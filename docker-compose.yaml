@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+
+  postgres_db:
+    image: postgres:15
+    restart: always
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_PASSWORD: financefacile
+      POSTGRES_DB: financefacile
+      POSTGRES_USER: financefacile
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+
+  financefacile:
+    build: .
+    command: bash -c "chmod +x ./run_server.sh && ./run_server.sh"
+    environment:
+      DB_HOST: postgres_db
+    volumes:
+      - ./financefacile:/app
+    depends_on:
+      - postgres_db
+    ports:
+      - "8000:8000"
+
+  ngrok:
+    image: ngrok/ngrok:alpine
+    environment:
+      NGROK_AUTHTOKEN: '2OPNvZ7NuYdrMX8arGYAuEm8pVj_5vximWpJdXRKaaxhwEaiK'
+    command: 'http --domain=gopher-known-collie.ngrok-free.app financefacile:8000'
+    ports:
+      - '4040:4040'
+    expose:
+      - '4040'
+

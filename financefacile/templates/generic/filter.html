@@ -1,0 +1,18 @@
+{% load crispy_forms_tags %}
+{% block filter %}
+<div class="col-md-12">
+    <div class="card">
+        <form method="get">
+            <div class="card-body">
+                {% crispy filter.form helper %}
+            </div>
+            <div class="row">
+                <div class="card-body">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <a href="{{ create_url }}" class="btn btn-success">Create</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock filter %}

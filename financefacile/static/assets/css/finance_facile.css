@@ -1,0 +1,8 @@
+select {
+            width: 100%;
+        }
+
+form > * {
+            display: block;  /* Ensure all elements are stacked */
+            margin-bottom: 15px;  /* Add space between elements */
+        }

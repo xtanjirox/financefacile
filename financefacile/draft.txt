@@ -1,0 +1,15 @@
+from django.contrib.auth.models import Group
+>>> admin_gr = Group.objects.create(name="admin")
+>>> admin_gr = Group.objects.create(name="user")
+>>> admin_gr = Group.objects.get(name="admin")
+>>> user
+Traceback (most recent call last):
+  File "<console>", line 1, in <module>
+NameError: name 'user' is not defined
+>>> from django.contrib.auth import get_user_model
+>>> User=get_user_model()
+>>> mehdi = User.objects.get(pk=1)
+>>> mehdi
+<User: my_user>
+>>> mehdi.groups.add(admin_gr)
+>>>
