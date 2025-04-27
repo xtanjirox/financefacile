@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-4">
+    <h2 class="mb-4">Search Results for "{{ query }}"</h2>
+    <ul class="nav nav-tabs mb-3" id="searchTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="products-tab" data-bs-toggle="tab" data-bs-target="#products" type="button" role="tab">Products</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="invoices-tab" data-bs-toggle="tab" data-bs-target="#invoices" type="button" role="tab">Invoices</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="categories-tab" data-bs-toggle="tab" data-bs-target="#categories" type="button" role="tab">Categories</button>
+        </li>
+    </ul>
+    <div class="tab-content" id="searchTabsContent">
+        <div class="tab-pane fade show active" id="products" role="tabpanel">
+            {% if products %}
+            <table class="table table-striped">
+                <thead><tr><th>Name</th><th>SKU</th><th>Quantity</th><th>Price</th></tr></thead>
+                <tbody>
+                {% for product in products %}
+                <tr>
+                    <td>{{ product.name }}</td>
+                    <td>{{ product.sku }}</td>
+                    <td>{{ product.quantity }}</td>
+                    <td>{{ product.price }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}<p>No products found.</p>{% endif %}
+        </div>
+        <div class="tab-pane fade" id="invoices" role="tabpanel">
+            {% if invoices %}
+            <table class="table table-striped">
+                <thead><tr><th>Number</th><th>Date</th><th>Total</th></tr></thead>
+                <tbody>
+                {% for invoice in invoices %}
+                <tr>
+                    <td>{{ invoice.id }}</td>
+                    <td>{{ invoice.created_at|date:'Y-m-d H:i' }}</td>
+                    <td>{% if invoice.custom_total %}{{ invoice.custom_total }}{% else %}{{ invoice.get_total }}{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}<p>No invoices found.</p>{% endif %}
+        </div>
+        <div class="tab-pane fade" id="categories" role="tabpanel">
+            {% if categories %}
+            <table class="table table-striped">
+                <thead><tr><th>Name</th><th>Parent</th></tr></thead>
+                <tbody>
+                {% for category in categories %}
+                <tr>
+                    <td>{{ category.name }}</td>
+                    <td>{% if category.parent %}{{ category.parent.name }}{% else %}-{% endif %}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+            {% else %}<p>No categories found.</p>{% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

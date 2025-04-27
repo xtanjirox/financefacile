@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block sidebar %}
+    {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+    {% include 'includes/topbar.html' %}
+{% block extra_js %}
+{{ block.super }}
+<script>
+  // Provide product prices for JS
+  window.PRODUCT_PRICES = {
+    {% for product in products %}
+      '{{ product.id }}': '{{ product.selling_price }}'{% if not forloop.last %},{% endif %}
+    {% endfor %}
+  };
+</script>
+<script src="{% static 'js/invoice_item_autofill.js' %}"></script>
+{% endblock %}
+{% endblock topbar %}
+
+{% block footer %}
+    {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+        <div class="card flex-fill shadow-lg" style="border-radius: 0.5rem;">
+  <div class="card-header d-flex align-items-center" style="background: linear-gradient(90deg,#e3f2fd 0%,#fafdff 100%); border-bottom: 1px solid #e0e6ed; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+    <h3 class="card-title mb-0 text-dark d-flex align-items-center">
+      <i class="fas fa-file-invoice me-2" style="color: #7cb9e8; font-size: 2rem;"></i>Invoice Form
+    </h3>
+  </div>
+  <div class="card-body p-4">
+    <form method="post" id="invoice-form" autocomplete="off" class="w-100">
+      {% csrf_token %}
+      <div class="mb-4">
+        <h4 class="fw-bold mb-3" style="color: #39739d;"><i class="fas fa-info-circle me-2" style="color: #7cb9e8;"></i>Invoice Details</h4>
+        <div class="row g-3">
+          {% for field in form.visible_fields %}
+            {% if field.name != 'invoice_total' %}
+            <div class="col-md-6">
+              <label class="form-label fw-semibold" for="id_{{ field.name }}">{{ field.label }}</label>
+              {{ field|as_crispy_field }}
+              {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+              {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+            </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+                    <div class="mb-4">
+  <h4 class="fw-bold mb-3" style="color: #39739d;"><i class="fas fa-list-ul me-2" style="color: #7cb9e8;"></i>Invoice Items</h4>
+  {{ formset.management_form }}
+  <div class="table-responsive">
+    <table class="table align-middle shadow-sm" id="invoice-items-table" style="background: #fff; border-radius: 0.5rem; overflow: hidden;">
+      <thead style="background: #e3f2fd; color: #39739d;">
+        <tr>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Selling Price</th>
+          <th>Total</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="invoice-items-body">
+        {% for form in formset.forms %}
+        <tr class="item-form">
+          {{ form.id }}
+          <td>{{ form.product }}</td>
+          <td>{{ form.quantity }}</td>
+          <td>{{ form.selling_price }}</td>
+          <td><input type="number" step="0.01" class="form-control form-control-lg invoice-total-input" value="" placeholder="Total" readonly /></td>
+          <td>
+            <button type="button" class="btn btn-sm btn-danger rounded px-3 delete-row" style="border-radius: 0.5rem;">Remove</button>
+          </td>
+        </tr>
+        {% endfor %}
+        <!-- Hidden empty form row for JS cloning -->
+        <tr id="empty-form-row" style="display:none;">
+          {% with form=formset.empty_form %}
+          {{ form.id }}
+          <td>{{ form.product }}</td>
+          <td>{{ form.quantity }}</td>
+          <td>{{ form.selling_price }}</td>
+          <td><input type="number" step="0.01" class="form-control form-control-lg invoice-total-input" value="" placeholder="Total" readonly /></td>
+          {% endwith %}
+          <td><button type="button" class="btn btn-sm btn-danger rounded px-3 delete-row" style="border-radius: 0.5rem;">Remove</button></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <button type="button" class="btn btn-info mb-3 rounded shadow-sm px-4" id="add-item" style="background: #7cb9e8; border: none; color: #fff; font-weight: 600; border-radius: 0.5rem;">
+    <i class="fa fa-plus me-2"></i> Add Another Item
+  </button>
+</div>
+                    <div class="row mt-4 mb-2 justify-content-end">
+  <div class="col-md-4">
+    <div class="p-3" style="background: #e3f2fd; border-radius: 0.5rem;">
+      <label for="invoice-total-price" class="fw-bold mb-2" style="color: #39739d;">Invoice Total</label>
+      <input type="number" step="0.01" class="form-control form-control-lg invoice-grand-total" id="invoice-total-price" name="invoice_total" value="" placeholder="Total invoice amount" />
+    </div>
+  </div>
+</div>
+<div class="mt-4 d-flex justify-content-end">
+  <button type="submit" class="btn btn-lg rounded shadow-sm px-5" style="background: #7cb9e8; color: #39739d; font-weight: 700; border: none; border-radius: 0.5rem;">
+    <i class="fas fa-save me-1"></i> Save Invoice
+  </button>
+</div>
+</form>
+</div>
+</div>
+{% endblock %}
+
+{% block script_content %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const addButton = document.getElementById('add-item');
+        const tbody = document.getElementById('invoice-items-body');
+        function updateFormCount() {
+            const count = tbody.querySelectorAll('.item-form').length;
+            const totalFormsInput = document.getElementById('id_items-TOTAL_FORMS');
+            if (!totalFormsInput) {
+                console.error('[Invoice JS] Management form not found! Make sure {{ formset.management_form }} is rendered directly inside <form>.');
+                return;
+            }
+            totalFormsInput.value = count;
+            console.log('[Invoice JS] Updated form count:', count);
+        }
+        function setupDeleteButtons() {
+            tbody.querySelectorAll('.delete-row').forEach(button => {
+                button.onclick = function() {
+                    const removedRow = this.closest('tr');
+                    removedRow.remove();
+                    updateFormCount();
+                    console.log('[Invoice JS] Removed an item row.');
+                };
+            });
+        }
+        setupDeleteButtons();
+        addButton.addEventListener('click', function() {
+            const emptyFormRow = document.getElementById('empty-form-row');
+            const newRow = emptyFormRow.cloneNode(true);
+            newRow.style.display = '';
+            newRow.removeAttribute('id');
+            newRow.classList.add('item-form');
+            const formIdx = tbody.querySelectorAll('.item-form').length;
+            newRow.querySelectorAll('input,select,label').forEach(function(el) {
+                if (el.name) el.name = el.name.replace(/__prefix__/g, formIdx);
+                if (el.id) el.id = el.id.replace(/__prefix__/g, formIdx);
+                if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/__prefix__/g, formIdx);
+                if (el.type === 'text' || el.type === 'number') el.value = '';
+            });
+            tbody.appendChild(newRow);
+            updateFormCount();
+            setupDeleteButtons();
+            console.log('[Invoice JS] Added a new item row.');
+        });
+    });
+</script>
+{% endblock %}

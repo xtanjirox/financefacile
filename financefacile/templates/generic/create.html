@@ -22,27 +22,66 @@
 {% endblock footer %}
 
 {% block content %}
-<div class="page-inner">
-    <div class="page-header">
-        <h4 class="page-title">Create {{segment|title}}</h4>
-    </div>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-body">
-                    <div class="col-md-8">
-                        <form action="" method="post">
-                            {% csrf_token %}
-                            {% crispy form %}
-                            <button type="submit" class="btn btn-success">Create</button>
-                        </form>
+<div class="container-fluid p-0">
+    <div class="row justify-content-center">
+    <div class="col-12">
+        <div class="card shadow-sm mt-4 border-0" style="border-radius: 1.2rem; overflow: hidden; background: #fafdff;">
+            <div class="card-header d-flex align-items-center" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed;">
+                <h3 class="card-title mb-0 text-dark"><i class="fas fa-plus-circle me-2" style="color: #7cb9e8;"></i>Create {{segment|title}}</h3>
+            </div>
+            <div class="card-body">
+                <form action="" method="post" autocomplete="off" class="w-100">
+                    {% csrf_token %}
+                    <div class="p-3 w-100" style="background: #fff; border-radius: 1rem;">
+                        <div class="row">
+                            {% for field in form.visible_fields %}
+                                <div class="form-group mb-1 col-12">
+                                    {{ field|as_crispy_field }}
+                                    {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+                                    {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                                </div>
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
+                    <div class="mt-4 d-flex justify-content-end">
+                        <button type="submit" class="btn btn-lg" style="background: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;">
+                            <i class="fas fa-check-circle me-1"></i> Create
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Enhance all select elements with bootstrap-select for searchability
+        var selects = document.querySelectorAll('select:not(.django-select2)');
+        selects.forEach(function(sel) {
+            sel.classList.add('selectpicker');
+            sel.setAttribute('data-live-search', 'true');
+        });
+        if (window.jQuery && window.jQuery().selectpicker) {
+            $('.selectpicker').selectpicker('refresh');
+        }
+    });
+</script>
+</div>
+<style>
+    .card-body input, .card-body select, .card-body textarea {
+        background: #fafdff;
+        border: 1px solid #dbeafe;
+        color: #39739d;
+        border-radius: 0.5rem;
+        margin-bottom: 1rem;
+    }
+    .card-body input:focus, .card-body select:focus, .card-body textarea:focus {
+        background: #e3f2fd;
+        border-color: #7cb9e8;
+        color: #39739d;
+        box-shadow: 0 0 0 0.1rem #b6e0fe;
+    }
+</style>
 {% endblock content %}
 
 {% block javascripts %}

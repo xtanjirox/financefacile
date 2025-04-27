@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+
+  postgres_db:
+    image: postgres:15
+    restart: always
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_PASSWORD: financefacile
+      POSTGRES_DB: financefacile
+      POSTGRES_USER: financefacile
+    volumes:
+      - ./data/db:/var/lib/postgresql/data

@@ -71,7 +71,7 @@ DATABASES = {
         'USER': 'financefacile',
         'PASSWORD': 'financefacile',
         'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': '5432',
+        'PORT': '5431',
     }
 }
 

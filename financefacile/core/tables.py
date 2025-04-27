@@ -15,6 +15,14 @@ DEFAULT_TABLE_ATTRS = {
 }
 
 
+class ProductTable(tables.Table):
+    actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE)
+
+    class Meta:
+        model = models.Product
+        attrs = {"class": "table table-material"}
+        fields = ('name', 'sku', 'quantity', 'unit_cost', 'selling_price', 'value_current', 'value_1_month', 'value_2_month', 'value_3_month', 'description', 'created_at')
+
 class EntriesTable(tables.Table):
     actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE)
 
@@ -23,6 +31,14 @@ class EntriesTable(tables.Table):
         attrs = DEFAULT_TABLE_ATTRS
         fields = ('entry_label', 'entry_category', 'finance_entry_type', 'entry_value', 'entry_date')
 
+
+class ProductCategoryTable(tables.Table):
+    actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE)
+
+    class Meta:
+        model = models.ProductCategory
+        attrs = DEFAULT_TABLE_ATTRS
+        fields = ('name', 'parent')
 
 class EntryCategoryTable(tables.Table):
     actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE)

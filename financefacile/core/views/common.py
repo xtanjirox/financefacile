@@ -79,6 +79,121 @@ def home(request):
         ]
     }
 
+    # --- Product stats for warehouse flash cards ---
+    from datetime import timedelta
+    from django.utils import timezone
+    now = timezone.now()
+    products = models.Product.objects.all()
+    product_count = products.count()
+    total_pieces = sum(p.quantity for p in products)
+    warehouse_value = 0
+    for p in products:
+        age = now - p.created_at
+        if age < timedelta(days=30):
+            value = p.value_current
+        elif age < timedelta(days=60):
+            value = p.value_1_month
+        elif age < timedelta(days=90):
+            value = p.value_2_month
+        else:
+            value = p.value_3_month
+        warehouse_value += p.quantity * value
+
+    # --- Pie chart: products by parent category ---
+    parent_categories = models.ProductCategory.objects.filter(parent__isnull=True)
+    products = models.Product.objects.select_related('category')
+    category_qty = {}
+    for parent in parent_categories:
+        # Get all descendant categories (children, grandchildren, etc.)
+        descendants = set()
+        stack = [parent]
+        while stack:
+            cat = stack.pop()
+            descendants.add(cat.id)
+            stack.extend(list(cat.children.all()))
+        # Aggregate the quantity for all products in this parent category and its descendants
+        qty = products.filter(category_id__in=descendants).aggregate(total=Sum('quantity'))['total'] or 0
+        category_qty[parent.name] = qty
+    pie_products_by_category = {
+        'labels': list(category_qty.keys()),
+        'datasets': [{
+            'label': 'Product Quantity',
+            'data': list(category_qty.values()),
+        }]
+    }
+
+    # --- Pie chart: inventory value by parent category ---
+    from django.utils import timezone
+    now = timezone.now()
+    value_by_parent = {}
+    for parent in parent_categories:
+        descendants = set()
+        stack = [parent]
+        while stack:
+            cat = stack.pop()
+            descendants.add(cat.id)
+            stack.extend(list(cat.children.all()))
+        value = 0
+        for p in products.filter(category_id__in=descendants):
+            age = now - p.created_at
+            if age.days < 30:
+                v = p.value_current
+            elif age.days < 60:
+                v = p.value_1_month
+            elif age.days < 90:
+                v = p.value_2_month
+            else:
+                v = p.value_3_month
+            value += p.quantity * v
+        value_by_parent[parent.name] = float(value)
+    pie_value_by_category = {
+        'labels': list(value_by_parent.keys()),
+        'datasets': [{
+            'label': 'Valeur du stock',
+            'data': list(value_by_parent.values()),
+        }]
+    }
+
+    # --- Pie chart: sold products by parent category (invoices) ---
+    from core.models import InvoiceItem
+    sold_qty_by_parent = {}
+    for parent in parent_categories:
+        descendants = set()
+        stack = [parent]
+        while stack:
+            cat = stack.pop()
+            descendants.add(cat.id)
+            stack.extend(list(cat.children.all()))
+        sold_qty = InvoiceItem.objects.filter(product__category_id__in=descendants).aggregate(total=Sum('quantity'))['total'] or 0
+        sold_qty_by_parent[parent.name] = sold_qty
+    pie_invoice_by_category = {
+        'labels': list(sold_qty_by_parent.keys()),
+        'datasets': [{
+            'label': 'Produits vendus',
+            'data': list(sold_qty_by_parent.values()),
+        }]
+    }
+
+    # --- Calculate the sum of all invoices for dashboard card ---
+    invoices = models.Invoice.objects.prefetch_related('items').all()
+    total_invoice_price = sum(inv.get_total() for inv in invoices)
+
+    recent_invoices = models.Invoice.objects.order_by('-created_at')[:10]
+
+    context = {
+        'total_charge': total_charge,
+        'total_revenue': total_revenue,
+        'stats': stats,
+        'pie_products_by_category': json.dumps(pie_products_by_category),
+        'pie_value_by_category': json.dumps(pie_value_by_category),
+        'pie_invoice_by_category': json.dumps(pie_invoice_by_category),
+        'product_count': product_count,
+        'total_pieces': total_pieces,
+        'warehouse_value': warehouse_value,
+        'total_invoice_price': total_invoice_price,
+        'recent_invoices': recent_invoices,
+    }
+    return render(request, 'index.html', context)
     context = {
         'total_charge': total_charge,
         'total_revenue': total_revenue,
@@ -86,6 +201,14 @@ def home(request):
         'data': json.dumps(stats),
         'table': models.FinanceEntry.objects.all().order_by('-entry_date')[:8],
         'ls_stats': [total_revenue, total_charge],
+        'product_count': product_count,
+        'warehouse_value': warehouse_value,
+        'total_pieces': total_pieces,
+        'pie_products_by_category': json.dumps(pie_products_by_category),
+        'pie_value_by_category': json.dumps(pie_value_by_category),
+        'pie_invoice_by_category': json.dumps(pie_invoice_by_category),
+        'total_invoice_price': total_invoice_price,
+        'recent_invoices': recent_invoices,
     }
     return render(request, 'index.html', context)
 

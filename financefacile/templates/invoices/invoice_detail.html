@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+    <div class="card flex-fill">
+      <div class="card-header">
+        <h5 class="card-title mb-0">Invoice #{{ invoice.id }}</h5>
+        <small class="text-muted">Date: {{ invoice.created_at|date:'Y-m-d H:i' }}</small>
+      </div>
+      <div class="card-body">
+        <h6>Invoice Items</h6>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Quantity</th>
+              <th>Selling Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in invoice.items.all %}
+            <tr>
+              <td>{{ item.product.name }}</td>
+              <td>{{ item.quantity }}</td>
+              <td>{{ item.selling_price }}</td>
+              <td>{{ item.total_price }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="text-end">
+          <strong>Total Amount: {{ invoice.get_total }} dt</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

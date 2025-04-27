@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block sidebar %}
+    {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+    {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+    {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card shadow-sm mt-4 border-0" style="border-radius: 1.2rem; overflow: hidden; background: #fafdff;">
+                <div class="card-header d-flex align-items-center justify-content-between" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed;">
+                    <h3 class="card-title mb-0 text-dark"><i class="fas fa-box-open me-2" style="color: #7cb9e8;"></i>{{ object.name }}</h3>
+                    <span class="badge rounded-pill" style="background: #e3f2fd; color: #39739d; font-size: 1rem; box-shadow: 0 1px 4px #dbeafe;">SKU: {{ object.sku }}</span>
+                </div>
+                <div class="card-body pb-2">
+                    <div class="row mb-3 g-3">
+                        <div class="col-6 col-md-3">
+                            <div class="shadow-none p-3 rounded-4 text-center" style="background: #e3f2fd;">
+                                <div class="mb-1 text-secondary small"><i class="fas fa-layer-group" style="color: #7cb9e8;"></i> Quantity</div>
+                                <span class="fw-bold fs-4 text-dark">{{ object.quantity }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="shadow-none p-3 rounded-4 text-center" style="background: #e8f5e9;">
+                                <div class="mb-1 text-secondary small"><i class="fas fa-coins" style="color: #81c784;"></i> Unit Cost</div>
+                                <span class="fw-bold fs-4 text-dark">{{ object.unit_cost }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="shadow-none p-3 rounded-4 text-center" style="background: #fffde7;">
+                                <div class="mb-1 text-secondary small"><i class="fas fa-tag" style="color: #ffd54f;"></i> Selling Price</div>
+                                <span class="fw-bold fs-4 text-dark">{{ object.selling_price }}</span>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <div class="shadow-none p-3 rounded-4 text-center" style="background: #f3e5f5;">
+                                <div class="mb-1 text-secondary small"><i class="fas fa-chart-line" style="color: #ba68c8;"></i> Current Value</div>
+                                <span class="fw-bold fs-4 text-dark">{{ object.value_current }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-3 g-3">
+                        <div class="col-4">
+                            <div class="shadow-none p-2 rounded-4 text-center" style="background: #e3f2fd;">
+                                <span class="text-muted small"><i class="fas fa-calendar-alt" style="color: #7cb9e8;"></i> 1 Month</span><br>
+                                <span class="fw-bold text-dark">{{ object.value_1_month }}</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="shadow-none p-2 rounded-4 text-center" style="background: #e8f5e9;">
+                                <span class="text-muted small"><i class="fas fa-calendar-alt" style="color: #81c784;"></i> 2 Months</span><br>
+                                <span class="fw-bold text-dark">{{ object.value_2_month }}</span>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="shadow-none p-2 rounded-4 text-center" style="background: #fffde7;">
+                                <span class="text-muted small"><i class="fas fa-calendar-alt" style="color: #ffd54f;"></i> 3 Months</span><br>
+                                <span class="fw-bold text-dark">{{ object.value_3_month }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <h6 class="text-muted"><i class="fas fa-info-circle" style="color: #7cb9e8;"></i> Description</h6>
+                        <div class="border rounded p-2 bg-light">{{ object.description|default:'<em>No description provided.</em>' }}</div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-0 position-relative" style="min-height: 70px;">
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="{% url 'product-update' object.pk %}" class="btn btn-outline-dark btn-lg shadow-sm">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="{% url 'product-delete' object.pk %}" class="btn btn-outline-danger btn-lg shadow-sm">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card mt-4 shadow-sm border-0" style="border-radius: 1.2rem; background: #fafdff;">
+                <div class="card-header" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed;">
+                    <h5 class="card-title mb-0" style="color: #39739d;"><i class="fas fa-file-invoice" style="color: #7cb9e8;"></i> Invoices Containing This Product</h5>
+                </div>
+                <div class="card-body">
+    {% if invoices %}
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <style>
+        /* Custom pastel DataTables styling */
+        table.dataTable thead th {
+            background: #e3f2fd;
+            color: #39739d;
+            border-bottom: 2px solid #e0e6ed;
+        }
+        table.dataTable tbody tr {
+            background: #fafdff;
+            transition: background 0.2s;
+        }
+        table.dataTable tbody tr:hover {
+            background: #f0f7fa;
+        }
+        .dataTables_wrapper .dataTables_filter input {
+            background: #e3f2fd;
+            color: #39739d;
+            border: 1px solid #dbeafe;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button {
+            background: #e3f2fd;
+            color: #39739d !important;
+            border: 1px solid #dbeafe;
+            border-radius: 0.5rem;
+            margin: 0 2px;
+        }
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+            background: #b6e0fe;
+            color: #39739d !important;
+        }
+    </style>
+    <div class="table-responsive">
+        <table id="invoice-table" class="table align-middle" style="background: #fafdff; border-radius: 1rem; overflow: hidden;">
+            <thead>
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Date</th>
+                    <th>Quantity Sold</th>
+                    <th>Selling Price</th>
+                    <th>Invoice Total</th>
+                    <th>View</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in invoices %}
+                <tr>
+                    <td>{{ item.invoice.id }}</td>
+                    <td>{{ item.invoice.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.selling_price }}</td>
+                    <td>{{ item.invoice.get_total|floatformat:2 }}</td>
+                    <td>
+                        <a href="{% url 'invoice-detail' item.invoice.id %}" class="btn btn-sm" style="background: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;">
+                            <i class="fas fa-eye"></i> Details
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <!-- DataTables JS -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#invoice-table').DataTable({
+                paging: true,
+                searching: true,
+                info: false,
+                lengthChange: false,
+                language: {
+                    search: "<span style='color:#39739d;'>Search:</span>",
+                    emptyTable: "No invoices found for this product."
+                }
+            });
+        });
+    </script>
+    {% else %}
+    <div class="alert alert-info mb-0" style="background: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;">No invoices found for this product.</div>
+    {% endif %}
+</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

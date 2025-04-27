@@ -17,406 +17,223 @@
 
     <h1 class="h3 mb-3">Finance <strong>Facile</strong></h1>
 
-    <div class="row">
-        <div class="col-xl-6 col-xxl-5 d-flex">
-            <div class="w-100">
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col mt-0">
-                                        <h5 class="card-title">Total Charges</h5>
-                                    </div>
+    <style>
+        .dashboard-card {
+            border: none;
+            border-radius: 1rem;
+            box-shadow: 0 2px 8px rgba(60, 60, 120, 0.06);
+            padding: 0.7rem 1rem;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
 
-                                    <div class="col-auto">
-                                        <div class="stat text-primary">
-                                            <i class="align-middle" data-feather="truck"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h1 class="mt-1 mb-3">{{ total_charge }} dt</h1>
-                                <div class="mb-0">
-                                    <span class="text-danger"> <i class="mdi mdi-arrow-bottom-right"></i> -3.65% </span>
-                                    <span class="text-muted">Since last week</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col mt-0">
-                                        <h5 class="card-title">Total Marge</h5>
-                                    </div>
+        .dashboard-card:hover {
+            box-shadow: 0 4px 24px 0 rgba(60, 60, 120, 0.13), 0 1.5px 4px 0 rgba(60, 60, 120, 0.10);
+            transform: translateY(-2px) scale(1.01);
+        }
 
-                                    <div class="col-auto">
-                                        <div class="stat text-primary">
-                                            <i class="align-middle" data-feather="users"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h1 class="mt-1 mb-3">{{ total_marge }} dt</h1>
-                                <div class="mb-0">
-                                    <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> </span>
-                                    <span class="text-muted">Since last week</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col mt-0">
-                                        <h5 class="card-title">Total Revenue</h5>
-                                    </div>
+        .dashboard-card.bg-prod {
+            background: #e3f2fd;
+        }
 
-                                    <div class="col-auto">
-                                        <div class="stat text-primary">
-                                            <i class="align-middle" data-feather="dollar-sign"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h1 class="mt-1 mb-3">{{ total_revenue }} dt</h1>
-                                <div class="mb-0">
-                                    <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 6.65% </span>
-                                    <span class="text-muted">Since last week</span>
-                                </div>
-                            </div>
-                        </div>
+        .dashboard-card.bg-items {
+            background: #e8f5e9;
+        }
 
-                        <div class="card">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col mt-0">
-                                        <h5 class="card-title">Total Revenue</h5>
-                                    </div>
+        .dashboard-card.bg-value {
+            background: #fff8e1;
+        }
 
-                                    <div class="col-auto">
-                                        <div class="stat text-primary">
-                                            <i class="align-middle" data-feather="dollar-sign"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <h1 class="mt-1 mb-3">{{ total_revenue }} dt</h1>
-                                <div class="mb-0">
-                                    <span class="text-success"> <i class="mdi mdi-arrow-bottom-right"></i> 6.65% </span>
-                                    <span class="text-muted">Since last week</span>
-                                </div>
-                            </div>
-                        </div>
+        .dashboard-card.bg-invoice {
+            background: #fce4ec;
+        }
 
-                    </div>
+        .dashboard-card .icon {
+            font-size: 1.35rem;
+            margin-right: 0.7rem;
+            opacity: 0.7;
+        }
+
+        .dashboard-card .card-title {
+            font-size: 1.05rem;
+            font-weight: 500;
+            margin-bottom: 0.2rem;
+        }
+
+        .dashboard-card .fw-bold {
+            font-size: 1.35rem;
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+    </style>
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="dashboard-card bg-prod">
+                <span class="icon"><i class="bi bi-box-seam"></i></span>
+                <div>
+                    <div class="card-title text-muted">Nombre de produits</div>
+                    <div class="fw-bold">{{ product_count }}</div>
                 </div>
             </div>
         </div>
-
-        <div class="col-xl-6 col-xxl-7">
-            <div class="card flex-fill w-100">
-                <div class="card-header">
-
-                    <h5 class="card-title mb-0">Mouvements des 12 derniers mois</h5>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="dashboard-card bg-items">
+                <span class="icon"><i class="bi bi-stack"></i></span>
+                <div>
+                    <div class="card-title text-muted">Articles en stock</div>
+                    <div class="fw-bold">{{ total_pieces }}</div>
                 </div>
-                <div class="card-body py-3">
-                    <div class="chart chart-sm">
-                        <canvas id="chartjs-dashboard-line"></canvas>
-                    </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="dashboard-card bg-value">
+                <span class="icon"><i class="bi bi-cash-stack"></i></span>
+                <div>
+                    <div class="card-title text-muted">Valeur du stock</div>
+                    <div class="fw-bold">{{ warehouse_value|floatformat:2 }} dt</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="dashboard-card bg-invoice">
+                <span class="icon"><i class="bi bi-receipt"></i></span>
+                <div>
+                    <div class="card-title text-muted">Total factures</div>
+                    <div class="fw-bold">{{ total_invoice_price|floatformat:2 }} dt</div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-12 col-md-6 col-xxl-3 d-flex order-2 order-xxl-3">
-            <div class="card flex-fill w-100">
-                <div class="card-header">
-
-                    <h5 class="card-title mb-0">Balance des 12 derniers mois</h5>
-                </div>
-                <div class="card-body d-flex">
-                    <div class="align-self-center w-100">
-                        <div class="py-3">
-                            <div class="chart chart-xs">
-                                <canvas id="chartjs-dashboard-pie"></canvas>
-                            </div>
-                        </div>
-
-                        <table class="table mb-0">
-                            <tbody>
-                            <tr>
-                                <td>Revenue</td>
-                                <td class="text-end">{{ ls_stats.0 }}</td>
-                            </tr>
-                            <tr>
-                                <td>Charges</td>
-                                <td class="text-end">{{ ls_stats.1 }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-
-                    </div>
+    <div class="row g-2">
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm border-0" style="margin-bottom:0;">
+                <div class="card-body p-2 text-center">
+                    <h6 class="card-title text-muted mb-1" style="font-size:0.85rem;">Répartition des articles par catégorie principale</h6>
+                    <canvas id="pie-products-category" width="120" height="120" style="display:inline-block;"></canvas>
                 </div>
             </div>
         </div>
-        <div class="col-12 col-md-12 col-xxl-6 d-flex order-3 order-xxl-2">
-            <div class="card flex-fill">
-                <div class="card-header">
-                    <h5 class="card-title mb-0">Dernières Entrées</h5>
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm border-0" style="margin-bottom:0;">
+                <div class="card-body p-2 text-center">
+                    <h6 class="card-title text-muted mb-1" style="font-size:0.85rem;">Valeur du stock par catégorie principale</h6>
+                    <canvas id="pie-value-category" width="120" height="120" style="display:inline-block;"></canvas>
                 </div>
-                <table class="table table-hover my-0">
-                    <thead>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm border-0" style="margin-bottom:0;">
+                <div class="card-body p-2 text-center">
+                    <h6 class="card-title text-muted mb-1" style="font-size:0.85rem;">Produits vendus par catégorie principale</h6>
+                    <canvas id="pie-invoice-category" width="120" height="120" style="display:inline-block;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Invoices Table -->
+    <div class="card mt-4">
+        <div class="card-header py-2 bg-white border-0">
+            <span class="fw-semibold">Dernières factures créées</span>
+        </div>
+        <div class="table-responsive mb-0">
+            <table class="table table-sm table-hover mb-0 align-middle">
+                <thead class="table-light">
                     <tr>
-                        <th>Label</th>
-                        <th class="d-none d-xl-table-cell">Date</th>
-                        <th class="d-none d-xl-table-cell">Valeur</th>
-                        <th>Type d'entrée</th>
+                        <th scope="col">#</th>
+                        <th scope="col">Date</th>
+                        <th scope="col">Total</th>
+                        <th scope="col">Action</th>
                     </tr>
-                    </thead>
-                    <tbody>
-                    {% for item in table %}
-                        <tr>
-                            <td>{{ item.entry_label }}</td>
-                            <td class="d-none d-xl-table-cell">{{ item.entry_date }}</td>
-                            <td class="d-none d-xl-table-cell">{{ item.entry_value }}</td>
-                            {% if item.finance_entry_type == 2 %}
-                                <td><span class="badge bg-success">Revenue</span></td>
-                            {% else %}
-                                <td><span class="badge bg-danger">Charge</span></td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="col-12 col-md-6 col-xxl-3 d-flex order-1 order-xxl-1">
-            <div class="card flex-fill">
-                <div class="card-header">
-
-                    <h5 class="card-title mb-0">Calendrier</h5>
-                </div>
-                <div class="card-body d-flex">
-
-                    <div class="align-self-center w-100">
-                        <div class="chart">
-                            <div id="datetimepicker-dashboard"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </thead>
+                <tbody>
+                {% for invoice in recent_invoices %}
+                    <tr style="cursor:pointer" onclick="window.location='{{ invoice.get_absolute_url }}'">
+                        <td>{{ invoice.pk }}</td>
+                        <td>{{ invoice.created_at|date:'Y-m-d H:i' }}</td>
+                        <td>{{ invoice.get_total|floatformat:2 }} <span class="text-muted">dt</span></td>
+                        <td>
+                            <a href="{{ invoice.get_absolute_url }}" class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation();">Voir</a>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="4" class="text-center text-muted">Aucune facture récente.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
-</div>
-{% endblock content %}
+    {% endblock content %}
 
 
-{% block script_content %}
+    {% block script_content %}
 
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var ctx = document.getElementById("chartjs-dashboard-line").getContext("2d");
-        var gradient = ctx.createLinearGradient(0, 0, 0, 225);
-        gradient.addColorStop(0, "rgba(215, 227, 244, 1)");
-        gradient.addColorStop(1, "rgba(0, 227, 244, 0)");
-        var data = JSON.parse('{{ data | safe }}');
-
-
-        data.datasets[0].borderColor = window.theme.primary;
-        data.datasets[0].fill = false;
-
-        data.datasets[1].borderColor = "#E16F8A";
-        data.datasets[1].fill = false;
-
-        // Line chart
-        new Chart(document.getElementById("chartjs-dashboard-line"), {
-            type: "line",
-            data: data,
-            options: {
-                maintainAspectRatio: false,
-                legend: {
-                    display: false
-                },
-                tooltips: {
-                    intersect: false
-                },
-                hover: {
-                    intersect: true
-                },
-                plugins: {
-                    filler: {
-                        propagate: false
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Pie Chart: Products by Parent Category
+            const pieProductsData = JSON.parse('{{ pie_products_by_category|escapejs }}');
+            const ctxProducts = document.getElementById('pie-products-category').getContext('2d');
+            new Chart(ctxProducts, {
+                type: 'pie',
+                data: Object.assign({}, pieProductsData, {
+                    datasets: pieProductsData.datasets.map(ds => Object.assign({}, ds, {
+                        backgroundColor: [
+                            '#bbdefb', '#c8e6c9', '#ffe0b2', '#f8bbd0', '#d1c4e9', '#fff9c4', '#b2dfdb', '#f0f4c3', '#f5f5f5', '#e1bee7'
+                        ]
+                    }))
+                }),
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true, position: 'bottom' }
                     }
-                },
-                scales: {
-                    xAxes: [{
-                        reverse: true,
-                        gridLines: {
-                            color: "rgba(0,0,0,0.0)"
-                        }
-                    }],
-                    yAxes: [{
-                        ticks: {
-                            stepSize: 1000
-                        },
-                        display: true,
-                        borderDash: [3, 3],
-                        gridLines: {
-                            color: "rgba(0,0,0,0.0)"
-                        }
-                    }]
                 }
-            }
-        });
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Pie chart
-        new Chart(document.getElementById("chartjs-dashboard-pie"), {
-            type: "pie",
-            data: {
-                labels: ["Revenues", "Charges"],
-                datasets: [{
-                    data: {{ ls_stats }},
-                    backgroundColor: [
-                        window.theme.success,
-                        window.theme.danger
-                    ],
-                    borderWidth: 5
-                }]
-            },
-            options: {
-                responsive: !window.MSInputMethodContext,
-                maintainAspectRatio: false,
-                legend: {
-                    display: false
-                },
-                cutoutPercentage: 75
-            }
-        });
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Bar chart
-        new Chart(document.getElementById("chartjs-dashboard-bar"), {
-            type: "bar",
-            data: {
-                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-                datasets: [{
-                    label: "This year",
-                    backgroundColor: window.theme.primary,
-                    borderColor: window.theme.primary,
-                    hoverBackgroundColor: window.theme.primary,
-                    hoverBorderColor: window.theme.primary,
-                    data: [54, 67, 41, 55, 62, 45, 55, 73, 60, 76, 48, 79],
-                    barPercentage: .75,
-                    categoryPercentage: .5
-                }]
-            },
-            options: {
-                maintainAspectRatio: false,
-                legend: {
-                    display: false
-                },
-                scales: {
-                    yAxes: [{
-                        gridLines: {
-                            display: false
-                        },
-                        stacked: false,
-                        ticks: {
-                            stepSize: 20
-                        }
-                    }],
-                    xAxes: [{
-                        stacked: false,
-                        gridLines: {
-                            color: "transparent"
-                        }
-                    }]
+            });
+
+            // Pie Chart: Inventory Value by Parent Category
+            const pieValueData = JSON.parse('{{ pie_value_by_category|escapejs }}');
+            const ctxValue = document.getElementById('pie-value-category').getContext('2d');
+            new Chart(ctxValue, {
+                type: 'pie',
+                data: Object.assign({}, pieValueData, {
+                    datasets: pieValueData.datasets.map(ds => Object.assign({}, ds, {
+                        backgroundColor: [
+                            '#bbdefb', '#c8e6c9', '#ffe0b2', '#f8bbd0', '#d1c4e9', '#fff9c4', '#b2dfdb', '#f0f4c3', '#f5f5f5', '#e1bee7'
+                        ]
+                    }))
+                }),
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true, position: 'bottom' }
+                    }
                 }
-            }
-        });
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var markers = [{
-                coords: [31.230391, 121.473701],
-                name: "Shanghai"
-            },
-            {
-                coords: [28.704060, 77.102493],
-                name: "Delhi"
-            },
-            {
-                coords: [6.524379, 3.379206],
-                name: "Lagos"
-            },
-            {
-                coords: [35.689487, 139.691711],
-                name: "Tokyo"
-            },
-            {
-                coords: [23.129110, 113.264381],
-                name: "Guangzhou"
-            },
-            {
-                coords: [40.7127837, -74.0059413],
-                name: "New York"
-            },
-            {
-                coords: [34.052235, -118.243683],
-                name: "Los Angeles"
-            },
-            {
-                coords: [41.878113, -87.629799],
-                name: "Chicago"
-            },
-            {
-                coords: [51.507351, -0.127758],
-                name: "London"
-            },
-            {
-                coords: [40.416775, -3.703790],
-                name: "Madrid "
-            }
-        ];
-        var map = new jsVectorMap({
-            map: "world",
-            selector: "#world_map",
-            zoomButtons: true,
-            markers: markers,
-            markerStyle: {
-                initial: {
-                    r: 9,
-                    strokeWidth: 7,
-                    stokeOpacity: .4,
-                    fill: window.theme.primary
-                },
-                hover: {
-                    fill: window.theme.primary,
-                    stroke: window.theme.primary
+            });
+
+            // Pie Chart: Invoices by Parent Category (sold products)
+            const pieInvoiceData = JSON.parse('{{ pie_invoice_by_category|escapejs }}');
+            const ctxInvoice = document.getElementById('pie-invoice-category').getContext('2d');
+            new Chart(ctxInvoice, {
+                type: 'pie',
+                data: Object.assign({}, pieInvoiceData, {
+                    datasets: pieInvoiceData.datasets.map(ds => Object.assign({}, ds, {
+                        backgroundColor: [
+                            '#bbdefb', '#c8e6c9', '#ffe0b2', '#f8bbd0', '#d1c4e9', '#fff9c4', '#b2dfdb', '#f0f4c3', '#f5f5f5', '#e1bee7'
+                        ]
+                    }))
+                }),
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: true, position: 'bottom' }
+                    }
                 }
-            },
-            zoomOnScroll: false
+            });
         });
-        window.addEventListener("resize", () => {
-            map.updateSize();
-        });
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var date = new Date(Date.now());
-        var defaultDate = date.getUTCFullYear() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCDate();
-        document.getElementById("datetimepicker-dashboard").flatpickr({
-            inline: true,
-            prevArrow: "<span title=\"Previous month\">&laquo;</span>",
-            nextArrow: "<span title=\"Next month\">&raquo;</span>",
-            defaultDate: defaultDate
-        });
-    });
-</script>
-{% endblock script_content %}
+    </script>
+    {% endblock script_content %}
