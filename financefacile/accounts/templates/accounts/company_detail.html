@@ -1,50 +1,66 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
 {% block title %}{{ company.name }}{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">{{ company.name }}</h1>
-        <div>
-            <a href="{% url 'company-list' %}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to Companies
-            </a>
-            {% if user.is_staff or user.is_superuser or user.profile.is_company_admin %}
-            <a href="{% url 'company-edit' company.id %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-                <i class="fas fa-edit fa-sm text-white-50"></i> Edit Company
-            </a>
-            <a href="{% url 'company-settings' company.id %}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm">
-                <i class="fas fa-cog fa-sm text-white-50"></i> Company Settings
-            </a>
-            {% endif %}
-        </div>
+<div class="container-fluid p-0">
+  <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <h2 class="fw-bold mb-0" style="color: #39739d;">
+      <i class="fas fa-building me-2" style="color: #7cb9e8;"></i>
+      {{ company.name }}
+    </h2>
+    <div class="d-flex gap-2">
+      <a href="{% url 'company-list' %}" class="btn btn-outline-secondary rounded-pill px-3">
+        <i class="fas fa-arrow-left me-2"></i> Back
+      </a>
+      {% if user.is_staff or user.is_superuser or user.profile.is_company_admin %}
+      <a href="{% url 'company-edit' company.id %}" class="btn rounded-pill px-3" style="background-color: #e8f5e9; color: #2e7d32;">
+        <i class="fas fa-edit me-2"></i> Edit
+      </a>
+      <a href="{% url 'company-settings' company.id %}" class="btn rounded-pill px-3" style="background-color: #fff8e1; color: #f57f17;">
+        <i class="fas fa-cog me-2"></i> Settings
+      </a>
+      {% endif %}
     </div>
+  </div>
 
-    <div class="row">
-        <!-- Company Information Card -->
-        <div class="col-lg-6">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Company Information</h6>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-4 font-weight-bold">SIRET Number:</div>
-                        <div class="col-md-8">{{ company.siret_number|default:"Not provided" }}</div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4 font-weight-bold">Address:</div>
-                        <div class="col-md-8">{{ company.address|default:"Not provided"|linebreaks }}</div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4 font-weight-bold">Phone Number:</div>
-                        <div class="col-md-8">{{ company.phone_number|default:"Not provided" }}</div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-4 font-weight-bold">Created:</div>
-                        <div class="col-md-8">{{ company.created_at|date:"F j, Y" }}</div>
-                    </div>
+  <div class="row g-4">
+    <!-- Company Information Card -->
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-0" style="border-radius: 14px;">
+        <div class="card-body p-4">
+          <h5 class="card-title mb-4 fw-bold" style="color: #39739d;">
+            <i class="fas fa-info-circle me-2" style="color: #7cb9e8;"></i>
+            Company Information
+          </h5>
+          
+          <div class="row mb-3 border-bottom pb-3">
+            <div class="col-md-4 fw-semibold">SIRET Number:</div>
+            <div class="col-md-8">{{ company.siret_number|default:"Not provided" }}</div>
+          </div>
+          <div class="row mb-3 border-bottom pb-3">
+            <div class="col-md-4 fw-semibold">Address:</div>
+            <div class="col-md-8">{{ company.address|default:"Not provided"|linebreaks }}</div>
+          </div>
+          <div class="row mb-3 border-bottom pb-3">
+            <div class="col-md-4 fw-semibold">Phone Number:</div>
+            <div class="col-md-8">{{ company.phone_number|default:"Not provided" }}</div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-4 fw-semibold">Created:</div>
+            <div class="col-md-8">{{ company.created_at|date:"F j, Y" }}</div>
+          </div>
                 </div>
             </div>
         </div>
@@ -103,13 +119,13 @@
                             <td>{{ profile.user.email|default:"-" }}</td>
                             <td>
                                 {% if profile.user.is_superuser %}
-                                    <span class="badge badge-danger">Superuser</span>
+                                    <span class="badge bg-danger rounded-pill px-3">Superuser</span>
                                 {% elif profile.user.is_staff %}
-                                    <span class="badge badge-warning">Staff</span>
+                                    <span class="badge bg-warning text-dark rounded-pill px-3">Staff</span>
                                 {% elif profile.is_company_admin %}
-                                    <span class="badge badge-primary">Company Admin</span>
+                                    <span class="badge bg-primary rounded-pill px-3">Company Admin</span>
                                 {% else %}
-                                    <span class="badge badge-secondary">Member</span>
+                                    <span class="badge bg-secondary rounded-pill px-3">Member</span>
                                 {% endif %}
                             </td>
                         </tr>

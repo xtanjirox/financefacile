@@ -1,55 +1,73 @@
 {% extends 'base.html' %}
 
+{% load crispy_forms_tags %}
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
 {% block title %}Company Settings{% endblock %}
 
 {% block content %}
-<div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Company Settings for {{ object.company.name }}</h1>
-        <a href="{% url 'company-detail' object.company.id %}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
-            <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to Company
-        </a>
-    </div>
+<div class="container-fluid p-0">
+  <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <h2 class="fw-bold mb-0" style="color: #39739d;">
+      <i class="fas fa-cog me-2" style="color: #7cb9e8;"></i>
+      Company Settings for {{ object.company.name }}
+    </h2>
+    <a href="{% url 'company-detail' object.company.id %}" class="btn btn-outline-secondary rounded-pill px-3">
+      <i class="fas fa-arrow-left me-2"></i> Back to Company
+    </a>
+  </div>
 
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Invoice and Financial Settings</h6>
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card shadow-sm border-0 mb-4" style="border-radius: 14px;">
+        <div class="card-body p-4">
+          <h5 class="card-title mb-4 fw-bold" style="color: #39739d;">
+            <i class="fas fa-file-invoice-dollar me-2" style="color: #7cb9e8;"></i>
+            Invoice and Financial Settings
+          </h5>
+          
+          <form method="post" class="row g-3">
+            {% csrf_token %}
+            
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.default_tva_rate.id_for_label }}" class="form-label fw-semibold">Default TVA Rate (%)</label>
+              <input type="number" name="default_tva_rate" id="{{ form.default_tva_rate.id_for_label }}" class="form-control" step="0.01" min="0" max="100" value="{{ form.default_tva_rate.value|default:'' }}" required>
+              {% if form.default_tva_rate.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.default_tva_rate.errors }}
                 </div>
-                <div class="card-body">
-                    <form method="post">
-                        {% csrf_token %}
-                        
-                        <div class="form-group">
-                            <label for="{{ form.default_tva_rate.id_for_label }}">Default TVA Rate (%)</label>
-                            {{ form.default_tva_rate }}
-                            {% if form.default_tva_rate.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {{ form.default_tva_rate.errors }}
-                                </div>
-                            {% endif %}
-                            <small class="form-text text-muted">Default TVA (VAT) rate in percentage (e.g., 19.00 for 19%)</small>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="{{ form.stamp_fee.id_for_label }}">Stamp Fee</label>
-                            {{ form.stamp_fee }}
-                            {% if form.stamp_fee.errors %}
-                                <div class="invalid-feedback d-block">
-                                    {{ form.stamp_fee.errors }}
-                                </div>
-                            {% endif %}
-                            <small class="form-text text-muted">Stamp fee amount to be added to all invoices</small>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-primary">
-                            Update Settings
-                        </button>
-                    </form>
-                </div>
+              {% endif %}
+              <small class="form-text text-muted">Default TVA (VAT) rate in percentage (e.g., 19.00 for 19%)</small>
             </div>
+            
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.stamp_fee.id_for_label }}" class="form-label fw-semibold">Stamp Fee</label>
+              <input type="number" name="stamp_fee" id="{{ form.stamp_fee.id_for_label }}" class="form-control" step="0.01" min="0" value="{{ form.stamp_fee.value|default:'' }}" required>
+              {% if form.stamp_fee.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.stamp_fee.errors }}
+                </div>
+              {% endif %}
+              <small class="form-text text-muted">Stamp fee amount to be added to all invoices</small>
+            </div>
+            
+            <div class="col-12 mt-4">
+              <button type="submit" class="btn btn-primary rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+                <i class="fas fa-save me-2"></i> Update Settings
+              </button>
+            </div>
+          </form>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 {% endblock %}

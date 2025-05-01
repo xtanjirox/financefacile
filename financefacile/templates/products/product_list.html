@@ -177,11 +177,53 @@
     </div>
   </div>
 
+  <!-- Filters Section -->
+  <div class="card shadow-sm border-0 mb-4" style="border-radius: 14px;">
+    <div class="card-body p-4">
+      <h5 class="card-title mb-3 fw-bold" style="color: #39739d;">
+        <i class="fas fa-filter me-2" style="color: #7cb9e8;"></i> Filter Products
+      </h5>
+      <div class="row g-3">
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="name-filter" placeholder="Product Name">
+            <label for="name-filter">Product Name</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="sku-filter" placeholder="SKU">
+            <label for="sku-filter">SKU</label>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-floating">
+            <select class="form-select" id="category-filter">
+              <option value="">All Categories</option>
+              <!-- Categories would be populated dynamically -->
+            </select>
+            <label for="category-filter">Category</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-12">
-      <div class="card flex-fill shadow-sm border-0" style="border-radius: 18px;">
-        <div class="card-header" style="background: #e3f2fd; border-top-left-radius: 18px; border-top-right-radius: 18px; border-bottom: 1px solid #e0e6ed;">
-          <h5 class="card-title mb-0" style="color: #1976d2; font-weight: 600;">Products</h5>
+      <div class="card flex-fill shadow-sm border-0" style="border-radius: 14px;">
+        <div class="card-header d-flex justify-content-between align-items-center py-3" style="background: #e7f1fa; border-top-left-radius: 14px; border-top-right-radius: 14px; border-bottom: 1px solid #e0e6ed;">
+          <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
+            <i class="fas fa-table me-2" style="color: #7cb9e8;"></i>Products
+          </h5>
+          <div class="d-flex gap-2">
+            <button id="export-csv" class="btn btn-sm rounded-pill px-3" style="background-color: #e8f5e9; color: #2e7d32;">
+              <i class="fas fa-file-csv me-2"></i> Export CSV
+            </button>
+            <button id="print-table" class="btn btn-sm rounded-pill px-3" style="background-color: #e3f2fd; color: #1976d2;">
+              <i class="fas fa-print me-2"></i> Print
+            </button>
+          </div>
         </div>
         <div class="card-body p-4">
           {% render_table table 'django_tables2/bootstrap5.html' %}
@@ -192,7 +234,7 @@
               const tableElement = document.querySelector('.table');
               if (tableElement) {
                 tableElement.id = 'products-table';
-                tableElement.classList.add('table-striped', 'align-middle');
+                tableElement.classList.add('table-hover', 'align-middle');
                 tableElement.style.width = '100%';
                 tableElement.style.background = '#fff';
                 tableElement.style.borderRadius = '12px';
@@ -201,10 +243,22 @@
                 // Style the header
                 const thead = tableElement.querySelector('thead');
                 if (thead) {
-                  thead.style.background = '#e3f2fd';
-                  thead.style.color = '#1976d2';
+                  thead.style.background = '#e7f1fa';
+                  thead.style.color = '#39739d';
                   thead.style.fontWeight = '600';
                 }
+                
+                // Style the table rows
+                const rows = tableElement.querySelectorAll('tbody tr');
+                rows.forEach(row => {
+                  row.style.transition = 'all 0.2s ease';
+                  row.addEventListener('mouseover', () => {
+                    row.style.backgroundColor = 'rgba(124, 185, 232, 0.1)';
+                  });
+                  row.addEventListener('mouseout', () => {
+                    row.style.backgroundColor = '';
+                  });
+                });
               }
             });
           </script>
@@ -220,6 +274,13 @@
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.bootstrap5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
 <script>
   $(document).ready(function() {
     // Initialize tooltips
@@ -229,11 +290,12 @@
     
     // Initialize DataTables with a slight delay to ensure the table is fully rendered
     setTimeout(function() {
-      $('#products-table').DataTable({
+      // Initialize DataTable
+      const dataTable = $('#products-table').DataTable({
         responsive: true,
         language: {
           search: "_INPUT_",
-          searchPlaceholder: "Search products by name, SKU, description...",
+          searchPlaceholder: "Quick search...",
           lengthMenu: "Show _MENU_ entries",
           info: "Showing _START_ to _END_ of _TOTAL_ products",
           infoEmpty: "Showing 0 to 0 of 0 products",
@@ -273,8 +335,77 @@
         }
       });
       
+      // Custom filtering
+      $('#name-filter').on('keyup', function() {
+        // Assuming product name is in the first column (index 0)
+        dataTable.column(0).search(this.value).draw();
+      });
+      
+      $('#sku-filter').on('keyup', function() {
+        // Assuming SKU is in the second column (index 1)
+        dataTable.column(1).search(this.value).draw();
+      });
+      
+      $('#category-filter').on('change', function() {
+        // Assuming category is in the third column (index 2)
+        const val = $(this).val();
+        dataTable.column(2).search(val ? val : '', true, false).draw();
+      });
+      
+      // Export buttons functionality
+      $('#export-csv').on('click', function() {
+        // Create a temporary button with DataTables Buttons extension
+        new $.fn.dataTable.Buttons(dataTable, {
+          buttons: [{
+            extend: 'csv',
+            text: 'Export CSV',
+            title: 'Products_' + new Date().toISOString().slice(0,10),
+            exportOptions: {
+              columns: ':not(:last-child)' // Exclude actions column
+            }
+          }]
+        });
+        
+        // Click the first button (CSV export)
+        dataTable.buttons(0).trigger();
+      });
+      
+      $('#print-table').on('click', function() {
+        // Create a temporary button with DataTables Buttons extension
+        new $.fn.dataTable.Buttons(dataTable, {
+          buttons: [{
+            extend: 'print',
+            text: 'Print',
+            title: 'Products List',
+            exportOptions: {
+              columns: ':not(:last-child)' // Exclude actions column
+            },
+            customize: function(win) {
+              $(win.document.body).css('font-size', '10pt');
+              $(win.document.body).find('table')
+                .addClass('compact')
+                .css('font-size', 'inherit');
+            }
+          }]
+        });
+        
+        // Click the first button (Print)
+        dataTable.buttons(0).trigger();
+      });
+      
       // Initialize tooltips for the first time
       initTooltips();
+      
+      // Apply custom styling to the search input
+      $('.dataTables_filter input')
+        .addClass('rounded-pill')
+        .css({
+          'padding-left': '15px',
+          'padding-right': '15px',
+          'border': '1px solid #e0e6ed',
+          'box-shadow': '0 2px 5px rgba(0,0,0,0.05)',
+          'transition': 'all 0.2s ease'
+        });
     }, 100);
   });
 </script>

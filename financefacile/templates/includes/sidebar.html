@@ -60,7 +60,14 @@
                 </a>
             </li>
             {% endif %}
-            {% if user.profile.company and user.profile.is_company_admin %}
+            {% if user.profile.company %}
+            <li class="sidebar-item active">
+                <a class="sidebar-link" href="{% url 'company-detail' user.profile.company.id %}">
+                    <i class="fa-solid fa-building-user"></i>
+                    <span class="align-middle">Company Details</span>
+                </a>
+            </li>
+            {% if user.profile.is_company_admin %}
             <li class="sidebar-item active">
                 <a class="sidebar-link" href="{% url 'company-settings' user.profile.company.id %}">
                     <i class="fa-solid fa-cog"></i>
@@ -73,6 +80,7 @@
                     <span class="align-middle">Manage Members</span>
                 </a>
             </li>
+            {% endif %}
             {% endif %}
             <li class="sidebar-header">
                 Account Management

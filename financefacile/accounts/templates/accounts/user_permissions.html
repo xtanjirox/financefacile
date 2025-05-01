@@ -23,9 +23,15 @@
           <h3 class="card-title mb-0 text-dark">
             <i class="fas fa-shield-alt me-2" style="color: #7cb9e8;"></i>Manage Permissions: {{ object.username }}
           </h3>
-          <a href="{% url 'users-list' %}" class="btn btn-sm btn-outline-secondary">
-            <i class="fas fa-arrow-left me-1"></i> Back to Users
-          </a>
+          {% if user.is_staff or user.is_superuser %}
+            <a href="{% url 'users-list' %}" class="btn btn-sm btn-outline-secondary">
+              <i class="fas fa-arrow-left me-1"></i> Back to Users
+            </a>
+          {% else %}
+            <a href="{% url 'company-members' user.profile.company.id %}" class="btn btn-sm btn-outline-secondary">
+              <i class="fas fa-arrow-left me-1"></i> Back to Company Members
+            </a>
+          {% endif %}
         </div>
         <div class="card-body">
           <form method="post" autocomplete="off" class="w-100">
@@ -39,10 +45,19 @@
                     </div>
                     <div class="card-body">
                       <div class="form-group mb-3">
-                        {{ form.is_active|as_crispy_field }}
+                        {% if 'is_active' in form.fields %}
+                          {{ form.is_active|as_crispy_field }}
+                        {% endif %}
                       </div>
                       <div class="form-group mb-3">
-                        {{ form.is_staff|as_crispy_field }}
+                        {% if 'is_staff' in form.fields %}
+                          {{ form.is_staff|as_crispy_field }}
+                        {% endif %}
+                      </div>
+                      <div class="form-group mb-3">
+                        {% if 'is_company_admin' in form.fields %}
+                          {{ form.is_company_admin|as_crispy_field }}
+                        {% endif %}
                       </div>
                     </div>
                   </div>
@@ -55,7 +70,9 @@
                     </div>
                     <div class="card-body">
                       <div class="form-group">
-                        {{ form.groups|as_crispy_field }}
+                        {% if 'groups' in form.fields %}
+                          {{ form.groups|as_crispy_field }}
+                        {% endif %}
                       </div>
                     </div>
                   </div>
@@ -71,8 +88,16 @@
                         <i class="fas fa-info-circle me-2"></i>
                         Select specific permissions to grant to this user. These are in addition to any permissions granted by the user's groups.
                       </div>
+                      <style>
+                        /* Hide permission descriptions */
+                        .form-text.text-muted {
+                          display: none;
+                        }
+                      </style>
                       <div class="form-group">
-                        {{ form.user_permissions|as_crispy_field }}
+                        {% if 'user_permissions' in form.fields %}
+                          {{ form.user_permissions|as_crispy_field }}
+                        {% endif %}
                       </div>
                     </div>
                   </div>
@@ -84,7 +109,11 @@
                 style="background: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;">
                 <i class="fas fa-save me-1"></i> Save Permissions
               </button>
-              <a href="{% url 'users-list' %}" class="btn btn-secondary ms-3">Cancel</a>
+              {% if user.is_staff or user.is_superuser %}
+                <a href="{% url 'users-list' %}" class="btn btn-secondary ms-3">Cancel</a>
+              {% else %}
+                <a href="{% url 'company-members' user.profile.company.id %}" class="btn btn-secondary ms-3">Cancel</a>
+              {% endif %}
             </div>
           </form>
         </div>

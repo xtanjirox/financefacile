@@ -43,8 +43,11 @@
           <!-- TVA Rate Field -->
           <div class="col-md-6">
             <label class="form-label fw-semibold" for="id_tva_rate">TVA Rate (%)</label>
-            <input type="number" name="tva_rate" id="id_tva_rate" class="form-control" step="0.01" min="0" max="100" placeholder="TVA Rate" value="{% if form.tva_rate.value != None %}{{ form.tva_rate.value }}{% else %}{{ form.initial.tva_rate|default:'19.0' }}{% endif %}" required>
-            <small class="form-text text-muted">{{ form.tva_rate.help_text }}</small>
+            {{ form.tva_rate.as_hidden }}
+            <input type="number" name="tva_rate" id="id_tva_rate" class="form-control" step="0.01" min="0" max="100" placeholder="{{ form.initial.tva_rate|default:'19.0' }}" 
+                  value="{{ form.initial.tva_rate }}" 
+                  >
+            <small class="form-text text-muted">Default rate from company settings ({{ form.initial.tva_rate|default:'19.0' }})</small>
             {% for error in form.tva_rate.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
           </div>
           

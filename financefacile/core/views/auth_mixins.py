@@ -19,7 +19,7 @@ class StaffRequiredMixin(UserPassesTestMixin):
     
     def handle_no_permission(self):
         messages.error(self.request, "You don't have permission to access this page.")
-        return redirect('dashboard')
+        return redirect('home')
 
 class ProductPermissionMixin(UserPassesTestMixin):
     """
@@ -38,7 +38,7 @@ class ProductPermissionMixin(UserPassesTestMixin):
     
     def handle_no_permission(self):
         messages.error(self.request, "You don't have permission to manage products.")
-        return redirect('dashboard')
+        return redirect('home')
 
 class ExpensePermissionMixin(UserPassesTestMixin):
     """
@@ -57,7 +57,7 @@ class ExpensePermissionMixin(UserPassesTestMixin):
     
     def handle_no_permission(self):
         messages.error(self.request, "You don't have permission to manage expenses.")
-        return redirect('dashboard')
+        return redirect('home')
 
 class InvoicePermissionMixin(UserPassesTestMixin):
     """
@@ -76,4 +76,4 @@ class InvoicePermissionMixin(UserPassesTestMixin):
     
     def handle_no_permission(self):
         messages.error(self.request, "You don't have permission to manage invoices.")
-        return redirect('dashboard')
+        return redirect('home')

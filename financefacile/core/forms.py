@@ -138,7 +138,7 @@ class InvoiceForm(forms.ModelForm):
         widget=forms.Textarea(attrs={"class": "form-control", "rows": 2, "placeholder": "Client address"})
     )
     tva_rate = forms.DecimalField(
-        max_digits=5, decimal_places=2, required=True,
+        max_digits=5, decimal_places=2, required=False,
         label="TVA Rate (%)",
         widget=forms.NumberInput(attrs={"class": "form-control", "step": "0.01", "min": "0", "max": "100", "placeholder": "TVA Rate"})
     )
@@ -157,26 +157,54 @@ class InvoiceForm(forms.ModelForm):
         # Set default values for TVA rate and include_stamp_fee
         default_tva_rate = 19.0  # Default value
         stamp_fee = 1.0  # Default value
-                
-        # Try to get company settings from the user
-        if user and hasattr(user, 'profile') and user.profile.company:
+        
+        print(f"[DEBUG] User: {user.username if user else 'None'}")
+        
+        # Try to get company settings directly from the database
+        if user and hasattr(user, 'profile') and user.profile and user.profile.company:
             company = user.profile.company
-            if hasattr(company, 'settings'):
-                default_tva_rate = company.settings.default_tva_rate
-                stamp_fee = company.settings.stamp_fee
+            print(f"[DEBUG] Company found: {company.name} (ID: {company.id})")
+            
+            # Get company settings directly from the database
+            from accounts.models import CompanySettings
+            try:
+                settings = CompanySettings.objects.get(company=company)
+                default_tva_rate = settings.default_tva_rate
+                stamp_fee = settings.stamp_fee
+                print(f"[DEBUG] Found company settings! Default TVA rate: {default_tva_rate}, Stamp fee: {stamp_fee}")
+            except Exception as e:
+                print(f"[DEBUG] Error getting company settings: {e}")
+        else:
+            print(f"[DEBUG] No company or profile found, using default TVA rate: {default_tva_rate}")
+        
+        # Ensure default_tva_rate is a Decimal for consistency
+        from decimal import Decimal
+        if not isinstance(default_tva_rate, Decimal):
+            default_tva_rate = Decimal(str(default_tva_rate))
         
         # For new invoices, set initial values
         if not self.instance.pk:  # New invoice
             self.fields['tva_rate'].initial = default_tva_rate
+            self.initial['tva_rate'] = default_tva_rate  # Set in both places to ensure it's picked up
+            print(f"[DEBUG] Setting initial TVA rate for new invoice: {default_tva_rate}")
             self.fields['include_stamp_fee'].initial = True
         # For existing invoices, use the existing values
         else:
             if self.instance.tva_rate is not None:
                 self.fields['tva_rate'].initial = self.instance.tva_rate
+                self.initial['tva_rate'] = self.instance.tva_rate  # Set in both places
+                print(f"[DEBUG] Setting initial TVA rate from existing invoice: {self.instance.tva_rate}")
             
             # For existing invoices, get stamp fee from the company
-            if self.instance.company and hasattr(self.instance.company, 'settings'):
-                stamp_fee = self.instance.company.settings.stamp_fee
+            if self.instance.company:
+                # Get company settings directly
+                from accounts.models import CompanySettings
+                try:
+                    settings = CompanySettings.objects.get(company=self.instance.company)
+                    stamp_fee = settings.stamp_fee
+                    print(f"[DEBUG] Got stamp fee from company settings: {stamp_fee}")
+                except Exception as e:
+                    print(f"[DEBUG] Error getting stamp fee from company settings: {e}")
         
         # Set help text for the stamp fee field
         self.fields['include_stamp_fee'].help_text = f"Include stamp fee of {stamp_fee} in this invoice"

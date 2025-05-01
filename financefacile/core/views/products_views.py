@@ -173,7 +173,22 @@ class InvoiceCreateView(CreateView, FormViewMixin):
     
     def get_initial(self):
         initial = super().get_initial()
+        
+        # Add user to initial data
         initial['user'] = self.request.user
+        
+        # Get default TVA rate from company settings
+        default_tva_rate = 19.0  # Default fallback
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            company = self.request.user.profile.company
+            if hasattr(company, 'settings'):
+                default_tva_rate = company.settings.default_tva_rate
+                print(f"[VIEW] Using company default TVA rate: {default_tva_rate}")
+        
+        # Set initial values for TVA rate and include_stamp_fee
+        initial['tva_rate'] = default_tva_rate
+        initial['include_stamp_fee'] = True
+        
         return initial
 
     def get_context_data(self, **kwargs):
@@ -258,13 +273,25 @@ class InvoiceCreateView(CreateView, FormViewMixin):
         
         # --- Simplified Logic for Debugging --- 
         # Directly assign form values if they exist. Handle None explicitly.
-        if tva_rate is not None:
+        if tva_rate is not None and tva_rate != '':
             self.object.tva_rate = tva_rate
             logger.info(f"Set self.object.tva_rate = {self.object.tva_rate}")
         else:
-            # What should happen if TVA is None from the form? Use default? Error? For now, log it.
-            logger.warning("TVA rate received as None from form. Setting to default 19.0")
-            self.object.tva_rate = 19.0 # Or fetch default? For debug, let's use 19
+            # Get default TVA rate from company settings
+            default_tva_rate = 19.0  # Default fallback
+            if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+                company = self.request.user.profile.company
+                # Get company settings directly
+                from accounts.models import CompanySettings
+                try:
+                    settings = CompanySettings.objects.get(company=company)
+                    default_tva_rate = settings.default_tva_rate
+                    logger.info(f"Got default TVA rate from company settings: {default_tva_rate}")
+                except Exception as e:
+                    logger.error(f"Error getting company settings: {e}")
+            
+            logger.warning(f"TVA rate received as None from form. Setting to default {default_tva_rate}")
+            self.object.tva_rate = default_tva_rate
 
         # For include_stamp_fee, use the raw value if available
         if raw_include_stamp_fee == 'on':
@@ -448,7 +475,22 @@ class InvoiceUpdateView(UpdateView, FormViewMixin):
     
     def get_initial(self):
         initial = super().get_initial()
+        
+        # Add user to initial data
         initial['user'] = self.request.user
+        
+        # Get default TVA rate from company settings
+        default_tva_rate = 19.0  # Default fallback
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            company = self.request.user.profile.company
+            if hasattr(company, 'settings'):
+                default_tva_rate = company.settings.default_tva_rate
+                print(f"[VIEW] Using company default TVA rate: {default_tva_rate}")
+        
+        # Set initial values for TVA rate and include_stamp_fee
+        initial['tva_rate'] = default_tva_rate
+        initial['include_stamp_fee'] = True
+        
         return initial
     
     def get_queryset(self):
@@ -547,12 +589,25 @@ class InvoiceUpdateView(UpdateView, FormViewMixin):
                 logger.error(f"Error converting raw tva_rate: {e}")
         
         # --- Simplified Logic for Debugging --- 
-        if tva_rate is not None:
+        if tva_rate is not None and tva_rate != '':
             obj.tva_rate = tva_rate
             logger.info(f"Set obj.tva_rate = {obj.tva_rate}")
         else:
-            logger.warning("Update: TVA rate received as None from form. Setting to default 19.0")
-            obj.tva_rate = 19.0 # Or fetch default?
+            # Get default TVA rate from company settings
+            default_tva_rate = 19.0  # Default fallback
+            if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+                company = self.request.user.profile.company
+                # Get company settings directly
+                from accounts.models import CompanySettings
+                try:
+                    settings = CompanySettings.objects.get(company=company)
+                    default_tva_rate = settings.default_tva_rate
+                    logger.info(f"Got default TVA rate from company settings: {default_tva_rate}")
+                except Exception as e:
+                    logger.error(f"Error getting company settings: {e}")
+            
+            logger.warning(f"Update: TVA rate received as None from form. Setting to default {default_tva_rate}")
+            obj.tva_rate = default_tva_rate
         
         # For include_stamp_fee, use the raw value if available
         if raw_include_stamp_fee == 'on':

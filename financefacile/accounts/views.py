@@ -1,18 +1,22 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.http import Http404
+from django.urls import reverse_lazy, reverse
 from django.views.generic import UpdateView, FormView, DetailView, TemplateView, View, CreateView, ListView
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.views import PasswordChangeView, LoginView, LogoutView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.db import transaction
+from django.shortcuts import render, redirect, get_object_or_404
 
 from .models import Company, CompanySettings, UserProfile
 from .forms import (UserProfileForm, CustomPasswordChangeForm, UserPermissionsForm, 
-                   CompanyForm, CompanySettingsForm, UserCompanyForm)
+                   CompanyForm, CompanySettingsForm, UserCompanyForm, RegistrationForm, CompanyUserCreationForm)
 
 class ProfileView(LoginRequiredMixin, DetailView):
     model = User
@@ -48,6 +52,24 @@ class IsAdminMixin(UserPassesTestMixin):
     def test_func(self):
         return self.request.user.is_staff or self.request.user.is_superuser
 
+
+class IsAdminOrCompanyAdminMixin(UserPassesTestMixin):
+    """Mixin that allows access to staff, superusers, or company admins for users in their company"""
+    def test_func(self):
+        # Always allow staff and superusers
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return True
+            
+        # For company admins, check if they're trying to manage a user in their company
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.is_company_admin:
+            user_to_manage = self.get_object()
+            
+            # Check if the user being managed has a profile and belongs to the same company
+            if hasattr(user_to_manage, 'profile') and hasattr(self.request.user.profile, 'company'):
+                return user_to_manage.profile.company == self.request.user.profile.company
+                
+        return False
+
 class IsCompanyAdminMixin(UserPassesTestMixin):
     def test_func(self):
         # Check if user is a company admin for their company
@@ -56,15 +78,77 @@ class IsCompanyAdminMixin(UserPassesTestMixin):
                 self.request.user.profile.company and 
                 self.request.user.profile.is_company_admin)
 
-class UserPermissionsView(LoginRequiredMixin, IsAdminMixin, UpdateView):
+class UserPermissionsView(LoginRequiredMixin, IsAdminOrCompanyAdminMixin, UpdateView):
     model = User
     form_class = UserPermissionsForm
     template_name = 'accounts/user_permissions.html'
-    success_url = reverse_lazy('users-list')
+    
+    def get_success_url(self):
+        # If user is a company admin, redirect back to company members page
+        if (not self.request.user.is_staff and not self.request.user.is_superuser) and \
+           hasattr(self.request.user, 'profile') and self.request.user.profile.is_company_admin:
+            return reverse('company-members', kwargs={'pk': self.request.user.profile.company.id})
+        # Otherwise, redirect to users list (for staff/superusers)
+        return reverse_lazy('users-list')
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        user = self.get_object()
+        
+        # If the current user is a company admin (not staff/superuser)
+        if (not self.request.user.is_staff and not self.request.user.is_superuser) and \
+           hasattr(self.request.user, 'profile') and self.request.user.profile.is_company_admin:
+            # Limit what company admins can modify
+            # Hide staff and superuser options
+            if 'is_staff' in form.fields:
+                form.fields.pop('is_staff')
+            if 'is_superuser' in form.fields:
+                form.fields.pop('is_superuser')
+            
+            # For company admins, show all permissions
+            if 'user_permissions' in form.fields:
+                # Show all permissions except system ones
+                form.fields['user_permissions'].queryset = get_company_admin_permissions()
+            
+            # Show all groups
+            # No filtering needed for groups - company admins can assign any group
+        
+        return form
     
     def form_valid(self, form):
+        response = super().form_valid(form)
+        
+        # If user is marked as company admin, ensure they have all necessary permissions
+        if hasattr(form.instance, 'profile') and form.instance.profile.is_company_admin:
+            ensure_company_admin_permissions(self.object)
+            messages.success(self.request, f'{self.object.username} has been granted company admin permissions.')
+        
         messages.success(self.request, f'Permissions for {self.object.username} have been updated successfully!')
-        return super().form_valid(form)
+        return response
+    
+# Utility functions for permissions management
+def get_company_admin_permissions():
+    """Get all permissions that a company admin should have"""
+    # Exclude admin-specific permissions and auth management
+    excluded_apps = ['admin', 'auth', 'contenttypes', 'sessions']
+    
+    # Return all permissions except those in excluded apps
+    return Permission.objects.exclude(content_type__app_label__in=excluded_apps)
+
+
+def ensure_company_admin_permissions(user):
+    """Ensure a company admin user has all necessary permissions"""
+    if hasattr(user, 'profile') and user.profile.is_company_admin:
+        # Get all permissions a company admin should have
+        admin_permissions = get_company_admin_permissions()
+        
+        # Add all these permissions to the user
+        user.user_permissions.add(*admin_permissions)
+        
+        # Make sure the user is active
+        if not user.is_active:
+            user.is_active = True
+            user.save()
 
 class UsersListView(LoginRequiredMixin, IsAdminMixin, TemplateView):
     template_name = 'accounts/users_list.html'
@@ -93,24 +177,79 @@ def toggle_user_active(request, pk):
     return redirect('users-list')
 
 
-class CustomLoginView(LoginView):
+class CustomLoginView(View):
     template_name = 'accounts/login.html'
-    redirect_authenticated_user = True
     
-    def get_success_url(self):
-        return reverse_lazy('dashboard')
+    def get(self, request):
+        # If user is already authenticated, redirect to dashboard
+        if request.user.is_authenticated:
+            return redirect('dashboard')
+        return render(request, self.template_name)
     
-    def form_invalid(self, form):
-        messages.error(self.request, 'Invalid username or password')
-        return super().form_invalid(form)
+    def post(self, request):
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        
+        if username and password:
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                # Redirect after successful login - use walrus operator for cleaner code
+                if next_url := request.GET.get('next'):
+                    return redirect(next_url)
+                # Default redirect to home page
+                return redirect('home')
+            else:
+                messages.error(request, 'Invalid username or password')
+        else:
+            messages.error(request, 'Please enter both username and password')
+        
+        return render(request, self.template_name)
 
 
 class CustomLogoutView(LogoutView):
-    next_page = 'login'
+    next_page = 'landing-page'
     
     def dispatch(self, request, *args, **kwargs):
         messages.info(request, 'You have been logged out.')
         return super().dispatch(request, *args, **kwargs)
+
+
+class LandingPageView(TemplateView):
+    """View for the landing page"""
+    template_name = 'accounts/landing_page.html'
+    
+    def get(self, request, *args, **kwargs):
+        # If user is already authenticated, redirect to home
+        if request.user.is_authenticated:
+            return redirect('home')
+        return super().get(request, *args, **kwargs)
+
+
+class RegistrationView(CreateView):
+    """View for user registration with company creation"""
+    form_class = RegistrationForm
+    template_name = 'accounts/register.html'
+    success_url = reverse_lazy('home')
+    
+    def get(self, request, *args, **kwargs):
+        # If user is already authenticated, redirect to home
+        if request.user.is_authenticated:
+            return redirect('home')
+        return super().get(request, *args, **kwargs)
+    
+    def form_valid(self, form):
+        # Save the user, company, and profile
+        user = form.save()
+        
+        # Log the user in
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+        user = authenticate(username=username, password=password)
+        login(self.request, user)
+        
+        messages.success(self.request, f'Account created for {username}. You are now logged in.')
+        return redirect(self.success_url)
 
 
 # Company Management Views
@@ -139,19 +278,37 @@ class CompanyUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Company
     form_class = CompanyForm
     template_name = 'accounts/company_form.html'
-    success_url = reverse_lazy('company-list')
+    
+    def get_object(self, queryset=None):
+        # For staff/superusers, allow editing any company
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return super().get_object(queryset)
+        
+        # For company admins, only allow editing their own company
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company and self.request.user.profile.is_company_admin:
+            return self.request.user.profile.company
+        
+        # If user doesn't have a company or isn't an admin, raise 404
+        raise Http404("You don't have permission to edit any company.")
+    
+    def get_success_url(self):
+        # For company admins, redirect back to company detail page
+        if (not self.request.user.is_staff and not self.request.user.is_superuser) and \
+           hasattr(self.request.user, 'profile') and self.request.user.profile.is_company_admin:
+            return reverse('company-detail', kwargs={'pk': self.object.id})
+        # For staff/superusers, redirect to company list
+        return reverse_lazy('company-list')
     
     def test_func(self):
-        company = self.get_object()
-        # Allow access if user is superuser/staff or company admin for this company
+        # This will only be called after get_object, so we can simplify
+        # Allow access if user is superuser/staff or company admin for their company
         return (self.request.user.is_staff or 
                 self.request.user.is_superuser or 
                 (hasattr(self.request.user, 'profile') and 
-                 self.request.user.profile.company == company and 
                  self.request.user.profile.is_company_admin))
     
     def form_valid(self, form):
-        messages.success(self.request, 'Company updated successfully.')
+        messages.success(self.request, 'Company information updated successfully.')
         return super().form_valid(form)
 
 
@@ -161,10 +318,18 @@ class CompanySettingsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateV
     form_class = CompanySettingsForm
     template_name = 'accounts/company_settings_form.html'
     
-    def get_object(self):
-        # Get the company settings for the specified company
-        company_id = self.kwargs.get('pk')
-        return get_object_or_404(CompanySettings, company_id=company_id)
+    def get_object(self, queryset=None):
+        # For staff/superusers, allow accessing any company settings
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            company_id = self.kwargs.get('pk')
+            return get_object_or_404(CompanySettings, company_id=company_id)
+        
+        # For company admins, only allow accessing their own company settings
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            return get_object_or_404(CompanySettings, company=self.request.user.profile.company)
+        
+        # If user doesn't have a company, raise 404
+        raise Http404("You don't have access to any company settings.")
     
     def test_func(self):
         company_settings = self.get_object()
@@ -183,25 +348,35 @@ class CompanySettingsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateV
         return super().form_valid(form)
 
 
-class CompanyDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+class CompanyDetailView(LoginRequiredMixin, DetailView):
     """View to see company details and settings"""
     model = Company
     template_name = 'accounts/company_detail.html'
     context_object_name = 'company'
     
-    def test_func(self):
-        company = self.get_object()
-        # Allow access if user is superuser/staff or belongs to this company
-        return (self.request.user.is_staff or 
-                self.request.user.is_superuser or 
-                (hasattr(self.request.user, 'profile') and 
-                 self.request.user.profile.company == company))
+    def get_object(self, queryset=None):
+        # For staff/superusers, allow viewing any company
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return super().get_object(queryset)
+        
+        # For regular users, always show their own company regardless of URL
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            return self.request.user.profile.company
+        
+        # If user doesn't have a company, raise 404
+        raise Http404("You don't have access to any company.")
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Add company members to context
+        # Add a flag to indicate if the user is viewing their own company
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            context['is_own_company'] = (self.object == self.request.user.profile.company)
+        
+        # Add company members to the context
         context['members'] = UserProfile.objects.filter(company=self.object).select_related('user')
+        
         return context
+    
 
 
 class CompanyMembersView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
@@ -230,6 +405,63 @@ class CompanyMembersView(LoginRequiredMixin, UserPassesTestMixin, TemplateView):
             context['all_users'] = User.objects.all().order_by('username')
         
         return context
+
+
+class CompanyUserCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
+    """View for company admins to create new user accounts"""
+    model = User
+    form_class = CompanyUserCreationForm
+    template_name = 'accounts/company_user_create.html'
+    
+    def test_func(self):
+        company_id = self.kwargs.get('company_id')
+        company = get_object_or_404(Company, pk=company_id)
+        # Allow access if user is superuser/staff or company admin for this company
+        return (self.request.user.is_staff or 
+                self.request.user.is_superuser or 
+                (hasattr(self.request.user, 'profile') and 
+                 self.request.user.profile.company == company and 
+                 self.request.user.profile.is_company_admin))
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        company_id = self.kwargs.get('company_id')
+        company = get_object_or_404(Company, pk=company_id)
+        kwargs['company'] = company
+        return kwargs
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        company_id = self.kwargs.get('company_id')
+        company = get_object_or_404(Company, pk=company_id)
+        context['company'] = company
+        return context
+    
+    def form_valid(self, form):
+        # Set the company for the form
+        form.company = self.company
+        
+        # Save the form
+        response = super().form_valid(form)
+        
+        # If the user was created as a company admin, ensure they have all necessary permissions
+        if form.cleaned_data.get('is_company_admin', False):
+            ensure_company_admin_permissions(form.instance)
+            messages.success(self.request, f'User {form.instance.username} has been created as a company admin with full permissions!')
+        else:
+            messages.success(self.request, f'User {form.instance.username} has been created successfully!')
+            
+        return response
+    
+    def get_success_url(self):
+        company_id = self.kwargs.get('company_id')
+        return reverse('company-members', kwargs={'pk': company_id})
+
+# Custom error handlers
+def handler403(request, exception=None):
+    """Custom 403 Forbidden handler that redirects to the dashboard with a message"""
+    messages.warning(request, "You don't have permission to access that page. You've been redirected to the dashboard.")
+    return redirect('home')
 
 
 @login_required
