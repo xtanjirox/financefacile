@@ -127,23 +127,63 @@ class InvoiceForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={
                                  "class": "form-control form-control-lg invoice-grand-total", "placeholder": "Total invoice amount"})
     )
+    client_name = forms.CharField(
+        max_length=255, required=False,
+        label="Client Name",
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Client name"})
+    )
+    client_address = forms.CharField(
+        max_length=255, required=False,
+        label="Client Address",
+        widget=forms.Textarea(attrs={"class": "form-control", "rows": 2, "placeholder": "Client address"})
+    )
+    tva_rate = forms.DecimalField(
+        max_digits=5, decimal_places=2, required=True,
+        label="TVA Rate (%)",
+        widget=forms.NumberInput(attrs={"class": "form-control", "step": "0.01", "min": "0", "max": "100", "placeholder": "TVA Rate"})
+    )
+    include_stamp_fee = forms.BooleanField(
+        required=False,
+        label="Include Stamp Fee",
+        widget=forms.CheckboxInput(attrs={"class": "form-check-input"})
+    )
     
     def __init__(self, *args, **kwargs):
+        # Extract user from initial data if present
+        user = kwargs.get('initial', {}).get('user')
+        
         super().__init__(*args, **kwargs)
-        # Get default TVA rate from site settings
-        site_settings = models.SiteSettings.get_settings()
         
-        # Set initial values for TVA rate and include_stamp_fee
+        # Set default values for TVA rate and include_stamp_fee
+        default_tva_rate = 19.0  # Default value
+        stamp_fee = 1.0  # Default value
+                
+        # Try to get company settings from the user
+        if user and hasattr(user, 'profile') and user.profile.company:
+            company = user.profile.company
+            if hasattr(company, 'settings'):
+                default_tva_rate = company.settings.default_tva_rate
+                stamp_fee = company.settings.stamp_fee
+        
+        # For new invoices, set initial values
         if not self.instance.pk:  # New invoice
-            self.fields['tva_rate'].initial = site_settings.default_tva_rate
+            self.fields['tva_rate'].initial = default_tva_rate
             self.fields['include_stamp_fee'].initial = True
+        # For existing invoices, use the existing values
+        else:
+            if self.instance.tva_rate is not None:
+                self.fields['tva_rate'].initial = self.instance.tva_rate
+            
+            # For existing invoices, get stamp fee from the company
+            if self.instance.company and hasattr(self.instance.company, 'settings'):
+                stamp_fee = self.instance.company.settings.stamp_fee
         
-        # Add help text with current stamp fee amount
-        self.fields['include_stamp_fee'].help_text = f"Include stamp fee of {site_settings.stamp_fee} in this invoice"
+        # Set help text for the stamp fee field
+        self.fields['include_stamp_fee'].help_text = f"Include stamp fee of {stamp_fee} in this invoice"
 
     class Meta:
         model = models.Invoice
-        fields = ['tva_rate', 'include_stamp_fee']
+        fields = ['client_name', 'client_address', 'tva_rate', 'include_stamp_fee']
 
 
 class InvoiceItemForm(forms.ModelForm):

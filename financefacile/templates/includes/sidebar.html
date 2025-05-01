@@ -50,6 +50,31 @@
                 </a>
             </li>
             <li class="sidebar-header">
+                Company Management
+            </li>
+            {% if user.is_company_admin or user.is_staff or user.is_superuser %}
+            <li class="sidebar-item active">
+                <a class="sidebar-link" href="{% url 'company-list' %}">
+                    <i class="fa-solid fa-building"></i>
+                    <span class="align-middle">Companies</span>
+                </a>
+            </li>
+            {% endif %}
+            {% if user.profile.company and user.profile.is_company_admin %}
+            <li class="sidebar-item active">
+                <a class="sidebar-link" href="{% url 'company-settings' user.profile.company.id %}">
+                    <i class="fa-solid fa-cog"></i>
+                    <span class="align-middle">Company Settings</span>
+                </a>
+            </li>
+            <li class="sidebar-item active">
+                <a class="sidebar-link" href="{% url 'company-members' user.profile.company.id %}">
+                    <i class="fa-solid fa-users-cog"></i>
+                    <span class="align-middle">Manage Members</span>
+                </a>
+            </li>
+            {% endif %}
+            <li class="sidebar-header">
                 Account Management
             </li>
             <li class="sidebar-item active">

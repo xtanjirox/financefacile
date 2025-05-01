@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.urls import reverse_lazy
 from datetime import datetime
+from accounts.models import Company, CompanySettings
 
 
 class EntryType(models.IntegerChoices):
@@ -12,12 +13,14 @@ class EntryType(models.IntegerChoices):
 
 
 class EntryCategory(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='entry_categories', null=True, blank=True)
     category_title = models.CharField(max_length=50)
     finance_entry_type = models.IntegerField(choices=EntryType.choices)
 
     class Meta:
         db_table = 'entry_category'
         verbose_name_plural = 'categories'
+        unique_together = ['company', 'category_title']
 
     def __str__(self):
         return self.category_title
@@ -30,21 +33,24 @@ class EntryCategory(models.Model):
 
 
 class ProductCategory(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='product_categories', null=True, blank=True)
     name = models.CharField(max_length=100)
     parent = models.ForeignKey('self', null=True, blank=True, related_name='children', on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Product Category'
         verbose_name_plural = 'Product Categories'
+        unique_together = ['company', 'name']
 
     def __str__(self):
         return self.name
 
 
 class Product(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     category = models.ForeignKey(ProductCategory, on_delete=models.PROTECT, related_name='products', null=True, blank=True)
     name = models.CharField(max_length=100)
-    sku = models.CharField(max_length=50, unique=True)
+    sku = models.CharField(max_length=50)
     quantity = models.PositiveIntegerField(default=0)
     unit_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     selling_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -58,6 +64,7 @@ class Product(models.Model):
     class Meta:
         db_table = 'products'
         verbose_name_plural = 'products'
+        unique_together = ['company', 'sku']
 
     def __str__(self):
         return f"{self.name} ({self.sku})"
@@ -69,6 +76,8 @@ class Product(models.Model):
         return reverse_lazy('product-delete', kwargs={"pk": self.pk})
 
 class Invoice(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='invoices', null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_invoices')
     created_at = models.DateTimeField(auto_now_add=True)
     # TVA and stamp fee fields
     tva_rate = models.DecimalField(
@@ -76,7 +85,7 @@ class Invoice(models.Model):
         decimal_places=2, 
         null=True, 
         blank=True, 
-        help_text="TVA (VAT) rate in percentage. If left blank, the default site setting will be used."
+        help_text="TVA (VAT) rate in percentage. If left blank, the default company setting will be used."
     )
     include_stamp_fee = models.BooleanField(
         default=True,
@@ -94,35 +103,63 @@ class Invoice(models.Model):
         return f"Invoice #{self.pk}"
     
     def get_tva_rate(self):
-        """Get the TVA rate for this invoice, using the default if not specified"""
-        if self.tva_rate is not None:
-            return self.tva_rate
-        return SiteSettings.get_settings().default_tva_rate
+        """Get the TVA rate for this invoice"""
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"Invoice #{self.pk}: get_tva_rate called, self.tva_rate = {self.tva_rate}")
+        # Always use the invoice's TVA rate - it should be set during creation
+        return self.tva_rate
     
     def get_stamp_fee(self):
         """Get the stamp fee if it should be included, otherwise 0"""
-        if self.include_stamp_fee:
-            return SiteSettings.get_settings().stamp_fee
-        return 0
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info(f"Invoice #{self.pk}: get_stamp_fee called, self.include_stamp_fee = {self.include_stamp_fee}")
+        
+        # Only include stamp fee if the checkbox is checked
+        if not self.include_stamp_fee:
+            logger.info(f"Invoice #{self.pk}: include_stamp_fee is False, returning 0")
+            return 0
+            
+        # Always use the company settings value for the stamp fee amount
+        if self.company and hasattr(self.company, 'settings'):
+            fee = self.company.settings.stamp_fee
+            logger.info(f"Invoice #{self.pk}: Using company stamp fee: {fee}")
+            return fee
+        
+        # Default fallback if no company settings
+        logger.info(f"Invoice #{self.pk}: No company settings, using default stamp fee: 1.0")
+        return 1.0  # Default stamp fee if no company settings
     
     def get_subtotal(self):
         """Get the sum of all invoice items before TVA and stamp fee"""
         return sum(item.total_price for item in self.items.all())
-    
+
     def get_tva_amount(self):
         """Calculate the TVA amount based on the subtotal"""
         return self.get_subtotal() * (self.get_tva_rate() / 100)
 
     def get_total(self):
         """Calculate the total invoice amount including TVA and stamp fee"""
+        from decimal import Decimal
+        import logging
+        logger = logging.getLogger(__name__)
+        
+        logger.info(f"Invoice #{self.pk}: get_total called")
+        
         if self.custom_total is not None:
+            logger.info(f"Invoice #{self.pk}: Using custom total: {self.custom_total}")
             return self.custom_total
         
         subtotal = self.get_subtotal()
         tva_amount = self.get_tva_amount()
-        stamp_fee = self.get_stamp_fee()
+        stamp_fee = Decimal(str(self.get_stamp_fee()))
         
-        return subtotal + tva_amount + stamp_fee
+        logger.info(f"Invoice #{self.pk}: Calculating total: subtotal={subtotal}, tva_amount={tva_amount}, stamp_fee={stamp_fee}")
+        total = subtotal + tva_amount + stamp_fee
+        logger.info(f"Invoice #{self.pk}: Final total: {total}")
+        
+        return total
 
     def get_absolute_url(self):
         from django.urls import reverse_lazy
@@ -143,16 +180,20 @@ class InvoiceItem(models.Model):
         return f"{self.product} x {self.quantity} @ {self.selling_price}"
 
 class ExpenseCategory(models.Model):
-    name = models.CharField(max_length=100, unique=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='expense_categories', null=True, blank=True)
+    name = models.CharField(max_length=100)
 
     class Meta:
         verbose_name = 'Expense Category'
         verbose_name_plural = 'Expense Categories'
+        unique_together = ['company', 'name']
 
     def __str__(self):
         return self.name
 
 class Expense(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='expenses', null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_expenses')
     category = models.ForeignKey(ExpenseCategory, on_delete=models.PROTECT, related_name='expenses')
     date = models.DateField()
     amount = models.DecimalField(max_digits=12, decimal_places=2)
@@ -174,6 +215,8 @@ class Expense(models.Model):
 
 
 class FinanceEntry(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='finance_entries', null=True, blank=True)
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_entries')
     finance_entry_type = models.IntegerField(choices=EntryType.choices)
     entry_category = models.ForeignKey(EntryCategory, on_delete=models.DO_NOTHING)
     entry_value = models.FloatField(default=0)
@@ -198,34 +241,5 @@ class FinanceEntry(models.Model):
         return datetime(self.entry_date.year, self.entry_date.month, 1).strftime("%B%Y")
 
 
-class SiteSettings(models.Model):
-    """Global site settings that can only be modified by administrators"""
-    default_tva_rate = models.DecimalField(
-        max_digits=5, 
-        decimal_places=2, 
-        default=19.00,
-        help_text="Default TVA (VAT) rate in percentage (e.g., 19.00 for 19%)"
-    )
-    stamp_fee = models.DecimalField(
-        max_digits=6, 
-        decimal_places=2, 
-        default=1.00,
-        help_text="Stamp fee amount to be added to all invoices"
-    )
-    
-    class Meta:
-        verbose_name = 'Site Settings'
-        verbose_name_plural = 'Site Settings'
-    
-    def save(self, *args, **kwargs):
-        # Ensure there's only one instance of SiteSettings
-        if not self.pk and SiteSettings.objects.exists():
-            raise ValidationError('There can only be one SiteSettings instance')
-        return super().save(*args, **kwargs)
-    
-    @classmethod
-    def get_settings(cls):
-        """Get the site settings, creating default ones if none exist"""
-        settings, created = cls.objects.get_or_create(pk=1)
-        return settings
+# SiteSettings is now replaced by CompanySettings in the accounts app
 

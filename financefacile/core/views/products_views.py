@@ -29,14 +29,32 @@ class ProductCategoryListView(BaseListView):
     create_url = reverse_lazy('category-create')
     segment = 'categories'
     detail = True
+    
+    def get_queryset(self):
+        # Filter categories by the user's company
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            return queryset
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            return queryset.filter(company=self.request.user.profile.company)
+        return queryset.none()
 
 
 class ProductCategoryCreateView(CreateView, FormViewMixin):
     model = models.ProductCategory
     template_name = 'generic/create.html'
-    fields = '__all__'
+    fields = ['name', 'parent']
     segment = 'categories'
     success_url = reverse_lazy('category-list')
+    
+    def form_valid(self, form):
+        # Set the company for the new category
+        category = form.save(commit=False)
+        if (not self.request.user.is_superuser and not self.request.user.is_staff and 
+                hasattr(self.request.user, 'profile') and self.request.user.profile.company):
+            category.company = self.request.user.profile.company
+        category.save()
+        return super().form_valid(form)
 
 
 class ProductCategoryUpdateView(UpdateView, FormViewMixin):
@@ -63,11 +81,25 @@ class ProductListView(BaseListView):
     segment = 'products'
     detail = True
     
+    def get_queryset(self):
+        # Filter products by the user's company
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            return queryset
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            return queryset.filter(company=self.request.user.profile.company)
+        return queryset.none()
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
-        # Calculate inventory stats
-        products = models.Product.objects.all()
+        # Calculate inventory stats for the user's company
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            products = models.Product.objects.all()
+        elif hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            products = models.Product.objects.filter(company=self.request.user.profile.company)
+        else:
+            products = models.Product.objects.none()
         
         # Calculate total inventory value (cost × quantity)
         total_inventory_value = sum(product.unit_cost * product.quantity for product in products)
@@ -81,17 +113,30 @@ class ProductListView(BaseListView):
 
 
 class ProductCreateView(CreateView):
-    def dispatch(self, *args, **kwargs):
-        import sys
-        print("DISPATCH ProductCreateView", file=sys.stderr)
-        return super().dispatch(*args, **kwargs)
-
     model = models.Product
     form_class = core.forms.ProductForm
-    print(form_class)
     template_name = 'generic/create.html'
     segment = 'products'
     success_url = reverse_lazy('product-list')
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # Filter category choices to only show categories from the user's company
+        if not self.request.user.is_superuser and not self.request.user.is_staff:
+            if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+                form.fields['category'].queryset = models.ProductCategory.objects.filter(
+                    company=self.request.user.profile.company
+                )
+        return form
+    
+    def form_valid(self, form):
+        # Set the company for the new product
+        product = form.save(commit=False)
+        if not self.request.user.is_superuser and not self.request.user.is_staff:
+            if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+                product.company = self.request.user.profile.company
+        product.save()
+        return super().form_valid(form)
 
 
 class ProductUpdateView(UpdateView):
@@ -120,98 +165,255 @@ class ProductDetailView(DetailView):
         return context
 
 
-class InvoiceCreateView(CreateView):
+class InvoiceCreateView(CreateView, FormViewMixin):
     model = models.Invoice
     form_class = core.forms.InvoiceForm
     template_name = 'invoices/invoice_form.html'
-    success_url = None  # Will be set in form_valid
+    success_url = None
+    
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['user'] = self.request.user
+        return initial
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.POST:
-            context['formset'] = core.forms.InvoiceItemFormSet(
-                self.request.POST)
+            context['formset'] = core.forms.InvoiceItemFormSet(self.request.POST)
         else:
             context['formset'] = core.forms.InvoiceItemFormSet()
         self.add_products_to_context(context)
         return context
 
     def add_products_to_context(self, context):
-        context['products'] = models.Product.objects.all()
+        # Add products to context for the select2 widget, filtered by company
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            products = models.Product.objects.all()
+        elif hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            products = models.Product.objects.filter(company=self.request.user.profile.company)
+        else:
+            products = models.Product.objects.none()
+            
+        context['products'] = products
+        context['product_json'] = [
+            {'id': p.id, 'text': p.name, 'price': float(p.selling_price)} for p in products
+        ]
+        return context
 
     def form_valid(self, form):
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info("--- InvoiceCreateView.form_valid --- START ---")
+        logger.info(f"Raw POST data: {self.request.POST}")
+        logger.info(f"Form cleaned_data: {form.cleaned_data}")
+        logger.info(f"Form fields: {form.fields.keys()}")
+        logger.info(f"TVA rate in POST: {self.request.POST.get('tva_rate')}")
+        logger.info(f"TVA rate in cleaned_data: {form.cleaned_data.get('tva_rate')}")
+        logger.info(f"include_stamp_fee in POST: {self.request.POST.get('include_stamp_fee')}")
+        logger.info(f"include_stamp_fee in cleaned_data: {form.cleaned_data.get('include_stamp_fee')}")
+
         context = self.get_context_data()
         formset = context['formset']
+        
+        logger.info(f"Formset is_valid: {formset.is_valid()}")
         if not formset.is_valid():
+            logger.error(f"Formset errors: {formset.errors}")
+            logger.error(f"Formset non_form_errors: {formset.non_form_errors()}")
+            # Return form invalid if formset has errors
             return self.form_invalid(form)
+
+        # Save the invoice
         self.object = form.save(commit=False)
-        self.save_custom_total(form)
-        self.object.save()
+        
+        # Set the company and created_by for the new invoice
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            self.object.company = self.request.user.profile.company
+        else:
+             logger.warning("User has no profile or company assigned.")
+             # Handle cases where company might be required? Or allow None?
+             # For now, let it be None if not found.
+             pass 
+        
+        self.object.created_by = self.request.user
+        
+        # Get values directly from cleaned_data
+        tva_rate = form.cleaned_data.get('tva_rate')
+        include_stamp_fee = form.cleaned_data.get('include_stamp_fee', False) # Default to False if not present
+
+        logger.info(f"Values from cleaned_data: tva_rate={tva_rate} ({type(tva_rate)}), include_stamp_fee={include_stamp_fee} ({type(include_stamp_fee)})")        
+        
+        # Check if the values are in the raw POST data
+        raw_tva_rate = self.request.POST.get('tva_rate')
+        raw_include_stamp_fee = self.request.POST.get('include_stamp_fee')
+        logger.info(f"Raw values from POST: tva_rate={raw_tva_rate}, include_stamp_fee={raw_include_stamp_fee}")
+        
+        # Try to convert raw values if needed
+        if raw_tva_rate and tva_rate is None:
+            try:
+                from decimal import Decimal
+                tva_rate = Decimal(raw_tva_rate)
+                logger.info(f"Converted raw tva_rate to Decimal: {tva_rate}")
+            except Exception as e:
+                logger.error(f"Error converting raw tva_rate: {e}")
+        
+        # --- Simplified Logic for Debugging --- 
+        # Directly assign form values if they exist. Handle None explicitly.
+        if tva_rate is not None:
+            self.object.tva_rate = tva_rate
+            logger.info(f"Set self.object.tva_rate = {self.object.tva_rate}")
+        else:
+            # What should happen if TVA is None from the form? Use default? Error? For now, log it.
+            logger.warning("TVA rate received as None from form. Setting to default 19.0")
+            self.object.tva_rate = 19.0 # Or fetch default? For debug, let's use 19
+
+        # For include_stamp_fee, use the raw value if available
+        if raw_include_stamp_fee == 'on':
+            self.object.include_stamp_fee = True
+            logger.info("Setting include_stamp_fee to True based on raw POST data")
+        else:
+            self.object.include_stamp_fee = include_stamp_fee or False
+            logger.info(f"Setting include_stamp_fee to {self.object.include_stamp_fee} based on cleaned_data or default")
+        
+        logger.info(f"Final values: tva_rate={self.object.tva_rate}, include_stamp_fee={self.object.include_stamp_fee}")
+        # --- End Simplified Logic --- 
+                
+        # Save the invoice *before* saving formset
+        try:
+            self.object.save()
+            logger.info(f"Invoice object saved successfully (ID: {self.object.pk})")
+        except Exception as e:
+            logger.error(f"Error saving invoice object: {e}")
+            # Add error to form and return invalid
+            form.add_error(None, f"Error saving invoice: {e}")
+            return self.form_invalid(form)
+
+        # Save the formset
         formset.instance = self.object
-        formset.save()
-        self.update_inventory(formset)
-        return redirect(self.object.get_absolute_url())
+        try:
+            formset.save()
+            logger.info("Formset saved successfully.")
+        except Exception as e:
+            logger.error(f"Error saving formset: {e}")
+            # Add error to form and return invalid
+            form.add_error(None, f"Error saving invoice items: {e}")
+             # Optionally delete the just-created invoice object if items fail?
+            # self.object.delete()
+            return self.form_invalid(form)
 
-    def save_custom_total(self, form):
-        invoice_total = form.cleaned_data.get('invoice_total')
-        if invoice_total is not None:
-            self.object.custom_total = invoice_total
+        logger.info("--- InvoiceCreateView.form_valid --- END ---")
+        return super().form_valid(form)
 
-    def update_inventory(self, formset):
-        for item in self.object.items.all():
-            product = item.product
-            product.quantity = max(0, product.quantity - item.quantity)
-            product.save()
+    def form_invalid(self, form):
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.warning("--- InvoiceCreateView.form_invalid --- START ---")
+        logger.warning(f"Form errors: {form.errors}")
+        context = self.get_context_data() # Re-fetch context
+        formset = context['formset']
+        if not formset.is_valid():
+             logger.warning(f"Formset errors: {formset.errors}")
+             logger.warning(f"Formset non_form_errors: {formset.non_form_errors()}")
+        logger.warning("--- InvoiceCreateView.form_invalid --- END ---")
+        # Ensure formset is passed back to the template on invalid form
+        return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 
 class InvoiceListView(BaseViewMixin, ProductPermissionMixin, ListView):
     model = models.Invoice
     template_name = 'invoices/invoice_list.html'
     context_object_name = 'invoices'
-
+    
     def get_queryset(self):
         queryset = super().get_queryset()
-
+        
+        # Filter by company if user is not superuser/staff
+        if not self.request.user.is_superuser and not self.request.user.is_staff:
+            if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+                queryset = queryset.filter(company=self.request.user.profile.company)
+            else:
+                return queryset.none()
+        
         # Get filter parameters from request
         start_date = self.request.GET.get('start_date')
         end_date = self.request.GET.get('end_date')
-
+        status = self.request.GET.get('status')
+        
         # Apply date range filter if provided
         if start_date:
             queryset = queryset.filter(created_at__date__gte=start_date)
         if end_date:
             queryset = queryset.filter(created_at__date__lte=end_date)
-
+            
+        # Apply status filter if provided
+        if status:
+            if status == 'paid':
+                queryset = queryset.filter(is_paid=True)
+            elif status == 'unpaid':
+                queryset = queryset.filter(is_paid=False)
+                
+        # Try to get client name filter
+        from contextlib import suppress
+        with suppress(Exception):
+            client_name = self.request.GET.get('client_name', '')
+            if client_name:
+                queryset = queryset.filter(client_name__icontains=client_name)
+            
         return queryset.order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        from core.models import InvoiceItem
-
+        
         # Initialize filter form
-        filter_form = DateRangeCategoryFilterForm(self.request.GET or None)
+        filter_form = DateRangeFilterForm(self.request.GET or None)
         context['filter_form'] = filter_form
-
-        # Get date range parameters
+        
+        # Get filter parameters
         start_date = self.request.GET.get('start_date')
         end_date = self.request.GET.get('end_date')
-
-        # Apply date range filter to stats if provided
-        invoice_filter = Q()
+        status = self.request.GET.get('status')
+        client_name = self.request.GET.get('client_name', '')
+        
+        # Build filter description
+        filter_description = []
+        is_filtered = False
+        
         if start_date:
-            invoice_filter &= Q(created_at__date__gte=start_date)
-            context['filter_start_date'] = start_date
-            context['is_filtered'] = True
+            filter_description.append(f"From {start_date}")
+            is_filtered = True
+            
         if end_date:
-            invoice_filter &= Q(created_at__date__lte=end_date)
-            context['filter_end_date'] = end_date
+            filter_description.append(f"To {end_date}")
+            is_filtered = True
+            
+        if status:
+            filter_description.append(f"Status: {status.title()}")
+            is_filtered = True
+            
+        if client_name:
+            filter_description.append(f"Client: {client_name}")
+            is_filtered = True
+            
+        if is_filtered:
             context['is_filtered'] = True
-
+            context['filter_description'] = ", ".join(filter_description)
+            
+        # Create base queryset filtered by company
+        invoice_queryset = models.Invoice.objects
+        if not self.request.user.is_superuser and not self.request.user.is_staff:
+            if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+                invoice_queryset = invoice_queryset.filter(company=self.request.user.profile.company)
+        
         # Calculate filtered stats if filter is applied
-        if start_date or end_date:
-            filtered_invoices = models.Invoice.objects.filter(invoice_filter)
+        if start_date or end_date or status or client_name:
+            filtered_invoices = invoice_queryset.filter(
+                created_at__date__gte=start_date or None,
+                created_at__date__lte=end_date or None,
+                is_paid=status or None,
+                client_name__icontains=client_name or ''
+            )
             filtered_invoice_items = InvoiceItem.objects.filter(
-                invoice__in=filtered_invoices)
+                invoice__in=filtered_invoices
+            )
 
             context['filtered_total_items'] = filtered_invoice_items.aggregate(
                 total=Sum('quantity'))['total'] or 0
@@ -238,12 +440,26 @@ class InvoiceListView(BaseViewMixin, ProductPermissionMixin, ListView):
         return context
 
 
-class InvoiceUpdateView(UpdateView):
+class InvoiceUpdateView(UpdateView, FormViewMixin):
     model = models.Invoice
     form_class = core.forms.InvoiceForm
     template_name = 'invoices/invoice_form.html'
     success_url = reverse_lazy('invoice-list')
-
+    
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['user'] = self.request.user
+        return initial
+    
+    def get_queryset(self):
+        # Ensure users can only update invoices from their company
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            return queryset
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            return queryset.filter(company=self.request.user.profile.company)
+        return queryset.none()
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         if self.request.POST:
@@ -252,23 +468,37 @@ class InvoiceUpdateView(UpdateView):
         else:
             context['formset'] = core.forms.InvoiceItemFormSet(
                 instance=self.object)
-        # Add all products for JS price autofill
-        context['products'] = models.Product.objects.all()
+        
+        # Add products to context for the select2 widget, filtered by company
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            products = models.Product.objects.all()
+        elif hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            products = models.Product.objects.filter(company=self.request.user.profile.company)
+        else:
+            products = models.Product.objects.none()
+            
+        context['products'] = products
+        context['product_json'] = [
+            {'id': p.id, 'text': p.name, 'price': float(p.selling_price)} for p in products
+        ]
+        
         return context
-
+        
     def form_valid(self, form):
         import logging
         from django.db import transaction
         logger = logging.getLogger(__name__)
-        context = self.get_context_data()
-        formset = context['formset']
         logger.debug('InvoiceUpdateView.form_valid called')
         logger.debug(f'Form valid: {form.is_valid()}')
-        logger.debug(f'Formset valid: {formset.is_valid()}')
         logger.debug(f'POST data: {self.request.POST}')
-
+        
         with transaction.atomic():
+            context = self.get_context_data()
+            formset = context['formset']
+            logger.info(f"Formset is_valid: {formset.is_valid()}")
             if not formset.is_valid():
+                logger.error(f"Formset errors: {formset.errors}")
+                logger.error(f"Formset non_form_errors: {formset.non_form_errors()}")
                 self._log_formset_errors(logger, formset)
                 return self.form_invalid(form)
 
@@ -286,13 +516,77 @@ class InvoiceUpdateView(UpdateView):
             return redirect(self.get_success_url())
 
     def _save_invoice_with_total(self, form):
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.info("--- InvoiceUpdateView._save_invoice_with_total --- START ---")
+        logger.info(f"Raw POST data: {self.request.POST}")
+        logger.info(f"Form cleaned_data: {form.cleaned_data}")
+
         # Save invoice object without committing to DB
         obj = form.save(commit=False)
-        # Save custom total from form
+        
+        # Get form values
+        tva_rate = form.cleaned_data.get('tva_rate')
+        include_stamp_fee = form.cleaned_data.get('include_stamp_fee', False) # Default False
         invoice_total = form.cleaned_data.get('invoice_total')
+
+        logger.info(f"Values from cleaned_data: tva_rate={tva_rate} ({type(tva_rate)}), include_stamp_fee={include_stamp_fee} ({type(include_stamp_fee)}), invoice_total={invoice_total}")
+        
+        # Check if the values are in the raw POST data
+        raw_tva_rate = self.request.POST.get('tva_rate')
+        raw_include_stamp_fee = self.request.POST.get('include_stamp_fee')
+        logger.info(f"Raw values from POST: tva_rate={raw_tva_rate}, include_stamp_fee={raw_include_stamp_fee}")
+        
+        # Try to convert raw values if needed
+        if raw_tva_rate and tva_rate is None:
+            try:
+                from decimal import Decimal
+                tva_rate = Decimal(raw_tva_rate)
+                logger.info(f"Converted raw tva_rate to Decimal: {tva_rate}")
+            except Exception as e:
+                logger.error(f"Error converting raw tva_rate: {e}")
+        
+        # --- Simplified Logic for Debugging --- 
+        if tva_rate is not None:
+            obj.tva_rate = tva_rate
+            logger.info(f"Set obj.tva_rate = {obj.tva_rate}")
+        else:
+            logger.warning("Update: TVA rate received as None from form. Setting to default 19.0")
+            obj.tva_rate = 19.0 # Or fetch default?
+        
+        # For include_stamp_fee, use the raw value if available
+        if raw_include_stamp_fee == 'on':
+            obj.include_stamp_fee = True
+            logger.info("Setting include_stamp_fee to True based on raw POST data")
+        else:
+            obj.include_stamp_fee = include_stamp_fee or False
+            logger.info(f"Setting include_stamp_fee to {obj.include_stamp_fee} based on cleaned_data or default")
+        
+        logger.info(f"Final values: tva_rate={obj.tva_rate}, include_stamp_fee={obj.include_stamp_fee}")
+        # --- End Simplified Logic --- 
+        
+        # Save custom total from form
         if invoice_total is not None:
             obj.custom_total = invoice_total
-        obj.save()
+            logger.info(f"Set obj.custom_total = {obj.custom_total}")
+        else:
+            # If not provided, ensure it's None so model calculates it
+            obj.custom_total = None 
+            logger.info("Set obj.custom_total = None")
+            
+        try:
+            obj.save()
+            logger.info(f"Invoice object updated successfully (ID: {obj.pk})")
+        except Exception as e:
+             logger.error(f"Error saving updated invoice object: {e}")
+             form.add_error(None, f"Error saving invoice: {e}")
+             # We are already inside form_valid, how to signal error? 
+             # Re-raising or handling might be needed depending on flow.
+             # For now, log and continue, but saving items might fail.
+             # Ideally, this save logic should be inside form_valid directly.
+             raise # Re-raise to be caught by form_valid/form_invalid
+
+        logger.info("--- InvoiceUpdateView._save_invoice_with_total --- END ---")
         return obj
 
     def _restore_previous_inventory(self, logger, obj):
@@ -325,13 +619,22 @@ class InvoiceUpdateView(UpdateView):
     def _log_formset_errors(self, logger, formset):
         logger.error('Formset invalid during invoice update')
         logger.error(f'Formset errors: {formset.errors}')
-        logger.error(f'Non-form errors: {formset.non_form_errors()}')
+        logger.error(f'Formset non_form_errors: {formset.non_form_errors()}')
 
 
 class InvoiceDeleteView(DeleteView):
     model = models.Invoice
     template_name = 'invoices/invoice_confirm_delete.html'
     success_url = reverse_lazy('invoice-list')
+    
+    def get_queryset(self):
+        # Ensure users can only delete invoices from their company
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            return queryset
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            return queryset.filter(company=self.request.user.profile.company)
+        return queryset.none()
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
@@ -347,3 +650,12 @@ class InvoiceDetailView(DetailView):
     model = models.Invoice
     template_name = 'invoices/invoice_detail.html'
     context_object_name = 'invoice'
+    
+    def get_queryset(self):
+        # Ensure users can only view invoices from their company
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            return queryset
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            return queryset.filter(company=self.request.user.profile.company)
+        return queryset.none()

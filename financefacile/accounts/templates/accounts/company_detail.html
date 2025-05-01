@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ company.name }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">{{ company.name }}</h1>
+        <div>
+            <a href="{% url 'company-list' %}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to Companies
+            </a>
+            {% if user.is_staff or user.is_superuser or user.profile.is_company_admin %}
+            <a href="{% url 'company-edit' company.id %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                <i class="fas fa-edit fa-sm text-white-50"></i> Edit Company
+            </a>
+            <a href="{% url 'company-settings' company.id %}" class="d-none d-sm-inline-block btn btn-sm btn-warning shadow-sm">
+                <i class="fas fa-cog fa-sm text-white-50"></i> Company Settings
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Company Information Card -->
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Company Information</h6>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">SIRET Number:</div>
+                        <div class="col-md-8">{{ company.siret_number|default:"Not provided" }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Address:</div>
+                        <div class="col-md-8">{{ company.address|default:"Not provided"|linebreaks }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Phone Number:</div>
+                        <div class="col-md-8">{{ company.phone_number|default:"Not provided" }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 font-weight-bold">Created:</div>
+                        <div class="col-md-8">{{ company.created_at|date:"F j, Y" }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Company Settings Card -->
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Financial Settings</h6>
+                    {% if user.is_staff or user.is_superuser or user.profile.is_company_admin %}
+                    <a href="{% url 'company-settings' company.id %}" class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit"></i> Edit Settings
+                    </a>
+                    {% endif %}
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-6 font-weight-bold">Default TVA Rate:</div>
+                        <div class="col-md-6">{{ company.settings.default_tva_rate }}%</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6 font-weight-bold">Stamp Fee:</div>
+                        <div class="col-md-6">{{ company.settings.stamp_fee }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Company Members Card -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Company Members</h6>
+            {% if user.is_staff or user.is_superuser or user.profile.is_company_admin %}
+            <a href="{% url 'company-members' company.id %}" class="btn btn-sm btn-success">
+                <i class="fas fa-users"></i> Manage Members
+            </a>
+            {% endif %}
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for profile in members %}
+                        <tr>
+                            <td>{{ profile.user.username }}</td>
+                            <td>{{ profile.user.get_full_name|default:"-" }}</td>
+                            <td>{{ profile.user.email|default:"-" }}</td>
+                            <td>
+                                {% if profile.user.is_superuser %}
+                                    <span class="badge badge-danger">Superuser</span>
+                                {% elif profile.user.is_staff %}
+                                    <span class="badge badge-warning">Staff</span>
+                                {% elif profile.is_company_admin %}
+                                    <span class="badge badge-primary">Company Admin</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">Member</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">No members found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
