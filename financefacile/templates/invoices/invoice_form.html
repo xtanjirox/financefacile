@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 {% load static %}
 
 {% block sidebar %}
@@ -14,7 +13,7 @@
   // Provide product prices for JS
   window.PRODUCT_PRICES = {
     {% for product in products %}
-      '{{ product.id }}': '{{ product.selling_price }}'{% if not forloop.last %},{% endif %}
+      "{{ product.id }}": "{{ product.selling_price }}"{% if not forloop.last %},{% endif %}
     {% endfor %}
   };
 </script>
@@ -41,16 +40,44 @@
       <div class="mb-4">
         <h4 class="fw-bold mb-3" style="color: #39739d;"><i class="fas fa-info-circle me-2" style="color: #7cb9e8;"></i>Invoice Details</h4>
         <div class="row g-3">
-          {% for field in form.visible_fields %}
-            {% if field.name != 'invoice_total' %}
-            <div class="col-md-6">
-              <label class="form-label fw-semibold" for="id_{{ field.name }}">{{ field.label }}</label>
-              {{ field|as_crispy_field }}
-              {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
-              {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+          <!-- TVA Rate Field -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold" for="id_tva_rate">TVA Rate (%)</label>
+            {{ form.tva_rate.as_hidden }}
+            <input type="number" name="tva_rate" id="id_tva_rate" class="form-control" step="0.01" min="0" max="100" placeholder="{{ form.initial.tva_rate|default:'19.0' }}" 
+                  value="{{ form.initial.tva_rate }}" 
+                  >
+            <small class="form-text text-muted">Default rate from company settings ({{ form.initial.tva_rate|default:'19.0' }})</small>
+            {% for error in form.tva_rate.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+          </div>
+          
+          <!-- Stamp Fee Field -->
+          <div class="col-md-6">
+            <div class="form-check mt-4">
+              <input class="form-check-input" type="checkbox" name="include_stamp_fee" id="id_include_stamp_fee" {% if form.include_stamp_fee.value or form.initial.include_stamp_fee %}checked{% endif %}>
+              <label class="form-check-label" for="id_include_stamp_fee">
+                Include Stamp Fee
+              </label>
+              <small class="form-text text-muted d-block">{{ form.include_stamp_fee.help_text }}</small>
+              {% for error in form.include_stamp_fee.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
             </div>
-            {% endif %}
-          {% endfor %}
+          </div>
+          
+          <!-- Client Name Field -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold" for="id_client_name">Client Name</label>
+            <input type="text" name="client_name" id="id_client_name" class="form-control" placeholder="Client name" {% if form.client_name.value %}value="{{ form.client_name.value }}"{% endif %}>
+            {% if form.client_name.help_text %}<small class="form-text text-muted">{{ form.client_name.help_text }}</small>{% endif %}
+            {% for error in form.client_name.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+          </div>
+          
+          <!-- Client Address Field -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold" for="id_client_address">Client Address</label>
+            <textarea name="client_address" id="id_client_address" class="form-control" rows="2" placeholder="Client address">{% if form.client_address.value %}{{ form.client_address.value }}{% endif %}</textarea>
+            {% if form.client_address.help_text %}<small class="form-text text-muted">{{ form.client_address.help_text }}</small>{% endif %}
+            {% for error in form.client_address.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+          </div>
         </div>
       </div>
                     <div class="mb-4">

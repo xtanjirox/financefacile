@@ -13,10 +13,14 @@ CSRF_TRUSTED_ORIGINS = ['https://*.ngrok-free.app',
                         'http://localhost', 'http://127.0.0.1',
                         ]
 
+# Django sites framework
+SITE_ID = 1
+
 # Application definition
 INSTALLED_APPS = [
     'core',
     'api',
+    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -100,6 +104,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = 'media/'
+
+# Authentication settings
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]

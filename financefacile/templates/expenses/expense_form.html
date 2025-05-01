@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block sidebar %}
+{% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+{% block topbar %}
+{% include 'includes/topbar.html' %}
+{% endblock topbar %}
+{% block footer %}
+{% include 'includes/footer.html' %}
+{% endblock footer %}
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="card shadow-sm mt-4 border-0" style="border-radius: 1.2rem; overflow: hidden; background: #fff;">
+        <div class="card-header d-flex align-items-center"
+          style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed;">
+          <h3 class="card-title mb-0 text-dark"><i class="fas fa-plus-circle me-2" style="color: #7cb9e8;"></i>Add
+            Expense</h3>
+        </div>
+        <div class="card-body">
+          <form method="post" autocomplete="off" class="w-100">
+            {% csrf_token %}
+            <div class="p-3 w-100">
+              <div class="row">
+                {% for field in form.visible_fields %}
+                <div class="form-group mb-1 col-12">
+                  {{ field|as_crispy_field }}
+                  {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+                  {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+            <div class="mt-4 d-flex justify-content-end">
+              <button type="submit" class="btn btn-lg"
+                style="background: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;">
+                <i class="fas fa-check-circle me-1"></i> Save Expense
+              </button>
+              <a href="{% url 'expenses-list' %}" class="btn btn-secondary ms-3">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  .card-body input,
+  .card-body select,
+  .card-body textarea {
+    background: #fafdff;
+    border: 1px solid #dbeafe;
+    color: #39739d;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .card-body input:focus,
+  .card-body select:focus,
+  .card-body textarea:focus {
+    background: #e3f2fd;
+    border-color: #7cb9e8;
+    color: #39739d;
+    box-shadow: 0 0 0 0.1rem #b6e0fe;
+  }
+</style>
+{% endblock content %}

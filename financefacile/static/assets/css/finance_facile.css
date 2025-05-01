@@ -1,8 +1,92 @@
 select {
-            width: 100%;
-        }
+    width: 100%;
+}
 
 form > * {
-            display: block;  /* Ensure all elements are stacked */
-            margin-bottom: 15px;  /* Add space between elements */
-        }
+    display: block;  /* Ensure all elements are stacked */
+    margin-bottom: 15px;  /* Add space between elements */
+}
+
+/* Consistent Button Styles */
+
+/* Primary Button - Blue */
+.btn-primary, 
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+    background-color: #e3f2fd !important;
+    color: #1565c0 !important;
+    border: 1px solid #bbdefb !important;
+    border-radius: 50rem !important;
+}
+
+/* Success Button - Green */
+.btn-success,
+.btn-success:hover,
+.btn-success:focus,
+.btn-success:active {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+    border: 1px solid #c8e6c9 !important;
+    border-radius: 50rem !important;
+}
+
+/* Danger Button - Red */
+.btn-danger,
+.btn-danger:hover,
+.btn-danger:focus,
+.btn-danger:active {
+    background-color: #ffebee !important;
+    color: #d32f2f !important;
+    border: 1px solid #ffcdd2 !important;
+    border-radius: 50rem !important;
+}
+
+/* Warning Button - Orange */
+.btn-warning,
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active {
+    background-color: #fff8e1 !important;
+    color: #f57f17 !important;
+    border: 1px solid #ffecb3 !important;
+    border-radius: 50rem !important;
+}
+
+/* Info Button - Cyan */
+.btn-info,
+.btn-info:hover,
+.btn-info:focus,
+.btn-info:active {
+    background-color: #e0f7fa !important;
+    color: #0097a7 !important;
+    border: 1px solid #b2ebf2 !important;
+    border-radius: 50rem !important;
+}
+
+/* Secondary Button - Gray */
+.btn-secondary,
+.btn-secondary:hover,
+.btn-secondary:focus,
+.btn-secondary:active {
+    background-color: #eceff1 !important;
+    color: #546e7a !important;
+    border: 1px solid #cfd8dc !important;
+    border-radius: 50rem !important;
+}
+
+/* Button Sizes */
+.btn-sm {
+    padding: 0.25rem 0.5rem !important;
+    font-size: 0.875rem !important;
+}
+
+.btn-lg {
+    padding: 0.5rem 1rem !important;
+    font-size: 1.25rem !important;
+}
+
+/* Button with Icon */
+.btn i {
+    margin-right: 0.25rem;
+}

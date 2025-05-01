@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+
+{% load crispy_forms_tags %}
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block title %}Manage Company Members{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+        <h2 class="fw-bold mb-0" style="color: #39739d;">
+            <i class="fas fa-users me-2" style="color: #7cb9e8;"></i>
+            Manage Members for {{ company.name }}
+        </h2>
+        <div class="d-flex gap-2">
+            {% if user.is_staff or user.is_superuser or user.profile.is_company_admin and user.profile.company == company %}
+            <a href="{% url 'company-user-create' company_id=company.id %}" class="btn rounded-pill px-3" style="background-color: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;">
+                <i class="fas fa-user-plus me-2"></i> Create New User
+            </a>
+            {% endif %}
+            <a href="{% url 'company-detail' company.id %}" class="btn btn-outline-secondary rounded-pill px-3">
+                <i class="fas fa-arrow-left me-2"></i> Back to Company
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Current Members Card -->
+        <div class="col-lg-12">
+            <div class="card shadow-sm border-0" style="border-radius: 14px;">
+                <div class="card-header d-flex align-items-center" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed;">
+                    <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
+                        <i class="fas fa-user-check me-2" style="color: #7cb9e8;"></i>
+                        Current Members
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-hover" id="membersTable" width="100%" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for profile in members %}
+                                <tr>
+                                    <td>{{ profile.user.username }}</td>
+                                    <td>{{ profile.user.get_full_name|default:"-" }}</td>
+                                    <td>{{ profile.user.email|default:"-" }}</td>
+                                    <td>
+                                        {% if profile.user.is_superuser %}
+                                            <span class="badge bg-danger rounded-pill">Superuser</span>
+                                        {% elif profile.user.is_staff %}
+                                            <span class="badge bg-warning text-dark rounded-pill">Staff</span>
+                                        {% elif profile.is_company_admin %}
+                                            <span class="badge bg-primary rounded-pill">Company Admin</span>
+                                        {% else %}
+                                            <span class="badge bg-secondary rounded-pill">Member</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div class="d-flex gap-2">
+                                            {% if user.is_staff or user.is_superuser or user.profile.is_company_admin and user.profile.company == company %}
+                                                <a href="{% url 'user-permissions' profile.user.id %}" class="btn btn-sm rounded-pill px-3" style="background-color: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb;">
+                                                    <i class="fas fa-key me-1"></i> Permissions
+                                                </a>
+                                            {% endif %}
+                                            
+                                            {% if user.is_staff or user.is_superuser %}
+                                                <form method="post" action="{% url 'remove-user-from-company' company.id profile.user.id %}" class="d-inline">
+                                                    {% csrf_token %}
+                                                    <button type="submit" class="btn btn-sm rounded-pill px-3" style="background-color: #ffebee; color: #d32f2f; border: 1px solid #ffcdd2;" onclick="return confirm('Are you sure you want to remove this user from the company?')">
+                                                        <i class="fas fa-user-minus me-1"></i> Remove
+                                                    </button>
+                                                </form>
+                                            {% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="5" class="text-center">No members found</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% if user.is_staff or user.is_superuser %}
+    <!-- Add New Member Card -->
+    <div class="row g-4">
+        <div class="col-lg-12">
+            <div class="card shadow-sm border-0" style="border-radius: 14px;">
+                <div class="card-header d-flex align-items-center" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed;">
+                    <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
+                        <i class="fas fa-user-plus me-2" style="color: #7cb9e8;"></i>
+                        Add New Member
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <form method="post" id="assignUserForm" action="#">
+                        {% csrf_token %}
+                        <div class="form-row align-items-center">
+                            <div class="col-md-4 my-1">
+                                <label class="sr-only" for="userSelect">User</label>
+                                <select class="form-control" id="userSelect" name="user_id" required>
+                                    <option value="">Select User...</option>
+                                    {% for user_obj in all_users %}
+                                        {% if not user_obj.profile.company or user_obj.profile.company.id != company.id %}
+                                            <option value="{{ user_obj.id }}">{{ user_obj.username }} ({{ user_obj.email }})</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-3 my-1">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="isCompanyAdmin" name="is_company_admin">
+                                    <label class="form-check-label" for="isCompanyAdmin">
+                                        Company Administrator
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-auto my-1">
+                                <button type="button" class="btn rounded-pill px-3" style="background-color: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;" id="assignUserBtn">
+                                    <i class="fas fa-user-plus me-2"></i> Add to Company
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    $(document).ready(function() {
+        $('#membersTable').DataTable();
+        
+        // Handle the assign user form submission
+        $('#assignUserBtn').click(function() {
+            var userId = $('#userSelect').val();
+            if (!userId) {
+                alert('Please select a user to add to the company.');
+                return;
+            }
+            
+            var isAdmin = $('#isCompanyAdmin').is(':checked') ? 'on' : 'off';
+            var form = $('#assignUserForm');
+            
+            // Update the form action with the selected user ID
+            form.attr('action', '{% url "assign-user-to-company" company.id %}' + userId + '/');
+            form.submit();
+        });
+    });
+</script>
+{% endblock %}

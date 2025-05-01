@@ -12,9 +12,14 @@
 <div class="container-fluid p-0">
   <div class="col-12 col-lg-12 col-xxl-12 d-flex">
     <div class="card flex-fill">
-      <div class="card-header">
-        <h5 class="card-title mb-0">Invoice #{{ invoice.id }}</h5>
-        <small class="text-muted">Date: {{ invoice.created_at|date:'Y-m-d H:i' }}</small>
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <div>
+          <h5 class="card-title mb-0">Invoice #{{ invoice.id }}</h5>
+          <small class="text-muted">Date: {{ invoice.created_at|date:'Y-m-d H:i' }}</small>
+        </div>
+        <a href="{% url 'invoice-pdf' invoice.id %}" class="btn shadow-sm" style="background: #e8f5e9; color: #388e3c; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Export PDF">
+          <i class="fas fa-file-pdf"></i> Download PDF
+        </a>
       </div>
       <div class="card-body">
         <h6>Invoice Items</h6>
@@ -38,8 +43,37 @@
             {% endfor %}
           </tbody>
         </table>
-        <div class="text-end">
-          <strong>Total Amount: {{ invoice.get_total }} dt</strong>
+        
+        <div class="card mt-3 shadow-sm" style="border-radius: 0.5rem; overflow: hidden;">
+          <div class="card-header" style="background: #e3f2fd; color: #39739d;">
+            <h6 class="mb-0">Invoice Summary</h6>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6 offset-md-6">
+                <table class="table table-sm">
+                  <tr>
+                    <td class="text-end">Subtotal:</td>
+                    <td class="text-end fw-bold">{{ invoice.get_subtotal|floatformat:2 }} dt</td>
+                  </tr>
+                  <tr>
+                    <td class="text-end">TVA ({{ invoice.get_tva_rate|floatformat:2 }}%):</td>
+                    <td class="text-end fw-bold">{{ invoice.get_tva_amount|floatformat:2 }} dt</td>
+                  </tr>
+                  {% if invoice.include_stamp_fee %}
+                  <tr>
+                    <td class="text-end">Stamp Fee:</td>
+                    <td class="text-end fw-bold">{{ invoice.get_stamp_fee|floatformat:2 }} dt</td>
+                  </tr>
+                  {% endif %}
+                  <tr class="table-active">
+                    <td class="text-end fw-bold">Total Amount:</td>
+                    <td class="text-end fw-bold">{{ invoice.get_total|floatformat:2 }} dt</td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

@@ -1,5 +1,9 @@
 from django.urls import path, include
 from . import views
+from core.views.expenses_views import (
+    ExpenseListView, ExpenseCreateView, ExpenseUpdateView, ExpenseDeleteView,
+    ExpenseCategoryListView, ExpenseCategoryCreateView, ExpenseCategoryUpdateView, ExpenseCategoryDeleteView
+)
 from .views import search_views
 from .views import search_api
 from .views.products_views import (
@@ -7,15 +11,30 @@ from .views.products_views import (
     ProductCategoryListView, ProductCategoryCreateView, ProductCategoryUpdateView, ProductCategoryDeleteView,
     InvoiceCreateView, InvoiceListView, InvoiceDetailView, InvoiceUpdateView, InvoiceDeleteView,
 )
+from .views.invoice_pdf import generate_invoice_pdf
+from .views.product_pdf import generate_product_pdf
+from .views.expense_pdf import generate_expense_pdf
 from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
+    path('expenses/', ExpenseListView.as_view(), name='expenses-list'),
+    path('expenses/create/', ExpenseCreateView.as_view(), name='expense-create'),
+    path('expenses/update/<int:pk>/', ExpenseUpdateView.as_view(), name='expense-update'),
+    path('expenses/delete/<int:pk>/', ExpenseDeleteView.as_view(), name='expense-delete'),
+    path('expenses/pdf/', generate_expense_pdf, name='expenses-pdf'),
+    path('expenses/pdf/<int:pk>/', generate_expense_pdf, name='expense-pdf'),
+
+    path('expense-categories/', ExpenseCategoryListView.as_view(), name='expense-categories-list'),
+    path('expense-categories/create/', ExpenseCategoryCreateView.as_view(), name='expense-category-create'),
+    path('expense-categories/update/<int:pk>/', ExpenseCategoryUpdateView.as_view(), name='expense-category-update'),
+    path('expense-categories/delete/<int:pk>/', ExpenseCategoryDeleteView.as_view(), name='expense-category-delete'),
     path('select2/', include('django_select2.urls')),
     path('invoices/', InvoiceListView.as_view(), name='invoice-list'),
     path('invoices/create/', InvoiceCreateView.as_view(), name='invoice-create'),
     path('invoices/<int:pk>/', InvoiceDetailView.as_view(), name='invoice-detail'),
     path('invoices/update/<int:pk>/', InvoiceUpdateView.as_view(), name='invoice-update'),
     path('invoices/delete/<int:pk>/', InvoiceDeleteView.as_view(), name='invoice-delete'),
+    path('invoices/pdf/<int:pk>/', generate_invoice_pdf, name='invoice-pdf'),
     # Product Category CRUD
     path('categories/', ProductCategoryListView.as_view(), name='category-list'),
     path('categories/create/', ProductCategoryCreateView.as_view(), name='category-create'),
@@ -27,6 +46,7 @@ urlpatterns = [
     path(r'products/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
     path(r'products/update/<int:pk>/', ProductUpdateView.as_view(), name='product-update'),
     path(r'products/delete/<int:pk>/', ProductDeleteView.as_view(), name='product-delete'),
+    path(r'products/pdf/<int:pk>/', generate_product_pdf, name='product-pdf'),
     path('search/', search_views.global_search, name='global-search'),
     path('api/live-search/', search_api.live_search, name='live-search-api'),
     path(r'', login_required(views.home), name='home'),
