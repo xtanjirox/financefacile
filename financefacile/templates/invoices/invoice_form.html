@@ -41,8 +41,25 @@
       <div class="mb-4">
         <h4 class="fw-bold mb-3" style="color: #39739d;"><i class="fas fa-info-circle me-2" style="color: #7cb9e8;"></i>Invoice Details</h4>
         <div class="row g-3">
+          <!-- TVA Rate Field -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold" for="id_tva_rate">TVA Rate (%)</label>
+            {{ form.tva_rate|as_crispy_field }}
+            <small class="form-text text-muted">{{ form.tva_rate.help_text }}</small>
+            {% for error in form.tva_rate.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+          </div>
+          
+          <!-- Stamp Fee Field -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold" for="id_include_stamp_fee">Stamp Fee</label>
+            {{ form.include_stamp_fee|as_crispy_field }}
+            <small class="form-text text-muted">{{ form.include_stamp_fee.help_text }}</small>
+            {% for error in form.include_stamp_fee.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+          </div>
+          
+          <!-- Other fields if any -->
           {% for field in form.visible_fields %}
-            {% if field.name != 'invoice_total' %}
+            {% if field.name != 'invoice_total' and field.name != 'tva_rate' and field.name != 'include_stamp_fee' %}
             <div class="col-md-6">
               <label class="form-label fw-semibold" for="id_{{ field.name }}">{{ field.label }}</label>
               {{ field|as_crispy_field }}

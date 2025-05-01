@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-tags me-2" style="color: #7cb9e8;"></i>Expense Categories</h2>
+    <a href="{% url 'expense-category-create' %}" class="btn btn-lg btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+      <i class="fa fa-plus"></i> Add Category
+    </a>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="card flex-fill shadow-sm border-0" style="border-radius: 18px;">
+        <div class="card-header" style="background: #e3f2fd; border-top-left-radius: 18px; border-top-right-radius: 18px; border-bottom: 1px solid #e0e6ed;">
+          <h5 class="card-title mb-0" style="color: #1976d2; font-weight: 600;">Expense Categories</h5>
+        </div>
+        <div class="card-body p-4">
+          <table class="table align-middle" style="background: #fff; border-radius: 12px; overflow: hidden;">
+            <thead style="background: #e3f2fd; color: #1976d2; font-weight: 600;">
+              <tr><th>Name</th><th>Actions</th></tr>
+            </thead>
+            <tbody>
+              {% for category in categories %}
+              <tr style="transition: background 0.15s;">
+                <td>{{ category.name }}</td>
+                <td>
+                  <a href="{% url 'expense-category-update' category.pk %}" class="btn btn-sm shadow-sm" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;">Edit</a>
+                  <a href="{% url 'expense-category-delete' category.pk %}" class="btn btn-sm shadow-sm" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;">Delete</a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="2" class="text-center">No categories found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <a href="{% url 'expenses-list' %}" class="btn btn-link mt-3">Back to Expenses</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

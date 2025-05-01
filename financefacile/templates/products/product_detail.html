@@ -76,10 +76,13 @@
                 </div>
                 <div class="card-footer bg-white border-0 position-relative" style="min-height: 70px;">
                     <div class="d-flex justify-content-end gap-2">
-                        <a href="{% url 'product-update' object.pk %}" class="btn btn-outline-dark btn-lg shadow-sm">
+                        <a href="{% url 'product-pdf' object.pk %}" class="btn btn-outline-success btn-lg shadow-sm" data-bs-toggle="tooltip" title="Export PDF">
+                            <i class="fas fa-file-pdf"></i>
+                        </a>
+                        <a href="{% url 'product-update' object.pk %}" class="btn btn-outline-primary btn-lg shadow-sm" data-bs-toggle="tooltip" title="Edit">
                             <i class="fas fa-edit"></i>
                         </a>
-                        <a href="{% url 'product-delete' object.pk %}" class="btn btn-outline-danger btn-lg shadow-sm">
+                        <a href="{% url 'product-delete' object.pk %}" class="btn btn-outline-danger btn-lg shadow-sm" data-bs-toggle="tooltip" title="Delete">
                             <i class="fas fa-trash"></i>
                         </a>
                     </div>

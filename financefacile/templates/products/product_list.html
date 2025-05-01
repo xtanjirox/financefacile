@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% load django_tables2 %}
+
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+<style>
+  /* Enhanced DataTables search styling */
+  .dataTables_wrapper .dataTables_filter {
+    margin-bottom: 20px;
+    float: none !important;
+    text-align: left !important;
+    width: 100%;
+  }
+  
+  .dataTables_wrapper .dataTables_filter input {
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid #e0e6ed;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    font-size: 1rem;
+    background-color: #f8fafc;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    padding-right: 40px;
+    transition: all 0.2s ease;
+  }
+  
+  .dataTables_wrapper .dataTables_filter input:focus {
+    border-color: #7cb9e8;
+    box-shadow: 0 0 0 3px rgba(124, 185, 232, 0.25);
+    outline: none;
+  }
+  
+  /* Adjust the length menu position */
+  .dataTables_wrapper .dataTables_length {
+    margin-top: 15px;
+  }
+  
+  /* Clickable rows styling */
+  #products-table tbody tr {
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  #products-table tbody tr:hover {
+    background-color: rgba(124, 185, 232, 0.1) !important;
+  }
+  
+  /* Ensure action buttons don't trigger row click */
+  #products-table .btn-group {
+    position: relative;
+    z-index: 10;
+  }
+  .filter-card {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  /* Select2 Custom Styling */
+  .select2-container--default .select2-selection--multiple {
+    border-color: #ced4da;
+    border-radius: 0.375rem;
+    min-height: 38px;
+  }
+  
+  .select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+  
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #e7f1fa;
+    border: 1px solid #7cb9e8;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    margin-top: 0.25rem;
+    color: #39739d;
+  }
+  
+  .select2-container--default .select2-selection__choice__remove {
+    color: #39739d;
+    margin-right: 5px;
+  }
+  
+  .select2-dropdown {
+    border-color: #86b7fe;
+    border-radius: 0.375rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .select2-results__option--highlighted {
+    background-color: #e7f1fa !important;
+    color: #39739d !important;
+  }
+  
+  .select2-container--default .select2-results__option--selected {
+    background-color: #7cb9e8;
+    color: white;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-boxes-stacked me-2" style="color: #7cb9e8;"></i>Products</h2>
+    <div class="d-flex gap-2">
+      <a href="{% url 'category-create' %}" class="btn btn-lg btn-outline-primary shadow-sm rounded-pill px-4" style="border-color: #7cb9e8; color: #39739d; font-weight: 600;">
+        <i class="fa fa-tags"></i> Add Category
+      </a>
+      <a href="{% url 'product-create' %}" class="btn btn-lg btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+        <i class="fa fa-plus"></i> Add Product
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card mb-3 shadow-sm border-0" style="background: #e3f2fd; border-radius: 14px;">
+        <div class="card-body">
+          <h5 class="card-title" style="color: #1976d2; font-weight: 600;">
+            Total Products
+          </h5>
+          <p class="card-text display-6" style="color: #1976d2; font-weight: 700;">
+            {{ table.rows|length }}
+          </p>
+          <p class="text-muted small">Total items in inventory</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-3 shadow-sm border-0" style="background: #e8f5e9; border-radius: 14px;">
+        <div class="card-body">
+          <h5 class="card-title" style="color: #388e3c; font-weight: 600;">
+            Total Inventory Value
+          </h5>
+          <p class="card-text display-6" style="color: #388e3c; font-weight: 700;">
+            {{ total_inventory_value|floatformat:2 }} {{ currency_symbol|default:'€' }}
+          </p>
+          <p class="text-muted small">Based on unit cost × quantity</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-3 shadow-sm border-0" style="background: #e1f5fe; border-radius: 14px;">
+        <div class="card-body">
+          <h5 class="card-title" style="color: #0288d1; font-weight: 600;">
+            Potential Revenue
+          </h5>
+          <p class="card-text display-6" style="color: #0288d1; font-weight: 700;">
+            {{ total_potential_revenue|floatformat:2 }} {{ currency_symbol|default:'€' }}
+          </p>
+          <p class="text-muted small">Based on selling price × quantity</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card flex-fill shadow-sm border-0" style="border-radius: 18px;">
+        <div class="card-header" style="background: #e3f2fd; border-top-left-radius: 18px; border-top-right-radius: 18px; border-bottom: 1px solid #e0e6ed;">
+          <h5 class="card-title mb-0" style="color: #1976d2; font-weight: 600;">Products</h5>
+        </div>
+        <div class="card-body p-4">
+          {% render_table table 'django_tables2/bootstrap5.html' %}
+          <script>
+            // We'll replace this table with DataTables after it's rendered
+            document.addEventListener('DOMContentLoaded', function() {
+              // Add ID to the rendered table for DataTables initialization
+              const tableElement = document.querySelector('.table');
+              if (tableElement) {
+                tableElement.id = 'products-table';
+                tableElement.classList.add('table-striped', 'align-middle');
+                tableElement.style.width = '100%';
+                tableElement.style.background = '#fff';
+                tableElement.style.borderRadius = '12px';
+                tableElement.style.overflow = 'hidden';
+                
+                // Style the header
+                const thead = tableElement.querySelector('thead');
+                if (thead) {
+                  thead.style.background = '#e3f2fd';
+                  thead.style.color = '#1976d2';
+                  thead.style.fontWeight = '600';
+                }
+              }
+            });
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // Initialize tooltips
+    function initTooltips() {
+      $('[data-bs-toggle="tooltip"]').tooltip();
+    }
+    
+    // Initialize DataTables with a slight delay to ensure the table is fully rendered
+    setTimeout(function() {
+      $('#products-table').DataTable({
+        responsive: true,
+        language: {
+          search: "_INPUT_",
+          searchPlaceholder: "Search products by name, SKU, description...",
+          lengthMenu: "Show _MENU_ entries",
+          info: "Showing _START_ to _END_ of _TOTAL_ products",
+          infoEmpty: "Showing 0 to 0 of 0 products",
+          infoFiltered: "(filtered from _MAX_ total products)"
+        },
+        dom: '<"row"<"col-12"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-5"i><"col-sm-7"p>>',
+        columnDefs: [
+          { orderable: false, targets: -1 } // Disable sorting on last column (actions)
+        ],
+        order: [[0, 'asc']], // Sort by first column ascending by default
+        pageLength: 10,
+        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        search: {
+          return: true, // Enable live search as you type
+          caseInsensitive: true
+        },
+        drawCallback: function() {
+          // Re-initialize any tooltips or popovers after table redraw
+          initTooltips();
+          
+          // Make rows clickable, directing to product detail page
+          $('#products-table tbody tr').off('click').on('click', function(e) {
+            // Don't trigger if clicking on action buttons
+            if ($(e.target).closest('.btn-group').length === 0 && 
+                !$(e.target).hasClass('btn') && 
+                !$(e.target).parent().hasClass('btn')) {
+              // Get the product ID from the last cell (actions column)
+              const actionLinks = $(this).find('td:last-child a:first-child');
+              if (actionLinks.length > 0) {
+                const detailUrl = actionLinks.attr('href');
+                if (detailUrl) {
+                  window.location.href = detailUrl;
+                }
+              }
+            }
+          });
+        }
+      });
+      
+      // Initialize tooltips for the first time
+      initTooltips();
+    }, 100);
+  });
+</script>
+{% endblock %}

@@ -49,8 +49,41 @@
 <body>
     <div class="wrapper">
         {% block sidebar %}
-
-        {% endblock sidebar %}
+<nav id="sidebar" class="sidebar js-sidebar">
+    <div class="sidebar-content js-simplebar">
+        <a class="sidebar-brand" href="/">
+            <span class="align-middle">Finance Facile</span>
+        </a>
+        <ul class="sidebar-nav">
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="/">
+                    <i class="fas fa-home align-middle"></i> <span class="align-middle">Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="/products">
+                    <i class="fas fa-boxes align-middle"></i> <span class="align-middle">Products</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="/invoices/">
+                    <i class="fas fa-file-invoice align-middle"></i> <span class="align-middle">Invoices</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="/expenses/">
+                    <i class="fas fa-money-bill-wave align-middle"></i> <span class="align-middle">Expenses</span>
+                </a>
+            </li>
+            <li class="sidebar-item">
+                <a class="sidebar-link" href="/expense-categories/">
+                    <i class="fas fa-tags align-middle"></i> <span class="align-middle">Expense Categories</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+</nav>
+{% endblock sidebar %}
         <div class="main">
             {% block topbar %}
             {% endblock topbar %}

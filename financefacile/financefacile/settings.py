@@ -17,6 +17,7 @@ CSRF_TRUSTED_ORIGINS = ['https://*.ngrok-free.app',
 INSTALLED_APPS = [
     'core',
     'api',
+    'accounts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -100,6 +101,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = 'media/'
+
+# Authentication settings
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'dashboard'
+LOGOUT_REDIRECT_URL = 'login'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]

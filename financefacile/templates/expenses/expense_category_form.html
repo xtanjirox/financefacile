@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+      <div class="card shadow-sm border-0" style="border-radius: 18px;">
+        <div class="card-header" style="background: #e3f2fd; border-top-left-radius: 18px; border-top-right-radius: 18px; border-bottom: 1px solid #e0e6ed;">
+          <h4 class="mb-0" style="color: #1976d2; font-weight: 600;">{% if form.instance.pk %}Edit Category{% else %}Add Category{% endif %}</h4>
+        </div>
+        <div class="card-body p-4">
+          <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+            <div class="mb-3">
+              <label for="id_name" class="form-label">Name</label>
+              {{ form.name }}
+              {{ form.name.errors }}
+            </div>
+            <button type="submit" class="btn btn-lg btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">Save</button>
+            <a href="{% url 'expense-categories-list' %}" class="btn btn-secondary ms-2">Cancel</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

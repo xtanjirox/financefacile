@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block sidebar %}
+{% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+{% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+{% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="row justify-content-center">
+    <div class="col-12">
+      <div class="card shadow-sm mt-4 border-0" style="border-radius: 1.2rem; overflow: hidden; background: #fff;">
+        <div class="card-header d-flex align-items-center justify-content-between"
+          style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed;">
+          <h3 class="card-title mb-0 text-dark">
+            <i class="fas fa-shield-alt me-2" style="color: #7cb9e8;"></i>Manage Permissions: {{ object.username }}
+          </h3>
+          <a href="{% url 'users-list' %}" class="btn btn-sm btn-outline-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Back to Users
+          </a>
+        </div>
+        <div class="card-body">
+          <form method="post" autocomplete="off" class="w-100">
+            {% csrf_token %}
+            <div class="p-3 w-100">
+              <div class="row">
+                <div class="col-md-6 mb-4">
+                  <div class="card h-100">
+                    <div class="card-header bg-light">
+                      <h5 class="mb-0">User Status</h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group mb-3">
+                        {{ form.is_active|as_crispy_field }}
+                      </div>
+                      <div class="form-group mb-3">
+                        {{ form.is_staff|as_crispy_field }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-md-6 mb-4">
+                  <div class="card h-100">
+                    <div class="card-header bg-light">
+                      <h5 class="mb-0">User Groups</h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="form-group">
+                        {{ form.groups|as_crispy_field }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="col-12">
+                  <div class="card">
+                    <div class="card-header bg-light">
+                      <h5 class="mb-0">Individual Permissions</h5>
+                    </div>
+                    <div class="card-body">
+                      <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        Select specific permissions to grant to this user. These are in addition to any permissions granted by the user's groups.
+                      </div>
+                      <div class="form-group">
+                        {{ form.user_permissions|as_crispy_field }}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 d-flex justify-content-end">
+              <button type="submit" class="btn btn-lg"
+                style="background: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;">
+                <i class="fas fa-save me-1"></i> Save Permissions
+              </button>
+              <a href="{% url 'users-list' %}" class="btn btn-secondary ms-3">Cancel</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

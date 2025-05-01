@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from django.core.exceptions import ValidationError
 from django.utils import timezone
 from django.urls import reverse_lazy
 from datetime import datetime
@@ -70,16 +70,59 @@ class Product(models.Model):
 
 class Invoice(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    # Optionally add customer or status fields here
-    custom_total = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True, help_text="Manual override for invoice total.")
+    # TVA and stamp fee fields
+    tva_rate = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        null=True, 
+        blank=True, 
+        help_text="TVA (VAT) rate in percentage. If left blank, the default site setting will be used."
+    )
+    include_stamp_fee = models.BooleanField(
+        default=True,
+        help_text="Whether to include the stamp fee in this invoice."
+    )
+    custom_total = models.DecimalField(
+        max_digits=12, 
+        decimal_places=2, 
+        null=True, 
+        blank=True, 
+        help_text="Manual override for invoice total."
+    )
 
     def __str__(self):
         return f"Invoice #{self.pk}"
+    
+    def get_tva_rate(self):
+        """Get the TVA rate for this invoice, using the default if not specified"""
+        if self.tva_rate is not None:
+            return self.tva_rate
+        return SiteSettings.get_settings().default_tva_rate
+    
+    def get_stamp_fee(self):
+        """Get the stamp fee if it should be included, otherwise 0"""
+        if self.include_stamp_fee:
+            return SiteSettings.get_settings().stamp_fee
+        return 0
+    
+    def get_subtotal(self):
+        """Get the sum of all invoice items before TVA and stamp fee"""
+        return sum(item.total_price for item in self.items.all())
+    
+    def get_tva_amount(self):
+        """Calculate the TVA amount based on the subtotal"""
+        return self.get_subtotal() * (self.get_tva_rate() / 100)
 
     def get_total(self):
+        """Calculate the total invoice amount including TVA and stamp fee"""
         if self.custom_total is not None:
             return self.custom_total
-        return sum(item.total_price for item in self.items.all())
+        
+        subtotal = self.get_subtotal()
+        tva_amount = self.get_tva_amount()
+        stamp_fee = self.get_stamp_fee()
+        
+        return subtotal + tva_amount + stamp_fee
 
     def get_absolute_url(self):
         from django.urls import reverse_lazy
@@ -98,6 +141,37 @@ class InvoiceItem(models.Model):
 
     def __str__(self):
         return f"{self.product} x {self.quantity} @ {self.selling_price}"
+
+class ExpenseCategory(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+
+    class Meta:
+        verbose_name = 'Expense Category'
+        verbose_name_plural = 'Expense Categories'
+
+    def __str__(self):
+        return self.name
+
+class Expense(models.Model):
+    category = models.ForeignKey(ExpenseCategory, on_delete=models.PROTECT, related_name='expenses')
+    date = models.DateField()
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    description = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = 'Expense'
+        verbose_name_plural = 'Expenses'
+        ordering = ['-date']
+
+    def __str__(self):
+        return f"{self.category} - {self.amount} on {self.date}"
+
+    def get_absolute_url(self):
+        return reverse_lazy('expense-detail', kwargs={'pk': self.pk})
+
+    def get_delete_url(self):
+        return reverse_lazy('expense-delete', kwargs={"pk": self.pk})
+
 
 class FinanceEntry(models.Model):
     finance_entry_type = models.IntegerField(choices=EntryType.choices)
@@ -123,4 +197,35 @@ class FinanceEntry(models.Model):
     def month_year(self):
         return datetime(self.entry_date.year, self.entry_date.month, 1).strftime("%B%Y")
 
+
+class SiteSettings(models.Model):
+    """Global site settings that can only be modified by administrators"""
+    default_tva_rate = models.DecimalField(
+        max_digits=5, 
+        decimal_places=2, 
+        default=19.00,
+        help_text="Default TVA (VAT) rate in percentage (e.g., 19.00 for 19%)"
+    )
+    stamp_fee = models.DecimalField(
+        max_digits=6, 
+        decimal_places=2, 
+        default=1.00,
+        help_text="Stamp fee amount to be added to all invoices"
+    )
+    
+    class Meta:
+        verbose_name = 'Site Settings'
+        verbose_name_plural = 'Site Settings'
+    
+    def save(self, *args, **kwargs):
+        # Ensure there's only one instance of SiteSettings
+        if not self.pk and SiteSettings.objects.exists():
+            raise ValidationError('There can only be one SiteSettings instance')
+        return super().save(*args, **kwargs)
+    
+    @classmethod
+    def get_settings(cls):
+        """Get the site settings, creating default ones if none exist"""
+        settings, created = cls.objects.get_or_create(pk=1)
+        return settings
 

@@ -1,11 +1,11 @@
 from django_tables2 import SingleTableView
 from django.forms import modelform_factory
-
 from django.views import generic
-
 from django.db.models import F, Q, Sum
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from core import forms, models
+from .auth_mixins import BaseViewMixin
 
 import random
 import json
@@ -16,7 +16,7 @@ def generate_color(n):
     return ['#' + ''.join(random.sample(chars, 6)) for i in range(n)]
 
 
-class BaseListView(SingleTableView):
+class BaseListView(BaseViewMixin, SingleTableView):
     template_name = "generic/list.html"
     segment = None
     filter_class = None
@@ -85,7 +85,7 @@ class BaseListView(SingleTableView):
         return context
 
 
-class FormViewMixin(generic.FormView):
+class FormViewMixin(BaseViewMixin, generic.FormView):
     model = None
     fields = []
     attrs = {}
@@ -112,7 +112,7 @@ class FormViewMixin(generic.FormView):
         return context
 
 
-class BaseDeleteView(generic.DeleteView):
+class BaseDeleteView(BaseViewMixin, generic.DeleteView):
     skip_confirmation = True
 
     def get(self, request, *args, **kwargs):

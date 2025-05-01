@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 {% block sidebar %}
   {% include 'includes/sidebar.html' %}
 {% endblock sidebar %}
@@ -8,6 +9,23 @@
 {% block footer %}
   {% include 'includes/footer.html' %}
 {% endblock footer %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+<style>
+  .dataTables_wrapper .dataTables_filter {
+    margin-bottom: 20px;
+  }
+  .filter-card {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container-fluid p-0">
   <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
@@ -16,33 +34,71 @@
     <i class="fa fa-plus"></i> Add Invoice
   </a>
 </div>
-  <!-- Stats Cards -->
+
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="card mb-3 shadow-sm border-0" style="background: #e3f2fd; border-radius: 14px;">
+      <div class="card-body">
+        <h5 class="card-title" style="color: #1976d2; font-weight: 600;">
+          {% if is_filtered %}Filtered Items Sold{% else %}Total Items Sold{% endif %}
+        </h5>
+        <p class="card-text display-6" style="color: #1976d2; font-weight: 700;">
+          {% if is_filtered %}{{ filtered_total_items }}{% else %}{{ total_items_sold }}{% endif %}
+        </p>
+        {% if is_filtered %}
+        <p class="text-muted small">Filtered period: {{ filter_start_date }} to {{ filter_end_date }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card mb-3 shadow-sm border-0" style="background: #e8f5e9; border-radius: 14px;">
+      <div class="card-body">
+        <h5 class="card-title" style="color: #388e3c; font-weight: 600;">
+          {% if is_filtered %}Filtered Inventory Sold Value{% else %}Total Inventory Sold Value{% endif %}
+        </h5>
+        <p class="card-text display-6" style="color: #388e3c; font-weight: 700;">
+          {% if is_filtered %}{{ filtered_total_value|floatformat:2 }}{% else %}{{ total_inventory_sold_value|floatformat:2 }}{% endif %}
+        </p>
+        {% if is_filtered %}
+        <p class="text-muted small">Filtered period: {{ filter_start_date }} to {{ filter_end_date }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card mb-3 shadow-sm border-0" style="background: #e1f5fe; border-radius: 14px;">
+      <div class="card-body">
+        <h5 class="card-title" style="color: #0288d1; font-weight: 600;">
+          {% if is_filtered %}Filtered Invoice Price{% else %}Total Invoice Price{% endif %}
+        </h5>
+        <p class="card-text display-6" style="color: #0288d1; font-weight: 700;">
+          {% if is_filtered %}{{ filtered_total_price|floatformat:2 }}{% else %}{{ total_invoice_price|floatformat:2 }}{% endif %}
+        </p>
+        {% if is_filtered %}
+        <p class="text-muted small">Filtered period: {{ filter_start_date }} to {{ filter_end_date }}</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- Date Range Filter -->
   <div class="row mb-4">
-    <div class="col-md-4">
-      <div class="card mb-3 shadow-sm border-0" style="background: #e3f2fd; border-radius: 14px;">
-        <div class="card-body">
-          <h5 class="card-title" style="color: #1976d2; font-weight: 600;">Total Items Sold</h5>
-          <p class="card-text display-6" style="color: #1976d2; font-weight: 700;">{{ total_items_sold }}</p>
+    <div class="col-12">
+      <div class="card shadow-sm border-0" style="border-radius: 1rem;">
+        <div class="card-header" style="background: #e3f2fd; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+          <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filter Invoices</h5>
         </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card mb-3 shadow-sm border-0" style="background: #e8f5e9; border-radius: 14px;">
         <div class="card-body">
-          <h5 class="card-title" style="color: #388e3c; font-weight: 600;">Total Inventory Sold Value</h5>
-          <p class="card-text display-6" style="color: #388e3c; font-weight: 700;">{{ total_inventory_sold_value|floatformat:2 }}</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card mb-3 shadow-sm border-0" style="background: #e1f5fe; border-radius: 14px;">
-        <div class="card-body">
-          <h5 class="card-title" style="color: #0288d1; font-weight: 600;">Total Invoice Price</h5>
-          <p class="card-text display-6" style="color: #0288d1; font-weight: 700;">{{ total_invoice_price|floatformat:2 }}</p>
+          {% crispy filter_form %}
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Stats Cards -->
+  
   <div class="row">
     <div class="col-12">
       <div class="card flex-fill shadow-sm border-0" style="border-radius: 18px;">
@@ -50,7 +106,7 @@
           <h5 class="card-title mb-0" style="color: #1976d2; font-weight: 600;">Invoices</h5>
         </div>
         <div class="card-body p-4">
-          <table class="table align-middle" style="background: #fff; border-radius: 12px; overflow: hidden;">
+          <table id="invoices-table" class="table table-striped align-middle" style="width:100%; background: #fff; border-radius: 12px; overflow: hidden;">
             <thead style="background: #e3f2fd; color: #1976d2; font-weight: 600;">
               <tr>
                 <th>ID</th>
@@ -61,18 +117,29 @@
             </thead>
             <tbody>
               {% for invoice in invoices %}
-              <tr style="transition: background 0.15s;">
+              <tr>
                 <td>{{ invoice.pk }}</td>
                 <td>{{ invoice.created_at|date:'Y-m-d H:i' }}</td>
                 <td>{{ invoice.get_total }}</td>
                 <td>
-                  <a href="{% url 'invoice-detail' invoice.pk %}" class="btn btn-sm shadow-sm" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;">View</a>
-                  <a href="{% url 'invoice-update' invoice.pk %}" class="btn btn-sm shadow-sm" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;">Edit</a>
-                  <a href="{% url 'invoice-delete' invoice.pk %}" class="btn btn-sm shadow-sm" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;">Delete</a>
+                  <div class="btn-group">
+                    <a href="{% url 'invoice-detail' invoice.pk %}" class="btn btn-sm shadow-sm" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{% url 'invoice-update' invoice.pk %}" class="btn btn-sm shadow-sm" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'invoice-pdf' invoice.pk %}" class="btn btn-sm shadow-sm" style="background: #e8f5e9; color: #388e3c; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Export PDF">
+                      <i class="fas fa-file-pdf"></i>
+                    </a>
+                    <a href="{% url 'invoice-delete' invoice.pk %}" class="btn btn-sm shadow-sm" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete">
+                      <i class="fas fa-trash"></i>
+                    </a>
+                  </div>
                 </td>
               </tr>
               {% empty %}
-              <tr><td colspan="4">No invoices found.</td></tr>
+              <tr><td colspan="4" class="text-center">No invoices found.</td></tr>
               {% endfor %}
             </tbody>
           </table>
@@ -82,3 +149,34 @@
   </div>
 </div>
 {% endblock content %}
+
+{% block extra_js %}
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // Initialize tooltips
+    $('[data-bs-toggle="tooltip"]').tooltip();
+    
+    $('#invoices-table').DataTable({
+      responsive: true,
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search invoices...",
+        lengthMenu: "Show _MENU_ entries",
+        info: "Showing _START_ to _END_ of _TOTAL_ invoices",
+        infoEmpty: "Showing 0 to 0 of 0 invoices",
+        infoFiltered: "(filtered from _MAX_ total invoices)"
+      },
+      columnDefs: [
+        { orderable: false, targets: 3 } // Disable sorting on actions column
+      ],
+      order: [[1, 'desc']], // Sort by date descending by default
+      pageLength: 10,
+      lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
+    });
+  });
+</script>
+{% endblock %}

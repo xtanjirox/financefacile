@@ -1,0 +1,229 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+<style>
+  .dataTables_wrapper .dataTables_filter {
+    margin-bottom: 20px;
+  }
+  .filter-card {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
+  
+  /* Select2 Custom Styling */
+  .select2-container--default .select2-selection--multiple {
+    border-color: #ced4da;
+    border-radius: 0.375rem;
+    min-height: 38px;
+  }
+  
+  .select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  }
+  
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #e7f1fa;
+    border: 1px solid #7cb9e8;
+    border-radius: 0.25rem;
+    padding: 0.25rem 0.5rem;
+    margin-top: 0.25rem;
+    color: #39739d;
+  }
+  
+  .select2-container--default .select2-selection__choice__remove {
+    color: #39739d;
+    margin-right: 5px;
+  }
+  
+  .select2-dropdown {
+    border-color: #86b7fe;
+    border-radius: 0.375rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .select2-results__option--highlighted {
+    background-color: #e7f1fa !important;
+    color: #39739d !important;
+  }
+  
+  .select2-container--default .select2-results__option--selected {
+    background-color: #7cb9e8;
+    color: white;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-money-bill-wave me-2" style="color: #7cb9e8;"></i>Expenses</h2>
+    <div class="d-flex gap-2">
+      <a href="{% url 'category-create' %}?type=1" class="btn btn-lg btn-outline-primary shadow-sm rounded-pill px-4" style="border-color: #7cb9e8; color: #39739d; font-weight: 600;">
+        <i class="fa fa-tags"></i> Add Category
+      </a>
+      <a href="{% url 'expense-create' %}" class="btn btn-lg btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+        <i class="fa fa-plus"></i> Add Expense
+      </a>
+      <a href="{% url 'expenses-pdf' %}{% if is_filtered %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-lg btn-success shadow-sm rounded-pill px-4" style="background: #81c784; border: none; font-weight: 600;">
+        <i class="fas fa-file-pdf"></i> Export PDF
+      </a>
+    </div>
+  </div>
+
+
+
+  <!-- Stats Cards -->
+  <div class="row mb-4">
+    <div class="col-12 col-md-6 col-lg-4 mx-auto">
+      <div class="card shadow-sm border-0" style="background: #e7f1fa; border-radius: 1rem;">
+        <div class="card-body d-flex align-items-center">
+          <div class="me-3">
+            <i class="fa-solid fa-coins" style="font-size: 2rem; color: #7cb9e8;"></i>
+          </div>
+          <div>
+            <div class="fw-bold text-secondary" style="font-size: 1rem;">
+              {% if is_filtered %}
+                Filtered Expenses
+                <div class="small text-muted mb-1">{{ filter_description }}</div>
+                <div class="fw-bold" style="font-size: 2rem; color: #39739d;">
+                  {{ filtered_total|floatformat:2 }} {{ currency_symbol|default:'€' }}
+                </div>
+                {% if filter_category_names %}
+                <div class="mt-1">
+                  {% for category in filter_category_names %}
+                  <span class="badge bg-info me-1">{{ category }}</span>
+                  {% endfor %}
+                </div>
+                {% endif %}
+              {% else %}
+                Total Expenses (This Month)
+                <div class="fw-bold" style="font-size: 2rem; color: #39739d;">
+                  {{ total_expenses|floatformat:2 }} {{ currency_symbol|default:'€' }}
+                </div>
+                <div class="mt-1">
+                  <span class="text-secondary" style="font-size: 0.95rem;">Previous Month: {{ previous_month_expenses|floatformat:2 }} {{ currency_symbol|default:'€' }}</span>
+                  {% if month_change_percent > 0 %}
+                    <span class="ms-2 fw-bold text-danger"><i class="fa fa-arrow-up"></i> +{{ month_change_percent|floatformat:1 }}%</span>
+                  {% elif month_change_percent < 0 %}
+                    <span class="ms-2 fw-bold text-success"><i class="fa fa-arrow-down"></i> {{ month_change_percent|floatformat:1 }}%</span>
+                  {% else %}
+                    <span class="ms-2 fw-bold text-muted">0%</span>
+                  {% endif %}
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- Date Range Filter -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card shadow-sm border-0" style="border-radius: 1rem;">
+          <div class="card-header" style="background: #e3f2fd; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+            <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filter Expenses</h5>
+          </div>
+          <div class="card-body">
+            {% crispy filter_form %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card flex-fill shadow-sm border-0" style="border-radius: 18px;">
+        <div class="card-header" style="background: #e3f2fd; border-top-left-radius: 18px; border-top-right-radius: 18px; border-bottom: 1px solid #e0e6ed;">
+          <h5 class="card-title mb-0" style="color: #1976d2; font-weight: 600;">Expenses</h5>
+        </div>
+        <div class="card-body p-4">
+          <table id="expenses-table" class="table table-striped align-middle" style="width:100%; background: #fff; border-radius: 12px; overflow: hidden;">
+            <thead style="background: #e3f2fd; color: #1976d2; font-weight: 600;">
+              <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for expense in expenses %}
+              <tr>
+                <td>{{ expense.date }}</td>
+                <td>{{ expense.category }}</td>
+                <td>{{ expense.amount }}</td>
+                <td>{{ expense.description|default:'—' }}</td>
+                <td>
+                  <div class="btn-group">
+                    <a href="{% url 'expense-update' expense.pk %}" class="btn btn-sm shadow-sm" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'expense-pdf' expense.pk %}" class="btn btn-sm shadow-sm" style="background: #e8f5e9; color: #388e3c; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Export PDF">
+                      <i class="fas fa-file-pdf"></i>
+                    </a>
+                    <a href="{% url 'expense-delete' expense.pk %}" class="btn btn-sm shadow-sm" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete">
+                      <i class="fas fa-trash"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="5" class="text-center">No expenses found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // Initialize tooltips
+    $('[data-bs-toggle="tooltip"]').tooltip();
+    
+    $('#expenses-table').DataTable({
+      responsive: true,
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search expenses...",
+        lengthMenu: "Show _MENU_ entries",
+        info: "Showing _START_ to _END_ of _TOTAL_ expenses",
+        infoEmpty: "Showing 0 to 0 of 0 expenses",
+        infoFiltered: "(filtered from _MAX_ total expenses)"
+      },
+      columnDefs: [
+        { orderable: false, targets: 4 } // Disable sorting on actions column
+      ],
+      order: [[0, 'desc']], // Sort by date descending by default
+      pageLength: 10,
+      lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
+    });
+  });
+</script>
+{% endblock %}

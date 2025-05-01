@@ -1,59 +1,73 @@
 {% load static %}
 {% block content %}
 <nav id="sidebar" class="sidebar js-sidebar">
-        <div class="sidebar-content js-simplebar">
-            <a class="sidebar-brand" href="/">
-                <span class="align-middle">Finance Facile</span>
-            </a>
+    <div class="sidebar-content js-simplebar">
+        <a class="sidebar-brand" href="/">
+            <span class="align-middle">Finance Facile</span>
+        </a>
 
-            <ul class="sidebar-nav">
-                <li class="sidebar-header">
-                    Management
-                </li>
-                <li class="sidebar-item active">
-                    <a class="sidebar-link" href="/">
-                        <i class="align-middle fa-solid fa-chart-line"></i>
-                        <span class="align-middle">Dashboard</span>
-                    </a>
-                </li>
-                <li class="sidebar-item active">
-                    <a class="sidebar-link" href="{% url 'entry-list' %}">
-                        <i class="align-middle fa-solid fa-shop"></i>
-                        <span class="align-middle">Total Look</span>
-                    </a>
-                </li>
-                <li class="sidebar-item active">
-                    <a class="sidebar-link" href="{% url 'revenue-list' %}">
-                        <i class="fa-solid fa-dollar-sign"></i>
-                        <span class="align-middle">Revenue</span>
-                    </a>
-                </li>
-                <li class="sidebar-item active">
-                    <a class="sidebar-link" href="{% url 'charge-list' %}">
-                        <i class="fa-solid fa-file-invoice-dollar"></i>
-                        <span class="align-middle">Charges</span>
-                    </a>
-                </li>
-                <li class="sidebar-item active">
-                    <a class="sidebar-link" href="{% url 'category-list' %}">
-                        <i class="fa-solid fa-list"></i>
-                        <span class="align-middle">Categories</span>
-                    </a>
-                </li>
-                <li class="sidebar-item active">
-                    <a class="sidebar-link" href="{% url 'product-list' %}">
-                        <i class="fa-solid fa-box"></i>
-                        <span class="align-middle">Products</span>
-                    </a>
-                </li>
-                <li class="sidebar-item active">
-                    <a class="sidebar-link" href="{% url 'invoice-list' %}">
-                        <i class="fa-solid fa-file-invoice"></i>
-                        <span class="align-middle">Invoices</span>
-                    </a>
-                </li>
-            </ul>
+        <ul class="sidebar-nav">
+            <li class="sidebar-header">
+                Management
+            </li>
+            <li class="sidebar-item active">
+                <a class="sidebar-link" href="/">
+                    <i class="align-middle fa-solid fa-chart-line"></i>
+                    <span class="align-middle">Dashboard</span>
+                </a>
+            </li>
+            <li class="sidebar-item active">
+                <a class="sidebar-link" href="{% url 'product-list' %}">
+                    <i class="fa-solid fa-box"></i>
+                    <span class="align-middle">Products</span>
+                </a>
+            </li>
+            <li class="sidebar-item active">
+                <a class="sidebar-link" href="{% url 'invoice-list' %}">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span class="align-middle">Invoices</span>
+                </a>
+            </li>
+            <li class="sidebar-item active">
+                <a class="sidebar-link" href="{% url 'expenses-list' %}">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <span class="align-middle">Expenses</span>
+                </a>
+            </li>
+            <li class="sidebar-header">
+                Categories Management
+            </li>
+            <li class="sidebar-item active">
+                <a class="sidebar-link" href="{% url 'expense-categories-list' %}">
+                    <i class="fa-solid fa-tags"></i>
+                    <span class="align-middle">Expense Categories</span>
+                </a>
+            </li>
+            <li class="sidebar-item active">
+                <a class="sidebar-link" href="{% url 'category-list' %}">
+                    <i class="fa-solid fa-list"></i>
+                    <span class="align-middle">Product Categories</span>
+                </a>
+            </li>
+            <li class="sidebar-header">
+                Account Management
+            </li>
+            <li class="sidebar-item active">
+                <a class="sidebar-link" href="{% url 'profile' %}">
+                    <i class="fa-solid fa-user-circle"></i>
+                    <span class="align-middle">My Profile</span>
+                </a>
+            </li>
+            {% if user.is_staff or user.is_superuser %}
+            <li class="sidebar-item active">
+                <a class="sidebar-link" href="{% url 'users-list' %}">
+                    <i class="fa-solid fa-users"></i>
+                    <span class="align-middle">User Management</span>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
 
-        </div>
-    </nav>
-    {% endblock content %}
+    </div>
+</nav>
+{% endblock content %}
