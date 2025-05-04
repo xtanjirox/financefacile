@@ -21,14 +21,14 @@
       {{ company.name }}
     </h2>
     <div class="d-flex gap-2">
-      <a href="{% url 'company-list' %}" class="btn btn-outline-secondary rounded-pill px-3">
+      <a href="{% url 'organizations:company-list' %}" class="btn btn-outline-secondary rounded-pill px-3">
         <i class="fas fa-arrow-left me-2"></i> Back
       </a>
       {% if user.is_staff or user.is_superuser or user.profile.is_company_admin %}
-      <a href="{% url 'company-edit' company.id %}" class="btn rounded-pill px-3" style="background-color: #e8f5e9; color: #2e7d32;">
+      <a href="{% url 'organizations:company-edit' company.id %}" class="btn rounded-pill px-3" style="background-color: #e8f5e9; color: #2e7d32;">
         <i class="fas fa-edit me-2"></i> Edit
       </a>
-      <a href="{% url 'company-settings' company.id %}" class="btn rounded-pill px-3" style="background-color: #fff8e1; color: #f57f17;">
+      <a href="{% url 'organizations:company-settings' company.id %}" class="btn rounded-pill px-3" style="background-color: #fff8e1; color: #f57f17;">
         <i class="fas fa-cog me-2"></i> Settings
       </a>
       {% endif %}
@@ -71,7 +71,7 @@
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                     <h6 class="m-0 font-weight-bold text-primary">Financial Settings</h6>
                     {% if user.is_staff or user.is_superuser or user.profile.is_company_admin %}
-                    <a href="{% url 'company-settings' company.id %}" class="btn btn-sm btn-warning">
+                    <a href="{% url 'organizations:company-settings' company.id %}" class="btn btn-sm btn-warning">
                         <i class="fas fa-edit"></i> Edit Settings
                     </a>
                     {% endif %}
@@ -95,7 +95,7 @@
         <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
             <h6 class="m-0 font-weight-bold text-primary">Company Members</h6>
             {% if user.is_staff or user.is_superuser or user.profile.is_company_admin %}
-            <a href="{% url 'company-members' company.id %}" class="btn btn-sm btn-success">
+            <a href="{% url 'organizations:company-members' company.id %}" class="btn btn-sm btn-success">
                 <i class="fas fa-users"></i> Manage Members
             </a>
             {% endif %}

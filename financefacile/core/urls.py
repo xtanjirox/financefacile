@@ -10,6 +10,7 @@ from .views.products_views import (
     ProductListView, ProductCreateView, ProductUpdateView, ProductDeleteView, ProductDetailView,
     ProductCategoryListView, ProductCategoryCreateView, ProductCategoryUpdateView, ProductCategoryDeleteView,
     InvoiceCreateView, InvoiceListView, InvoiceDetailView, InvoiceUpdateView, InvoiceDeleteView,
+    ProductDataJsonView
 )
 from .views.invoice_pdf import generate_invoice_pdf
 from .views.product_pdf import generate_product_pdf
@@ -41,12 +42,13 @@ urlpatterns = [
     path('categories/update/<int:pk>/', ProductCategoryUpdateView.as_view(), name='category-update'),
     path('categories/delete/<int:pk>/', ProductCategoryDeleteView.as_view(), name='category-delete'),
     # Product URLs
-    path(r'products', ProductListView.as_view(), name='product-list'),
-    path(r'products/create/', ProductCreateView.as_view(), name='product-create'),
-    path(r'products/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
-    path(r'products/update/<int:pk>/', ProductUpdateView.as_view(), name='product-update'),
-    path(r'products/delete/<int:pk>/', ProductDeleteView.as_view(), name='product-delete'),
-    path(r'products/pdf/<int:pk>/', generate_product_pdf, name='product-pdf'),
+    path('products/', ProductListView.as_view(), name='product-list'),
+    path('products/data/', ProductDataJsonView.as_view(), name='product-data-json'),
+    path('products/create/', ProductCreateView.as_view(), name='product-create'),
+    path('products/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
+    path('products/update/<int:pk>/', ProductUpdateView.as_view(), name='product-update'),
+    path('products/delete/<int:pk>/', ProductDeleteView.as_view(), name='product-delete'),
+    path('products/pdf/<int:pk>/', generate_product_pdf, name='product-pdf'),
     path('search/', search_views.global_search, name='global-search'),
     path('api/live-search/', search_api.live_search, name='live-search-api'),
     path(r'', login_required(views.home), name='home'),

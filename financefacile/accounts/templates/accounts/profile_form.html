@@ -25,17 +25,39 @@
           </h3>
         </div>
         <div class="card-body">
-          <form method="post" autocomplete="off" class="w-100">
+          <form method="post" autocomplete="off" class="w-100" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="p-3 w-100">
               <div class="row">
-                {% for field in form.visible_fields %}
-                <div class="form-group mb-3 col-md-6">
-                  {{ field|as_crispy_field }}
-                  {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
-                  {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                <div class="col-md-4 text-center mb-4">
+                  <div class="profile-img-container mb-3">
+                    {% if user.profile.avatar %}
+                      <img src="{{ user.profile.avatar.url }}" alt="{{ user.username }}" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover; border: 3px solid #e3f2fd;">
+                    {% else %}
+                      <div class="avatar-circle" style="width: 150px; height: 150px; background-color: #7cb9e8; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                        <span style="color: white; font-size: 3rem; font-weight: bold;">{{ user.profile.get_initials }}</span>
+                      </div>
+                    {% endif %}
+                  </div>
+                  <div class="form-group">
+                    <label for="id_avatar">Profile Picture</label>
+                    {{ form.avatar }}
+                    <small class="form-text text-muted">Upload a new profile picture (optional)</small>
+                  </div>
                 </div>
-                {% endfor %}
+                <div class="col-md-8">
+                  <div class="row">
+                    {% for field in form.visible_fields %}
+                      {% if field.name != 'avatar' %}
+                        <div class="form-group mb-3 col-md-6">
+                          {{ field|as_crispy_field }}
+                          {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
+                          {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                        </div>
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                </div>
               </div>
             </div>
             <div class="mt-4 d-flex justify-content-end">
@@ -43,7 +65,7 @@
                 style="background: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;">
                 <i class="fas fa-save me-1"></i> Save Changes
               </button>
-              <a href="{% url 'profile' %}" class="btn btn-secondary ms-3">Cancel</a>
+              <a href="{% url 'auth:profile' %}" class="btn btn-secondary ms-3">Cancel</a>
             </div>
           </form>
         </div>

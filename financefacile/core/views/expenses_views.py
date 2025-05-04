@@ -9,22 +9,15 @@ from django.db.models import Sum, Q
 
 from core.models import Expense, ExpenseCategory
 from core.forms import ExpenseForm, ExpenseCategoryForm, DateRangeFilterForm
-from .auth_mixins import BaseViewMixin, ExpensePermissionMixin
+from .auth_mixins import BaseViewMixin, ExpensePermissionMixin, CompanyFilterMixin
 
-class ExpenseListView(BaseViewMixin, ExpensePermissionMixin, ListView):
+class ExpenseListView(BaseViewMixin, ExpensePermissionMixin, CompanyFilterMixin, ListView):
     model = Expense
     template_name = 'expenses/expenses_list.html'
     context_object_name = 'expenses'
     
     def get_queryset(self):
         queryset = super().get_queryset()
-        
-        # Filter by company if user is not superuser/staff
-        if not self.request.user.is_superuser and not self.request.user.is_staff:
-            if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-                queryset = queryset.filter(company=self.request.user.profile.company)
-            else:
-                return queryset.none()
         
         # Get filter parameters from request
         start_date = self.request.GET.get('start_date')

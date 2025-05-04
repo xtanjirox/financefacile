@@ -30,14 +30,26 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserProfileForm
     template_name = 'accounts/profile_form.html'
-    success_url = reverse_lazy('profile')
+    success_url = reverse_lazy('auth:profile')
     
     def get_object(self):
         return self.request.user
     
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'instance': self.request.user})
+        return kwargs
+    
     def form_valid(self, form):
         messages.success(self.request, 'Your profile has been updated successfully!')
         return super().form_valid(form)
+        
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     form_class = CustomPasswordChangeForm
@@ -134,6 +146,33 @@ def get_company_admin_permissions():
     
     # Return all permissions except those in excluded apps
     return Permission.objects.exclude(content_type__app_label__in=excluded_apps)
+
+
+def get_default_view_permissions():
+    """Get all view permissions that a normal user should have by default"""
+    # Exclude admin-specific permissions and auth management
+    excluded_apps = ['admin', 'auth', 'contenttypes', 'sessions']
+    
+    # Get all view permissions except those in excluded apps
+    return Permission.objects.filter(
+        codename__startswith='view_'
+    ).exclude(
+        content_type__app_label__in=excluded_apps
+    )
+
+
+def ensure_default_view_permissions(user):
+    """Ensure a normal user has view permissions on all models by default"""
+    # Get all view permissions
+    view_permissions = get_default_view_permissions()
+    
+    # Add all view permissions to the user
+    user.user_permissions.add(*view_permissions)
+    
+    # Make sure the user is active
+    if not user.is_active:
+        user.is_active = True
+        user.save()
 
 
 def ensure_company_admin_permissions(user):
@@ -414,8 +453,7 @@ class CompanyUserCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView)
     template_name = 'accounts/company_user_create.html'
     
     def test_func(self):
-        company_id = self.kwargs.get('company_id')
-        company = get_object_or_404(Company, pk=company_id)
+        company = self.get_company()
         # Allow access if user is superuser/staff or company admin for this company
         return (self.request.user.is_staff or 
                 self.request.user.is_superuser or 
@@ -425,21 +463,23 @@ class CompanyUserCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView)
     
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        company_id = self.kwargs.get('company_id')
-        company = get_object_or_404(Company, pk=company_id)
-        kwargs['company'] = company
+        kwargs['company'] = self.get_company()
         return kwargs
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        company_id = self.kwargs.get('company_id')
-        company = get_object_or_404(Company, pk=company_id)
-        context['company'] = company
+        context['company'] = self.get_company()
         return context
+    
+    def get_company(self):
+        """Helper method to get the company from the URL parameter"""
+        company_id = self.kwargs.get('company_id')
+        return get_object_or_404(Company, pk=company_id)
     
     def form_valid(self, form):
         # Set the company for the form
-        form.company = self.company
+        company = self.get_company()
+        form.company = company
         
         # Save the form
         response = super().form_valid(form)
@@ -454,8 +494,8 @@ class CompanyUserCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView)
         return response
     
     def get_success_url(self):
-        company_id = self.kwargs.get('company_id')
-        return reverse('company-members', kwargs={'pk': company_id})
+        company = self.get_company()
+        return reverse('organizations:company-members', kwargs={'pk': company.pk})
 
 # Custom error handlers
 def handler403(request, exception=None):
@@ -487,24 +527,75 @@ def assign_user_to_company(request, user_id, company_id):
 
 @login_required
 def remove_user_from_company(request, user_id, company_id):
-    """Remove a user from a company"""
-    if not (request.user.is_staff or request.user.is_superuser):
-        messages.error(request, 'You do not have permission to perform this action.')
-        return redirect('company-list')
-    
-    user = get_object_or_404(User, pk=user_id)
+    """Remove a user from the database entirely"""
     company = get_object_or_404(Company, pk=company_id)
     
+    # Check if user has permission (is staff, superuser, or company admin for this company)
+    if not (request.user.is_staff or request.user.is_superuser or 
+            (hasattr(request.user, 'profile') and request.user.profile.company == company and 
+             request.user.profile.is_company_admin)):
+        messages.error(request, 'You do not have permission to perform this action.')
+        return redirect('organizations:company-members', pk=company_id)
+    
+    user = get_object_or_404(User, pk=user_id)
+    
     # Check if user belongs to this company
-    if user.profile.company != company:
+    if not hasattr(user, 'profile') or user.profile.company != company:
         messages.error(request, f'User {user.username} is not a member of {company.name}.')
-        return redirect('company-members', pk=company_id)
+        return redirect('organizations:company-members', pk=company_id)
     
-    # Remove user from company
-    profile = user.profile
-    profile.company = None
-    profile.is_company_admin = False
-    profile.save()
+    # Prevent removing yourself
+    if user == request.user:
+        messages.error(request, 'You cannot remove yourself from the company.')
+        return redirect('organizations:company-members', pk=company_id)
     
-    messages.success(request, f'User {user.username} has been removed from {company.name}.')
-    return redirect('company-members', pk=company_id)
+    # Store username for success message
+    username = user.username
+    
+    # Delete the user from the database entirely
+    user.delete()
+    
+    messages.success(request, f'User {username} has been permanently deleted from the system.')
+    return redirect('organizations:company-members', pk=company_id)
+
+
+@login_required
+def delete_company_user(request, user_id, company_id):
+    """Delete a user from the system (company admin function)"""
+    company = get_object_or_404(Company, pk=company_id)
+    
+    # Check if user has permission (is staff, superuser, or company admin for this company)
+    if not (request.user.is_staff or request.user.is_superuser or 
+            (hasattr(request.user, 'profile') and request.user.profile.company == company and 
+             request.user.profile.is_company_admin)):
+        messages.error(request, 'You do not have permission to perform this action.')
+        return redirect('organizations:company-members', pk=company_id)
+    
+    user = get_object_or_404(User, pk=user_id)
+    
+    # Check if user belongs to this company
+    if not hasattr(user, 'profile') or user.profile.company != company:
+        messages.error(request, f'User {user.username} is not a member of {company.name}.')
+        return redirect('organizations:company-members', pk=company_id)
+    
+    # Prevent deleting yourself
+    if user == request.user:
+        messages.error(request, 'You cannot delete your own account.')
+        return redirect('organizations:company-members', pk=company_id)
+    
+    # Check if this is a POST request (for confirmation)
+    if request.method == 'POST':
+        # Store username for success message
+        username = user.username
+        
+        # Delete the user
+        user.delete()
+        
+        messages.success(request, f'User {username} has been deleted from the system.')
+        return redirect('organizations:company-members', pk=company_id)
+    
+    # If it's a GET request, show confirmation page
+    return render(request, 'accounts/confirm_delete_user.html', {
+        'user_to_delete': user,
+        'company': company
+    })

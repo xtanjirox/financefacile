@@ -1,15 +1,14 @@
-from django.views.generic import DetailView, UpdateView, DeleteView
+import logging
+from django.views.generic import DetailView, UpdateView, DeleteView, ListView, CreateView, TemplateView
 from django_select2 import forms as s2forms
-from core.forms import DateRangeFilterForm, DateRangeCategoryFilterForm
+from core.forms import DateRangeFilterForm, DateRangeCategoryFilterForm, DateRangeFilterFormNew
 from django.db.models import Q, Sum
-from django.views.generic import ListView
 from django.forms import modelformset_factory
 from django.views.generic.edit import CreateView
 from django.views import View
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.urls import reverse_lazy
-from django.shortcuts import redirect, render
-from django.db.models import Sum
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
@@ -17,10 +16,10 @@ from core import models, tables
 from core.models import InvoiceItem
 import core.forms
 from .base import BaseListView, FormViewMixin, BaseDeleteView
-from .auth_mixins import BaseViewMixin, ProductPermissionMixin
+from .auth_mixins import BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin
 
 
-class ProductCategoryListView(BaseListView):
+class ProductCategoryListView(BaseListView, CompanyFilterMixin):
     model = models.ProductCategory
     table_class = tables.ProductCategoryTable
     filter_class = None
@@ -29,15 +28,7 @@ class ProductCategoryListView(BaseListView):
     create_url = reverse_lazy('category-create')
     segment = 'categories'
     detail = True
-    
-    def get_queryset(self):
-        # Filter categories by the user's company
-        queryset = super().get_queryset()
-        if self.request.user.is_superuser or self.request.user.is_staff:
-            return queryset
-        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-            return queryset.filter(company=self.request.user.profile.company)
-        return queryset.none()
+    company_field = 'company'  # Field name for company relationship
 
 
 class ProductCategoryCreateView(CreateView, FormViewMixin):
@@ -47,59 +38,76 @@ class ProductCategoryCreateView(CreateView, FormViewMixin):
     segment = 'categories'
     success_url = reverse_lazy('category-list')
     
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # Filter parent categories to only show those from the same company
+        if 'parent' in form.fields and hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            form.fields['parent'].queryset = models.ProductCategory.objects.filter(
+                company=self.request.user.profile.company
+            )
+        return form
+    
     def form_valid(self, form):
         # Set the company for the new category
         category = form.save(commit=False)
-        if (not self.request.user.is_superuser and not self.request.user.is_staff and 
-                hasattr(self.request.user, 'profile') and self.request.user.profile.company):
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
             category.company = self.request.user.profile.company
         category.save()
         return super().form_valid(form)
 
 
-class ProductCategoryUpdateView(UpdateView, FormViewMixin):
+class ProductCategoryUpdateView(UpdateView, FormViewMixin, CompanyFilterMixin):
     model = models.ProductCategory
     template_name = 'generic/detail.html'
-    fields = '__all__'
+    fields = ['name', 'parent']
     segment = 'categories'
     success_url = reverse_lazy('category-list')
+    company_field = 'company'  # Field name for company relationship
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # Filter parent categories to only show those from the same company
+        if 'parent' in form.fields and hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            form.fields['parent'].queryset = models.ProductCategory.objects.filter(
+                company=self.request.user.profile.company
+            )
 
 
-class ProductCategoryDeleteView(BaseDeleteView):
+class ProductCategoryDeleteView(BaseDeleteView, CompanyFilterMixin):
     model = models.ProductCategory
     success_url = reverse_lazy('category-list')
-
-
-class ProductListView(BaseListView):
-    model = models.Product
-    table_class = tables.ProductTable
-    template_name = 'products/product_list.html'
-    filter_class = None
-    get_stats = False
-    table_pagination = {'per_page': 10}
-    create_url = reverse_lazy('product-create')
-    segment = 'products'
-    detail = True
-    
-    def get_queryset(self):
-        # Filter products by the user's company
-        queryset = super().get_queryset()
-        if self.request.user.is_superuser or self.request.user.is_staff:
-            return queryset
-        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-            return queryset.filter(company=self.request.user.profile.company)
-        return queryset.none()
+    company_field = 'company'  # Field name for company relationship
+    template_name = 'products/product_category_confirm_delete.html'
+    skip_confirmation = False  # Override the BaseDeleteView setting to show confirmation page
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # Get related products for this category
+        related_products = self.object.products.all()
+        context['related_products'] = related_products[:10]  # Limit to 10 products to avoid large pages
+        context['related_products_count'] = related_products.count()
+        return context
+
+
+from django.http import JsonResponse
+from django.views.generic import TemplateView
+from django.urls import reverse
+from django.utils.html import format_html
+
+class ProductListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin, ListView):
+    model = models.Product
+    template_name = 'products/product_list.html'
+    create_url = reverse_lazy('product-create')
+    segment = 'products'
+    context_object_name = 'products'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        products = self.get_queryset()
         
-        # Calculate inventory stats for the user's company
-        if self.request.user.is_superuser or self.request.user.is_staff:
-            products = models.Product.objects.all()
-        elif hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-            products = models.Product.objects.filter(company=self.request.user.profile.company)
-        else:
-            products = models.Product.objects.none()
+        # Add products to context for direct rendering in template
+        context['products'] = products
+        context['total_products'] = products.count()
         
         # Calculate total inventory value (cost × quantity)
         total_inventory_value = sum(product.unit_cost * product.quantity for product in products)
@@ -109,7 +117,82 @@ class ProductListView(BaseListView):
         total_potential_revenue = sum(product.selling_price * product.quantity for product in products)
         context['total_potential_revenue'] = total_potential_revenue
         
+        # Add product count for stats
+        context['product_count'] = products.count()
+        
+        # Add create URL and segment for template
+        context['create_url'] = self.create_url
+        context['segment'] = self.segment
+        
         return context
+
+
+class ProductDataJsonView(BaseViewMixin, View):
+    """
+    View to return product data in JSON format for DataTables
+    """
+    def get(self, request, *args, **kwargs):
+        import logging
+        logger = logging.getLogger(__name__)
+        
+        logger.info(f"ProductDataJsonView: Request received from user {self.request.user.username}")
+        
+        # Get products filtered by company
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            products = models.Product.objects.all()
+            logger.info(f"ProductDataJsonView: Admin user, found {products.count()} products")
+        elif hasattr(self.request.user, 'profile') and self.request.user.profile and self.request.user.profile.company:
+            company = self.request.user.profile.company
+            logger.info(f"ProductDataJsonView: Company user, company: {company.name}, id: {company.id}")
+            products = models.Product.objects.filter(company=company)
+            logger.info(f"ProductDataJsonView: Found {products.count()} products for company {company.name}")
+        else:
+            logger.info(f"ProductDataJsonView: No company found for user {self.request.user.username}")
+            products = models.Product.objects.none()
+        
+        # Prepare data for DataTables
+        data = []
+        try:
+            from django.utils.html import format_html
+            from django.urls import reverse
+            
+            for product in products:
+                # Create action buttons HTML
+                actions = format_html(
+                    '<div class="btn-group">' +
+                    '<a href="{}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a> ' +
+                    '<a href="{}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i></a> ' +
+                    '<a href="{}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Delete"><i class="fas fa-trash"></i></a>' +
+                    '</div>',
+                    reverse('product-detail', args=[product.id]),
+                    reverse('product-update', args=[product.id]),
+                    reverse('product-delete', args=[product.id])
+                )
+                
+                # Format category name
+                category_name = product.category.name if product.category else '-'
+                
+                # Add product data
+                data.append({
+                    'id': product.id,
+                    'name': product.name,
+                    'sku': product.sku or '-',
+                    'category': category_name,
+                    'quantity': product.quantity,
+                    'unit_cost': float(product.unit_cost),
+                    'selling_price': float(product.selling_price),
+                    'actions': actions
+                })
+            
+            logger.info(f"ProductDataJsonView: Successfully prepared data for {len(data)} products")
+        except Exception as e:
+            logger.error(f"ProductDataJsonView: Error preparing product data: {str(e)}")
+            import traceback
+            logger.error(traceback.format_exc())
+        
+        response_data = {'data': data}
+        logger.info(f"ProductDataJsonView: Returning response with {len(data)} products")
+        return JsonResponse(response_data)
 
 
 class ProductCreateView(CreateView):
@@ -159,9 +242,27 @@ class ProductDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # Find all InvoiceItems for this product, prefetch related invoice
-        context['invoices'] = InvoiceItem.objects.filter(
-            product=self.object).select_related('invoice')
+        
+        # Find all InvoiceItems for this product
+        invoice_items = models.InvoiceItem.objects.filter(product=self.object).select_related('invoice')
+        
+        # Get the unique invoices containing this product
+        invoices_data = []
+        for item in invoice_items:
+            invoice = item.invoice
+            # Add invoice data with additional information
+            invoices_data.append({
+                'id': invoice.id,
+                'invoice_number': f'INV-{invoice.id:06d}',  # Format invoice number
+                'date': invoice.created_at,
+                'client_name': f'Company {invoice.company.name}' if invoice.company else 'N/A',  # Use company name as client
+                'total': item.total_price,  # Use the item's total price
+                'quantity': item.quantity,  # Include quantity sold
+                'status': 'paid',  # Default status since we don't have a status field
+                'url': reverse_lazy('invoice-detail', kwargs={'pk': invoice.pk})
+            })
+        
+        context['invoices'] = invoices_data
         return context
 
 
@@ -193,10 +294,18 @@ class InvoiceCreateView(CreateView, FormViewMixin):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        
+        # Get the company for the current user
+        company = None
+        if hasattr(self.request.user, 'profile') and self.request.user.profile and self.request.user.profile.company:
+            company = self.request.user.profile.company
+        
+        # Pass the company to the formset
         if self.request.POST:
-            context['formset'] = core.forms.InvoiceItemFormSet(self.request.POST)
+            context['formset'] = core.forms.InvoiceItemFormSet(self.request.POST, company=company)
         else:
-            context['formset'] = core.forms.InvoiceItemFormSet()
+            context['formset'] = core.forms.InvoiceItemFormSet(company=company)
+            
         self.add_products_to_context(context)
         return context
 
@@ -317,14 +426,36 @@ class InvoiceCreateView(CreateView, FormViewMixin):
         # Save the formset
         formset.instance = self.object
         try:
-            formset.save()
+            # First save the formset
+            invoice_items = formset.save()
             logger.info("Formset saved successfully.")
+            
+            # Now update product inventory for each invoice item
+            for item in invoice_items:
+                try:
+                    product = item.product
+                    if product.quantity < item.quantity:
+                        # Not enough stock
+                        logger.error(f"Not enough stock for product {product.name} (ID: {product.id}). Requested: {item.quantity}, Available: {product.quantity}")
+                        form.add_error(None, f"Not enough stock for product {product.name}. Requested: {item.quantity}, Available: {product.quantity}")
+                        # Delete the invoice and return form_invalid
+                        self.object.delete()
+                        return self.form_invalid(form)
+                    
+                    # Update product quantity
+                    product.quantity -= item.quantity
+                    product.save()
+                    logger.info(f"Updated inventory for product {product.name} (ID: {product.id}). New quantity: {product.quantity}")
+                except Exception as e:
+                    logger.error(f"Error updating product inventory: {e}")
+                    # Add error but continue with other products
+                    form.add_error(None, f"Error updating inventory for product {item.product.name if item.product else 'Unknown'}: {e}")
         except Exception as e:
             logger.error(f"Error saving formset: {e}")
             # Add error to form and return invalid
             form.add_error(None, f"Error saving invoice items: {e}")
-             # Optionally delete the just-created invoice object if items fail?
-            # self.object.delete()
+            # Delete the just-created invoice object if items fail
+            self.object.delete()
             return self.form_invalid(form)
 
         logger.info("--- InvoiceCreateView.form_valid --- END ---")
@@ -345,7 +476,7 @@ class InvoiceCreateView(CreateView, FormViewMixin):
         return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 
-class InvoiceListView(BaseViewMixin, ProductPermissionMixin, ListView):
+class InvoiceListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin, ListView):
     model = models.Invoice
     template_name = 'invoices/invoice_list.html'
     context_object_name = 'invoices'
@@ -380,25 +511,20 @@ class InvoiceListView(BaseViewMixin, ProductPermissionMixin, ListView):
                 
         # Try to get client name filter
         from contextlib import suppress
-        with suppress(Exception):
-            client_name = self.request.GET.get('client_name', '')
-            if client_name:
-                queryset = queryset.filter(client_name__icontains=client_name)
-            
+        # Remove client_name filtering as it doesn't exist in the Invoice model
         return queryset.order_by('-created_at')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         
         # Initialize filter form
-        filter_form = DateRangeFilterForm(self.request.GET or None)
+        filter_form = DateRangeFilterFormNew(self.request.GET or None)
         context['filter_form'] = filter_form
         
         # Get filter parameters
         start_date = self.request.GET.get('start_date')
         end_date = self.request.GET.get('end_date')
         status = self.request.GET.get('status')
-        client_name = self.request.GET.get('client_name', '')
         
         # Build filter description
         filter_description = []
@@ -416,10 +542,6 @@ class InvoiceListView(BaseViewMixin, ProductPermissionMixin, ListView):
             filter_description.append(f"Status: {status.title()}")
             is_filtered = True
             
-        if client_name:
-            filter_description.append(f"Client: {client_name}")
-            is_filtered = True
-            
         if is_filtered:
             context['is_filtered'] = True
             context['filter_description'] = ", ".join(filter_description)
@@ -431,13 +553,14 @@ class InvoiceListView(BaseViewMixin, ProductPermissionMixin, ListView):
                 invoice_queryset = invoice_queryset.filter(company=self.request.user.profile.company)
         
         # Calculate filtered stats if filter is applied
-        if start_date or end_date or status or client_name:
-            filtered_invoices = invoice_queryset.filter(
-                created_at__date__gte=start_date or None,
-                created_at__date__lte=end_date or None,
-                is_paid=status or None,
-                client_name__icontains=client_name or ''
-            )
+        if start_date or end_date:
+            filter_kwargs = {}
+            if start_date:
+                filter_kwargs['created_at__date__gte'] = start_date
+            if end_date:
+                filter_kwargs['created_at__date__lte'] = end_date
+            
+            filtered_invoices = invoice_queryset.filter(**filter_kwargs)
             filtered_invoice_items = InvoiceItem.objects.filter(
                 invoice__in=filtered_invoices
             )

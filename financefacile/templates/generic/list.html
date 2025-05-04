@@ -15,221 +15,7 @@
 {% endblock footer %}
 
 {% block content %}
-
-
-{% if segment == "entries"%}
-<div class="row">
-    <div class="col-sm-6 col-xl-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col mt-0">
-                        <h5 class="card-title">Total Charge</h5>
-                    </div>
-
-                    <div class="col-auto">
-                        <div class="stat text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="feather feather-shopping-bag align-middle">
-                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                <line x1="3" y1="6" x2="21" y2="6"></line>
-                                <path d="M16 10a4 4 0 0 1-8 0"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                <h1 class="mt-1 mb-3">{{ total_charge }} dt</h1>
-                <div class="mb-0">
-                    <span class="badge badge-success-light">3.65%</span>
-                    <span class="text-muted">Since last week</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-xl-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col mt-0">
-                        <h5 class="card-title">Total Revenue</h5>
-                    </div>
-
-                    <div class="col-auto">
-                        <div class="stat text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="feather feather-shopping-bag align-middle">
-                                <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
-                                <line x1="3" y1="6" x2="21" y2="6"></line>
-                                <path d="M16 10a4 4 0 0 1-8 0"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                <h1 class="mt-1 mb-3">{{ total_revenue }} dt</h1>
-                <div class="mb-0">
-                    <span class="badge badge-danger-light">-5.25%</span>
-                    <span class="text-muted">Sold Units</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-sm-6 col-xl-4">
-        <div class="card">
-            <div class="card-body">
-                <div class="row">
-                    <div class="col mt-0">
-                        <h5 class="card-title">Benefice</h5>
-                    </div>
-
-                    <div class="col-auto">
-                        <div class="stat text-primary">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                                 fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                 stroke-linejoin="round" class="feather feather-dollar-sign align-middle">
-                                <line x1="12" y1="1" x2="12" y2="23"></line>
-                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                <h1 class="mt-1 mb-3">{{ total_benefice }}</h1>
-                <div class="mb-0">
-                    <span class="badge badge-success-light">4.65%</span>
-                    <span class="text-muted">Since last week</span>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-{% if detail %}
-<div class="row">
-    <div class="col-12 col-md-6">
-        <div class="card flex-fill w-100">
-            <div class="card-header">
-
-                <h5 class="card-title mb-0">Balance Total / Type</h5>
-            </div>
-            <div class="card-body d-flex">
-                <div class="align-self-center w-100">
-                    <div class="py-3">
-                        <div class="chart chart-xs">
-                            <canvas id="chartjs-dashboard-pie1"></canvas>
-                        </div>
-                    </div>
-
-                    <a data-bs-target="#multi-2" data-bs-toggle="collapse" class="collapsed" aria-expanded="false" style="float: right; color:Black;">
-                            More Details <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-right-down align-middle"><polyline points="10 15 15 20 20 15"></polyline><path d="M4 4h7a4 4 0 0 1 4 4v12"></path></svg>
-                    </a>
-
-                    <ul id="multi-2" class="sidebar-dropdown list-unstyled collapse" style="">
-                        <li class="sidebar-item">
-                            <table class="table mb-0">
-                                <tbody>
-                                <tr>
-                                    <td>Revenue</td>
-                                    <td class="text-end">{{ ls_stats.0 }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Charges</td>
-                                    <td class="text-end">{{ ls_stats.1 }}</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-12 col-md-6">
-        <div class="card flex-fill w-100">
-            <div class="card-header">
-
-                <h5 class="card-title mb-0">Balance Charge / Catégorie</h5>
-            </div>
-            <div class="card-body d-flex">
-                <div class="align-self-center w-100">
-                    <div class="py-3">
-                        <div class="chart chart-xs">
-                            <canvas id="chartjs-dashboard-pie2"></canvas>
-                        </div>
-                    </div>
-                    <a data-bs-target="#multi-3" data-bs-toggle="collapse" class="collapsed" aria-expanded="false" style="float: right; color:Black;">
-                            More Details <svg xmlns="http://www.w3.org/2000/svg"  width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-corner-right-down align-middle"><polyline points="10 15 15 20 20 15"></polyline><path d="M4 4h7a4 4 0 0 1 4 4v12"></path></svg>
-                    </a>
-
-                    <ul id="multi-3" class="sidebar-dropdown list-unstyled collapse" style="">
-                        <li class="sidebar-item">
-                            <table class="table mb-0">
-                                <tbody>
-                                {% for item in pie_charge %}
-                                <tr>
-                                    <td>{{ item.category_name }}</td>
-                                    <td class="text-end">{{ item.total_sum }}</td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Pie chart
-        new Chart(document.getElementById("chartjs-dashboard-pie1"), {
-            type: "pie",
-            data: {
-                labels: ["Revenues", "Charges"],
-                datasets: [{
-                    data: {{ ls_stats }},
-                    backgroundColor: [
-                        window.theme.success,
-                        window.theme.danger
-                    ],
-                    borderWidth: 5
-                }]
-            },
-            options: {
-                responsive: !window.MSInputMethodContext,
-                maintainAspectRatio: false,
-                legend: {
-                    display: false
-                },
-                cutoutPercentage: 75
-            }
-        });
-    });
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Pie chart
-        var data = JSON.parse('{{ data | safe }}');
-        console.log(data);
-        new Chart(document.getElementById("chartjs-dashboard-pie2"), {
-            type: "pie",
-            data: data,
-            options: {
-                responsive: !window.MSInputMethodContext,
-                maintainAspectRatio: false,
-                legend: {
-                    display: false
-                },
-                cutoutPercentage: 75
-            }
-        });
-    });
-</script>
-{% endif %}
-{% endif %}
 <div class="container-fluid p-0">
-
-
     {% if filter %}
         {% block filter %}
             {% include 'generic/filter.html' %}
@@ -239,7 +25,7 @@
     {% if segment == 'products' %}
     <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
         <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fas fa-box-open me-2" style="color: #7cb9e8;"></i>Products</h2>
-        <a href="{% url 'product-create' %}" class="btn btn-lg btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+        <a href="{% url 'product-create' %}" class="btn btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
             <i class="fa fa-plus"></i> Add Product
         </a>
     </div>
@@ -283,7 +69,7 @@
     {% if segment == 'categories' %}
     <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
         <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fas fa-tags me-2" style="color: #7cb9e8;"></i>Categories</h2>
-        <a href="{% url 'category-create' %}" class="btn btn-lg btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+        <a href="{% url 'category-create' %}" class="btn btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
             <i class="fa fa-plus"></i> Add Category
         </a>
     </div>

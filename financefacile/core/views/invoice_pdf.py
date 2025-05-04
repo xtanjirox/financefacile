@@ -46,13 +46,42 @@ def generate_invoice_pdf(request, pk):
     normal_style = styles["Normal"]
     
     # Add invoice header
-    elements.append(Paragraph(f"INVOICE #{invoice.pk}", title_style))
+    elements.append(Paragraph(f"INVOICE INV-{invoice.pk}", title_style))
     elements.append(Spacer(1, 0.25*inch))
     
     # Add invoice date
     date_str = invoice.created_at.strftime('%Y-%m-%d %H:%M')
     elements.append(Paragraph(f"Date: {date_str}", normal_style))
-    elements.append(Spacer(1, 0.25*inch))
+    elements.append(Spacer(1, 0.1*inch))
+    
+    # Add company information if available
+    if invoice.company:
+        company_style = ParagraphStyle(
+            'Company',
+            parent=styles['Heading3'],
+            fontSize=12,
+            spaceAfter=6
+        )
+        company_info_style = ParagraphStyle(
+            'CompanyInfo',
+            parent=normal_style,
+            fontSize=10,
+            leftIndent=10
+        )
+        
+        elements.append(Paragraph("Company Information:", company_style))
+        elements.append(Paragraph(f"<b>Name:</b> {invoice.company.name}", company_info_style))
+        
+        if invoice.company.siret_number:
+            elements.append(Paragraph(f"<b>SIRET Number:</b> {invoice.company.siret_number}", company_info_style))
+        
+        if invoice.company.address:
+            elements.append(Paragraph(f"<b>Address:</b> {invoice.company.address}", company_info_style))
+        
+        if invoice.company.phone_number:
+            elements.append(Paragraph(f"<b>Phone:</b> {invoice.company.phone_number}", company_info_style))
+        
+        elements.append(Spacer(1, 0.25*inch))
     
     # Add invoice items section header
     elements.append(Paragraph("Invoice Items:", header_style))

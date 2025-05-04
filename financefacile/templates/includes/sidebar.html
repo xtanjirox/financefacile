@@ -54,7 +54,7 @@
             </li>
             {% if user.is_company_admin or user.is_staff or user.is_superuser %}
             <li class="sidebar-item active">
-                <a class="sidebar-link" href="{% url 'company-list' %}">
+                <a class="sidebar-link" href="{% url 'organizations:company-list' %}">
                     <i class="fa-solid fa-building"></i>
                     <span class="align-middle">Companies</span>
                 </a>
@@ -62,38 +62,24 @@
             {% endif %}
             {% if user.profile.company %}
             <li class="sidebar-item active">
-                <a class="sidebar-link" href="{% url 'company-detail' user.profile.company.id %}">
+                <a class="sidebar-link" href="{% url 'organizations:company-detail' user.profile.company.id %}">
                     <i class="fa-solid fa-building-user"></i>
                     <span class="align-middle">Company Details</span>
                 </a>
             </li>
-            {% if user.profile.is_company_admin %}
-            <li class="sidebar-item active">
-                <a class="sidebar-link" href="{% url 'company-settings' user.profile.company.id %}">
-                    <i class="fa-solid fa-cog"></i>
-                    <span class="align-middle">Company Settings</span>
-                </a>
-            </li>
-            <li class="sidebar-item active">
-                <a class="sidebar-link" href="{% url 'company-members' user.profile.company.id %}">
-                    <i class="fa-solid fa-users-cog"></i>
-                    <span class="align-middle">Manage Members</span>
-                </a>
-            </li>
-            {% endif %}
             {% endif %}
             <li class="sidebar-header">
                 Account Management
             </li>
             <li class="sidebar-item active">
-                <a class="sidebar-link" href="{% url 'profile' %}">
+                <a class="sidebar-link" href="{% url 'auth:profile' %}">
                     <i class="fa-solid fa-user-circle"></i>
                     <span class="align-middle">My Profile</span>
                 </a>
             </li>
             {% if user.is_staff or user.is_superuser %}
             <li class="sidebar-item active">
-                <a class="sidebar-link" href="{% url 'users-list' %}">
+                <a class="sidebar-link" href="{% url 'users:users-list' %}">
                     <i class="fa-solid fa-users"></i>
                     <span class="align-middle">User Management</span>
                 </a>

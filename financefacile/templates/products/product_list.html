@@ -30,23 +30,33 @@
   .dataTables_wrapper .dataTables_filter input {
     width: 100% !important;
     margin-left: 0 !important;
-    padding: 10px 15px;
-    border-radius: 10px;
-    border: 1px solid #e0e6ed;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-    font-size: 1rem;
+    padding: 12px 20px;
+    border-radius: 50px;
+    border: 2px solid #e0e6ed;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    font-size: 1.1rem;
     background-color: #f8fafc;
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
     background-repeat: no-repeat;
-    background-position: right 15px center;
-    padding-right: 40px;
-    transition: all 0.2s ease;
+    background-position: right 20px center;
+    padding-right: 50px;
+    transition: all 0.3s ease;
   }
   
   .dataTables_wrapper .dataTables_filter input:focus {
     border-color: #7cb9e8;
-    box-shadow: 0 0 0 3px rgba(124, 185, 232, 0.25);
+    box-shadow: 0 0 0 4px rgba(124, 185, 232, 0.25);
     outline: none;
+    background-color: #fff;
+  }
+  
+  /* Add label for search */
+  .dataTables_wrapper .dataTables_filter label {
+    font-weight: bold;
+    color: #39739d;
+    font-size: 1.1rem;
+    margin-bottom: 8px;
+    display: block;
   }
   
   /* Adjust the length menu position */
@@ -125,10 +135,10 @@
   <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
     <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-boxes-stacked me-2" style="color: #7cb9e8;"></i>Products</h2>
     <div class="d-flex gap-2">
-      <a href="{% url 'category-create' %}" class="btn btn-lg btn-outline-primary shadow-sm rounded-pill px-4" style="border-color: #7cb9e8; color: #39739d; font-weight: 600;">
+      <a href="{% url 'category-create' %}" class="btn btn-outline-primary shadow-sm rounded-pill px-4" style="border-color: #7cb9e8; color: #39739d; font-weight: 600;">
         <i class="fa fa-tags"></i> Add Category
       </a>
-      <a href="{% url 'product-create' %}" class="btn btn-lg btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+      <a href="{% url 'product-create' %}" class="btn btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
         <i class="fa fa-plus"></i> Add Product
       </a>
     </div>
@@ -143,7 +153,7 @@
             Total Products
           </h5>
           <p class="card-text display-6" style="color: #1976d2; font-weight: 700;">
-            {{ table.rows|length }}
+            {{ total_products }}
           </p>
           <p class="text-muted small">Total items in inventory</p>
         </div>
@@ -177,37 +187,8 @@
     </div>
   </div>
 
-  <!-- Filters Section -->
-  <div class="card shadow-sm border-0 mb-4" style="border-radius: 14px;">
-    <div class="card-body p-4">
-      <h5 class="card-title mb-3 fw-bold" style="color: #39739d;">
-        <i class="fas fa-filter me-2" style="color: #7cb9e8;"></i> Filter Products
-      </h5>
-      <div class="row g-3">
-        <div class="col-md-4">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="name-filter" placeholder="Product Name">
-            <label for="name-filter">Product Name</label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-floating">
-            <input type="text" class="form-control" id="sku-filter" placeholder="SKU">
-            <label for="sku-filter">SKU</label>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="form-floating">
-            <select class="form-select" id="category-filter">
-              <option value="">All Categories</option>
-              <!-- Categories would be populated dynamically -->
-            </select>
-            <label for="category-filter">Category</label>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- DataTables will handle filtering and searching -->
+
 
   <div class="row">
     <div class="col-12">
@@ -216,52 +197,62 @@
           <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
             <i class="fas fa-table me-2" style="color: #7cb9e8;"></i>Products
           </h5>
-          <div class="d-flex gap-2">
-            <button id="export-csv" class="btn btn-sm rounded-pill px-3" style="background-color: #e8f5e9; color: #2e7d32;">
-              <i class="fas fa-file-csv me-2"></i> Export CSV
-            </button>
-            <button id="print-table" class="btn btn-sm rounded-pill px-3" style="background-color: #e3f2fd; color: #1976d2;">
-              <i class="fas fa-print me-2"></i> Print
-            </button>
-          </div>
         </div>
         <div class="card-body p-4">
-          {% render_table table 'django_tables2/bootstrap5.html' %}
-          <script>
-            // We'll replace this table with DataTables after it's rendered
-            document.addEventListener('DOMContentLoaded', function() {
-              // Add ID to the rendered table for DataTables initialization
-              const tableElement = document.querySelector('.table');
-              if (tableElement) {
-                tableElement.id = 'products-table';
-                tableElement.classList.add('table-hover', 'align-middle');
-                tableElement.style.width = '100%';
-                tableElement.style.background = '#fff';
-                tableElement.style.borderRadius = '12px';
-                tableElement.style.overflow = 'hidden';
-                
-                // Style the header
-                const thead = tableElement.querySelector('thead');
-                if (thead) {
-                  thead.style.background = '#e7f1fa';
-                  thead.style.color = '#39739d';
-                  thead.style.fontWeight = '600';
-                }
-                
-                // Style the table rows
-                const rows = tableElement.querySelectorAll('tbody tr');
-                rows.forEach(row => {
-                  row.style.transition = 'all 0.2s ease';
-                  row.addEventListener('mouseover', () => {
-                    row.style.backgroundColor = 'rgba(124, 185, 232, 0.1)';
-                  });
-                  row.addEventListener('mouseout', () => {
-                    row.style.backgroundColor = '';
-                  });
-                });
-              }
-            });
-          </script>
+          <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+          <link rel="stylesheet" href="{% static 'css/datatables_pastel.css' %}">
+          <div class="table-responsive">
+            <table id="products-table" class="table align-middle datatable" style="width:100%; background:#fff; border-radius:12px; overflow:hidden;">
+              <thead style="background:#e7f1fa; color:#39739d; font-weight:600;">
+                <tr>
+                  <th>Name</th>
+                  <th>SKU</th>
+                  <th>Category</th>
+                  <th>Quantity</th>
+                  <th>Unit Cost</th>
+                  <th>Selling Price</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for product in products %}
+                <tr>
+                  <td>{{ product.name }}</td>
+                  <td>{{ product.sku|default:'-' }}</td>
+                  <td>{{ product.category.name|default:'-' }}</td>
+                  <td>{{ product.quantity }}</td>
+                  <td>{{ product.unit_cost|floatformat:2 }} €</td>
+                  <td>{{ product.selling_price|floatformat:2 }} €</td>
+                  <td>
+                    <div class="btn-group">
+                      <a href="{% url 'product-detail' product.id %}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a>
+                      <a href="{% url 'product-update' product.id %}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i></a>
+                      <a href="{% url 'product-delete' product.id %}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Delete"><i class="fas fa-trash"></i></a>
+                    </div>
+                  </td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="7" class="text-center py-4">
+                    <div class="d-flex flex-column align-items-center">
+                      <i class="fas fa-box-open text-muted mb-3" style="font-size: 3rem;"></i>
+                      <h5 class="text-muted">No products found</h5>
+                      <p class="text-muted">Get started by adding your first product</p>
+                      <a href="{% url 'product-create' %}" class="btn btn-primary mt-2">
+                        <i class="fa fa-plus me-2"></i> Add Product
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <!-- Product table -->
+          <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+          <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+          <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+          <script src="{% static 'js/datatables_init.js' %}"></script>
         </div>
       </div>
     </div>
@@ -270,143 +261,4 @@
 {% endblock content %}
 
 {% block extra_js %}
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.bootstrap5.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
-<script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
-<script>
-  $(document).ready(function() {
-    // Initialize tooltips
-    function initTooltips() {
-      $('[data-bs-toggle="tooltip"]').tooltip();
-    }
-    
-    // Initialize DataTables with a slight delay to ensure the table is fully rendered
-    setTimeout(function() {
-      // Initialize DataTable
-      const dataTable = $('#products-table').DataTable({
-        responsive: true,
-        language: {
-          search: "_INPUT_",
-          searchPlaceholder: "Quick search...",
-          lengthMenu: "Show _MENU_ entries",
-          info: "Showing _START_ to _END_ of _TOTAL_ products",
-          infoEmpty: "Showing 0 to 0 of 0 products",
-          infoFiltered: "(filtered from _MAX_ total products)"
-        },
-        dom: '<"row"<"col-12"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-5"i><"col-sm-7"p>>',
-        columnDefs: [
-          { orderable: false, targets: -1 } // Disable sorting on last column (actions)
-        ],
-        order: [[0, 'asc']], // Sort by first column ascending by default
-        pageLength: 10,
-        lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
-        search: {
-          return: true, // Enable live search as you type
-          caseInsensitive: true
-        },
-        drawCallback: function() {
-          // Re-initialize any tooltips or popovers after table redraw
-          initTooltips();
-          
-          // Make rows clickable, directing to product detail page
-          $('#products-table tbody tr').off('click').on('click', function(e) {
-            // Don't trigger if clicking on action buttons
-            if ($(e.target).closest('.btn-group').length === 0 && 
-                !$(e.target).hasClass('btn') && 
-                !$(e.target).parent().hasClass('btn')) {
-              // Get the product ID from the last cell (actions column)
-              const actionLinks = $(this).find('td:last-child a:first-child');
-              if (actionLinks.length > 0) {
-                const detailUrl = actionLinks.attr('href');
-                if (detailUrl) {
-                  window.location.href = detailUrl;
-                }
-              }
-            }
-          });
-        }
-      });
-      
-      // Custom filtering
-      $('#name-filter').on('keyup', function() {
-        // Assuming product name is in the first column (index 0)
-        dataTable.column(0).search(this.value).draw();
-      });
-      
-      $('#sku-filter').on('keyup', function() {
-        // Assuming SKU is in the second column (index 1)
-        dataTable.column(1).search(this.value).draw();
-      });
-      
-      $('#category-filter').on('change', function() {
-        // Assuming category is in the third column (index 2)
-        const val = $(this).val();
-        dataTable.column(2).search(val ? val : '', true, false).draw();
-      });
-      
-      // Export buttons functionality
-      $('#export-csv').on('click', function() {
-        // Create a temporary button with DataTables Buttons extension
-        new $.fn.dataTable.Buttons(dataTable, {
-          buttons: [{
-            extend: 'csv',
-            text: 'Export CSV',
-            title: 'Products_' + new Date().toISOString().slice(0,10),
-            exportOptions: {
-              columns: ':not(:last-child)' // Exclude actions column
-            }
-          }]
-        });
-        
-        // Click the first button (CSV export)
-        dataTable.buttons(0).trigger();
-      });
-      
-      $('#print-table').on('click', function() {
-        // Create a temporary button with DataTables Buttons extension
-        new $.fn.dataTable.Buttons(dataTable, {
-          buttons: [{
-            extend: 'print',
-            text: 'Print',
-            title: 'Products List',
-            exportOptions: {
-              columns: ':not(:last-child)' // Exclude actions column
-            },
-            customize: function(win) {
-              $(win.document.body).css('font-size', '10pt');
-              $(win.document.body).find('table')
-                .addClass('compact')
-                .css('font-size', 'inherit');
-            }
-          }]
-        });
-        
-        // Click the first button (Print)
-        dataTable.buttons(0).trigger();
-      });
-      
-      // Initialize tooltips for the first time
-      initTooltips();
-      
-      // Apply custom styling to the search input
-      $('.dataTables_filter input')
-        .addClass('rounded-pill')
-        .css({
-          'padding-left': '15px',
-          'padding-right': '15px',
-          'border': '1px solid #e0e6ed',
-          'box-shadow': '0 2px 5px rgba(0,0,0,0.05)',
-          'transition': 'all 0.2s ease'
-        });
-    }, 100);
-  });
-</script>
 {% endblock %}

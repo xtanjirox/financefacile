@@ -12,7 +12,7 @@
 <div class="container-fluid p-0">
   <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
     <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-tags me-2" style="color: #7cb9e8;"></i>Expense Categories</h2>
-    <a href="{% url 'expense-category-create' %}" class="btn btn-lg btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+    <a href="{% url 'expense-category-create' %}" class="btn btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
       <i class="fa fa-plus"></i> Add Category
     </a>
   </div>
@@ -32,8 +32,12 @@
               <tr style="transition: background 0.15s;">
                 <td>{{ category.name }}</td>
                 <td>
-                  <a href="{% url 'expense-category-update' category.pk %}" class="btn btn-sm shadow-sm" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;">Edit</a>
-                  <a href="{% url 'expense-category-delete' category.pk %}" class="btn btn-sm shadow-sm" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;">Delete</a>
+                  <a href="{% url 'expense-category-update' category.pk %}" class="btn btn-sm shadow-sm rounded-pill px-3" style="background-color: #e8f5e9; color: #2e7d32; font-weight: 500; border: none;">
+                    <i class="fas fa-edit me-1"></i> Edit
+                  </a>
+                  <a href="{% url 'expense-category-delete' category.pk %}" class="btn btn-sm shadow-sm rounded-pill px-3" style="background-color: #ffebee; color: #c62828; font-weight: 500; border: none;">
+                    <i class="fas fa-trash-alt me-1"></i> Delete
+                  </a>
                 </td>
               </tr>
               {% empty %}
@@ -41,7 +45,9 @@
               {% endfor %}
             </tbody>
           </table>
-          <a href="{% url 'expenses-list' %}" class="btn btn-link mt-3">Back to Expenses</a>
+          <a href="{% url 'expenses-list' %}" class="btn btn-outline-secondary rounded-pill px-3 mt-3 shadow-sm" style="font-weight: 500;">
+            <i class="fas fa-arrow-left me-2"></i> Back to Expenses
+          </a>
         </div>
       </div>
     </div>

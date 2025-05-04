@@ -45,15 +45,43 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='members', null=True, blank=True)
     is_company_admin = models.BooleanField(default=False, help_text="Designates whether this user can manage company settings")
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     
     def __str__(self):
         return f"{self.user.username}'s Profile"
+        
+    def get_avatar_url(self):
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return self.avatar.url
+        return None
+        
+    def get_initials(self):
+        """Return the first two letters of the username for the default avatar"""
+        return self.user.username[:2].upper() if self.user.username else "--"
+        
+    def save(self, *args, **kwargs):
+        """Override save method to handle company admin permissions"""
+        # Check if this is an existing profile being updated
+        is_update = self.pk is not None
+        
+        # Save the profile first
+        super().save(*args, **kwargs)
+        
+        # If this is a company admin, ensure they have the right permissions
+        if self.is_company_admin:
+            from accounts.views import ensure_company_admin_permissions
+            ensure_company_admin_permissions(self.user)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
-    """Create a UserProfile for each new User"""
+    """Create a UserProfile for each new User and assign default view permissions"""
     if created:
+        # Create user profile
         UserProfile.objects.create(user=instance)
+        
+        # Assign default view permissions to all new users
+        from accounts.views import ensure_default_view_permissions
+        ensure_default_view_permissions(instance)
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
