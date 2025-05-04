@@ -246,12 +246,21 @@ class CustomLoginView(View):
         return render(request, self.template_name)
 
 
-class CustomLogoutView(LogoutView):
-    next_page = 'landing-page'
+class CustomLogoutView(View):
+    """Custom logout view that handles both GET and POST requests"""
     
-    def dispatch(self, request, *args, **kwargs):
-        messages.info(request, 'You have been logged out.')
-        return super().dispatch(request, *args, **kwargs)
+    def get(self, request, *args, **kwargs):
+        """Handle GET requests for logout"""
+        # Perform the logout
+        logout(request)
+        # No logout message
+        # Redirect to landing page
+        return redirect('/landing/')
+        
+    def post(self, request, *args, **kwargs):
+        """Handle POST requests for logout"""
+        # Same implementation as GET for consistency
+        return self.get(request, *args, **kwargs)
 
 
 class LandingPageView(TemplateView):
@@ -287,7 +296,7 @@ class RegistrationView(CreateView):
         user = authenticate(username=username, password=password)
         login(self.request, user)
         
-        messages.success(self.request, f'Account created for {username}. You are now logged in.')
+        # No success message on registration
         return redirect(self.success_url)
 
 

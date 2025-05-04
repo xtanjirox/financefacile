@@ -15,6 +15,8 @@ urlpatterns = [
     # Include accounts URLs with proper namespaces
     path("landing/", views.LandingPageView.as_view(), name='landing-page'),
     path("", RedirectView.as_view(url='/landing/', permanent=False), name='index'),
+    # Direct login URL to handle redirects from LoginRequiredMixin
+    path("login/", RedirectView.as_view(url='/auth/login/', permanent=True)),
     path("", include("accounts.urls")),  # This includes auth, users, and organizations
     path("app/", include("core.urls")),
     path("api/", include("api.routes")),

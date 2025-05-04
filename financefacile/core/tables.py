@@ -2,14 +2,12 @@ import django_tables2 as tables
 from . import models
 
 ACTIONS_BUTTONS_TEMPLATE = """
-<div class="btn-group">
-    <a href="{{record.get_absolute_url}}" class="btn btn-sm shadow-sm" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit">
+    <a href="{{record.get_absolute_url}}" class="btn btn-sm shadow-sm me-1" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit">
         <i class="fas fa-edit"></i>
     </a>
-    <a href="{{record.get_delete_url}}" class="btn btn-sm shadow-sm" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete">
+    <a href="{{record.get_delete_url}}" class="btn btn-sm shadow-sm me-1" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete">
         <i class="fas fa-trash"></i>
     </a>
-</div>
 """
 
 DEFAULT_TABLE_ATTRS = {
@@ -23,11 +21,12 @@ DEFAULT_TABLE_ATTRS = {
 
 class ProductTable(tables.Table):
     actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE)
+    category = tables.Column(accessor='category.name', verbose_name='Category')
 
     class Meta:
         model = models.Product
         attrs = {"class": "table table-material"}
-        fields = ('name', 'sku', 'quantity', 'unit_cost', 'selling_price', 'value_current', 'value_1_month', 'value_2_month', 'value_3_month', 'description', 'created_at')
+        fields = ('name', 'sku', 'category', 'quantity', 'unit_cost', 'selling_price')
 
 class EntriesTable(tables.Table):
     actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE)
