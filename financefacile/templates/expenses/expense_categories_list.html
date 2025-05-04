@@ -32,12 +32,12 @@
               <tr style="transition: background 0.15s;">
                 <td>{{ category.name }}</td>
                 <td>
-                  <a href="{% url 'expense-category-update' category.pk %}" class="btn btn-sm shadow-sm rounded-pill px-3" style="background-color: #e8f5e9; color: #2e7d32; font-weight: 500; border: none;">
-                    <i class="fas fa-edit me-1"></i> Edit
-                  </a>
-                  <a href="{% url 'expense-category-delete' category.pk %}" class="btn btn-sm shadow-sm rounded-pill px-3" style="background-color: #ffebee; color: #c62828; font-weight: 500; border: none;">
-                    <i class="fas fa-trash-alt me-1"></i> Delete
-                  </a>
+                  <a href="{% url 'expense-category-update' category.pk %}" class="btn btn-sm shadow-sm me-1" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit">
+                    <i class="fas fa-edit" aria-hidden="true"></i>
+               </a>
+               <a href="{% url 'expense-category-delete' category.pk %}" class="btn btn-sm shadow-sm me-1" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete">
+                <i class="fas fa-trash" aria-hidden="true"></i>
+            </a>
                 </td>
               </tr>
               {% empty %}

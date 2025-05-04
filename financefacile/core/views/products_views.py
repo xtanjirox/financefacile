@@ -159,11 +159,9 @@ class ProductDataJsonView(BaseViewMixin, View):
             for product in products:
                 # Create action buttons HTML
                 actions = format_html(
-                    '<div class="btn-group">' +
-                    '<a href="{}" class="btn btn-sm btn-primary" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a> ' +
-                    '<a href="{}" class="btn btn-sm btn-info" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i></a> ' +
-                    '<a href="{}" class="btn btn-sm btn-danger" data-bs-toggle="tooltip" title="Delete"><i class="fas fa-trash"></i></a>' +
-                    '</div>',
+                    '<a href="{}" class="btn btn-sm btn-primary me-1" data-bs-toggle="tooltip" title="View Details"><i class="fas fa-eye"></i></a> ' +
+                    '<a href="{}" class="btn btn-sm btn-info me-1" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i></a> ' +
+                    '<a href="{}" class="btn btn-sm btn-danger me-1" data-bs-toggle="tooltip" title="Delete"><i class="fas fa-trash"></i></a>',
                     reverse('product-detail', args=[product.id]),
                     reverse('product-update', args=[product.id]),
                     reverse('product-delete', args=[product.id])

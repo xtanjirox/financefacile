@@ -108,15 +108,9 @@
                 <div class="dropdown-menu dropdown-menu-end">
                     <a class="dropdown-item" href="{% url 'auth:profile' %}"><i class="align-middle me-1"
                             data-feather="user"></i> Profile</a>
-                    <a class="dropdown-item" href="{% url 'auth:profile-edit' %}"><i class="align-middle me-1" data-feather="edit"></i>
-                        Edit Profile</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'auth:password-change' %}"><i class="align-middle me-1" data-feather="key"></i>
-                        Change Password</a>
-                    {% if user.profile.company and user.profile.is_company_admin %}
-                    <a class="dropdown-item" href="{% url 'organizations:company-settings' user.profile.company.id %}"><i class="align-middle me-1" data-feather="settings"></i>
+                    <a class="dropdown-item" href="{% url 'organizations:company-detail' user.profile.company.id %}"><i class="align-middle me-1" data-feather="settings"></i>
                         Company Settings</a>
-                    {% endif %}
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{% url 'auth:logout' %}">Log out</a>
                 </div>

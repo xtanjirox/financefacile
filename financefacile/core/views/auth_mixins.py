@@ -8,7 +8,7 @@ class BaseViewMixin(LoginRequiredMixin):
     """
     Base mixin that requires login for all views
     """
-    login_url = 'login'
+    login_url = 'auth:login'
     redirect_field_name = 'next'
 
 class StaffRequiredMixin(UserPassesTestMixin):

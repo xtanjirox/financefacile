@@ -219,11 +219,7 @@ class RegistrationForm(UserCreationForm):
     company_phone = forms.CharField(required=False, widget=forms.TextInput(attrs={'class': 'form-control'}), 
                                  label='Phone Number')
     
-    # Company settings
-    default_tva_rate = forms.DecimalField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-                                        initial=19.0, label='Default TVA Rate (%)')
-    stamp_fee = forms.DecimalField(required=False, widget=forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
-                                 initial=1.0, label='Stamp Fee')
+    # Company settings are now using default values (19% for TVA rate and 1.0 for stamp fee)
     
     class Meta:
         model = User
@@ -263,19 +259,19 @@ class RegistrationForm(UserCreationForm):
                     phone_number=self.cleaned_data.get('company_phone')
                 )
                 
-                # Check if company settings already exist for this company
+                # Create company settings with default values
                 company_settings, created = CompanySettings.objects.get_or_create(
                     company=company,
                     defaults={
-                        'default_tva_rate': self.cleaned_data.get('default_tva_rate') or 19.0,
-                        'stamp_fee': self.cleaned_data.get('stamp_fee') or 1.0
+                        'default_tva_rate': 19.0,  # Default TVA rate
+                        'stamp_fee': 1.0  # Default stamp fee
                     }
                 )
                 
-                # If settings already existed, update them
+                # If settings already existed, ensure they have the default values
                 if not created:
-                    company_settings.default_tva_rate = self.cleaned_data.get('default_tva_rate') or 19.0
-                    company_settings.stamp_fee = self.cleaned_data.get('stamp_fee') or 1.0
+                    company_settings.default_tva_rate = 19.0
+                    company_settings.stamp_fee = 1.0
                     company_settings.save()
                 
                 # Create or update user profile and link to company

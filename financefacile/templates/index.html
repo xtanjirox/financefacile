@@ -153,11 +153,13 @@
                 <tbody>
                 {% for invoice in recent_invoices %}
                     <tr style="cursor:pointer" onclick="window.location='{{ invoice.get_absolute_url }}'">
-                        <td>{{ invoice.pk }}</td>
+                        <td>INV-{{ invoice.pk }}</td>
                         <td>{{ invoice.created_at|date:'Y-m-d H:i' }}</td>
                         <td>{{ invoice.get_total|floatformat:2 }} <span class="text-muted">dt</span></td>
                         <td>
-                            <a href="{{ invoice.get_absolute_url }}" class="btn btn-outline-primary btn-sm" onclick="event.stopPropagation();">Voir</a>
+                            <a href="{{ invoice.get_absolute_url }}" class="btn btn-sm shadow-sm" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View">
+                                <i class="fas fa-eye" aria-hidden="true"></i>
+                            </a>
                         </td>
                     </tr>
                 {% empty %}

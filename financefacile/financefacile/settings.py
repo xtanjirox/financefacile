@@ -13,6 +13,11 @@ CSRF_TRUSTED_ORIGINS = ['https://*.ngrok-free.app',
                         'http://localhost', 'http://127.0.0.1',
                         ]
 
+# Authentication settings
+LOGIN_URL = 'auth:login'
+LOGIN_REDIRECT_URL = '/app/'
+LOGOUT_REDIRECT_URL = '/landing/'
+
 # Django sites framework
 SITE_ID = 1
 
