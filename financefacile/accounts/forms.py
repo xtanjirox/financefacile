@@ -11,10 +11,17 @@ class UserProfileForm(forms.ModelForm):
     email = forms.EmailField(required=True)
     first_name = forms.CharField(required=False)
     last_name = forms.CharField(required=False)
+    avatar = forms.ImageField(required=False, widget=forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}))
     
     class Meta:
         model = User
         fields = ['username', 'email', 'first_name', 'last_name']
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # If the user has a profile, set the initial avatar value
+        if self.instance and hasattr(self.instance, 'profile'):
+            self.fields['avatar'].initial = self.instance.profile.avatar
         
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -22,6 +29,15 @@ class UserProfileForm(forms.ModelForm):
         if email and User.objects.filter(email=email).exclude(username=username).exists():
             raise forms.ValidationError('Email address is already in use.')
         return email
+        
+    def save(self, commit=True):
+        user = super().save(commit=commit)
+        if commit:
+            profile = user.profile
+            if 'avatar' in self.cleaned_data:
+                profile.avatar = self.cleaned_data['avatar']
+                profile.save()
+        return user
 
 
 class CustomPasswordChangeForm(PasswordChangeForm):

@@ -197,8 +197,8 @@
               <tr>
                 <td>{{ invoice.invoice_number }}</td>
                 <td>{{ invoice.date|date:"d/m/Y" }}</td>
-                <td>{{ invoice.client.name }}</td>
-                <td>{{ invoice.total }} €</td>
+                <td>{{ invoice.client_name }}</td>
+                <td>{{ invoice.total|floatformat:2 }} €</td>
                 <td>
                   {% if invoice.status == 'draft' %}
                   <span class="badge" style="background-color: #eceff1; color: #546e7a;">Draft</span>
@@ -213,7 +213,7 @@
                   {% endif %}
                 </td>
                 <td>
-                  <a href="{% url 'invoice-detail' invoice.id %}" class="btn btn-sm rounded-pill px-3" style="background-color: #e3f2fd; color: #1976d2;">
+                  <a href="{{ invoice.url }}" class="btn btn-sm rounded-pill px-3" style="background-color: #e3f2fd; color: #1976d2;">
                     <i class="fas fa-eye me-1"></i> View
                   </a>
                 </td>

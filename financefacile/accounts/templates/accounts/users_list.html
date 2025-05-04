@@ -61,11 +61,11 @@
                   <td>{{ user.last_login|date:"M d, Y"|default:"-" }}</td>
                   <td>
                     <div class="btn-group">
-                      <a href="{% url 'user-permissions' user.id %}" class="btn btn-sm btn-outline-primary">
+                      <a href="{% url 'users:user-permissions' user.id %}" class="btn btn-sm btn-outline-primary">
                         <i class="fas fa-shield-alt"></i>
                       </a>
                       {% if user != request.user %}
-                      <a href="{% url 'toggle-user-active' user.id %}" class="btn btn-sm {% if user.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}"
+                      <a href="{% url 'users:toggle-user-active' user.id %}" class="btn btn-sm {% if user.is_active %}btn-outline-danger{% else %}btn-outline-success{% endif %}"
                          onclick="return confirm('Are you sure you want to {% if user.is_active %}deactivate{% else %}activate{% endif %} this user?')">
                         <i class="fas {% if user.is_active %}fa-user-slash{% else %}fa-user-check{% endif %}"></i>
                       </a>

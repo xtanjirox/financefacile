@@ -24,6 +24,49 @@ class CategoryMultiSelectWidget(s2forms.Select2MultipleWidget):
         return attrs
 
 
+class DateRangeFilterFormNew(forms.Form):
+    start_date = forms.DateField(
+        label='Start Date',
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+    )
+    end_date = forms.DateField(
+        label='End Date',
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Setup crispy form helper
+        self.helper = FormHelper()
+        self.helper.form_method = 'get'
+        self.helper.form_class = 'form-inline'
+        self.helper.layout = Layout(
+            Div(
+                Div('start_date', css_class='col-md-3'),
+                Div('end_date', css_class='col-md-3'),
+                Div(
+                    Submit('submit', 'Filter', css_class='btn-primary me-2'),
+                    HTML('<a href="?" class="btn btn-secondary">Reset</a>'),
+                    css_class='col-md-3 d-flex align-items-end'
+                ),
+                css_class='row'
+            )
+        )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+
+        if start_date and end_date and start_date > end_date:
+            raise forms.ValidationError('End date must be after start date')
+
+        return cleaned_data
+    
+
 class DateRangeFilterForm(forms.Form):
     start_date = forms.DateField(
         label='Start Date',
@@ -220,12 +263,38 @@ class InvoiceItemForm(forms.ModelForm):
         fields = ['product', 'quantity', 'selling_price']
 
     def __init__(self, *args, **kwargs):
+        # Get company from kwargs if available
+        company = kwargs.pop('company', None)
         super().__init__(*args, **kwargs)
-        self.fields['product'].queryset = models.Product.objects.all()
+        
+        # Filter products by stock > 0
+        product_queryset = models.Product.objects.filter(quantity__gt=0)
+        
+        # If company is provided, filter by company as well
+        if company:
+            product_queryset = product_queryset.filter(company=company)
+            
+        self.fields['product'].queryset = product_queryset
+        
+        # Add validation for quantity
+        self.fields['quantity'].widget.attrs.update({'min': '1', 'class': 'form-control'})
+        
+        # Add help text
+        self.fields['product'].help_text = 'Only products with available stock are shown'
 
+
+class BaseInvoiceItemFormSet(forms.BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        self.company = kwargs.pop('company', None)
+        super().__init__(*args, **kwargs)
+    
+    def _construct_form(self, i, **kwargs):
+        # Pass company to each form in the formset
+        kwargs['company'] = self.company
+        return super()._construct_form(i, **kwargs)
 
 InvoiceItemFormSet = inlineformset_factory(
-    models.Invoice, models.InvoiceItem, form=InvoiceItemForm,
+    models.Invoice, models.InvoiceItem, form=InvoiceItemForm, formset=BaseInvoiceItemFormSet,
     fields=['product', 'quantity', 'selling_price'], extra=1, can_delete=True
 )
 
@@ -262,10 +331,16 @@ class ProductForm(forms.ModelForm):
         if 'category' in self.fields:
             self.fields['category'].queryset = models.ProductCategory.objects.all(
             ).order_by('name')
+            
+        # Remove company field if it exists using contextlib's suppress
+        from contextlib import suppress
+        with suppress(KeyError):
+            del self.fields['company']
 
     class Meta:
         model = models.Product
-        fields = '__all__'
+        fields = ['name', 'sku', 'category', 'quantity', 'unit_cost', 'selling_price', 
+                 'value_current', 'value_1_month', 'value_2_month', 'value_3_month', 'description']
         widgets = {
             'name': forms.TextInput(attrs={"class": "form-control", "style": "width: 100%;"}),
             'sku': forms.TextInput(attrs={"class": "form-control", "style": "width: 100%;"}),

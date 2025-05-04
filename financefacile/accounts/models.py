@@ -45,9 +45,19 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='members', null=True, blank=True)
     is_company_admin = models.BooleanField(default=False, help_text="Designates whether this user can manage company settings")
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
     
     def __str__(self):
         return f"{self.user.username}'s Profile"
+        
+    def get_avatar_url(self):
+        if self.avatar and hasattr(self.avatar, 'url'):
+            return self.avatar.url
+        return None
+        
+    def get_initials(self):
+        """Return the first two letters of the username for the default avatar"""
+        return self.user.username[:2].upper() if self.user.username else "--"
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):

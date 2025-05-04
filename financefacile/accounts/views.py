@@ -30,14 +30,26 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = User
     form_class = UserProfileForm
     template_name = 'accounts/profile_form.html'
-    success_url = reverse_lazy('profile')
+    success_url = reverse_lazy('auth:profile')
     
     def get_object(self):
         return self.request.user
     
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'instance': self.request.user})
+        return kwargs
+    
     def form_valid(self, form):
         messages.success(self.request, 'Your profile has been updated successfully!')
         return super().form_valid(form)
+        
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
 
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     form_class = CustomPasswordChangeForm

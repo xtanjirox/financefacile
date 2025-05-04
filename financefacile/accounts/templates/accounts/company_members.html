@@ -22,11 +22,11 @@
         </h2>
         <div class="d-flex gap-2">
             {% if user.is_staff or user.is_superuser or user.profile.is_company_admin and user.profile.company == company %}
-            <a href="{% url 'company-user-create' company_id=company.id %}" class="btn rounded-pill px-3" style="background-color: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;">
+            <a href="{% url 'organizations:company-user-create' company_id=company.id %}" class="btn rounded-pill px-3" style="background-color: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;">
                 <i class="fas fa-user-plus me-2"></i> Create New User
             </a>
             {% endif %}
-            <a href="{% url 'company-detail' company.id %}" class="btn btn-outline-secondary rounded-pill px-3">
+            <a href="{% url 'organizations:company-detail' company.id %}" class="btn btn-outline-secondary rounded-pill px-3">
                 <i class="fas fa-arrow-left me-2"></i> Back to Company
             </a>
         </div>
@@ -74,7 +74,7 @@
                                     <td>
                                         <div class="d-flex gap-2">
                                             {% if user.is_staff or user.is_superuser or user.profile.is_company_admin and user.profile.company == company %}
-                                                <a href="{% url 'user-permissions' profile.user.id %}" class="btn btn-sm rounded-pill px-3" style="background-color: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb;">
+                                                <a href="{% url 'users:user-permissions' profile.user.id %}" class="btn btn-sm rounded-pill px-3" style="background-color: #e3f2fd; color: #1565c0; border: 1px solid #bbdefb;">
                                                     <i class="fas fa-key me-1"></i> Permissions
                                                 </a>
                                             {% endif %}

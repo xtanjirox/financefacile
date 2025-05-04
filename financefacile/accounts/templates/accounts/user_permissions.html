@@ -24,11 +24,11 @@
             <i class="fas fa-shield-alt me-2" style="color: #7cb9e8;"></i>Manage Permissions: {{ object.username }}
           </h3>
           {% if user.is_staff or user.is_superuser %}
-            <a href="{% url 'users-list' %}" class="btn btn-sm btn-outline-secondary">
+            <a href="{% url 'users:users-list' %}" class="btn btn-sm btn-outline-secondary">
               <i class="fas fa-arrow-left me-1"></i> Back to Users
             </a>
           {% else %}
-            <a href="{% url 'company-members' user.profile.company.id %}" class="btn btn-sm btn-outline-secondary">
+            <a href="{% url 'organizations:company-members' user.profile.company.id %}" class="btn btn-sm btn-outline-secondary">
               <i class="fas fa-arrow-left me-1"></i> Back to Company Members
             </a>
           {% endif %}
@@ -110,9 +110,9 @@
                 <i class="fas fa-save me-1"></i> Save Permissions
               </button>
               {% if user.is_staff or user.is_superuser %}
-                <a href="{% url 'users-list' %}" class="btn btn-secondary ms-3">Cancel</a>
+                <a href="{% url 'users:users-list' %}" class="btn btn-secondary ms-3">Cancel</a>
               {% else %}
-                <a href="{% url 'company-members' user.profile.company.id %}" class="btn btn-secondary ms-3">Cancel</a>
+                <a href="{% url 'organizations:company-members' user.profile.company.id %}" class="btn btn-secondary ms-3">Cancel</a>
               {% endif %}
             </div>
           </form>
