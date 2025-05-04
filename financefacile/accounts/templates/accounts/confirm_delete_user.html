@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow-sm border-0" style="border-radius: 14px; overflow: hidden; background: #fafdff;">
+        <div class="card-header py-3" style="background: #ffebee; border-bottom: 1px solid #e0e6ed;">
+          <h5 class="card-title mb-0 fw-bold text-danger">
+            <i class="fas fa-exclamation-triangle me-2"></i> Confirm User Deletion
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-circle me-2"></i>
+            <strong>Warning:</strong> This action cannot be undone. The user will be permanently deleted from the system.
+          </div>
+          
+          <div class="mb-4">
+            <h6 class="fw-bold">You are about to delete the following user:</h6>
+            <div class="p-3 bg-light rounded">
+              <p><strong>Username:</strong> {{ user_to_delete.username }}</p>
+              <p><strong>Email:</strong> {{ user_to_delete.email }}</p>
+              <p><strong>Full Name:</strong> {{ user_to_delete.get_full_name|default:"Not provided" }}</p>
+              <p><strong>Company:</strong> {{ company.name }}</p>
+              <p><strong>Company Admin:</strong> {% if user_to_delete.profile.is_company_admin %}Yes{% else %}No{% endif %}</p>
+            </div>
+          </div>
+          
+          <div class="d-flex justify-content-between">
+            <a href="{% url 'organizations:company-members' pk=company.pk %}" class="btn btn-secondary">
+              <i class="fas fa-times me-1"></i> Cancel
+            </a>
+            
+            <form method="post" action="{% url 'organizations:delete-company-user' company_id=company.pk user_id=user_to_delete.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">
+                <i class="fas fa-trash-alt me-1"></i> Delete User
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}

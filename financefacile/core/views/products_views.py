@@ -16,10 +16,10 @@ from core import models, tables
 from core.models import InvoiceItem
 import core.forms
 from .base import BaseListView, FormViewMixin, BaseDeleteView
-from .auth_mixins import BaseViewMixin, ProductPermissionMixin
+from .auth_mixins import BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin
 
 
-class ProductCategoryListView(BaseListView):
+class ProductCategoryListView(BaseListView, CompanyFilterMixin):
     model = models.ProductCategory
     table_class = tables.ProductCategoryTable
     filter_class = None
@@ -28,15 +28,7 @@ class ProductCategoryListView(BaseListView):
     create_url = reverse_lazy('category-create')
     segment = 'categories'
     detail = True
-    
-    def get_queryset(self):
-        # Filter categories by the user's company
-        queryset = super().get_queryset()
-        if self.request.user.is_superuser or self.request.user.is_staff:
-            return queryset
-        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-            return queryset.filter(company=self.request.user.profile.company)
-        return queryset.none()
+    company_field = 'company'  # Field name for company relationship
 
 
 class ProductCategoryCreateView(CreateView, FormViewMixin):
@@ -46,27 +38,55 @@ class ProductCategoryCreateView(CreateView, FormViewMixin):
     segment = 'categories'
     success_url = reverse_lazy('category-list')
     
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # Filter parent categories to only show those from the same company
+        if 'parent' in form.fields and hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            form.fields['parent'].queryset = models.ProductCategory.objects.filter(
+                company=self.request.user.profile.company
+            )
+        return form
+    
     def form_valid(self, form):
         # Set the company for the new category
         category = form.save(commit=False)
-        if (not self.request.user.is_superuser and not self.request.user.is_staff and 
-                hasattr(self.request.user, 'profile') and self.request.user.profile.company):
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
             category.company = self.request.user.profile.company
         category.save()
         return super().form_valid(form)
 
 
-class ProductCategoryUpdateView(UpdateView, FormViewMixin):
+class ProductCategoryUpdateView(UpdateView, FormViewMixin, CompanyFilterMixin):
     model = models.ProductCategory
     template_name = 'generic/detail.html'
-    fields = '__all__'
+    fields = ['name', 'parent']
     segment = 'categories'
     success_url = reverse_lazy('category-list')
+    company_field = 'company'  # Field name for company relationship
+    
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        # Filter parent categories to only show those from the same company
+        if 'parent' in form.fields and hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            form.fields['parent'].queryset = models.ProductCategory.objects.filter(
+                company=self.request.user.profile.company
+            )
 
 
-class ProductCategoryDeleteView(BaseDeleteView):
+class ProductCategoryDeleteView(BaseDeleteView, CompanyFilterMixin):
     model = models.ProductCategory
     success_url = reverse_lazy('category-list')
+    company_field = 'company'  # Field name for company relationship
+    template_name = 'products/product_category_confirm_delete.html'
+    skip_confirmation = False  # Override the BaseDeleteView setting to show confirmation page
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Get related products for this category
+        related_products = self.object.products.all()
+        context['related_products'] = related_products[:10]  # Limit to 10 products to avoid large pages
+        context['related_products_count'] = related_products.count()
+        return context
 
 
 from django.http import JsonResponse
@@ -74,21 +94,16 @@ from django.views.generic import TemplateView
 from django.urls import reverse
 from django.utils.html import format_html
 
-class ProductListView(BaseViewMixin, TemplateView):
+class ProductListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin, ListView):
+    model = models.Product
     template_name = 'products/product_list.html'
     create_url = reverse_lazy('product-create')
     segment = 'products'
+    context_object_name = 'products'
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        
-        # Get products for stats calculation and display
-        if self.request.user.is_superuser or self.request.user.is_staff:
-            products = models.Product.objects.all()
-        elif hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-            products = models.Product.objects.filter(company=self.request.user.profile.company)
-        else:
-            products = models.Product.objects.none()
+        products = self.get_queryset()
         
         # Add products to context for direct rendering in template
         context['products'] = products
@@ -461,7 +476,7 @@ class InvoiceCreateView(CreateView, FormViewMixin):
         return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 
-class InvoiceListView(BaseViewMixin, ProductPermissionMixin, ListView):
+class InvoiceListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin, ListView):
     model = models.Invoice
     template_name = 'invoices/invoice_list.html'
     context_object_name = 'invoices'

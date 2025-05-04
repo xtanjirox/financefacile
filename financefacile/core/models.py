@@ -44,11 +44,19 @@ class ProductCategory(models.Model):
 
     def __str__(self):
         return self.name
+        
+    def get_absolute_url(self):
+        from django.urls import reverse_lazy
+        return reverse_lazy('category-update', kwargs={'pk': self.pk})
+        
+    def get_delete_url(self):
+        from django.urls import reverse_lazy
+        return reverse_lazy('category-delete', kwargs={'pk': self.pk})
 
 
 class Product(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
-    category = models.ForeignKey(ProductCategory, on_delete=models.PROTECT, related_name='products', null=True, blank=True)
+    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     name = models.CharField(max_length=100)
     sku = models.CharField(max_length=50)
     quantity = models.PositiveIntegerField(default=0)

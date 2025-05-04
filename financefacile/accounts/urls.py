@@ -28,6 +28,7 @@ organizations_patterns = [
     path('<int:company_id>/create-user/', views.CompanyUserCreateView.as_view(), name='company-user-create'),
     path('<int:company_id>/assign-user/<int:user_id>/', views.assign_user_to_company, name='assign-user-to-company'),
     path('<int:company_id>/remove-user/<int:user_id>/', views.remove_user_from_company, name='remove-user-from-company'),
+    path('<int:company_id>/delete-user/<int:user_id>/', views.delete_company_user, name='delete-company-user'),
 ]
 
 urlpatterns = [
