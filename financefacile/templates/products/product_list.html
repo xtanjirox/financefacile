@@ -18,116 +18,6 @@
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
-<style>
-  /* Enhanced DataTables search styling */
-  .dataTables_wrapper .dataTables_filter {
-    margin-bottom: 20px;
-    float: none !important;
-    text-align: left !important;
-    width: 100%;
-  }
-  
-  .dataTables_wrapper .dataTables_filter input {
-    width: 100% !important;
-    margin-left: 0 !important;
-    padding: 12px 20px;
-    border-radius: 50px;
-    border: 2px solid #e0e6ed;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-    font-size: 1.1rem;
-    background-color: #f8fafc;
-    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="%23a0aec0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>');
-    background-repeat: no-repeat;
-    background-position: right 20px center;
-    padding-right: 50px;
-    transition: all 0.3s ease;
-  }
-  
-  .dataTables_wrapper .dataTables_filter input:focus {
-    border-color: #7cb9e8;
-    box-shadow: 0 0 0 4px rgba(124, 185, 232, 0.25);
-    outline: none;
-    background-color: #fff;
-  }
-  
-  /* Add label for search */
-  .dataTables_wrapper .dataTables_filter label {
-    font-weight: bold;
-    color: #39739d;
-    font-size: 1.1rem;
-    margin-bottom: 8px;
-    display: block;
-  }
-  
-  /* Adjust the length menu position */
-  .dataTables_wrapper .dataTables_length {
-    margin-top: 15px;
-  }
-  
-  /* Clickable rows styling */
-  #products-table tbody tr {
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-  
-  #products-table tbody tr:hover {
-    background-color: rgba(124, 185, 232, 0.1) !important;
-  }
-  
-  /* Ensure action buttons don't trigger row click */
-  #products-table .btn-group {
-    position: relative;
-    z-index: 10;
-  }
-  .filter-card {
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 20px;
-  }
-  
-  /* Select2 Custom Styling */
-  .select2-container--default .select2-selection--multiple {
-    border-color: #ced4da;
-    border-radius: 0.375rem;
-    min-height: 38px;
-  }
-  
-  .select2-container--default.select2-container--focus .select2-selection--multiple {
-    border-color: #86b7fe;
-    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-  }
-  
-  .select2-container--default .select2-selection--multiple .select2-selection__choice {
-    background-color: #e7f1fa;
-    border: 1px solid #7cb9e8;
-    border-radius: 0.25rem;
-    padding: 0.25rem 0.5rem;
-    margin-top: 0.25rem;
-    color: #39739d;
-  }
-  
-  .select2-container--default .select2-selection__choice__remove {
-    color: #39739d;
-    margin-right: 5px;
-  }
-  
-  .select2-dropdown {
-    border-color: #86b7fe;
-    border-radius: 0.375rem;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .select2-results__option--highlighted {
-    background-color: #e7f1fa !important;
-    color: #39739d !important;
-  }
-  
-  .select2-container--default .select2-results__option--selected {
-    background-color: #7cb9e8;
-    color: white;
-  }
-</style>
 {% endblock %}
 
 {% block content %}
@@ -188,75 +78,144 @@
   </div>
 
   <!-- DataTables will handle filtering and searching -->
-
-
-  <div class="row">
+  <div class="row mt-4">
     <div class="col-12">
-      <div class="card flex-fill shadow-sm border-0" style="border-radius: 14px;">
-        <div class="card-header d-flex justify-content-between align-items-center py-3" style="background: #e7f1fa; border-top-left-radius: 14px; border-top-right-radius: 14px; border-bottom: 1px solid #e0e6ed;">
+      <div class="card shadow-sm border-0" style="border-radius: 14px; background: #fafdff;">
+        <div class="card-header py-3" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
           <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
-            <i class="fas fa-table me-2" style="color: #7cb9e8;"></i>Products
+            <i class="fas fa-file-invoice me-2" style="color: #7cb9e8;"></i>Products
           </h5>
         </div>
         <div class="card-body p-4">
+          {% if products %}
+          <!-- DataTables CSS -->
           <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-          <link rel="stylesheet" href="{% static 'css/datatables_pastel.css' %}">
-          <div class="table-responsive">
-            <!-- Simplified table structure -->
-            <table id="products-table" class="table table-striped" style="width:100%">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>SKU</th>
-                  <th>Category</th>
-                  <th>Quantity</th>
-                  <th>Unit Cost</th>
-                  <th>Selling Price</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {% for product in products %}
-                <tr>
-                  <td>{{ product.name }}</td>
-                  <td>{{ product.sku|default:'-' }}</td>
-                  <td>{{ product.category.name|default:'-' }}</td>
-                  <td>{{ product.quantity }}</td>
-                  <td>{{ product.unit_cost|floatformat:2 }} €</td>
-                  <td>{{ product.selling_price|floatformat:2 }} €</td>
-                  <td>
-                      <a href="{% url 'product-detail' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View"><i class="fas fa-eye"></i></a>
-                      <a href="{% url 'product-update' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i></a>
-                      <a href="{% url 'product-delete' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete"><i class="fas fa-trash"></i></a>
-                  </td>
-                </tr>
-                {% empty %}
-                <tr>
-                  <td colspan="7" class="text-center py-4">
-                    <div class="d-flex flex-column align-items-center">
-                      <i class="fas fa-box-open text-muted mb-3" style="font-size: 3rem;"></i>
-                      <h5 class="text-muted">No products found</h5>
-                      <p class="text-muted">Get started by adding your first product</p>
-                      <a href="{% url 'product-create' %}" class="btn btn-primary mt-2">
-                        <i class="fa fa-plus me-2"></i> Add Product
-                      </a>
-                    </div>
-                  </td>
-                </tr>
-                {% endfor %}
-              </tbody>
-            </table>
-          </div>
-          <!-- Product table -->
-          <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+          <style>
+            /* Custom DataTables styling */
+            .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+              color: #39739d;
+              margin-bottom: 15px;
+            }
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+              background: #e7f1fa;
+              border-color: #7cb9e8;
+              color: #39739d !important;
+              border-radius: 50px;
+            }
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+              background: #e7f1fa;
+              border-color: #7cb9e8;
+              color: #39739d !important;
+              border-radius: 50px;
+            }
+            .dataTables_wrapper .dataTables_paginate .paginate_button {
+              color: #39739d !important;
+              border-radius: 50px;
+              margin: 0 3px;
+            }
+            .dataTables_wrapper .dataTables_length select {
+              border-color: #e0e6ed;
+              background-color: #f8f9fa;
+              color: #39739d;
+              border-radius: 8px;
+              padding: 5px 10px;
+            }
+            .dataTables_wrapper .dataTables_filter input {
+              border-color: #e0e6ed;
+              background-color: #f8f9fa;
+              color: #39739d;
+              border-radius: 50px;
+              padding: 8px 15px;
+              width: 250px;
+            }
+            table.dataTable thead th, table.dataTable thead td {
+              border-bottom: 1px solid #e0e6ed;
+              padding: 12px 10px;
+              font-weight: 600;
+              color: #39739d;
+              background-color: #FAFDFF;
+            }
+            table.dataTable.no-footer {
+              border-bottom: 1px solid #e0e6ed;
+            }
+            table.dataTable tbody tr:hover {
+              background-color: rgba(124, 185, 232, 0.1);
+            }
+            .badge {
+              padding: 6px 10px;
+              font-weight: 500;
+              border-radius: 50px;
+            }
+          </style>
+          <table id="productsss-table" class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>SKU</th>
+                <th>Category</th>
+                <th>Quantity</th>
+                <th>Unit Cost</th>
+                <th>Selling Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for product in products %}
+              <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.sku|default:'-' }}</td>
+                <td>{{ product.category.name|default:'-' }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>{{ product.unit_cost|floatformat:2 }} €</td>
+                <td>{{ product.selling_price|floatformat:2 }} €</td>
+                <td>
+                    <a href="{% url 'product-detail' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View"><i class="fas fa-eye"></i></a>
+                    <a href="{% url 'product-update' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a href="{% url 'product-delete' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete"><i class="fas fa-trash"></i></a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" class="text-center py-4">
+                  <div class="d-flex flex-column align-items-center">
+                    <i class="fas fa-box-open text-muted mb-3" style="font-size: 3rem;"></i>
+                    <h5 class="text-muted">No products found</h5>
+                    <p class="text-muted">Get started by adding your first product</p>
+                    <a href="{% url 'product-create' %}" class="btn btn-primary mt-2">
+                      <i class="fa fa-plus me-2"></i> Add Product
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <!-- DataTables JS -->
           <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
           <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
           <script>
             $(document).ready(function() {
-              // Most basic initialization possible
-              $('#products-table').DataTable();
+              $('#productsss-table').DataTable({
+                responsive: true,
+                pageLength: 5,
+                lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],
+                language: {
+                  search: "_INPUT_",
+                  searchPlaceholder: "Search products...",
+                  lengthMenu: "Show _MENU_ products",
+                  info: "Showing _START_ to _END_ of _TOTAL_ products",
+                  infoEmpty: "Showing 0 to 0 of 0 products",
+                  infoFiltered: "(filtered from _MAX_ total products)"
+                },
+                dom: '<"row"<"col-sm-6"l><"col-sm-6"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-5"i><"col-sm-7"p>>'
+              });
             });
           </script>
+          {% else %}
+          <div class="alert alert-info rounded-3 border-0 shadow-sm" style="background-color: #e3f2fd; color: #1976d2;">
+            <i class="fas fa-info-circle me-2"></i> No Product are created.
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>

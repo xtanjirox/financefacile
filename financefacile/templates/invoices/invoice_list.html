@@ -98,15 +98,76 @@
   </div>
 
   <!-- Stats Cards -->
-  
-  <div class="row">
+  <div class="row mt-4">
     <div class="col-12">
-      <div class="card flex-fill shadow-sm border-0" style="border-radius: 18px;">
-        <div class="card-header" style="background: #e3f2fd; border-top-left-radius: 18px; border-top-right-radius: 18px; border-bottom: 1px solid #e0e6ed;">
-          <h5 class="card-title mb-0" style="color: #1976d2; font-weight: 600;">Invoices</h5>
+      <div class="card shadow-sm border-0" style="border-radius: 14px; background: #fafdff;">
+        <div class="card-header py-3" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
+          <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
+            <i class="fas fa-file-invoice me-2" style="color: #7cb9e8;"></i>Invoices
+          </h5>
         </div>
         <div class="card-body p-4">
-          <table id="invoices-table" class="table table-striped align-middle" style="width:100%; background: #fff; border-radius: 12px; overflow: hidden;">
+          {% if invoices %}
+          <!-- DataTables CSS -->
+          <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+          <style>
+            /* Custom DataTables styling */
+            .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+              color: #39739d;
+              margin-bottom: 15px;
+            }
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+              background: #e7f1fa;
+              border-color: #7cb9e8;
+              color: #39739d !important;
+              border-radius: 50px;
+            }
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+              background: #e7f1fa;
+              border-color: #7cb9e8;
+              color: #39739d !important;
+              border-radius: 50px;
+            }
+            .dataTables_wrapper .dataTables_paginate .paginate_button {
+              color: #39739d !important;
+              border-radius: 50px;
+              margin: 0 3px;
+            }
+            .dataTables_wrapper .dataTables_length select {
+              border-color: #e0e6ed;
+              background-color: #f8f9fa;
+              color: #39739d;
+              border-radius: 8px;
+              padding: 5px 10px;
+            }
+            .dataTables_wrapper .dataTables_filter input {
+              border-color: #e0e6ed;
+              background-color: #f8f9fa;
+              color: #39739d;
+              border-radius: 50px;
+              padding: 8px 15px;
+              width: 250px;
+            }
+            table.dataTable thead th, table.dataTable thead td {
+              border-bottom: 1px solid #e0e6ed;
+              padding: 12px 10px;
+              font-weight: 600;
+              color: #39739d;
+              background-color: #FAFDFF;
+            }
+            table.dataTable.no-footer {
+              border-bottom: 1px solid #e0e6ed;
+            }
+            table.dataTable tbody tr:hover {
+              background-color: rgba(124, 185, 232, 0.1);
+            }
+            .badge {
+              padding: 6px 10px;
+              font-weight: 500;
+              border-radius: 50px;
+            }
+          </style>
+          <table id="invoices-table" class="table table-hover align-middle">
             <thead style="background: #e3f2fd; color: #1976d2; font-weight: 600;">
               <tr>
                 <th>ID</th>
@@ -122,7 +183,7 @@
                 <td>{{ invoice.created_at|date:'Y-m-d H:i' }}</td>
                 <td>{{ invoice.get_total }}</td>
                 <td>
-
+  
                     <a href="{% url 'invoice-detail' invoice.pk %}" class="btn btn-sm shadow-sm me-1" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View">
                       <i class="fas fa-eye"></i>
                     </a>
@@ -142,10 +203,37 @@
               {% endfor %}
             </tbody>
           </table>
+          <!-- DataTables JS -->
+          <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+          <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+          <script>
+            $(document).ready(function() {
+              $('#invoices-table').DataTable({
+                responsive: true,
+                pageLength: 5,
+                lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],
+                language: {
+                  search: "_INPUT_",
+                  searchPlaceholder: "Search invoices...",
+                  lengthMenu: "Show _MENU_ invoices",
+                  info: "Showing _START_ to _END_ of _TOTAL_ invoices",
+                  infoEmpty: "Showing 0 to 0 of 0 invoices",
+                  infoFiltered: "(filtered from _MAX_ total invoices)"
+                },
+                dom: '<"row"<"col-sm-6"l><"col-sm-6"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-5"i><"col-sm-7"p>>'
+              });
+            });
+          </script>
+          {% else %}
+          <div class="alert alert-info rounded-3 border-0 shadow-sm" style="background-color: #e3f2fd; color: #1976d2;">
+            <i class="fas fa-info-circle me-2"></i> No invoices are created.
+          </div>
+          {% endif %}
         </div>
       </div>
     </div>
   </div>
+  
 </div>
 {% endblock content %}
 
@@ -154,28 +242,4 @@
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
-<script>
-  $(document).ready(function() {
-    // Initialize tooltips
-    $('[data-bs-toggle="tooltip"]').tooltip();
-    
-    $('#invoices-table').DataTable({
-      responsive: true,
-      language: {
-        search: "_INPUT_",
-        searchPlaceholder: "Search invoices...",
-        lengthMenu: "Show _MENU_ entries",
-        info: "Showing _START_ to _END_ of _TOTAL_ invoices",
-        infoEmpty: "Showing 0 to 0 of 0 invoices",
-        infoFiltered: "(filtered from _MAX_ total invoices)"
-      },
-      columnDefs: [
-        { orderable: false, targets: 3 } // Disable sorting on actions column
-      ],
-      order: [[1, 'desc']], // Sort by date descending by default
-      pageLength: 10,
-      lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]]
-    });
-  });
-</script>
 {% endblock %}
