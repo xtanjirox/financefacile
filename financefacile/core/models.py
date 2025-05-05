@@ -68,6 +68,23 @@ class Product(models.Model):
     value_3_month = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    
+    def save(self, *args, **kwargs):
+        # If no category is specified and the product has a company, assign to 'Uncategorized'
+        if not self.category and self.company:
+            # Try to find the 'Uncategorized' category for this company
+            try:
+                uncategorized = ProductCategory.objects.get(company=self.company, name='Uncategorized')
+                self.category = uncategorized
+            except ProductCategory.DoesNotExist:
+                # Create the 'Uncategorized' category if it doesn't exist
+                uncategorized = ProductCategory.objects.create(
+                    company=self.company,
+                    name='Uncategorized'
+                )
+                self.category = uncategorized
+        
+        super().save(*args, **kwargs)
 
     class Meta:
         db_table = 'products'

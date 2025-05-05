@@ -277,10 +277,36 @@ class InvoiceItemForm(forms.ModelForm):
         self.fields['product'].queryset = product_queryset
         
         # Add validation for quantity
-        self.fields['quantity'].widget.attrs.update({'min': '1', 'class': 'form-control'})
+        self.fields['quantity'].widget.attrs.update({
+            'min': '1', 
+            'class': 'form-control',
+            'data-bs-toggle': 'tooltip',
+            'title': 'Enter quantity (must not exceed available stock)'
+        })
         
         # Add help text
         self.fields['product'].help_text = 'Only products with available stock are shown'
+        self.fields['quantity'].help_text = 'Must not exceed available product stock'
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        product = cleaned_data.get('product')
+        quantity = cleaned_data.get('quantity')
+        
+        # If both product and quantity are provided, check if quantity exceeds stock
+        if product and quantity:
+            # Get the current stock level
+            available_stock = product.quantity
+            
+            # Check if requested quantity exceeds available stock
+            if quantity > available_stock:
+                self.add_error('quantity', 
+                               f'Insufficient stock! Only {available_stock} units of "{product.name}" available.')
+                raise forms.ValidationError(
+                    f"Cannot create invoice: Requested quantity ({quantity}) exceeds available stock ({available_stock}) for {product.name}"
+                )
+        
+        return cleaned_data
 
 
 class BaseInvoiceItemFormSet(forms.BaseInlineFormSet):
@@ -292,6 +318,34 @@ class BaseInvoiceItemFormSet(forms.BaseInlineFormSet):
         # Pass company to each form in the formset
         kwargs['company'] = self.company
         return super()._construct_form(i, **kwargs)
+    
+    def clean(self):
+        """Validate the formset as a whole."""
+        if any(self.errors):
+            # Don't bother validating the formset if any of the forms have errors
+            return
+        
+        products_quantities = {}
+        
+        # Collect all products and their requested quantities
+        for form in self.forms:
+            if form.cleaned_data and not form.cleaned_data.get('DELETE', False):
+                product = form.cleaned_data.get('product')
+                quantity = form.cleaned_data.get('quantity')
+                
+                if product and quantity:
+                    # Add quantity to existing product or create new entry
+                    if product in products_quantities:
+                        products_quantities[product] += quantity
+                    else:
+                        products_quantities[product] = quantity
+        
+        # Check if any product's total quantity exceeds available stock
+        for product, total_quantity in products_quantities.items():
+            if total_quantity > product.quantity:
+                raise forms.ValidationError(
+                    f"Total quantity ({total_quantity}) for {product.name} exceeds available stock ({product.quantity})."
+                )
 
 InvoiceItemFormSet = inlineformset_factory(
     models.Invoice, models.InvoiceItem, form=InvoiceItemForm, formset=BaseInvoiceItemFormSet,
