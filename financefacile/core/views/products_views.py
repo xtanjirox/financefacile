@@ -19,7 +19,10 @@ from .base import BaseListView, FormViewMixin, BaseDeleteView
 from .auth_mixins import BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin
 
 
-class ProductCategoryListView(BaseListView, CompanyFilterMixin):
+import logging
+logger = logging.getLogger(__name__)
+
+class ProductCategoryListView(BaseListView):
     model = models.ProductCategory
     table_class = tables.ProductCategoryTable
     filter_class = None
@@ -28,7 +31,41 @@ class ProductCategoryListView(BaseListView, CompanyFilterMixin):
     create_url = reverse_lazy('category-create')
     segment = 'categories'
     detail = True
-    company_field = 'company'  # Field name for company relationship
+    
+    def get_queryset(self):
+        # Start with the base queryset
+        queryset = super().get_queryset()
+        user = self.request.user
+        
+        # Superusers and staff can see all categories if needed
+        if user.is_superuser or user.is_staff:
+            # For debugging purposes, we'll still filter by company
+            if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+                return queryset.filter(company=user.profile.company)
+            return queryset.none()
+        
+        # Regular users can only see their company's categories
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            company = user.profile.company
+            return queryset.filter(company=company)
+        
+        # Users without a company can't see any categories
+        return queryset.none()
+    
+    def get(self, request, *args, **kwargs):
+        # Always render the list view - the template will handle showing the empty state
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add a flag indicating whether there are any categories
+        context['has_categories'] = self.get_queryset().exists()
+        
+        # Log the table data being passed to the template
+        if hasattr(context, 'table') and hasattr(context['table'], 'rows'):
+            logger.info(f"Number of rows in table: {len(context['table'].rows)}")
+        
+        return context
 
 
 class ProductCategoryCreateView(CreateView, FormViewMixin):
@@ -474,20 +511,24 @@ class InvoiceCreateView(CreateView, FormViewMixin):
         return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 
-class InvoiceListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin, ListView):
+class InvoiceListView(BaseViewMixin, ProductPermissionMixin, ListView):
     model = models.Invoice
     template_name = 'invoices/invoice_list.html'
     context_object_name = 'invoices'
     
     def get_queryset(self):
+        # Start with the base queryset
         queryset = super().get_queryset()
+        user = self.request.user
         
-        # Filter by company if user is not superuser/staff
-        if not self.request.user.is_superuser and not self.request.user.is_staff:
-            if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-                queryset = queryset.filter(company=self.request.user.profile.company)
-            else:
-                return queryset.none()
+        # Always filter by company, even for superusers and staff
+        # This ensures data isolation between companies
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            company = user.profile.company
+            queryset = queryset.filter(company=company)
+        else:
+            # Users without a company can't see any invoices
+            return queryset.none()
         
         # Get filter parameters from request
         start_date = self.request.GET.get('start_date')
@@ -506,10 +547,8 @@ class InvoiceListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin,
                 queryset = queryset.filter(is_paid=True)
             elif status == 'unpaid':
                 queryset = queryset.filter(is_paid=False)
-                
-        # Try to get client name filter
-        from contextlib import suppress
-        # Remove client_name filtering as it doesn't exist in the Invoice model
+        
+        # Order by most recent first
         return queryset.order_by('-created_at')
 
     def get_context_data(self, **kwargs):
@@ -546,9 +585,14 @@ class InvoiceListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin,
             
         # Create base queryset filtered by company
         invoice_queryset = models.Invoice.objects
-        if not self.request.user.is_superuser and not self.request.user.is_staff:
-            if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-                invoice_queryset = invoice_queryset.filter(company=self.request.user.profile.company)
+        user = self.request.user
+        
+        # Always filter by company, even for superusers and staff
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            invoice_queryset = invoice_queryset.filter(company=user.profile.company)
+        else:
+            # If user has no company, they shouldn't see any invoices
+            invoice_queryset = invoice_queryset.none()
         
         # Calculate filtered stats if filter is applied
         if start_date or end_date:
@@ -571,14 +615,32 @@ class InvoiceListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin,
             context['filtered_total_price'] = filtered_invoices.aggregate(
                 total=Sum('items__total_price'))['total'] or 0
 
-        # Calculate overall stats regardless of filter
-        total_items_sold = InvoiceItem.objects.aggregate(
-            total=Sum('quantity'))['total'] or 0
-        total_inventory_sold_value = sum(
-            item.quantity * item.product.unit_cost for item in InvoiceItem.objects.select_related('product').all()
-        )
-        total_invoice_price = models.Invoice.objects.aggregate(
-            total=Sum('items__total_price'))['total'] or 0
+        # Calculate overall stats for user's company only
+        user = self.request.user
+        company = None
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            company = user.profile.company
+        
+        if company:
+            # Filter invoice items by the user's company
+            company_invoice_items = InvoiceItem.objects.filter(invoice__company=company)
+            
+            # Calculate stats based on company's data only
+            total_items_sold = company_invoice_items.aggregate(
+                total=Sum('quantity'))['total'] or 0
+                
+            total_inventory_sold_value = sum(
+                item.quantity * item.product.unit_cost 
+                for item in company_invoice_items.select_related('product')
+            ) if company_invoice_items.exists() else 0
+            
+            total_invoice_price = models.Invoice.objects.filter(company=company).aggregate(
+                total=Sum('items__total_price'))['total'] or 0
+        else:
+            # No company, no stats
+            total_items_sold = 0
+            total_inventory_sold_value = 0
+            total_invoice_price = 0
 
         context.update({
             'total_items_sold': total_items_sold,
@@ -830,8 +892,11 @@ class InvoiceDetailView(DetailView):
     def get_queryset(self):
         # Ensure users can only view invoices from their company
         queryset = super().get_queryset()
-        if self.request.user.is_superuser or self.request.user.is_staff:
-            return queryset
-        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-            return queryset.filter(company=self.request.user.profile.company)
+        user = self.request.user
+        
+        # Always filter by company, even for superusers and staff
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            return queryset.filter(company=user.profile.company)
+        
+        # Users without a company can't see any invoices
         return queryset.none()

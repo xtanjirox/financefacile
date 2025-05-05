@@ -226,14 +226,6 @@
                         <p class="mb-0">Get started with FinanceFacile today</p>
                     </div>
                     <div class="register-body">
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
                         
                         <form method="post" id="registrationForm">
                             {% csrf_token %}
@@ -331,6 +323,9 @@
                                                 {{ form.password2.errors }}
                                             </div>
                                         {% endif %}
+                                        <div class="invalid-feedback d-none" id="password-mismatch-error">
+                                            Passwords do not match
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="d-grid mt-4">
@@ -438,6 +433,10 @@
                 const lastName = document.getElementById('{{ form.last_name.id_for_label }}').value;
                 const password1 = document.getElementById('{{ form.password1.id_for_label }}').value;
                 const password2 = document.getElementById('{{ form.password2.id_for_label }}').value;
+                const passwordMismatchError = document.getElementById('password-mismatch-error');
+                
+                // Reset error messages
+                passwordMismatchError.classList.add('d-none');
                 
                 // Basic validation
                 if (!username || !email || !firstName || !lastName || !password1 || !password2) {
@@ -446,8 +445,13 @@
                 }
                 
                 if (password1 !== password2) {
-                    alert('Passwords do not match');
+                    // Show inline error message
+                    passwordMismatchError.classList.remove('d-none');
+                    document.getElementById('{{ form.password2.id_for_label }}').classList.add('is-invalid');
                     return false;
+                } else {
+                    // Clear error if passwords match
+                    document.getElementById('{{ form.password2.id_for_label }}').classList.remove('is-invalid');
                 }
                 
                 return true;

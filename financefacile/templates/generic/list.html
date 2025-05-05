@@ -50,7 +50,7 @@
                         <tbody>
                             {% for row in table.rows %}
                             <tr>
-                                {% for column, cell in row.items %}
+                                {% for cell in row %}
                                     <td>{{ cell }}</td>
                                 {% endfor %}
                             </tr>
@@ -66,6 +66,7 @@
         </div>
     </div>
     {% endif %}
+    
     {% if segment == 'categories' %}
     <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
         <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fas fa-tags me-2" style="color: #7cb9e8;"></i>Categories</h2>
@@ -73,6 +74,9 @@
             <i class="fa fa-plus"></i> Add Category
         </a>
     </div>
+    
+    {% if has_categories %}
+    <!-- Categories table for when categories exist -->
     <div class="col-12">
         <div class="card shadow-sm border-0" style="border-radius: 1.2rem; background: #fafdff;">
             <div class="card-header d-flex align-items-center justify-content-between" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed;">
@@ -84,66 +88,50 @@
             <div class="card-body">
                 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
                 <link rel="stylesheet" href="{% static 'css/datatables_pastel.css' %}">
-                <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-          <style>
-            /* Custom DataTables styling */
-            .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
-              color: #39739d;
-              margin-bottom: 15px;
-            }
-            .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
-              background: #e7f1fa;
-              border-color: #7cb9e8;
-              color: #39739d !important;
-              border-radius: 50px;
-            }
-            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-              background: #e7f1fa;
-              border-color: #7cb9e8;
-              color: #39739d !important;
-              border-radius: 50px;
-            }
-            .dataTables_wrapper .dataTables_paginate .paginate_button {
-              color: #39739d !important;
-              border-radius: 50px;
-              margin: 0 3px;
-            }
-            .dataTables_wrapper .dataTables_length select {
-              border-color: #e0e6ed;
-              background-color: #f8f9fa;
-              color: #39739d;
-              border-radius: 8px;
-              padding: 5px 10px;
-            }
-            .dataTables_wrapper .dataTables_filter input {
-              border-color: #e0e6ed;
-              background-color: #f8f9fa;
-              color: #39739d;
-              border-radius: 50px;
-              padding: 8px 15px;
-              width: 250px;
-            }
-            table.dataTable thead th, table.dataTable thead td {
-              border-bottom: 1px solid #e0e6ed;
-              padding: 12px 10px;
-              font-weight: 600;
-              color: #39739d;
-              background-color: #FAFDFF;
-            }
-            table.dataTable.no-footer {
-              border-bottom: 1px solid #e0e6ed;
-            }
-            table.dataTable tbody tr:hover {
-              background-color: rgba(124, 185, 232, 0.1);
-            }
-            .badge {
-              padding: 6px 10px;
-              font-weight: 500;
-              border-radius: 50px;
-            }
-          </style>
+                <style>
+                    /* Custom DataTables styling */
+                    .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+                      color: #39739d;
+                      margin-bottom: 15px;
+                    }
+                    .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+                      background: #e7f1fa;
+                      border-color: #7cb9e8;
+                      color: #39739d !important;
+                      border-radius: 50px;
+                    }
+                    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+                      background: #e3f2fd;
+                      border-color: #7cb9e8;
+                      color: #39739d !important;
+                    }
+                    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+                      color: #6c757d !important;
+                    }
+                    .dataTables_wrapper .dataTables_filter input {
+                      border: 1px solid #e0e6ed;
+                      border-radius: 50px;
+                      padding: 5px 15px;
+                    }
+                    .dataTables_wrapper .dataTables_length select {
+                      border: 1px solid #e0e6ed;
+                      border-radius: 50px;
+                      padding: 5px 30px 5px 15px;
+                    }
+                    table.dataTable thead th, table.dataTable thead td {
+                      border-bottom: 1px solid #e0e6ed;
+                      padding: 15px 10px;
+                      font-weight: 600;
+                      color: #39739d;
+                    }
+                    table.dataTable tbody td {
+                      padding: 15px 10px;
+                      border-bottom: 1px solid #f1f5f9;
+                      vertical-align: middle;
+                    }
+                </style>
                 <div class="table-responsive">
-                    <table id="categories-table" class="table table-hover align-middle">
+                    <table id="categories-table" class="table align-middle datatable" style="background: #fafdff; border-radius: 1rem; overflow: hidden;">
                         <thead>
                             <tr>
                             {% for column in table.columns %}
@@ -153,11 +141,11 @@
                         </thead>
                         <tbody>
                             {% for row in table.rows %}
-                            <tr>
-                                {% for column, cell in row.items %}
+                                <tr>
+                                {% for cell in row %}
                                     <td>{{ cell }}</td>
                                 {% endfor %}
-                            </tr>
+                                </tr>
                             {% endfor %}
                         </tbody>
                     </table>
@@ -165,31 +153,37 @@
                 <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
                 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
                 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-                <script src="{% static 'js/datatables_init.js' %}"></script>
-                <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-          <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-          <script>
-            $(document).ready(function() {
-              $('#categories-table').DataTable({
-                responsive: true,
-                pageLength: 5,
-                lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],
-                language: {
-                  search: "_INPUT_",
-                  searchPlaceholder: "Search categories...",
-                  lengthMenu: "Show _MENU_ categories",
-                  info: "Showing _START_ to _END_ of _TOTAL_ categories",
-                  infoEmpty: "Showing 0 to 0 of 0 categories",
-                  infoFiltered: "(filtered from _MAX_ total categories)"
-                },
-                dom: '<"row"<"col-sm-6"l><"col-sm-6"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-5"i><"col-sm-7"p>>'
-              });
-            });
-          </script>
+                <script>
+                  $(document).ready(function() {
+                      $('#categories-table').DataTable({
+                        "pageLength": 10,
+                        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                        "language": {
+                          searchPlaceholder: "Search categories...",
+                          lengthMenu: "Show _MENU_ categories",
+                          info: "Showing _START_ to _END_ of _TOTAL_ categories",
+                          infoEmpty: "Showing 0 to 0 of 0 categories",
+                          infoFiltered: "(filtered from _MAX_ total categories)"
+                        },
+                        dom: '<"row"<"col-sm-6"l><"col-sm-6"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-5"i><"col-sm-7"p>>'
+                      });
+                  });
+                </script>
             </div>
         </div>
     </div>
-{% endif %}
+    {% else %}
+    <!-- Empty state for when no categories exist -->
+    <div class="col-12">
+        <div class="card shadow-sm border-0" style="border-radius: 1.2rem; background: #fafdff;">
+            <div class="card-body text-center py-5">
+                <i class="fas fa-tags mb-3" style="font-size: 3rem; color: #7cb9e8;"></i>
+                <h4 class="mb-3">No Categories Found</h4>
+                <p class="text-muted">You haven't created any product categories yet. Click the "Add Category" button above to create your first category.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
 </div>
-
 {% endblock content %}
