@@ -287,57 +287,59 @@ class LandingPageView(TemplateView):
         return super().get(request, *args, **kwargs)
 
 
-class RegistrationView(View):
+class RegistrationView(FormView):
     """View for user registration with company creation"""
     form_class = RegistrationForm
     template_name = 'accounts/register.html'
     success_url = reverse_lazy('home')
     
     def get(self, request, *args, **kwargs):
-        form = self.form_class()
-        return render(request, self.template_name, {'form': form})
-    
-    def post(self, request, *args, **kwargs):
-        form = self.form_class(request.POST)
-        
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return render(request, self.template_name, {'form': form})
+        if request.user.is_authenticated:
+            return redirect('home')
+        return super().get(request, *args, **kwargs)
     
     def form_valid(self, form):
-        with transaction.atomic():
-            # Generate username from email
-            email = form.cleaned_data['email']
-            username = email.split('@')[0]  # Use part before @ as base username
-            
-            # Check if username exists and append numbers if needed
-            base_username = username
-            counter = 1
-            while User.objects.filter(username=username).exists():
-                username = f"{base_username}{counter}"
-                counter += 1
-            
-            # Set the username and save the user
-            user = form.save(commit=False)
-            user.username = username
-            user.save()
-            
-            # Create company for the user
-            company = Company.objects.create(
-                name=form.cleaned_data['company_name'],
-                siret_number=form.cleaned_data['company_siret'],
-                address=form.cleaned_data['company_address'],
-                phone_number=form.cleaned_data['company_phone']
-            )
-            # Create or update user profile
-            profile, created = UserProfile.objects.get_or_create(user=user)
-            profile.company = company
-            profile.is_company_admin = True  # Make the user a company admin
-            profile.save()
-        
-        messages.success(self.request, 'Account created successfully. You can now log in.')
-        return redirect(self.success_url)
+        try:
+            with transaction.atomic():
+                # Generate username from email
+                email = form.cleaned_data['email']
+                username = email.split('@')[0]  # Use part before @ as base username
+                
+                # Check if username exists and append numbers if needed
+                base_username = username
+                counter = 1
+                while User.objects.filter(username=username).exists():
+                    username = f"{base_username}{counter}"
+                    counter += 1
+                
+                # Create user with generated username
+                user = User.objects.create_user(
+                    username=username,
+                    email=form.cleaned_data['email'],
+                    password=form.cleaned_data['password1'],
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name']
+                )
+                
+                # Create company for the user
+                company = Company.objects.create(
+                    name=form.cleaned_data['company_name'],
+                    siret_number=form.cleaned_data.get('company_siret', ''),
+                    address=form.cleaned_data.get('company_address', ''),
+                    phone_number=form.cleaned_data.get('company_phone', '')
+                )
+                
+                # Create or update user profile
+                profile, created = UserProfile.objects.get_or_create(user=user)
+                profile.company = company
+                profile.is_company_admin = True  # Make the user a company admin
+                profile.save()
+                
+                messages.success(self.request, 'Account created successfully. You can now log in.')
+                return redirect(self.success_url)
+        except Exception as e:
+            messages.error(self.request, f'Error creating account: {str(e)}')
+            return self.form_invalid(form)
 
 
 # Company Management Views

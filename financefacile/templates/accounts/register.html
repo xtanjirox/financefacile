@@ -42,18 +42,30 @@
                     <div class="card-body p-4">
                         <form method="POST">
                             {% csrf_token %}
-                            <div class="mb-3">
-                                <label class="form-label">Username</label>
-                                {{ form.username }}
-                                {% if form.username.errors %}
-                                <div class="text-danger">{{ form.username.errors }}</div>
-                                {% endif %}
+                            {% if form.non_field_errors %}
+                            <div class="alert alert-danger">
+                                {{ form.non_field_errors }}
                             </div>
+                            {% endif %}
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
                                 {{ form.email }}
                                 {% if form.email.errors %}
                                 <div class="text-danger">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">First Name</label>
+                                {{ form.first_name }}
+                                {% if form.first_name.errors %}
+                                <div class="text-danger">{{ form.first_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Last Name</label>
+                                {{ form.last_name }}
+                                {% if form.last_name.errors %}
+                                <div class="text-danger">{{ form.last_name.errors }}</div>
                                 {% endif %}
                             </div>
                             <div class="mb-3">
@@ -75,6 +87,27 @@
                                 {{ form.company_name }}
                                 {% if form.company_name.errors %}
                                 <div class="text-danger">{{ form.company_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">SIRET Number (optional)</label>
+                                {{ form.company_siret }}
+                                {% if form.company_siret.errors %}
+                                <div class="text-danger">{{ form.company_siret.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Company Address (optional)</label>
+                                {{ form.company_address }}
+                                {% if form.company_address.errors %}
+                                <div class="text-danger">{{ form.company_address.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number (optional)</label>
+                                {{ form.company_phone }}
+                                {% if form.company_phone.errors %}
+                                <div class="text-danger">{{ form.company_phone.errors }}</div>
                                 {% endif %}
                             </div>
                             <div class="text-center mt-4">
