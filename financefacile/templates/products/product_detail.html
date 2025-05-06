@@ -44,6 +44,23 @@
           <span class="badge rounded-pill px-3 py-2" style="background: #e3f2fd; color: #39739d; font-size: 0.9rem; box-shadow: 0 1px 4px rgba(0,0,0,0.1);">SKU: {{ object.sku }}</span>
         </div>
         <div class="card-body p-4">
+          <!-- Product Image Section -->
+          <div class="row mb-4">
+            <div class="col-12 col-md-4 mx-auto">
+              <div class="card shadow-sm border-0 h-100" style="border-radius: 10px; overflow: hidden;">
+                {% if object.image %}
+                  <img src="{{ object.image.url }}" alt="{{ object.name }}" class="img-fluid" style="object-fit: contain; max-height: 300px;">
+                {% else %}
+                  <div class="d-flex justify-content-center align-items-center bg-light" style="height: 300px;">
+                    <div class="text-center p-4">
+                      <i class="fas fa-box-open fa-4x mb-3" style="color: #ccc;"></i>
+                      <p class="text-muted mb-0">No image available</p>
+                    </div>
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
           <div class="row mb-4 g-3">
             <div class="col-6 col-md-3">
               <div class="shadow-sm p-3 rounded-4 text-center h-100" style="background: #e3f2fd; border: 1px solid rgba(124, 185, 232, 0.2);">

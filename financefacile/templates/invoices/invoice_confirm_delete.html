@@ -1,17 +1,99 @@
 {% extends 'base.html' %}
+
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
 {% block content %}
-<div class="container mt-5">
-  <div class="card">
-    <div class="card-header bg-danger text-white">
-      <h4>Delete Invoice</h4>
+<div class="container-fluid p-0">
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+        <h2 class="fw-bold mb-0" style="color: #d32f2f;">
+            <i class="fas fa-exclamation-triangle me-2" style="color: #f44336;"></i>
+            Confirm Invoice Deletion
+        </h2>
+        <div class="d-flex gap-2">
+            <a href="{% url 'invoice-list' %}" class="btn btn-outline-secondary rounded-pill px-3">
+                <i class="fas fa-arrow-left me-2"></i> Back to Invoices
+            </a>
+        </div>
     </div>
-    <div class="card-body">
-      <p>Are you sure you want to delete Invoice #{{ object.pk }}?</p>
-      <form method="post">{% csrf_token %}
-        <a href="{% url 'invoice-list' %}" class="btn btn-secondary">Cancel</a>
-        <button type="submit" class="btn btn-danger">Delete</button>
-      </form>
+
+    <div class="row g-4">
+        <div class="col-lg-12">
+            <div class="card shadow-sm border-0" style="border-radius: 14px;">
+                <div class="card-header d-flex align-items-center" style="background: #ffebee; border-bottom: 1px solid #ffcdd2;">
+                    <h5 class="card-title mb-0 fw-bold" style="color: #d32f2f;">
+                        <i class="fas fa-trash-alt me-2" style="color: #f44336;"></i>
+                        Delete Invoice #{{ object.pk }}
+                    </h5>
+                </div>
+                <div class="card-body p-4">
+                    <div class="alert alert-warning">
+                        <i class="fas fa-exclamation-circle me-2"></i>
+                        <strong>Warning:</strong> This action cannot be undone. All invoice data and related items will be permanently deleted.
+                    </div>
+                    
+                    <div class="mb-4">
+                        <h6 class="fw-bold">Invoice Details:</h6>
+                        <div class="p-3 bg-light rounded">
+                            <p><strong>Invoice Number:</strong> #{{ object.pk }}</p>
+                            <p><strong>Client:</strong> {{ object.client_name }}</p>
+                            <p><strong>Date:</strong> {{ object.created_at|date:"F d, Y" }}</p>
+                            <p><strong>Total Amount:</strong> {{ object.total_amount }}</p>
+                            <p><strong>Status:</strong> {{ object.get_status_display }}</p>
+                        </div>
+                    </div>
+                    
+                    {% if object.items.all %}
+                    <div class="mb-4">
+                        <h6 class="fw-bold">Invoice Items:</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in object.items.all %}
+                                    <tr>
+                                        <td>{{ item.product.name }}</td>
+                                        <td>{{ item.quantity }}</td>
+                                        <td>{{ item.selling_price }}</td>
+                                        <td>{{ item.total }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'invoice-list' %}" class="btn btn-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash-alt me-1"></i> Delete Invoice
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
-{% endblock %}
+{% endblock content %}

@@ -7,7 +7,7 @@ from core.views.expenses_views import (
 from .views import search_views
 from .views import search_api
 from .views.products_views import (
-    ProductListView, ProductCreateView, ProductUpdateView, ProductDeleteView, ProductDetailView,
+    ProductListView, ProductCreateView, ProductUpdateView, ProductDeleteView, ProductDetailView, ProductRestoreView,
     ProductCategoryListView, ProductCategoryCreateView, ProductCategoryUpdateView, ProductCategoryDeleteView,
     InvoiceCreateView, InvoiceListView, InvoiceDetailView, InvoiceUpdateView, InvoiceDeleteView,
     ProductDataJsonView
@@ -48,6 +48,7 @@ urlpatterns = [
     path('products/<int:pk>/', ProductDetailView.as_view(), name='product-detail'),
     path('products/update/<int:pk>/', ProductUpdateView.as_view(), name='product-update'),
     path('products/delete/<int:pk>/', ProductDeleteView.as_view(), name='product-delete'),
+    path('products/restore/<int:pk>/', ProductRestoreView.as_view(), name='product-restore'),
     path('products/pdf/<int:pk>/', generate_product_pdf, name='product-pdf'),
     path('search/', search_views.global_search, name='global-search'),
     path('api/live-search/', search_api.live_search, name='live-search-api'),

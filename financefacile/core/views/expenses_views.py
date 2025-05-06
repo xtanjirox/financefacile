@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.urls import reverse_lazy
 from django.views import View
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
@@ -40,8 +41,8 @@ class ExpenseListView(BaseViewMixin, ExpensePermissionMixin, CompanyFilterMixin,
         context = super().get_context_data(**kwargs)
         now = timezone.now()
         
-        # Initialize filter form
-        filter_form = DateRangeFilterForm(self.request.GET or None)
+        # Initialize filter form with the current user
+        filter_form = DateRangeFilterForm(self.request.GET or None, user=self.request.user)
         context['filter_form'] = filter_form
         
         # Get filter parameters
@@ -246,3 +247,19 @@ class ExpenseCategoryDeleteView(BaseViewMixin, ExpensePermissionMixin, DeleteVie
         if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
             return queryset.filter(company=self.request.user.profile.company)
         return queryset.none()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Count related expenses for this category
+        related_expenses_count = Expense.objects.filter(category=self.object).count()
+        context['related_expenses_count'] = related_expenses_count
+        return context
+        
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        # Check if category has related expenses
+        related_expenses_count = Expense.objects.filter(category=self.object).count()
+        if related_expenses_count > 0:
+            messages.error(request, f"Cannot delete category '{self.object.name}' because it has {related_expenses_count} related expenses.")
+            return redirect('expense-categories-list')
+        return super().post(request, *args, **kwargs)

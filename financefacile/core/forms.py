@@ -85,11 +85,20 @@ class DateRangeFilterForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        # Extract user from kwargs
+        self.user = kwargs.pop('user', None)
+        
         super().__init__(*args, **kwargs)
-        # Dynamically populate category choices
-        categories = models.ExpenseCategory.objects.all().order_by('name')
+        
+        # Dynamically populate category choices, filtered by company
+        categories_queryset = models.ExpenseCategory.objects.all().order_by('name')
+        
+        # Filter categories by company if user is provided
+        if self.user and hasattr(self.user, 'profile') and hasattr(self.user.profile, 'company') and self.user.profile.company:
+            categories_queryset = categories_queryset.filter(company=self.user.profile.company)
+        
         self.fields['category_name'].choices = [
-            ('', '---------')] + [(cat.name, cat.name) for cat in categories]
+            ('', '---------')] + [(cat.name, cat.name) for cat in categories_queryset]
 
         # Setup crispy form helper
         self.helper = FormHelper()
@@ -373,14 +382,6 @@ class ProductForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        import sys
-        print("ProductForm INIT DEBUG:", file=sys.stderr)
-        print("  Meta.model:", getattr(
-            self._meta, 'model', None), file=sys.stderr)
-        print("  Meta.fields:", getattr(
-            self._meta, 'fields', None), file=sys.stderr)
-        print("  Fields:", list(self.fields.keys()), file=sys.stderr)
-
         # Ensure the category queryset is populated
         if 'category' in self.fields:
             self.fields['category'].queryset = models.ProductCategory.objects.all(
@@ -394,7 +395,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = models.Product
         fields = ['name', 'sku', 'category', 'quantity', 'unit_cost', 'selling_price', 
-                 'value_current', 'value_1_month', 'value_2_month', 'value_3_month', 'description']
+                 'value_current', 'value_1_month', 'value_2_month', 'value_3_month', 'description', 'image']
         widgets = {
             'name': forms.TextInput(attrs={"class": "form-control", "style": "width: 100%;"}),
             'sku': forms.TextInput(attrs={"class": "form-control", "style": "width: 100%;"}),
@@ -406,16 +407,18 @@ class ProductForm(forms.ModelForm):
             'value_2_month': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;"}),
             'value_3_month': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;"}),
             'description': forms.Textarea(attrs={"class": "form-control", "rows": 4, "style": "width: 100%;"}),
+            'image': forms.FileInput(attrs={"class": "form-control", "accept": "image/*"}),
         }
 
 
 class ExpenseForm(forms.ModelForm):
     class Meta:
         model = models.Expense
-        fields = ['category', 'date', 'amount', 'description']
+        fields = ['category', 'date', 'amount', 'description', 'attachment']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
             'description': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Optional'}),
+            'attachment': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):

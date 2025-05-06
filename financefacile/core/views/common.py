@@ -107,8 +107,8 @@ def home(request):
     from django.utils import timezone
     now = timezone.now()
     
-    # Get all products
-    products_query = models.Product.objects.all()
+    # Get all active products (exclude archived)
+    products_query = models.Product.objects.filter(is_archived=False)
     
     # Filter products by company if user has a company
     if user_company:
@@ -139,8 +139,8 @@ def home(request):
     if user_company:
         parent_categories_query = parent_categories_query.filter(company=user_company)
         
-    # Get products with category information
-    products_with_category = models.Product.objects.select_related('category')
+    # Get products with category information (exclude archived)
+    products_with_category = models.Product.objects.select_related('category').filter(is_archived=False)
     if user_company:
         products_with_category = products_with_category.filter(company=user_company)
     category_qty = {}

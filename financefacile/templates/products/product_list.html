@@ -24,7 +24,22 @@
 {% block content %}
 <div class="container-fluid p-0">
   <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
-    <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-boxes-stacked me-2" style="color: #7cb9e8;"></i>Products</h2>
+    <div class="d-flex align-items-center">
+      <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-boxes-stacked me-2" style="color: #7cb9e8;"></i>Products</h2>
+      {% if archived_products_count > 0 %}
+      <div class="ms-3">
+        {% if show_archived %}
+          <a href="{% url 'product-list' %}" class="btn btn-sm btn-outline-secondary rounded-pill">
+            <i class="fas fa-eye-slash me-1"></i> Hide Archived ({{ archived_products_count }})
+          </a>
+        {% else %}
+          <a href="{% url 'product-list' %}?show_archived=true" class="btn btn-sm btn-outline-secondary rounded-pill">
+            <i class="fas fa-archive me-1"></i> Show Archived ({{ archived_products_count }})
+          </a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
     <div class="d-flex gap-2">
       <a href="{% url 'category-create' %}" class="btn btn-outline-primary shadow-sm rounded-pill px-4" style="border-color: #7cb9e8; color: #39739d; font-weight: 600;">
         <i class="fa fa-tags"></i> Add Category
@@ -172,7 +187,12 @@
                 <td>
                     <a href="{% url 'product-detail' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View"><i class="fas fa-eye"></i></a>
                     <a href="{% url 'product-update' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i></a>
-                    <a href="{% url 'product-delete' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete"><i class="fas fa-trash"></i></a>
+                    
+                    {% if product.is_archived %}
+                    <a href="{% url 'product-restore' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #e8f5e9; color: #4caf50; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Restore"><i class="fas fa-undo-alt"></i></a>
+                    {% else %}
+                    <a href="{% url 'product-delete' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Archive"><i class="fas fa-archive"></i></a>
+                    {% endif %}
                 </td>
               </tr>
               {% empty %}
