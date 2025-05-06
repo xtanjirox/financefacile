@@ -20,8 +20,8 @@
       <i class="fas fa-cog me-2" style="color: #7cb9e8;"></i>
       Company Settings for {{ object.company.name }}
     </h2>
-    <a href="{% url 'organizations:company-detail' object.company.id %}" class="btn btn-outline-secondary rounded-pill px-3">
-      <i class="fas fa-arrow-left me-2"></i> Back to Company
+    <a href="{% url 'auth:profile' %}" class="btn btn-outline-secondary rounded-pill px-3">
+      <i class="fas fa-arrow-left me-2"></i> Back to Profile
     </a>
   </div>
 
@@ -39,24 +39,35 @@
             
             <div class="col-md-6 mb-3">
               <label for="{{ form.default_tva_rate.id_for_label }}" class="form-label fw-semibold">Default TVA Rate (%)</label>
-              <input type="number" name="default_tva_rate" id="{{ form.default_tva_rate.id_for_label }}" class="form-control" step="0.01" min="0" max="100" value="{{ form.default_tva_rate.value|default:'' }}" required>
+              {{ form.default_tva_rate }}
               {% if form.default_tva_rate.errors %}
                 <div class="invalid-feedback d-block">
                   {{ form.default_tva_rate.errors }}
                 </div>
               {% endif %}
-              <small class="form-text text-muted">Default TVA (VAT) rate in percentage (e.g., 19.00 for 19%)</small>
+              <small class="form-text text-muted">{{ form.default_tva_rate.help_text }}</small>
             </div>
             
             <div class="col-md-6 mb-3">
               <label for="{{ form.stamp_fee.id_for_label }}" class="form-label fw-semibold">Stamp Fee</label>
-              <input type="number" name="stamp_fee" id="{{ form.stamp_fee.id_for_label }}" class="form-control" step="0.01" min="0" value="{{ form.stamp_fee.value|default:'' }}" required>
+              {{ form.stamp_fee }}
               {% if form.stamp_fee.errors %}
                 <div class="invalid-feedback d-block">
                   {{ form.stamp_fee.errors }}
                 </div>
               {% endif %}
-              <small class="form-text text-muted">Stamp fee amount to be added to all invoices</small>
+              <small class="form-text text-muted">{{ form.stamp_fee.help_text }}</small>
+            </div>
+            
+            <div class="col-md-6 mb-3">
+              <label for="{{ form.currency.id_for_label }}" class="form-label fw-semibold">Currency</label>
+              {{ form.currency }}
+              {% if form.currency.errors %}
+                <div class="invalid-feedback d-block">
+                  {{ form.currency.errors }}
+                </div>
+              {% endif %}
+              <small class="form-text text-muted">{{ form.currency.help_text }}</small>
             </div>
             
             <div class="col-12 mt-4">

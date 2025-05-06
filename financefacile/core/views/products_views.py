@@ -17,6 +17,7 @@ from core.models import InvoiceItem
 import core.forms
 from .base import BaseListView, FormViewMixin, BaseDeleteView
 from .auth_mixins import BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin
+from accounts.models import CompanySettings
 
 
 import logging
@@ -160,6 +161,17 @@ class ProductListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin,
         # Add create URL and segment for template
         context['create_url'] = self.create_url
         context['segment'] = self.segment
+        
+        # Add currency symbol to context
+        user = self.request.user
+        currency_symbol = 'DT'  # Default currency
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            try:
+                company_settings = CompanySettings.objects.get(company=user.profile.company)
+                currency_symbol = company_settings.currency
+            except CompanySettings.DoesNotExist:
+                pass
+        context['currency_symbol'] = currency_symbol
         
         return context
 
@@ -642,10 +654,20 @@ class InvoiceListView(BaseViewMixin, ProductPermissionMixin, ListView):
             total_inventory_sold_value = 0
             total_invoice_price = 0
 
+        # Add currency symbol to context
+        currency_symbol = 'DT'  # Default currency
+        if company:
+            try:
+                company_settings = CompanySettings.objects.get(company=company)
+                currency_symbol = company_settings.currency
+            except CompanySettings.DoesNotExist:
+                pass
+        
         context.update({
             'total_items_sold': total_items_sold,
             'total_inventory_sold_value': total_inventory_sold_value,
             'total_invoice_price': total_invoice_price,
+            'currency_symbol': currency_symbol,
         })
         return context
 
@@ -900,3 +922,19 @@ class InvoiceDetailView(DetailView):
         
         # Users without a company can't see any invoices
         return queryset.none()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Add currency symbol to context
+        user = self.request.user
+        currency_symbol = 'DT'  # Default currency
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            try:
+                company_settings = CompanySettings.objects.get(company=user.profile.company)
+                currency_symbol = company_settings.currency
+            except CompanySettings.DoesNotExist:
+                pass
+        context['currency_symbol'] = currency_symbol
+        
+        return context

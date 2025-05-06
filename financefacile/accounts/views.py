@@ -389,7 +389,8 @@ class CompanySettingsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateV
                  self.request.user.profile.is_company_admin))
     
     def get_success_url(self):
-        return reverse_lazy('company-detail', kwargs={'pk': self.object.company.pk})
+        # Redirect back to the same company settings page
+        return reverse_lazy('organizations:company-detail', kwargs={'pk': self.object.company.pk})
     
     def form_valid(self, form):
         messages.success(self.request, 'Company settings updated successfully.')

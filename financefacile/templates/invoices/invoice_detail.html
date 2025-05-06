@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load currency_tags %}
 {% block sidebar %}
   {% include 'includes/sidebar.html' %}
 {% endblock sidebar %}
@@ -62,8 +63,8 @@
             <tr>
               <td>{{ item.product.name }}</td>
               <td>{{ item.quantity }}</td>
-              <td>{{ item.selling_price }}</td>
-              <td>{{ item.total_price }}</td>
+              <td>{{ item.selling_price|currency:currency_symbol }}</td>
+              <td>{{ item.total_price|currency:currency_symbol }}</td>
             </tr>
             {% endfor %}
           </tbody>
@@ -79,21 +80,21 @@
                 <table class="table table-sm">
                   <tr>
                     <td class="text-end">Subtotal:</td>
-                    <td class="text-end fw-bold">{{ invoice.get_subtotal|floatformat:2 }} dt</td>
+                    <td class="text-end fw-bold">{{ invoice.get_subtotal|currency:currency_symbol }}</td>
                   </tr>
                   <tr>
                     <td class="text-end">TVA ({{ invoice.get_tva_rate|floatformat:2 }}%):</td>
-                    <td class="text-end fw-bold">{{ invoice.get_tva_amount|floatformat:2 }} dt</td>
+                    <td class="text-end fw-bold">{{ invoice.get_tva_amount|currency:currency_symbol }}</td>
                   </tr>
                   {% if invoice.include_stamp_fee %}
                   <tr>
                     <td class="text-end">Stamp Fee:</td>
-                    <td class="text-end fw-bold">{{ invoice.get_stamp_fee|floatformat:2 }} dt</td>
+                    <td class="text-end fw-bold">{{ invoice.get_stamp_fee|currency:currency_symbol }}</td>
                   </tr>
                   {% endif %}
                   <tr class="table-active">
                     <td class="text-end fw-bold">Total Amount:</td>
-                    <td class="text-end fw-bold">{{ invoice.get_total|floatformat:2 }} dt</td>
+                    <td class="text-end fw-bold">{{ invoice.get_total|currency:currency_symbol }}</td>
                   </tr>
                 </table>
               </div>

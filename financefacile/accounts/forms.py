@@ -187,10 +187,14 @@ class CompanySettingsForm(forms.ModelForm):
     """Form for updating company settings"""
     class Meta:
         model = CompanySettings
-        fields = ('default_tva_rate', 'stamp_fee')
+        fields = ('default_tva_rate', 'stamp_fee', 'currency')
         widgets = {
             'default_tva_rate': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'stamp_fee': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'currency': forms.Select(attrs={'class': 'form-control form-select'}),
+        }
+        help_texts = {
+            'currency': 'Select the currency symbol to display with all monetary values in the application.',
         }
 
 

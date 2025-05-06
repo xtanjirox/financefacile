@@ -45,10 +45,22 @@ def generate_stat_by_entry_type(queryset, entry_type, ls_month_year):
 
 
 def home(request):
-    # Get the user's company
+    # Get the user's company and currency
     user_company = None
+    currency_symbol = 'DT'  # Default currency
+    
     if hasattr(request.user, 'profile') and hasattr(request.user.profile, 'company'):
         user_company = request.user.profile.company
+        
+        # Get currency from company settings
+        if user_company:
+            try:
+                from accounts.models import CompanySettings
+                company_settings = CompanySettings.objects.get(company=user_company)
+                currency_symbol = company_settings.currency
+            except Exception:
+                # Use default if settings not found
+                pass
     
     # Filter finance entries by company
     finance_entries_charge = models.FinanceEntry.objects.filter(finance_entry_type=models.EntryType.CHARGE)
@@ -241,6 +253,7 @@ def home(request):
         'warehouse_value': warehouse_value,
         'total_invoice_price': total_invoice_price,
         'recent_invoices': recent_invoices_query,
+        'currency_symbol': currency_symbol,  # Add currency symbol to context
     }
     return render(request, 'index.html', context)
 

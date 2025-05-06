@@ -10,6 +10,7 @@ from core.models import Expense, ExpenseCategory
 from django.utils import timezone
 from django.db.models import Sum
 from datetime import datetime, timedelta
+from accounts.models import CompanySettings
 
 def generate_expense_pdf(request, pk=None):
     """
@@ -19,6 +20,15 @@ def generate_expense_pdf(request, pk=None):
     """
     buffer = io.BytesIO()
     doc = SimpleDocTemplate(buffer, pagesize=letter)
+    
+    # Get the currency symbol from company settings
+    currency_symbol = 'DT'  # Default currency
+    if hasattr(request.user, 'profile') and hasattr(request.user.profile, 'company') and request.user.profile.company:
+        try:
+            company_settings = CompanySettings.objects.get(company=request.user.profile.company)
+            currency_symbol = company_settings.currency
+        except CompanySettings.DoesNotExist:
+            pass
     
     # Get styles
     styles = getSampleStyleSheet()
@@ -55,7 +65,7 @@ def generate_expense_pdf(request, pk=None):
             Spacer(1, 0.1*inch),
             Paragraph(f"Date: {expense.date.strftime('%Y-%m-%d')}", normal_style),
             Spacer(1, 0.1*inch),
-            Paragraph(f"Amount: {expense.amount:.2f}", normal_style),
+            Paragraph(f"Amount: {expense.amount:.2f} {currency_symbol}", normal_style),
             Spacer(1, 0.25*inch)
         ])
         
@@ -103,7 +113,7 @@ def generate_expense_pdf(request, pk=None):
                 Spacer(1, 0.25*inch),
                 Paragraph(filter_description, normal_style),
                 Spacer(1, 0.25*inch),
-                Paragraph(f"Total Amount: {total_amount:.2f}", header_style),
+                Paragraph(f"Total Amount: {total_amount:.2f} {currency_symbol}", header_style),
                 Spacer(1, 0.25*inch)
             ]
             
@@ -118,13 +128,13 @@ def generate_expense_pdf(request, pk=None):
                 [
                     expense.date.strftime('%Y-%m-%d'),
                     expense.category.name,
-                    f"{expense.amount:.2f}",
+                    f"{expense.amount:.2f} {currency_symbol}",
                     expense.description or ""
                 ] for expense in expenses
             ])
             
             # Add total row
-            data.append(['', 'TOTAL', f"{total_amount:.2f}", ''])
+            data.append(['', 'TOTAL', f"{total_amount:.2f} {currency_symbol}", ''])
             
             # Create the expenses table
             expenses_table = Table(data, colWidths=[1*inch, 1.5*inch, 1*inch, 2.5*inch])
@@ -178,7 +188,7 @@ def generate_expense_pdf(request, pk=None):
                 percentage = (amount / total_amount) * 100 if total_amount > 0 else 0
                 category_data.append([
                     category,
-                    f"{amount:.2f}",
+                    f"{amount:.2f} {currency_symbol}",
                     f"{percentage:.1f}%"
                 ])
             

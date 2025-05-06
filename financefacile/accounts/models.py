@@ -20,6 +20,20 @@ class Company(models.Model):
 
 class CompanySettings(models.Model):
     """Company-specific settings that can only be modified by company administrators"""
+    # Currency choices
+    CURRENCY_CHOICES = [
+        ('DT', 'Tunisian Dinar (DT)'),
+        ('$', 'US Dollar ($)'),
+        ('€', 'Euro (€)'),
+        ('£', 'British Pound (£)'),
+        ('¥', 'Japanese Yen (¥)'),
+        ('₹', 'Indian Rupee (₹)'),
+        ('د.إ', 'UAE Dirham (د.إ)'),
+        ('SAR', 'Saudi Riyal (SAR)'),
+        ('MAD', 'Moroccan Dirham (MAD)'),
+        ('DZD', 'Algerian Dinar (DZD)'),
+    ]
+    
     company = models.OneToOneField(Company, on_delete=models.CASCADE, related_name='settings')
     default_tva_rate = models.DecimalField(
         max_digits=5, 
@@ -32,6 +46,12 @@ class CompanySettings(models.Model):
         decimal_places=2, 
         default=1.00,
         help_text="Stamp fee amount to be added to all invoices"
+    )
+    currency = models.CharField(
+        max_length=5,
+        choices=CURRENCY_CHOICES,
+        default='DT',
+        help_text="Currency symbol to display with all monetary values"
     )
     
     class Meta:

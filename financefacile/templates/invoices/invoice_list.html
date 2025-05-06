@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load currency_tags %}
 {% block sidebar %}
   {% include 'includes/sidebar.html' %}
 {% endblock sidebar %}
@@ -58,7 +59,7 @@
           {% if is_filtered %}Filtered Inventory Sold Value{% else %}Total Inventory Sold Value{% endif %}
         </h5>
         <p class="card-text display-6" style="color: #388e3c; font-weight: 700;">
-          {% if is_filtered %}{{ filtered_total_value|floatformat:2 }}{% else %}{{ total_inventory_sold_value|floatformat:2 }}{% endif %}
+          {% if is_filtered %}{% format_currency filtered_total_value %}{% else %}{% format_currency total_inventory_sold_value %}{% endif %}
         </p>
         {% if is_filtered %}
         <p class="text-muted small">Filtered period: {{ filter_start_date }} to {{ filter_end_date }}</p>
@@ -73,7 +74,7 @@
           {% if is_filtered %}Filtered Invoice Price{% else %}Total Invoice Price{% endif %}
         </h5>
         <p class="card-text display-6" style="color: #0288d1; font-weight: 700;">
-          {% if is_filtered %}{{ filtered_total_price|floatformat:2 }}{% else %}{{ total_invoice_price|floatformat:2 }}{% endif %}
+          {% if is_filtered %}{% format_currency filtered_total_price %}{% else %}{% format_currency total_invoice_price %}{% endif %}
         </p>
         {% if is_filtered %}
         <p class="text-muted small">Filtered period: {{ filter_start_date }} to {{ filter_end_date }}</p>
@@ -181,7 +182,7 @@
               <tr>
                 <td>{{ invoice.pk }}</td>
                 <td>{{ invoice.created_at|date:'Y-m-d H:i' }}</td>
-                <td>{{ invoice.get_total }}</td>
+                <td>{{ invoice.get_total|currency:currency_symbol }}</td>
                 <td>
   
                     <a href="{% url 'invoice-detail' invoice.pk %}" class="btn btn-sm shadow-sm me-1" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View">

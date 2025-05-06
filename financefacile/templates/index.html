@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% load static %}
+{% load currency_tags %}
 
 {% block sidebar %}
 {% include 'includes/sidebar.html' %}
@@ -93,7 +95,7 @@
                 <span class="icon"><i class="bi bi-cash-stack"></i></span>
                 <div>
                     <div class="card-title text-muted">Valeur du stock</div>
-                    <div class="fw-bold">{{ warehouse_value|floatformat:2 }} dt</div>
+                    <div class="fw-bold">{% format_currency warehouse_value %}</div>
                 </div>
             </div>
         </div>
@@ -102,7 +104,7 @@
                 <span class="icon"><i class="bi bi-receipt"></i></span>
                 <div>
                     <div class="card-title text-muted">Total factures</div>
-                    <div class="fw-bold">{{ total_invoice_price|floatformat:2 }} dt</div>
+                    <div class="fw-bold">{% format_currency total_invoice_price %}</div>
                 </div>
             </div>
         </div>
@@ -155,7 +157,7 @@
                     <tr style="cursor:pointer" onclick="window.location='{{ invoice.get_absolute_url }}'">
                         <td>INV-{{ invoice.pk }}</td>
                         <td>{{ invoice.created_at|date:'Y-m-d H:i' }}</td>
-                        <td>{{ invoice.get_total|floatformat:2 }} <span class="text-muted">dt</span></td>
+                        <td>{% format_currency invoice.get_total %}</td>
                         <td>
                             <a href="{{ invoice.get_absolute_url }}" class="btn btn-sm shadow-sm" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View">
                                 <i class="fas fa-eye" aria-hidden="true"></i>
@@ -177,6 +179,8 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            // Get the currency symbol from the server
+            const currencySymbol = '{{ currency_symbol }}';
             // Pie Chart: Products by Parent Category
             const pieProductsData = JSON.parse('{{ pie_products_by_category|escapejs }}');
             const ctxProducts = document.getElementById('pie-products-category').getContext('2d');

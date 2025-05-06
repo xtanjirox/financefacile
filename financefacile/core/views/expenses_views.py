@@ -10,6 +10,7 @@ from django.db.models import Sum, Q
 from core.models import Expense, ExpenseCategory
 from core.forms import ExpenseForm, ExpenseCategoryForm, DateRangeFilterForm
 from .auth_mixins import BaseViewMixin, ExpensePermissionMixin, CompanyFilterMixin
+from accounts.models import CompanySettings
 
 class ExpenseListView(BaseViewMixin, ExpensePermissionMixin, CompanyFilterMixin, ListView):
     model = Expense
@@ -105,6 +106,16 @@ class ExpenseListView(BaseViewMixin, ExpensePermissionMixin, CompanyFilterMixin,
             context['month_change_percent'] = 100
         else:
             context['month_change_percent'] = ((context['total_expenses'] - prev_total) / prev_total) * 100
+        
+        # Add currency symbol to context
+        currency_symbol = 'DT'  # Default currency
+        if hasattr(self.request.user, 'profile') and hasattr(self.request.user.profile, 'company') and self.request.user.profile.company:
+            try:
+                company_settings = CompanySettings.objects.get(company=self.request.user.profile.company)
+                currency_symbol = company_settings.currency
+            except CompanySettings.DoesNotExist:
+                pass
+        context['currency_symbol'] = currency_symbol
             
         return context
 
