@@ -80,12 +80,62 @@
                                             {% endif %}
                                             
                                             {% if user.is_staff or user.is_superuser or user.profile.is_company_admin and user.profile.company == company %}
-                                                <form method="post" action="{% url 'organizations:remove-user-from-company' company.id profile.user.id %}" class="d-inline">
-                                                    {% csrf_token %}
-                                                    <button type="submit" class="btn btn-sm rounded-pill px-3" style="background-color: #b71c1c; color: white; border: none;" onclick="return confirm('Are you sure you want to permanently delete this user? This action cannot be undone.')">
-                                                        <i class="fas fa-trash-alt me-1"></i> Delete User
-                                                    </button>
-                                                </form>
+                                                <button type="button" class="btn btn-sm rounded-pill px-3" style="background-color: #b71c1c; color: white; border: none;" data-bs-toggle="modal" data-bs-target="#deleteUserModal{{ profile.user.id }}">
+                                                    <i class="fas fa-trash-alt me-1"></i> Delete User
+                                                </button>
+                                                
+                                                <!-- Delete User Modal -->
+                                                <div class="modal fade" id="deleteUserModal{{ profile.user.id }}" tabindex="-1" aria-labelledby="deleteUserModalLabel{{ profile.user.id }}" aria-hidden="true">
+                                                    <div class="modal-dialog modal-dialog-centered">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header" style="background: #ffebee; border-bottom: 1px solid #ffcdd2;">
+                                                                <h5 class="modal-title fw-bold" id="deleteUserModalLabel{{ profile.user.id }}" style="color: #d32f2f;">
+                                                                    <i class="fas fa-exclamation-triangle me-2" style="color: #f44336;"></i>
+                                                                    Confirm User Deletion
+                                                                </h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body p-4">
+                                                                <div class="alert alert-warning">
+                                                                    <i class="fas fa-exclamation-circle me-2"></i>
+                                                                    <strong>Warning:</strong> This action cannot be undone. The user will be permanently deleted from the system.
+                                                                </div>
+                                                                
+                                                                <div class="mb-4">
+                                                                    <h6 class="fw-bold">You are about to delete the following user:</h6>
+                                                                    <div class="p-3 bg-light rounded">
+                                                                        <p><strong>Username:</strong> {{ profile.user.username }}</p>
+                                                                        <p><strong>Email:</strong> {{ profile.user.email|default:"Not provided" }}</p>
+                                                                        <p><strong>Full Name:</strong> {{ profile.user.get_full_name|default:"Not provided" }}</p>
+                                                                        <p><strong>Company:</strong> {{ company.name }}</p>
+                                                                        <p><strong>Role:</strong> 
+                                                                            {% if profile.user.is_superuser %}
+                                                                                Superuser
+                                                                            {% elif profile.user.is_staff %}
+                                                                                Staff
+                                                                            {% elif profile.is_company_admin %}
+                                                                                Company Admin
+                                                                            {% else %}
+                                                                                Member
+                                                                            {% endif %}
+                                                                        </p>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                                                    <i class="fas fa-times me-1"></i> Cancel
+                                                                </button>
+                                                                <form method="post" action="{% url 'organizations:remove-user-from-company' company.id profile.user.id %}" class="d-inline">
+                                                                    {% csrf_token %}
+                                                                    <button type="submit" class="btn btn-danger">
+                                                                        <i class="fas fa-trash-alt me-1"></i> Delete User
+                                                                    </button>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             {% endif %}
                                         </div>
                                     </td>

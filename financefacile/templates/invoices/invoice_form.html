@@ -35,6 +35,51 @@
     </h3>
   </div>
   <div class="card-body p-4">
+    <!-- Error Messages Section -->
+    {% if form.errors or formset.errors or formset.non_form_errors %}
+    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+      <div class="d-flex align-items-center">
+        <i class="fas fa-exclamation-triangle me-3" style="font-size: 1.5rem;"></i>
+        <div>
+          <h5 class="alert-heading mb-1">Invoice Creation Failed</h5>
+          <p class="mb-0">Please correct the following errors:</p>
+          
+          <!-- Form non-field errors (general errors) -->
+          {% if form.non_field_errors %}
+          <ul class="mt-2 mb-0">
+            {% for error in form.non_field_errors %}
+              <li><strong>{{ error }}</strong></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          
+          <!-- Formset non-form errors (formset-level validation errors) -->
+          {% if formset.non_form_errors %}
+          <ul class="mt-2 mb-0">
+            {% for error in formset.non_form_errors %}
+              <li><strong>{{ error }}</strong></li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          
+          <!-- Individual formset form errors -->
+          {% if formset.errors %}
+          <ul class="mt-2 mb-0">
+            {% for form_errors in formset.errors %}
+              {% for field, errors in form_errors.items %}
+                {% for error in errors %}
+                  <li><strong>Product Item {{ forloop.parentloop.parentloop.counter }}:</strong> {{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+            {% endfor %}
+          </ul>
+          {% endif %}
+        </div>
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endif %}
+    
     <form method="post" id="invoice-form" autocomplete="off" class="w-100">
       {% csrf_token %}
       <div class="mb-4">

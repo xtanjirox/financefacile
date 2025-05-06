@@ -126,15 +126,14 @@ class CompanyUserCreationForm(UserCreationForm):
     first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     is_company_admin = forms.BooleanField(required=False, initial=False, 
-                                        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-                                        label='Make this user a company administrator')
+                                          widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+                                          label='Make this user a company administrator')
+    display_username = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}),
+                                      label='Username')
     
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'is_company_admin')
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-        }
+        fields = ('display_username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'is_company_admin')
     
     def __init__(self, *args, **kwargs):
         self.company = kwargs.pop('company', None)
@@ -142,6 +141,10 @@ class CompanyUserCreationForm(UserCreationForm):
         # Add Bootstrap classes to password fields
         self.fields['password1'].widget.attrs.update({'class': 'form-control'})
         self.fields['password2'].widget.attrs.update({'class': 'form-control'})
+        
+        # Remove the actual username field from the form
+        if 'username' in self.fields:
+            del self.fields['username']
     
     def clean_email(self):
         email = self.cleaned_data.get('email')
@@ -149,12 +152,39 @@ class CompanyUserCreationForm(UserCreationForm):
             raise forms.ValidationError('Email address is already in use.')
         return email
     
+    def clean_display_username(self):
+        display_username = self.cleaned_data.get('display_username')
+        
+        # Check if this username is already used in this specific company
+        if self.company:
+            # Get all users in this company
+            from accounts.models import UserProfile
+            company_profiles = UserProfile.objects.filter(company=self.company)
+            company_users = User.objects.filter(profile__in=company_profiles)
+            
+            # Check if any user in this company has a username that starts with this display_username
+            # followed by an underscore (which would indicate it's the same display name)
+            for user in company_users:
+                # Extract the display username from the actual username
+                if user.username.startswith(f"{display_username}_") or user.username == display_username:
+                    raise forms.ValidationError('This username is already taken within your company.')
+        
+        return display_username
+    
     @transaction.atomic
     def save(self, commit=True):
         user = super().save(commit=False)
         user.email = self.cleaned_data.get('email')
         user.first_name = self.cleaned_data.get('first_name')
         user.last_name = self.cleaned_data.get('last_name')
+        
+        # Create a unique username by appending company ID
+        display_username = self.cleaned_data.get('display_username')
+        if self.company:
+            # Format: username_companyID
+            user.username = f"{display_username}_{self.company.id}"
+        else:
+            user.username = display_username
         
         if commit:
             user.save()
@@ -187,10 +217,14 @@ class CompanySettingsForm(forms.ModelForm):
     """Form for updating company settings"""
     class Meta:
         model = CompanySettings
-        fields = ('default_tva_rate', 'stamp_fee')
+        fields = ('default_tva_rate', 'stamp_fee', 'currency')
         widgets = {
             'default_tva_rate': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
             'stamp_fee': forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
+            'currency': forms.Select(attrs={'class': 'form-control form-select'}),
+        }
+        help_texts = {
+            'currency': 'Select the currency symbol to display with all monetary values in the application.',
         }
 
 
@@ -223,16 +257,17 @@ class RegistrationForm(UserCreationForm):
     
     class Meta:
         model = User
-        fields = ('username', 'email', 'first_name', 'last_name', 'password1', 'password2')
-        widgets = {
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-        }
+        fields = ('email', 'first_name', 'last_name', 'password1', 'password2')
     
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Add Bootstrap classes to password fields
         self.fields['password1'].widget.attrs.update({'class': 'form-control'})
         self.fields['password2'].widget.attrs.update({'class': 'form-control'})
+        
+        # Remove the username field from the form
+        if 'username' in self.fields:
+            del self.fields['username']
     
     def clean_email(self):
         email = self.cleaned_data.get('email')

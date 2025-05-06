@@ -99,7 +99,7 @@ class UserPermissionsView(LoginRequiredMixin, IsAdminOrCompanyAdminMixin, Update
         # If user is a company admin, redirect back to company members page
         if (not self.request.user.is_staff and not self.request.user.is_superuser) and \
            hasattr(self.request.user, 'profile') and self.request.user.profile.is_company_admin:
-            return reverse('company-members', kwargs={'pk': self.request.user.profile.company.id})
+            return reverse('organizations:company-members', kwargs={'pk': self.request.user.profile.company.id})
         # Otherwise, redirect to users list (for staff/superusers)
         return reverse_lazy('users-list')
     
@@ -229,8 +229,17 @@ class CustomLoginView(View):
         username = request.POST.get('username')
         password = request.POST.get('password')
         
+        form_errors = {}
+        
+        if not username:
+            form_errors['username'] = 'Email or username is required'
+        
+        if not password:
+            form_errors['password'] = 'Password is required'
+        
         if username and password:
-            user = authenticate(username=username, password=password)
+            # Pass the request to authenticate so our custom backend can use it
+            user = authenticate(request=request, username=username, password=password)
             if user is not None:
                 login(request, user)
                 # Redirect after successful login - use walrus operator for cleaner code
@@ -239,11 +248,15 @@ class CustomLoginView(View):
                 # Default redirect to home page
                 return redirect('home')
             else:
-                messages.error(request, 'Invalid username or password')
-        else:
-            messages.error(request, 'Please enter both username and password')
+                # Add error to the password field for invalid credentials
+                form_errors['password'] = 'Invalid email/username or password'
+                messages.error(request, 'Invalid email/username or password')
         
-        return render(request, self.template_name)
+        # Return the form with errors
+        return render(request, self.template_name, {
+            'form_errors': form_errors,
+            'username': username  # Pass back the username to pre-fill the field
+        })
 
 
 class CustomLogoutView(View):
@@ -274,30 +287,59 @@ class LandingPageView(TemplateView):
         return super().get(request, *args, **kwargs)
 
 
-class RegistrationView(CreateView):
+class RegistrationView(FormView):
     """View for user registration with company creation"""
     form_class = RegistrationForm
     template_name = 'accounts/register.html'
     success_url = reverse_lazy('home')
     
     def get(self, request, *args, **kwargs):
-        # If user is already authenticated, redirect to home
         if request.user.is_authenticated:
             return redirect('home')
         return super().get(request, *args, **kwargs)
     
     def form_valid(self, form):
-        # Save the user, company, and profile
-        user = form.save()
-        
-        # Log the user in
-        username = form.cleaned_data.get('username')
-        password = form.cleaned_data.get('password1')
-        user = authenticate(username=username, password=password)
-        login(self.request, user)
-        
-        # No success message on registration
-        return redirect(self.success_url)
+        try:
+            with transaction.atomic():
+                # Generate username from email
+                email = form.cleaned_data['email']
+                username = email.split('@')[0]  # Use part before @ as base username
+                
+                # Check if username exists and append numbers if needed
+                base_username = username
+                counter = 1
+                while User.objects.filter(username=username).exists():
+                    username = f"{base_username}{counter}"
+                    counter += 1
+                
+                # Create user with generated username
+                user = User.objects.create_user(
+                    username=username,
+                    email=form.cleaned_data['email'],
+                    password=form.cleaned_data['password1'],
+                    first_name=form.cleaned_data['first_name'],
+                    last_name=form.cleaned_data['last_name']
+                )
+                
+                # Create company for the user
+                company = Company.objects.create(
+                    name=form.cleaned_data['company_name'],
+                    siret_number=form.cleaned_data.get('company_siret', ''),
+                    address=form.cleaned_data.get('company_address', ''),
+                    phone_number=form.cleaned_data.get('company_phone', '')
+                )
+                
+                # Create or update user profile
+                profile, created = UserProfile.objects.get_or_create(user=user)
+                profile.company = company
+                profile.is_company_admin = True  # Make the user a company admin
+                profile.save()
+                
+                messages.success(self.request, 'Account created successfully. You can now log in.')
+                return redirect(self.success_url)
+        except Exception as e:
+            messages.error(self.request, f'Error creating account: {str(e)}')
+            return self.form_invalid(form)
 
 
 # Company Management Views
@@ -389,7 +431,8 @@ class CompanySettingsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateV
                  self.request.user.profile.is_company_admin))
     
     def get_success_url(self):
-        return reverse_lazy('company-detail', kwargs={'pk': self.object.company.pk})
+        # Redirect back to the same company settings page
+        return reverse_lazy('organizations:company-detail', kwargs={'pk': self.object.company.pk})
     
     def form_valid(self, form):
         messages.success(self.request, 'Company settings updated successfully.')

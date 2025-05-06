@@ -7,6 +7,11 @@ from datetime import datetime
 from accounts.models import Company, CompanySettings
 
 
+def product_image_path(instance, filename):
+    # File will be uploaded to MEDIA_ROOT/products/company_<id>/<sku>_<filename>
+    return f'products/company_{instance.company.id}/{instance.sku}_{filename}'
+
+
 class EntryType(models.IntegerChoices):
     CHARGE = 1, 'DEPENSE'
     REVENUE = 2, 'REVENUE'
@@ -67,7 +72,26 @@ class Product(models.Model):
     value_2_month = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     value_3_month = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     description = models.TextField(blank=True)
+    image = models.ImageField(upload_to=product_image_path, null=True, blank=True, help_text="Upload an image of the product")
     created_at = models.DateTimeField(auto_now_add=True)
+    is_archived = models.BooleanField(default=False, help_text="Archived products are not shown in active lists but remain available for historical invoices")
+    
+    def save(self, *args, **kwargs):
+        # If no category is specified and the product has a company, assign to 'Uncategorized'
+        if not self.category and self.company:
+            # Try to find the 'Uncategorized' category for this company
+            try:
+                uncategorized = ProductCategory.objects.get(company=self.company, name='Uncategorized')
+                self.category = uncategorized
+            except ProductCategory.DoesNotExist:
+                # Create the 'Uncategorized' category if it doesn't exist
+                uncategorized = ProductCategory.objects.create(
+                    company=self.company,
+                    name='Uncategorized'
+                )
+                self.category = uncategorized
+        
+        super().save(*args, **kwargs)
 
     class Meta:
         db_table = 'products'
@@ -199,6 +223,10 @@ class ExpenseCategory(models.Model):
     def __str__(self):
         return self.name
 
+def expense_attachment_path(instance, filename):
+    # File will be uploaded to MEDIA_ROOT/expenses/company_<id>/<date>_<filename>
+    return f'expenses/company_{instance.company.id}/{instance.date}_{filename}'
+
 class Expense(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='expenses', null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_expenses')
@@ -206,6 +234,7 @@ class Expense(models.Model):
     date = models.DateField()
     amount = models.DecimalField(max_digits=12, decimal_places=2)
     description = models.TextField(blank=True)
+    attachment = models.FileField(upload_to=expense_attachment_path, null=True, blank=True, help_text="Upload a receipt or invoice for this expense")
 
     class Meta:
         verbose_name = 'Expense'

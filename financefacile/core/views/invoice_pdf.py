@@ -8,12 +8,22 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from core.models import Invoice
 from django.utils import timezone
+from accounts.models import CompanySettings
 
 def generate_invoice_pdf(request, pk):
     """Generate a PDF invoice for the specified invoice ID"""
     
     # Get the invoice object
     invoice = get_object_or_404(Invoice, pk=pk)
+    
+    # Get the currency symbol from company settings
+    currency_symbol = 'DT'  # Default currency
+    if invoice.company:
+        try:
+            company_settings = CompanySettings.objects.get(company=invoice.company)
+            currency_symbol = company_settings.currency
+        except CompanySettings.DoesNotExist:
+            pass
     
     # Create a file-like buffer to receive PDF data
     buffer = io.BytesIO()
@@ -95,8 +105,8 @@ def generate_invoice_pdf(request, pk):
         data.append([
             item.product.name,
             str(item.quantity),
-            f"{item.selling_price:.2f}",
-            f"{item.total_price:.2f}"
+            f"{item.selling_price:.2f} {currency_symbol}",
+            f"{item.total_price:.2f} {currency_symbol}"
         ])
     
     # Create the table
@@ -130,16 +140,16 @@ def generate_invoice_pdf(request, pk):
     
     # Create table for invoice summary
     summary_data = [
-        ['Subtotal:', f"{invoice.get_subtotal():.2f}"],
-        [f"TVA ({invoice.get_tva_rate():.2f}%):", f"{invoice.get_tva_amount():.2f}"],
+        ['Subtotal:', f"{invoice.get_subtotal():.2f} {currency_symbol}"],
+        [f"TVA ({invoice.get_tva_rate():.2f}%):", f"{invoice.get_tva_amount():.2f} {currency_symbol}"],
     ]
     
     # Add stamp fee if included
     if invoice.include_stamp_fee:
-        summary_data.append(['Stamp Fee:', f"{invoice.get_stamp_fee():.2f}"])
+        summary_data.append(['Stamp Fee:', f"{invoice.get_stamp_fee():.2f} {currency_symbol}"])
     
     # Add total row
-    summary_data.append(['Total:', f"{invoice.get_total():.2f}"])
+    summary_data.append(['Total:', f"{invoice.get_total():.2f} {currency_symbol}"])
     
     # Create the summary table
     summary_table = Table(summary_data, colWidths=[2*inch, 1*inch])

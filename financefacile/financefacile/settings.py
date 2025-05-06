@@ -114,6 +114,12 @@ MEDIA_URL = 'media/'
 LOGIN_URL = 'login'
 LOGIN_REDIRECT_URL = 'home'
 LOGOUT_REDIRECT_URL = 'login'
+
+# Custom authentication backends
+AUTHENTICATION_BACKENDS = [
+    'accounts.backends.EmailBackend',
+    'django.contrib.auth.backends.ModelBackend',
+]
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static')
 ]

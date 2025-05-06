@@ -85,11 +85,20 @@ class DateRangeFilterForm(forms.Form):
     )
 
     def __init__(self, *args, **kwargs):
+        # Extract user from kwargs
+        self.user = kwargs.pop('user', None)
+        
         super().__init__(*args, **kwargs)
-        # Dynamically populate category choices
-        categories = models.ExpenseCategory.objects.all().order_by('name')
+        
+        # Dynamically populate category choices, filtered by company
+        categories_queryset = models.ExpenseCategory.objects.all().order_by('name')
+        
+        # Filter categories by company if user is provided
+        if self.user and hasattr(self.user, 'profile') and hasattr(self.user.profile, 'company') and self.user.profile.company:
+            categories_queryset = categories_queryset.filter(company=self.user.profile.company)
+        
         self.fields['category_name'].choices = [
-            ('', '---------')] + [(cat.name, cat.name) for cat in categories]
+            ('', '---------')] + [(cat.name, cat.name) for cat in categories_queryset]
 
         # Setup crispy form helper
         self.helper = FormHelper()
@@ -277,10 +286,36 @@ class InvoiceItemForm(forms.ModelForm):
         self.fields['product'].queryset = product_queryset
         
         # Add validation for quantity
-        self.fields['quantity'].widget.attrs.update({'min': '1', 'class': 'form-control'})
+        self.fields['quantity'].widget.attrs.update({
+            'min': '1', 
+            'class': 'form-control',
+            'data-bs-toggle': 'tooltip',
+            'title': 'Enter quantity (must not exceed available stock)'
+        })
         
         # Add help text
         self.fields['product'].help_text = 'Only products with available stock are shown'
+        self.fields['quantity'].help_text = 'Must not exceed available product stock'
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        product = cleaned_data.get('product')
+        quantity = cleaned_data.get('quantity')
+        
+        # If both product and quantity are provided, check if quantity exceeds stock
+        if product and quantity:
+            # Get the current stock level
+            available_stock = product.quantity
+            
+            # Check if requested quantity exceeds available stock
+            if quantity > available_stock:
+                self.add_error('quantity', 
+                               f'Insufficient stock! Only {available_stock} units of "{product.name}" available.')
+                raise forms.ValidationError(
+                    f"Cannot create invoice: Requested quantity ({quantity}) exceeds available stock ({available_stock}) for {product.name}"
+                )
+        
+        return cleaned_data
 
 
 class BaseInvoiceItemFormSet(forms.BaseInlineFormSet):
@@ -292,6 +327,34 @@ class BaseInvoiceItemFormSet(forms.BaseInlineFormSet):
         # Pass company to each form in the formset
         kwargs['company'] = self.company
         return super()._construct_form(i, **kwargs)
+    
+    def clean(self):
+        """Validate the formset as a whole."""
+        if any(self.errors):
+            # Don't bother validating the formset if any of the forms have errors
+            return
+        
+        products_quantities = {}
+        
+        # Collect all products and their requested quantities
+        for form in self.forms:
+            if form.cleaned_data and not form.cleaned_data.get('DELETE', False):
+                product = form.cleaned_data.get('product')
+                quantity = form.cleaned_data.get('quantity')
+                
+                if product and quantity:
+                    # Add quantity to existing product or create new entry
+                    if product in products_quantities:
+                        products_quantities[product] += quantity
+                    else:
+                        products_quantities[product] = quantity
+        
+        # Check if any product's total quantity exceeds available stock
+        for product, total_quantity in products_quantities.items():
+            if total_quantity > product.quantity:
+                raise forms.ValidationError(
+                    f"Total quantity ({total_quantity}) for {product.name} exceeds available stock ({product.quantity})."
+                )
 
 InvoiceItemFormSet = inlineformset_factory(
     models.Invoice, models.InvoiceItem, form=InvoiceItemForm, formset=BaseInvoiceItemFormSet,
@@ -319,14 +382,6 @@ class ProductForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        import sys
-        print("ProductForm INIT DEBUG:", file=sys.stderr)
-        print("  Meta.model:", getattr(
-            self._meta, 'model', None), file=sys.stderr)
-        print("  Meta.fields:", getattr(
-            self._meta, 'fields', None), file=sys.stderr)
-        print("  Fields:", list(self.fields.keys()), file=sys.stderr)
-
         # Ensure the category queryset is populated
         if 'category' in self.fields:
             self.fields['category'].queryset = models.ProductCategory.objects.all(
@@ -340,7 +395,7 @@ class ProductForm(forms.ModelForm):
     class Meta:
         model = models.Product
         fields = ['name', 'sku', 'category', 'quantity', 'unit_cost', 'selling_price', 
-                 'value_current', 'value_1_month', 'value_2_month', 'value_3_month', 'description']
+                 'value_current', 'value_1_month', 'value_2_month', 'value_3_month', 'description', 'image']
         widgets = {
             'name': forms.TextInput(attrs={"class": "form-control", "style": "width: 100%;"}),
             'sku': forms.TextInput(attrs={"class": "form-control", "style": "width: 100%;"}),
@@ -352,16 +407,18 @@ class ProductForm(forms.ModelForm):
             'value_2_month': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;"}),
             'value_3_month': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;"}),
             'description': forms.Textarea(attrs={"class": "form-control", "rows": 4, "style": "width: 100%;"}),
+            'image': forms.FileInput(attrs={"class": "form-control", "accept": "image/*"}),
         }
 
 
 class ExpenseForm(forms.ModelForm):
     class Meta:
         model = models.Expense
-        fields = ['category', 'date', 'amount', 'description']
+        fields = ['category', 'date', 'amount', 'description', 'attachment']
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date'}, format='%Y-%m-%d'),
             'description': forms.Textarea(attrs={'rows': 2, 'placeholder': 'Optional'}),
+            'attachment': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
     def __init__(self, *args, **kwargs):

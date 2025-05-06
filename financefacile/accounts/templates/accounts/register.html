@@ -13,97 +13,190 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary-color: #4361ee;
-            --primary-light: #4895ef;
-            --primary-dark: #3f37c9;
-            --secondary-color: #f8f9fa;
-            --accent-color: #f72585;
-            --success-color: #4cc9f0;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
         }
         
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #4cc9f0 0%, #4361ee 100%);
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
+            color: var(--text-color);
+            padding: 0;
+            margin: 0;
+        }
+        
+        .top-navbar {
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            padding: 0.75rem 0;
+            width: 100%;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+        
+        .navbar-content {
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 40px 0;
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+        }
+        
+        .logo {
+            background-color: var(--primary-color);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+        
+        .logo-text {
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--text-color);
+        }
+        
+        .navbar-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        
+        .nav-link {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            transition: color 0.2s;
+        }
+        
+        .nav-link:hover {
+            color: var(--text-color);
+        }
+        
+        .nav-link.active {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .nav-link.btn-signup {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s;
+        }
+        
+        .nav-link.btn-signup:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
         }
         
         .register-card {
-            background-color: white;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            margin-bottom: 30px;
+            background-color: var(--card-bg);
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            width: 100%;
+            max-width: 450px;
+            margin-bottom: 2rem;
         }
         
         .register-header {
             text-align: center;
-            padding: 30px 30px 10px;
-            color: var(--dark-color);
+            padding: 1.5rem 1.5rem 1rem;
+            color: var(--text-color);
         }
         
         .register-header h2 {
             font-weight: 700;
-            margin-bottom: 10px;
-            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            font-size: 1.5rem;
         }
         
         .register-header p {
-            color: #6c757d;
-            font-size: 1.1rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
             margin-bottom: 0;
         }
         
         .register-body {
-            padding: 20px 40px 40px;
+            padding: 1.5rem 2rem 2rem;
         }
         
         .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
             font-weight: 500;
-            color: #495057;
-            margin-bottom: 8px;
-            font-size: 0.95rem;
+            font-size: 0.875rem;
+            color: var(--text-color);
         }
         
         .form-control {
-            padding: 12px 20px;
-            border-radius: 10px;
-            border: 1px solid #e0e0e0;
-            background-color: #f8f9fa;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+            width: 100%;
+            padding: 0.625rem 0.75rem;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            border: 1px solid var(--border-color);
+            border-radius: 0.375rem;
+            transition: border-color 0.15s ease-in-out;
         }
         
         .form-control:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 0.25rem rgba(67, 97, 238, 0.25);
-            background-color: #fff;
+            outline: 0;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
         
         .btn-primary {
-            background: linear-gradient(to right, var(--primary-color), var(--primary-light));
+            display: block;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
             border: none;
-            font-weight: 600;
-            padding: 14px 20px;
-            border-radius: 10px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 10px;
+            padding: 0.625rem 1rem;
+            border-radius: 0.375rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: background-color 0.15s ease-in-out;
         }
         
         .btn-primary:hover {
-            background: linear-gradient(to right, var(--primary-dark), var(--primary-color));
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.4);
+            background-color: var(--primary-hover);
         }
         
         .form-section {
@@ -144,7 +237,19 @@
         
         .invalid-feedback {
             color: #dc3545;
-            font-size: 0.875rem;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            display: block;
+        }
+        
+        .form-control.is-invalid {
+            border-color: #dc3545;
+            background-image: none;
+        }
+        
+        .form-control.is-invalid:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
         }
         
         /* Multi-step form styles */
@@ -217,23 +322,33 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
-                <div class="register-card">
+    <!-- Top Navigation Bar -->
+    <nav class="top-navbar">
+        <div class="container">
+            <div class="navbar-content">
+                <a href="/landing/" class="navbar-brand">
+                    <div class="logo">F</div>
+                    <span class="logo-text">FinanceFacile</span>
+                </a>
+                <div class="navbar-links">
+                    <a href="/landing/features/" class="nav-link">Features</a>
+                    <a href="/landing/pricing/" class="nav-link">Pricing</a>
+                    <a href="/landing/about/" class="nav-link">About</a>
+                    <a href="/login/" class="nav-link">Sign In</a>
+                    <a href="/landing/register/" class="nav-link active btn-signup">Sign Up</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content Area -->
+    <div class="main-content">
+        <div class="register-card">
                     <div class="register-header">
                         <h2><i class="fas fa-user-plus me-2"></i> Create Your Account</h2>
                         <p class="mb-0">Get started with FinanceFacile today</p>
                     </div>
                     <div class="register-body">
-                        {% if messages %}
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                                    {{ message }}
-                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                                </div>
-                            {% endfor %}
-                        {% endif %}
                         
                         <form method="post" id="registrationForm">
                             {% csrf_token %}
@@ -254,83 +369,55 @@
                             <!-- Step 1: Account Information -->
                             <div class="form-step" id="step-1">
                                 <h3 class="step-title"><i class="fas fa-user me-2" style="color: var(--primary-color);"></i> Create Your Account</h3>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
-                                            {{ form.username }}
+                                <div class="mb-3">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
+                                    <input type="email" name="email" id="{{ form.email.id_for_label }}" class="form-control {% if form.email.errors %}is-invalid{% endif %}" value="{{ form.email.value|default:'' }}" placeholder="your.email@example.com" required>
+                                    {% if form.email.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.email.errors }}
                                         </div>
-                                        {% if form.username.errors %}
-                                            <div class="invalid-feedback d-block">
-                                                {{ form.username.errors }}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="{{ form.email.id_for_label }}" class="form-label">Email Address</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                            {{ form.email }}
-                                        </div>
-                                        {% if form.email.errors %}
-                                            <div class="invalid-feedback d-block">
-                                                {{ form.email.errors }}
-                                            </div>
-                                        {% endif %}
-                                    </div>
+                                    {% endif %}
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="{{ form.first_name.id_for_label }}" class="form-label">First Name</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                                            {{ form.first_name }}
-                                        </div>
+                                        <input type="text" name="first_name" id="{{ form.first_name.id_for_label }}" class="form-control {% if form.first_name.errors %}is-invalid{% endif %}" value="{{ form.first_name.value|default:'' }}" placeholder="John" required>
                                         {% if form.first_name.errors %}
-                                            <div class="invalid-feedback d-block">
+                                            <div class="invalid-feedback">
                                                 {{ form.first_name.errors }}
                                             </div>
                                         {% endif %}
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label for="{{ form.last_name.id_for_label }}" class="form-label">Last Name</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-id-card"></i></span>
-                                            {{ form.last_name }}
-                                        </div>
+                                        <input type="text" name="last_name" id="{{ form.last_name.id_for_label }}" class="form-control {% if form.last_name.errors %}is-invalid{% endif %}" value="{{ form.last_name.value|default:'' }}" placeholder="Doe" required>
                                         {% if form.last_name.errors %}
-                                            <div class="invalid-feedback d-block">
+                                            <div class="invalid-feedback">
                                                 {{ form.last_name.errors }}
                                             </div>
                                         {% endif %}
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="{{ form.password1.id_for_label }}" class="form-label">Password</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                            {{ form.password1 }}
+                                <div class="mb-3">
+                                    <label for="{{ form.password1.id_for_label }}" class="form-label">Password</label>
+                                    <input type="password" name="password1" id="{{ form.password1.id_for_label }}" class="form-control {% if form.password1.errors %}is-invalid{% endif %}" placeholder="••••••••" required>
+                                    {% if form.password1.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.password1.errors }}
                                         </div>
-                                        {% if form.password1.errors %}
-                                            <div class="invalid-feedback d-block">
-                                                {{ form.password1.errors }}
-                                            </div>
-                                        {% endif %}
-                                        <div class="form-text">{{ form.password1.help_text }}</div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="{{ form.password2.id_for_label }}" class="form-label">Confirm Password</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-lock"></i></span>
-                                            {{ form.password2 }}
+                                    {% endif %}
+                                    <div class="form-text small">{{ form.password1.help_text }}</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="{{ form.password2.id_for_label }}" class="form-label">Confirm Password</label>
+                                    <input type="password" name="password2" id="{{ form.password2.id_for_label }}" class="form-control {% if form.password2.errors %}is-invalid{% endif %}" placeholder="••••••••" required>
+                                    {% if form.password2.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.password2.errors }}
                                         </div>
-                                        {% if form.password2.errors %}
-                                            <div class="invalid-feedback d-block">
-                                                {{ form.password2.errors }}
-                                            </div>
-                                        {% endif %}
+                                    {% endif %}
+                                    <div class="invalid-feedback d-none" id="password-mismatch-error">
+                                        Passwords do not match
                                     </div>
                                 </div>
                                 <div class="d-grid mt-4">
@@ -343,52 +430,38 @@
                             <!-- Step 2: Company Information -->
                             <div class="form-step" id="step-2" style="display: none;">
                                 <h3 class="step-title"><i class="fas fa-building me-2" style="color: var(--primary-color);"></i> Company Information</h3>
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label for="{{ form.company_name.id_for_label }}" class="form-label">Company Name</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-building"></i></span>
-                                            {{ form.company_name }}
+                                <div class="mb-3">
+                                    <label for="{{ form.company_name.id_for_label }}" class="form-label">Company Name</label>
+                                    <input type="text" name="company_name" id="{{ form.company_name.id_for_label }}" class="form-control {% if form.company_name.errors %}is-invalid{% endif %}" value="{{ form.company_name.value|default:'' }}" placeholder="ABC Company" required>
+                                    {% if form.company_name.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.company_name.errors }}
                                         </div>
-                                        {% if form.company_name.errors %}
-                                            <div class="invalid-feedback d-block">
-                                                {{ form.company_name.errors }}
-                                            </div>
-                                        {% endif %}
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="{{ form.company_siret.id_for_label }}" class="form-label">SIRET Number</label>
-                                        <div class="input-group">
-                                            <span class="input-group-text"><i class="fas fa-fingerprint"></i></span>
-                                            {{ form.company_siret }}
+                                    {% endif %}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="{{ form.company_siret.id_for_label }}" class="form-label">SIRET Number</label>
+                                    <input type="text" name="company_siret" id="{{ form.company_siret.id_for_label }}" class="form-control {% if form.company_siret.errors %}is-invalid{% endif %}" value="{{ form.company_siret.value|default:'' }}" placeholder="123 456 789 00012" required>
+                                    {% if form.company_siret.errors %}
+                                        <div class="invalid-feedback">
+                                            {{ form.company_siret.errors }}
                                         </div>
-                                        {% if form.company_siret.errors %}
-                                            <div class="invalid-feedback d-block">
-                                                {{ form.company_siret.errors }}
-                                            </div>
-                                        {% endif %}
-                                    </div>
+                                    {% endif %}
                                 </div>
                                 <div class="mb-3">
                                     <label for="{{ form.company_address.id_for_label }}" class="form-label">Company Address</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                                        {{ form.company_address }}
-                                    </div>
+                                    <input type="text" name="company_address" id="{{ form.company_address.id_for_label }}" class="form-control {% if form.company_address.errors %}is-invalid{% endif %}" value="{{ form.company_address.value|default:'' }}" placeholder="123 Business Street, 75001 Paris" required>
                                     {% if form.company_address.errors %}
-                                        <div class="invalid-feedback d-block">
+                                        <div class="invalid-feedback">
                                             {{ form.company_address.errors }}
                                         </div>
                                     {% endif %}
                                 </div>
                                 <div class="mb-3">
                                     <label for="{{ form.company_phone.id_for_label }}" class="form-label">Phone Number</label>
-                                    <div class="input-group">
-                                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
-                                        {{ form.company_phone }}
-                                    </div>
+                                    <input type="tel" name="company_phone" id="{{ form.company_phone.id_for_label }}" class="form-control {% if form.company_phone.errors %}is-invalid{% endif %}" value="{{ form.company_phone.value|default:'' }}" placeholder="+33 1 23 45 67 89" required>
                                     {% if form.company_phone.errors %}
-                                        <div class="invalid-feedback d-block">
+                                        <div class="invalid-feedback">
                                             {{ form.company_phone.errors }}
                                         </div>
                                     {% endif %}
@@ -408,12 +481,10 @@
                         </form>
                         
                         <div class="login-link">
-                            Already have an account? <a href="{% url 'auth:login' %}">Log in</a>
+                            Already have an account? <a href="/login/">Sign In</a>
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
     </div>
 
     <!-- Bootstrap JS -->
@@ -432,25 +503,73 @@
             
             // Form validation for step 1
             function validateStep1() {
-                const username = document.getElementById('{{ form.username.id_for_label }}').value;
-                const email = document.getElementById('{{ form.email.id_for_label }}').value;
-                const firstName = document.getElementById('{{ form.first_name.id_for_label }}').value;
-                const lastName = document.getElementById('{{ form.last_name.id_for_label }}').value;
-                const password1 = document.getElementById('{{ form.password1.id_for_label }}').value;
-                const password2 = document.getElementById('{{ form.password2.id_for_label }}').value;
+                const emailField = document.getElementById('{{ form.email.id_for_label }}');
+                const firstNameField = document.getElementById('{{ form.first_name.id_for_label }}');
+                const lastNameField = document.getElementById('{{ form.last_name.id_for_label }}');
+                const password1Field = document.getElementById('{{ form.password1.id_for_label }}');
+                const password2Field = document.getElementById('{{ form.password2.id_for_label }}');
+                const passwordMismatchError = document.getElementById('password-mismatch-error');
                 
-                // Basic validation
-                if (!username || !email || !firstName || !lastName || !password1 || !password2) {
-                    alert('Please fill in all required fields');
-                    return false;
+                // Reset all validation states
+                const formFields = [emailField, firstNameField, lastNameField, password1Field, password2Field];
+                formFields.forEach(field => {
+                    field.classList.remove('is-invalid');
+                    const errorDiv = field.nextElementSibling;
+                    if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
+                        errorDiv.style.display = 'none';
+                    }
+                });
+                
+                passwordMismatchError.classList.add('d-none');
+                
+                let isValid = true;
+                
+                // Check required fields
+                formFields.forEach(field => {
+                    if (!field.value.trim()) {
+                        field.classList.add('is-invalid');
+                        isValid = false;
+                        
+                        // Create error message if it doesn't exist
+                        let errorDiv = field.nextElementSibling;
+                        if (!errorDiv || !errorDiv.classList.contains('invalid-feedback')) {
+                            errorDiv = document.createElement('div');
+                            errorDiv.classList.add('invalid-feedback');
+                            field.parentNode.insertBefore(errorDiv, field.nextSibling);
+                        }
+                        errorDiv.textContent = 'This field is required.';
+                        errorDiv.style.display = 'block';
+                    }
+                });
+                
+                // Check email format
+                if (emailField.value && !isValidEmail(emailField.value)) {
+                    emailField.classList.add('is-invalid');
+                    let errorDiv = emailField.nextElementSibling;
+                    if (!errorDiv || !errorDiv.classList.contains('invalid-feedback')) {
+                        errorDiv = document.createElement('div');
+                        errorDiv.classList.add('invalid-feedback');
+                        emailField.parentNode.insertBefore(errorDiv, emailField.nextSibling);
+                    }
+                    errorDiv.textContent = 'Please enter a valid email address.';
+                    errorDiv.style.display = 'block';
+                    isValid = false;
                 }
                 
-                if (password1 !== password2) {
-                    alert('Passwords do not match');
-                    return false;
+                // Check password match
+                if (password1Field.value && password2Field.value && password1Field.value !== password2Field.value) {
+                    password2Field.classList.add('is-invalid');
+                    passwordMismatchError.classList.remove('d-none');
+                    isValid = false;
                 }
                 
-                return true;
+                return isValid;
+            }
+            
+            // Email validation helper
+            function isValidEmail(email) {
+                const re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+                return re.test(String(email).toLowerCase());
             }
             
             // Next button click handler

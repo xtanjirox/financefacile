@@ -11,15 +11,20 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.contrib import messages
 
 from core import models, tables
 from core.models import InvoiceItem
 import core.forms
 from .base import BaseListView, FormViewMixin, BaseDeleteView
 from .auth_mixins import BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin
+from accounts.models import CompanySettings
 
 
-class ProductCategoryListView(BaseListView, CompanyFilterMixin):
+import logging
+logger = logging.getLogger(__name__)
+
+class ProductCategoryListView(BaseListView):
     model = models.ProductCategory
     table_class = tables.ProductCategoryTable
     filter_class = None
@@ -28,7 +33,41 @@ class ProductCategoryListView(BaseListView, CompanyFilterMixin):
     create_url = reverse_lazy('category-create')
     segment = 'categories'
     detail = True
-    company_field = 'company'  # Field name for company relationship
+    
+    def get_queryset(self):
+        # Start with the base queryset
+        queryset = super().get_queryset()
+        user = self.request.user
+        
+        # Superusers and staff can see all categories if needed
+        if user.is_superuser or user.is_staff:
+            # For debugging purposes, we'll still filter by company
+            if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+                return queryset.filter(company=user.profile.company)
+            return queryset.none()
+        
+        # Regular users can only see their company's categories
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            company = user.profile.company
+            return queryset.filter(company=company)
+        
+        # Users without a company can't see any categories
+        return queryset.none()
+    
+    def get(self, request, *args, **kwargs):
+        # Always render the list view - the template will handle showing the empty state
+        return super().get(request, *args, **kwargs)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Add a flag indicating whether there are any categories
+        context['has_categories'] = self.get_queryset().exists()
+        
+        # Log the table data being passed to the template
+        if hasattr(context, 'table') and hasattr(context['table'], 'rows'):
+            logger.info(f"Number of rows in table: {len(context['table'].rows)}")
+        
+        return context
 
 
 class ProductCategoryCreateView(CreateView, FormViewMixin):
@@ -101,9 +140,35 @@ class ProductListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin,
     segment = 'products'
     context_object_name = 'products'
     
+    def get_queryset(self):
+        # First get the company-filtered queryset from CompanyFilterMixin
+        queryset = super().get_queryset()
+        
+        # Check if we should show archived products
+        show_archived = self.request.GET.get('show_archived', 'false').lower() == 'true'
+        
+        # Filter out archived products by default
+        if not show_archived:
+            queryset = queryset.filter(is_archived=False)
+            
+        return queryset
+    
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         products = self.get_queryset()
+        
+        # Add flag for whether we're showing archived products
+        show_archived = self.request.GET.get('show_archived', 'false').lower() == 'true'
+        context['show_archived'] = show_archived
+        
+        # Get count of archived products for the current company only
+        user = self.request.user
+        archived_query = models.Product.objects.filter(is_archived=True)
+        
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            archived_query = archived_query.filter(company=user.profile.company)
+            
+        context['archived_products_count'] = archived_query.count()
         
         # Add products to context for direct rendering in template
         context['products'] = products
@@ -123,6 +188,17 @@ class ProductListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin,
         # Add create URL and segment for template
         context['create_url'] = self.create_url
         context['segment'] = self.segment
+        
+        # Add currency symbol to context
+        user = self.request.user
+        currency_symbol = 'DT'  # Default currency
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            try:
+                company_settings = CompanySettings.objects.get(company=user.profile.company)
+                currency_symbol = company_settings.currency
+            except CompanySettings.DoesNotExist:
+                pass
+        context['currency_symbol'] = currency_symbol
         
         return context
 
@@ -213,10 +289,24 @@ class ProductCreateView(CreateView):
     def form_valid(self, form):
         # Set the company for the new product
         product = form.save(commit=False)
+        
+        # Debug logging for image upload
+        logger.info(f"ProductCreateView.form_valid: Processing product form with data: {form.cleaned_data}")
+        logger.info(f"ProductCreateView.form_valid: Image file in request.FILES: {self.request.FILES}")
+        
+        if 'image' in form.cleaned_data and form.cleaned_data['image']:
+            logger.info(f"ProductCreateView.form_valid: Image file detected: {form.cleaned_data['image']}")
+        else:
+            logger.info("ProductCreateView.form_valid: No image file in form.cleaned_data")
+            
         if not self.request.user.is_superuser and not self.request.user.is_staff:
             if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
                 product.company = self.request.user.profile.company
+        
+        # Save the product
         product.save()
+        logger.info(f"ProductCreateView.form_valid: Product saved with ID: {product.id}, Image: {product.image}")
+        
         return super().form_valid(form)
 
 
@@ -226,11 +316,84 @@ class ProductUpdateView(UpdateView):
     template_name = 'generic/detail.html'
     segment = 'products'
     success_url = reverse_lazy('product-list')
+    
+    def form_valid(self, form):
+        # Debug logging for image upload
+        logger.info(f"ProductUpdateView.form_valid: Processing product form with data: {form.cleaned_data}")
+        logger.info(f"ProductUpdateView.form_valid: Image file in request.FILES: {self.request.FILES}")
+        
+        if 'image' in form.cleaned_data and form.cleaned_data['image']:
+            logger.info(f"ProductUpdateView.form_valid: Image file detected: {form.cleaned_data['image']}")
+        else:
+            logger.info("ProductUpdateView.form_valid: No image file in form.cleaned_data")
+            
+        # Save the product
+        response = super().form_valid(form)
+        logger.info(f"ProductUpdateView.form_valid: Product saved with ID: {self.object.id}, Image: {self.object.image}")
+        
+        return response
 
 
-class ProductDeleteView(BaseDeleteView):
+class ProductDeleteView(BaseViewMixin, View):
     model = models.Product
+    template_name = 'products/product_archive_confirm.html'
     success_url = reverse_lazy('product-list')
+    
+    def get_context_data(self, **kwargs):
+        context = kwargs
+        # Check if product is used in any invoices
+        if 'object' in context:
+            product = context['object']
+            context['invoice_items_count'] = models.InvoiceItem.objects.filter(product=product).count()
+        return context
+    
+    def get(self, request, *args, **kwargs):
+        self.object = get_object_or_404(models.Product, pk=kwargs['pk'])
+        context = self.get_context_data(object=self.object)
+        return render(request, self.template_name, context)
+    
+    def post(self, request, *args, **kwargs):
+        self.object = get_object_or_404(models.Product, pk=kwargs['pk'])
+        
+        # Check if product is used in any invoices
+        invoice_items_count = models.InvoiceItem.objects.filter(product=self.object).count()
+        
+        # Archive the product instead of deleting it
+        self.object.is_archived = True
+        self.object.save()
+        
+        if invoice_items_count > 0:
+            messages.success(request, f"Product '{self.object.name}' has been archived. It appears in {invoice_items_count} invoice(s) and will remain available for historical reference.")
+        else:
+            messages.success(request, f"Product '{self.object.name}' has been archived.")
+            
+        return redirect(self.success_url)
+
+
+class ProductRestoreView(BaseViewMixin, View):
+    model = models.Product
+    template_name = 'products/product_restore_confirm.html'
+    success_url = reverse_lazy('product-list')
+    
+    def get_context_data(self, **kwargs):
+        context = kwargs
+        return context
+    
+    def get(self, request, *args, **kwargs):
+        self.object = get_object_or_404(models.Product, pk=kwargs['pk'])
+        context = self.get_context_data(object=self.object)
+        return render(request, self.template_name, context)
+    
+    def post(self, request, *args, **kwargs):
+        self.object = get_object_or_404(models.Product, pk=kwargs['pk'])
+        
+        # Restore the product by setting is_archived to False
+        self.object.is_archived = False
+        self.object.save()
+        
+        messages.success(request, f"Product '{self.object.name}' has been restored and is now active.")
+        
+        return redirect(self.success_url)
 
 
 class ProductDetailView(DetailView):
@@ -474,20 +637,24 @@ class InvoiceCreateView(CreateView, FormViewMixin):
         return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 
-class InvoiceListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin, ListView):
+class InvoiceListView(BaseViewMixin, ProductPermissionMixin, ListView):
     model = models.Invoice
     template_name = 'invoices/invoice_list.html'
     context_object_name = 'invoices'
     
     def get_queryset(self):
+        # Start with the base queryset
         queryset = super().get_queryset()
+        user = self.request.user
         
-        # Filter by company if user is not superuser/staff
-        if not self.request.user.is_superuser and not self.request.user.is_staff:
-            if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-                queryset = queryset.filter(company=self.request.user.profile.company)
-            else:
-                return queryset.none()
+        # Always filter by company, even for superusers and staff
+        # This ensures data isolation between companies
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            company = user.profile.company
+            queryset = queryset.filter(company=company)
+        else:
+            # Users without a company can't see any invoices
+            return queryset.none()
         
         # Get filter parameters from request
         start_date = self.request.GET.get('start_date')
@@ -506,10 +673,8 @@ class InvoiceListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin,
                 queryset = queryset.filter(is_paid=True)
             elif status == 'unpaid':
                 queryset = queryset.filter(is_paid=False)
-                
-        # Try to get client name filter
-        from contextlib import suppress
-        # Remove client_name filtering as it doesn't exist in the Invoice model
+        
+        # Order by most recent first
         return queryset.order_by('-created_at')
 
     def get_context_data(self, **kwargs):
@@ -546,9 +711,14 @@ class InvoiceListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin,
             
         # Create base queryset filtered by company
         invoice_queryset = models.Invoice.objects
-        if not self.request.user.is_superuser and not self.request.user.is_staff:
-            if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-                invoice_queryset = invoice_queryset.filter(company=self.request.user.profile.company)
+        user = self.request.user
+        
+        # Always filter by company, even for superusers and staff
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            invoice_queryset = invoice_queryset.filter(company=user.profile.company)
+        else:
+            # If user has no company, they shouldn't see any invoices
+            invoice_queryset = invoice_queryset.none()
         
         # Calculate filtered stats if filter is applied
         if start_date or end_date:
@@ -571,19 +741,47 @@ class InvoiceListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin,
             context['filtered_total_price'] = filtered_invoices.aggregate(
                 total=Sum('items__total_price'))['total'] or 0
 
-        # Calculate overall stats regardless of filter
-        total_items_sold = InvoiceItem.objects.aggregate(
-            total=Sum('quantity'))['total'] or 0
-        total_inventory_sold_value = sum(
-            item.quantity * item.product.unit_cost for item in InvoiceItem.objects.select_related('product').all()
-        )
-        total_invoice_price = models.Invoice.objects.aggregate(
-            total=Sum('items__total_price'))['total'] or 0
+        # Calculate overall stats for user's company only
+        user = self.request.user
+        company = None
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            company = user.profile.company
+        
+        if company:
+            # Filter invoice items by the user's company
+            company_invoice_items = InvoiceItem.objects.filter(invoice__company=company)
+            
+            # Calculate stats based on company's data only
+            total_items_sold = company_invoice_items.aggregate(
+                total=Sum('quantity'))['total'] or 0
+                
+            total_inventory_sold_value = sum(
+                item.quantity * item.product.unit_cost 
+                for item in company_invoice_items.select_related('product')
+            ) if company_invoice_items.exists() else 0
+            
+            total_invoice_price = models.Invoice.objects.filter(company=company).aggregate(
+                total=Sum('items__total_price'))['total'] or 0
+        else:
+            # No company, no stats
+            total_items_sold = 0
+            total_inventory_sold_value = 0
+            total_invoice_price = 0
 
+        # Add currency symbol to context
+        currency_symbol = 'DT'  # Default currency
+        if company:
+            try:
+                company_settings = CompanySettings.objects.get(company=company)
+                currency_symbol = company_settings.currency
+            except CompanySettings.DoesNotExist:
+                pass
+        
         context.update({
             'total_items_sold': total_items_sold,
             'total_inventory_sold_value': total_inventory_sold_value,
             'total_invoice_price': total_invoice_price,
+            'currency_symbol': currency_symbol,
         })
         return context
 
@@ -830,8 +1028,27 @@ class InvoiceDetailView(DetailView):
     def get_queryset(self):
         # Ensure users can only view invoices from their company
         queryset = super().get_queryset()
-        if self.request.user.is_superuser or self.request.user.is_staff:
-            return queryset
-        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-            return queryset.filter(company=self.request.user.profile.company)
+        user = self.request.user
+        
+        # Always filter by company, even for superusers and staff
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            return queryset.filter(company=user.profile.company)
+        
+        # Users without a company can't see any invoices
         return queryset.none()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Add currency symbol to context
+        user = self.request.user
+        currency_symbol = 'DT'  # Default currency
+        if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
+            try:
+                company_settings = CompanySettings.objects.get(company=user.profile.company)
+                currency_symbol = company_settings.currency
+            except CompanySettings.DoesNotExist:
+                pass
+        context['currency_symbol'] = currency_symbol
+        
+        return context
