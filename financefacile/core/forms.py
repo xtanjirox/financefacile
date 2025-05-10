@@ -14,12 +14,9 @@ class CategoryMultiSelectWidget(s2forms.Select2MultipleWidget):
         attrs = super().build_attrs(*args, **kwargs)
         attrs.update({
             'data-placeholder': 'Select categories...',
-            'data-minimum-input-length': 0,
-            'class': 'form-control select2-widget',
-            'style': 'width: 100%;',
             'data-allow-clear': 'true',
-            'data-dropdown-css-class': 'select2-dropdown-open',
-            'data-close-on-select': 'false'
+            'data-close-on-select': 'false',
+            'style': 'width: 100%;',
         })
         return attrs
 
