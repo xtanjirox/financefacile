@@ -17,7 +17,7 @@ from core import models, tables
 from core.models import InvoiceItem
 import core.forms
 from .base import BaseListView, FormViewMixin, BaseDeleteView
-from .auth_mixins import BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin
+from .auth_mixins import BaseViewMixin, ProductPermissionMixin, InvoicePermissionMixin, CompanyFilterMixin
 from accounts.models import CompanySettings
 
 
@@ -133,7 +133,7 @@ from django.views.generic import TemplateView
 from django.urls import reverse
 from django.utils.html import format_html
 
-class ProductListView(BaseViewMixin, ProductPermissionMixin, CompanyFilterMixin, ListView):
+class ProductListView(ProductPermissionMixin, CompanyFilterMixin, ListView):
     model = models.Product
     template_name = 'products/product_list.html'
     create_url = reverse_lazy('product-create')
@@ -269,7 +269,7 @@ class ProductDataJsonView(BaseViewMixin, View):
         return JsonResponse(response_data)
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(ProductPermissionMixin, CreateView):
     model = models.Product
     form_class = core.forms.ProductForm
     template_name = 'generic/create.html'
@@ -310,7 +310,7 @@ class ProductCreateView(CreateView):
         return super().form_valid(form)
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(ProductPermissionMixin, UpdateView):
     model = models.Product
     form_class = core.forms.ProductForm
     template_name = 'generic/detail.html'
@@ -332,9 +332,18 @@ class ProductUpdateView(UpdateView):
         logger.info(f"ProductUpdateView.form_valid: Product saved with ID: {self.object.id}, Image: {self.object.image}")
         
         return response
+        
+    def get_queryset(self):
+        # Ensure users can only update products from their company
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            return queryset
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            return queryset.filter(company=self.request.user.profile.company)
+        return queryset.none()
 
 
-class ProductDeleteView(BaseViewMixin, View):
+class ProductDeleteView(ProductPermissionMixin, View):
     model = models.Product
     template_name = 'products/product_archive_confirm.html'
     success_url = reverse_lazy('product-list')
@@ -346,28 +355,40 @@ class ProductDeleteView(BaseViewMixin, View):
             product = context['object']
             context['invoice_items_count'] = models.InvoiceItem.objects.filter(product=product).count()
         return context
-    
+
     def get(self, request, *args, **kwargs):
-        self.object = get_object_or_404(models.Product, pk=kwargs['pk'])
-        context = self.get_context_data(object=self.object)
-        return render(request, self.template_name, context)
-    
-    def post(self, request, *args, **kwargs):
-        self.object = get_object_or_404(models.Product, pk=kwargs['pk'])
-        
+        # Get the product object
+        self.object = get_object_or_404(models.Product, pk=kwargs.get('pk'))
+
+        # Check if the product belongs to the user's company
+        if not request.user.is_superuser and not request.user.is_staff:
+            if hasattr(request.user, 'profile') and request.user.profile.company:
+                if self.object.company != request.user.profile.company:
+                    messages.error(request, "You don't have permission to archive this product.")
+                    return redirect('product-list')
+
         # Check if product is used in any invoices
         invoice_items_count = models.InvoiceItem.objects.filter(product=self.object).count()
-        
+
         # Archive the product instead of deleting it
         self.object.is_archived = True
         self.object.save()
-        
+
         if invoice_items_count > 0:
             messages.success(request, f"Product '{self.object.name}' has been archived. It appears in {invoice_items_count} invoice(s) and will remain available for historical reference.")
         else:
             messages.success(request, f"Product '{self.object.name}' has been archived.")
-            
+
         return redirect(self.success_url)
+
+    def get_queryset(self):
+        # Ensure users can only delete products from their company
+        queryset = super().get_queryset()
+        if self.request.user.is_superuser or self.request.user.is_staff:
+            return queryset
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            return queryset.filter(company=self.request.user.profile.company)
+        return queryset.none()
 
 
 class ProductRestoreView(BaseViewMixin, View):
@@ -396,7 +417,7 @@ class ProductRestoreView(BaseViewMixin, View):
         return redirect(self.success_url)
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(ProductPermissionMixin, DetailView):
     model = models.Product
     template_name = 'products/product_detail.html'
     context_object_name = 'object'
@@ -427,7 +448,7 @@ class ProductDetailView(DetailView):
         return context
 
 
-class InvoiceCreateView(CreateView, FormViewMixin):
+class InvoiceCreateView(InvoicePermissionMixin, CreateView, FormViewMixin):
     model = models.Invoice
     form_class = core.forms.InvoiceForm
     template_name = 'invoices/invoice_form.html'
@@ -637,7 +658,7 @@ class InvoiceCreateView(CreateView, FormViewMixin):
         return self.render_to_response(self.get_context_data(form=form, formset=formset))
 
 
-class InvoiceListView(BaseViewMixin, ProductPermissionMixin, ListView):
+class InvoiceListView(InvoicePermissionMixin, ListView):
     model = models.Invoice
     template_name = 'invoices/invoice_list.html'
     context_object_name = 'invoices'
@@ -786,7 +807,7 @@ class InvoiceListView(BaseViewMixin, ProductPermissionMixin, ListView):
         return context
 
 
-class InvoiceUpdateView(UpdateView, FormViewMixin):
+class InvoiceUpdateView(InvoicePermissionMixin, UpdateView, FormViewMixin):
     model = models.Invoice
     form_class = core.forms.InvoiceForm
     template_name = 'invoices/invoice_form.html'
@@ -996,7 +1017,9 @@ class InvoiceUpdateView(UpdateView, FormViewMixin):
         logger.error(f'Formset non_form_errors: {formset.non_form_errors()}')
 
 
-class InvoiceDeleteView(DeleteView):
+# Helper methods for invoice views
+
+class InvoiceDeleteView(InvoicePermissionMixin, DeleteView):
     model = models.Invoice
     template_name = 'invoices/invoice_confirm_delete.html'
     success_url = reverse_lazy('invoice-list')
@@ -1020,7 +1043,7 @@ class InvoiceDeleteView(DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class InvoiceDetailView(DetailView):
+class InvoiceDetailView(InvoicePermissionMixin, DetailView):
     model = models.Invoice
     template_name = 'invoices/invoice_detail.html'
     context_object_name = 'invoice'

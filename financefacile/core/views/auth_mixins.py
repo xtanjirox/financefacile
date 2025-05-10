@@ -36,11 +36,15 @@ class ProductPermissionMixin(UserPassesTestMixin):
         if hasattr(user, 'profile') and user.profile and user.profile.is_company_admin:
             return True
             
-        # Check for specific product permissions
-        return (user.has_perm('core.view_product') or 
-                user.has_perm('core.add_product') or 
-                user.has_perm('core.change_product') or 
-                user.has_perm('core.delete_product'))
+        # Check for specific product permissions based on the view type
+        if self.__class__.__name__.endswith('CreateView'):
+            return user.has_perm('core.add_product')
+        elif self.__class__.__name__.endswith('UpdateView'):
+            return user.has_perm('core.change_product')
+        elif self.__class__.__name__.endswith('DeleteView'):
+            return user.has_perm('core.delete_product')
+        else:  # ListView, DetailView, etc.
+            return user.has_perm('core.view_product')
     
     def handle_no_permission(self):
         messages.error(self.request, "You don't have permission to manage products.")
@@ -60,11 +64,15 @@ class ExpensePermissionMixin(UserPassesTestMixin):
         if hasattr(user, 'profile') and user.profile and user.profile.is_company_admin:
             return True
             
-        # Check for specific expense permissions
-        return (user.has_perm('core.view_expense') or 
-                user.has_perm('core.add_expense') or 
-                user.has_perm('core.change_expense') or 
-                user.has_perm('core.delete_expense'))
+        # Check for specific expense permissions based on the view type
+        if self.__class__.__name__.endswith('CreateView'):
+            return user.has_perm('core.add_expense')
+        elif self.__class__.__name__.endswith('UpdateView'):
+            return user.has_perm('core.change_expense')
+        elif self.__class__.__name__.endswith('DeleteView'):
+            return user.has_perm('core.delete_expense')
+        else:  # ListView, DetailView, etc.
+            return user.has_perm('core.view_expense')
     
     def handle_no_permission(self):
         messages.error(self.request, "You don't have permission to manage expenses.")
@@ -84,14 +92,76 @@ class InvoicePermissionMixin(UserPassesTestMixin):
         if hasattr(user, 'profile') and user.profile and user.profile.is_company_admin:
             return True
             
-        # Check for specific invoice permissions
-        return (user.has_perm('core.view_invoice') or 
-                user.has_perm('core.add_invoice') or 
-                user.has_perm('core.change_invoice') or 
-                user.has_perm('core.delete_invoice'))
+        # Check for specific invoice permissions based on the view type
+        if self.__class__.__name__.endswith('CreateView'):
+            return user.has_perm('core.add_invoice')
+        elif self.__class__.__name__.endswith('UpdateView'):
+            return user.has_perm('core.change_invoice')
+        elif self.__class__.__name__.endswith('DeleteView'):
+            return user.has_perm('core.delete_invoice')
+        else:  # ListView, DetailView, etc.
+            return user.has_perm('core.view_invoice')
     
     def handle_no_permission(self):
         messages.error(self.request, "You don't have permission to manage invoices.")
+        return redirect('home')
+
+
+class CategoryPermissionMixin(UserPassesTestMixin):
+    """
+    Mixin that checks if user has permissions to manage categories
+    """
+    def test_func(self):
+        user = self.request.user
+        # Allow staff and superusers
+        if user.is_staff or user.is_superuser:
+            return True
+            
+        # Allow company admins for their company's categories
+        if hasattr(user, 'profile') and user.profile and user.profile.is_company_admin:
+            return True
+            
+        # Check for specific category permissions based on the view type
+        if self.__class__.__name__.endswith('CreateView'):
+            return user.has_perm('core.add_entrycategory')
+        elif self.__class__.__name__.endswith('UpdateView'):
+            return user.has_perm('core.change_entrycategory')
+        elif self.__class__.__name__.endswith('DeleteView'):
+            return user.has_perm('core.delete_entrycategory')
+        else:  # ListView, DetailView, etc.
+            return user.has_perm('core.view_entrycategory')
+    
+    def handle_no_permission(self):
+        messages.error(self.request, "You don't have permission to manage categories.")
+        return redirect('home')
+
+
+class FinanceEntryPermissionMixin(UserPassesTestMixin):
+    """
+    Mixin that checks if user has permissions to manage finance entries
+    """
+    def test_func(self):
+        user = self.request.user
+        # Allow staff and superusers
+        if user.is_staff or user.is_superuser:
+            return True
+            
+        # Allow company admins for their company's finance entries
+        if hasattr(user, 'profile') and user.profile and user.profile.is_company_admin:
+            return True
+            
+        # Check for specific finance entry permissions based on the view type
+        if self.__class__.__name__.endswith('CreateView'):
+            return user.has_perm('core.add_financeentry')
+        elif self.__class__.__name__.endswith('UpdateView'):
+            return user.has_perm('core.change_financeentry')
+        elif self.__class__.__name__.endswith('DeleteView'):
+            return user.has_perm('core.delete_financeentry')
+        else:  # ListView, DetailView, etc.
+            return user.has_perm('core.view_financeentry')
+    
+    def handle_no_permission(self):
+        messages.error(self.request, "You don't have permission to manage finance entries.")
         return redirect('home')
 
 

@@ -4,10 +4,11 @@ from django.urls import reverse_lazy
 from core import models, tables, filters
 
 from .base import BaseListView, FormViewMixin, BaseDeleteView
+from .auth_mixins import FinanceEntryPermissionMixin, BaseViewMixin
 from django_select2 import forms as s2forms
 
 
-class FianceEntryListView(BaseListView):
+class FianceEntryListView(FinanceEntryPermissionMixin, BaseListView):
     model = models.FinanceEntry
     table_class = tables.EntriesTable
     filter_class = filters.FinanceEntryFilter
@@ -27,7 +28,7 @@ class FianceEntryListView(BaseListView):
         return queryset.none()
 
 
-class FianceEntryCreateView(CreateView, FormViewMixin):
+class FianceEntryCreateView(FinanceEntryPermissionMixin, CreateView):
     model = models.FinanceEntry
     template_name = 'generic/create.html'
     fields = ['finance_entry_type', 'entry_category', 'entry_date', 'amount', 'description']
@@ -67,7 +68,7 @@ class FianceEntryCreateView(CreateView, FormViewMixin):
         return super().form_valid(form)
 
 
-class FianceEntryUpdateView(UpdateView, FormViewMixin):
+class FianceEntryUpdateView(FinanceEntryPermissionMixin, UpdateView):
     model = models.FinanceEntry
     template_name = 'generic/detail.html'
     fields = ['finance_entry_type', 'entry_category', 'entry_date', 'amount', 'description']
@@ -103,7 +104,7 @@ class FianceEntryUpdateView(UpdateView, FormViewMixin):
         return form
 
 
-class FianceEntryDeleteView(BaseDeleteView):
+class FianceEntryDeleteView(FinanceEntryPermissionMixin, BaseDeleteView):
     model = models.FinanceEntry
     success_url = reverse_lazy('entry-list')
     
@@ -117,7 +118,7 @@ class FianceEntryDeleteView(BaseDeleteView):
         return queryset.none()
 
 
-class ChargeListView(BaseListView):
+class ChargeListView(FinanceEntryPermissionMixin, BaseListView):
     model = models.FinanceEntry
     table_class = tables.EntriesTable
     filter_class = filters.FinanceEntryFilter
@@ -137,7 +138,7 @@ class ChargeListView(BaseListView):
         return queryset.none()
 
 
-class RevenueListView(BaseListView):
+class RevenueListView(FinanceEntryPermissionMixin, BaseListView):
     model = models.FinanceEntry
     table_class = tables.EntriesTable
     filter_class = filters.FinanceEntryFilter

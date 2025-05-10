@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.urls import reverse_lazy, reverse
 from django.views.generic import UpdateView, FormView, DetailView, TemplateView, View, CreateView, ListView
 from django.contrib.auth.models import User, Permission
@@ -12,11 +12,17 @@ from django.contrib import messages
 from django.db.models import Q
 from django.utils.decorators import method_decorator
 from django.db import transaction
-from django.shortcuts import render, redirect, get_object_or_404
+from django.utils.http import urlsafe_base64_decode
+from django.utils.encoding import force_str
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.backends import ModelBackend
+from accounts.backends import EmailBackend
+from utils.email_utils import send_confirmation_email
 
 from .models import Company, CompanySettings, UserProfile
 from .forms import (UserProfileForm, CustomPasswordChangeForm, UserPermissionsForm, 
-                   CompanyForm, CompanySettingsForm, UserCompanyForm, RegistrationForm, CompanyUserCreationForm)
+                   CompanyForm, CompanySettingsForm, UserCompanyForm, RegistrationForm, 
+                   CompanyUserCreationForm, ResendConfirmationEmailForm)
 
 class ProfileView(LoginRequiredMixin, DetailView):
     model = User
@@ -46,10 +52,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         
     def post(self, request, *args, **kwargs):
         form = self.get_form()
-        if form.is_valid():
-            return self.form_valid(form)
-        else:
-            return self.form_invalid(form)
+        return self.form_valid(form) if form.is_valid() else self.form_invalid(form)
 
 class CustomPasswordChangeView(LoginRequiredMixin, PasswordChangeView):
     form_class = CustomPasswordChangeForm
@@ -170,10 +173,11 @@ def ensure_default_view_permissions(user):
     user.user_permissions.add(*view_permissions)
     
     # Make sure the user is active
+    """
     if not user.is_active:
         user.is_active = True
         user.save()
-
+    """
 
 def ensure_company_admin_permissions(user):
     """Ensure a company admin user has all necessary permissions"""
@@ -185,9 +189,11 @@ def ensure_company_admin_permissions(user):
         user.user_permissions.add(*admin_permissions)
         
         # Make sure the user is active
+        """
         if not user.is_active:
             user.is_active = True
             user.save()
+        """
 
 class UsersListView(LoginRequiredMixin, IsAdminMixin, TemplateView):
     template_name = 'accounts/users_list.html'
@@ -220,9 +226,9 @@ class CustomLoginView(View):
     template_name = 'accounts/login.html'
     
     def get(self, request):
-        # If user is already authenticated, redirect to dashboard
+        # If user is already authenticated, redirect to home
         if request.user.is_authenticated:
-            return redirect('dashboard')
+            return redirect('home')
         return render(request, self.template_name)
     
     def post(self, request):
@@ -233,24 +239,72 @@ class CustomLoginView(View):
         
         if not username:
             form_errors['username'] = 'Email or username is required'
+            return render(request, self.template_name, {
+                'form_errors': form_errors,
+                'username': username
+            })
         
         if not password:
             form_errors['password'] = 'Password is required'
+            return render(request, self.template_name, {
+                'form_errors': form_errors,
+                'username': username
+            })
         
-        if username and password:
-            # Pass the request to authenticate so our custom backend can use it
-            user = authenticate(request=request, username=username, password=password)
-            if user is not None:
-                login(request, user)
-                # Redirect after successful login - use walrus operator for cleaner code
-                if next_url := request.GET.get('next'):
-                    return redirect(next_url)
-                # Default redirect to home page
-                return redirect('home')
-            else:
-                # Add error to the password field for invalid credentials
+        # First check if the user exists and has the correct password
+        try:
+            # Try to find the user by either username or email
+            user = User.objects.filter(
+                Q(username=username) | Q(email=username)
+            ).first()
+            
+            if user is None:
+                # User doesn't exist
                 form_errors['password'] = 'Invalid email/username or password'
                 messages.error(request, 'Invalid email/username or password')
+                return render(request, self.template_name, {
+                    'form_errors': form_errors,
+                    'username': username
+                })
+                
+            # Check if the password is correct
+            if not user.check_password(password):
+                # Incorrect password
+                form_errors['password'] = 'Invalid email/username or password'
+                messages.error(request, 'Invalid email/username or password')
+                return render(request, self.template_name, {
+                    'form_errors': form_errors,
+                    'username': username
+                })
+                
+            # Check if the user's account is active (email confirmed)
+            if not user.is_active:
+                messages.error(request, 'Please confirm your email address before logging in. Check your inbox for the confirmation link.')
+                return render(request, self.template_name, {
+                    'form_errors': {'username': 'Email not confirmed'},
+                    'username': username,
+                    'show_resend_link': True
+                })
+            
+            # If we get here, the user exists, password is correct, and account is active
+            # Specify the backend to use for login
+            login(request, user, backend='accounts.backends.EmailBackend')
+            
+            # Redirect after successful login
+            if next_url := request.GET.get('next'):
+                return redirect(next_url)
+            # Default redirect to home page
+            return redirect('home')
+                
+        except Exception as e:
+            # Log the error
+            print(f"Error in login process: {e}")
+            form_errors['password'] = 'An error occurred during login'
+            messages.error(request, 'An error occurred during login')
+            return render(request, self.template_name, {
+                'form_errors': form_errors,
+                'username': username
+            })
         
         # Return the form with errors
         return render(request, self.template_name, {
@@ -298,27 +352,34 @@ class RegistrationView(FormView):
             return redirect('home')
         return super().get(request, *args, **kwargs)
     
+    def generate_unique_username(self, email):
+        """Generate a unique username based on the user's email"""
+        username = email.split('@')[0]  # Use part before @ as base username
+        
+        # Check if username exists and append numbers if needed
+        base_username = username
+        counter = 1
+        while User.objects.filter(username=username).exists():
+            username = f"{base_username}{counter}"
+            counter += 1
+        
+        return username
+    
     def form_valid(self, form):
         try:
             with transaction.atomic():
                 # Generate username from email
                 email = form.cleaned_data['email']
-                username = email.split('@')[0]  # Use part before @ as base username
+                username = self.generate_unique_username(email)
                 
-                # Check if username exists and append numbers if needed
-                base_username = username
-                counter = 1
-                while User.objects.filter(username=username).exists():
-                    username = f"{base_username}{counter}"
-                    counter += 1
-                
-                # Create user with generated username
+                # Create user with generated username but set as inactive until email confirmation
                 user = User.objects.create_user(
                     username=username,
                     email=form.cleaned_data['email'],
                     password=form.cleaned_data['password1'],
                     first_name=form.cleaned_data['first_name'],
-                    last_name=form.cleaned_data['last_name']
+                    last_name=form.cleaned_data['last_name'],
+                    is_active=False  # User is inactive until email is confirmed
                 )
                 
                 # Create company for the user
@@ -335,7 +396,10 @@ class RegistrationView(FormView):
                 profile.is_company_admin = True  # Make the user a company admin
                 profile.save()
                 
-                messages.success(self.request, 'Account created successfully. You can now log in.')
+                # Send confirmation email
+                send_confirmation_email(user)
+                
+                messages.success(self.request, 'Account created successfully. Please check your email to activate your account.')
                 return redirect(self.success_url)
         except Exception as e:
             messages.error(self.request, f'Error creating account: {str(e)}')
@@ -529,19 +593,22 @@ class CompanyUserCreateView(LoginRequiredMixin, UserPassesTestMixin, CreateView)
         return get_object_or_404(Company, pk=company_id)
     
     def form_valid(self, form):
-        # Set the company for the form
+        # Get the company (already set in the form via get_form_kwargs)
         company = self.get_company()
-        form.company = company
         
-        # Save the form
+        # Create the user
         response = super().form_valid(form)
         
-        # If the user was created as a company admin, ensure they have all necessary permissions
+        # If user is a company admin, ensure they have the right permissions
         if form.cleaned_data.get('is_company_admin', False):
             ensure_company_admin_permissions(form.instance)
             messages.success(self.request, f'User {form.instance.username} has been created as a company admin with full permissions!')
         else:
             messages.success(self.request, f'User {form.instance.username} has been created successfully!')
+        
+        # Send confirmation email to the new user
+        send_confirmation_email(form.instance)
+        messages.info(self.request, f'A confirmation email has been sent to {form.instance.email}. The user must confirm their email before they can log in.')
             
         return response
     
@@ -651,3 +718,53 @@ def delete_company_user(request, user_id, company_id):
         'user_to_delete': user,
         'company': company
     })
+
+
+def confirm_email(request, uidb64, token):
+    """Confirm a user's email address using the token sent in the confirmation email"""
+    try:
+        # Decode the user id
+        uid = force_str(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    # Check if the user exists and the token is valid
+    if user is not None and default_token_generator.check_token(user, token):
+        # Activate the user
+        user.is_active = True
+        user.save()
+        
+        # Add success message
+        messages.success(request, 'Your email has been confirmed! You can now log in to your account.')
+        
+        # Render the confirmation success page
+        return render(request, 'accounts/email_confirmed.html')
+    else:
+        # Invalid link
+        messages.error(request, 'The confirmation link is invalid or has expired.')
+        return redirect('home')
+
+
+class ResendConfirmationEmailView(FormView):
+    """View for resending confirmation emails to users who haven't confirmed their email yet"""
+    form_class = ResendConfirmationEmailForm
+    template_name = 'accounts/resend_confirmation.html'
+    success_url = reverse_lazy('login')
+    
+    def get_initial(self):
+        # Pre-fill the email field if provided in the URL
+        initial = super().get_initial()
+        if email := self.request.GET.get('email'):
+            initial['email'] = email
+        return initial
+    
+    def form_valid(self, form):
+        email = form.cleaned_data['email']
+        user = User.objects.get(email=email)
+        
+        # Send a new confirmation email
+        send_confirmation_email(user)
+        
+        messages.success(self.request, 'A new confirmation email has been sent. Please check your inbox.')
+        return super().form_valid(form)

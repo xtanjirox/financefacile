@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Email Confirmed{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h4 class="mb-0">Email Confirmed Successfully</h4>
+                </div>
+                <div class="card-body text-center">
+                    <div class="mb-4">
+                        <i class="fas fa-check-circle text-success" style="font-size: 64px;"></i>
+                    </div>
+                    
+                    <h5 class="card-title">Thank you for confirming your email!</h5>
+                    <p class="card-text">Your account has been activated and you can now log in to access all features.</p>
+                    
+                    <a href="{% url 'auth:login' %}" class="btn btn-primary btn-lg mt-3">Log In Now</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
