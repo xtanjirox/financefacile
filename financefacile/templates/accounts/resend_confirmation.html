@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Resend Confirmation Email{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Resend Confirmation Email</h4>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Please enter the email address you registered with. We'll send you a new confirmation link.</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                        <button type="submit" class="btn btn-primary btn-block mt-4">Resend Confirmation Email</button>
+                    </form>
+                    
+                    <div class="mt-3 text-center">
+                        <p>Already confirmed? <a href="{% url 'auth:login' %}">Log in</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

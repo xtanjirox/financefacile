@@ -5,6 +5,8 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django import forms
 from .models import Company, CompanySettings, UserProfile
+from django.core.exceptions import ValidationError
+from django.core.validators import EmailValidator
 
 class UserProfileForm(forms.ModelForm):
     """Form for updating user profile information"""
@@ -91,9 +93,12 @@ class UserPermissionsForm(forms.ModelForm):
         content_types = ContentType.objects.filter(
             model__in=['product', 'expense', 'invoice', 'productcategory', 'expensecategory']
         )
-        self.fields['user_permissions'].queryset = Permission.objects.filter(
-            content_type__in=content_types
-        ).order_by('content_type__app_label', 'content_type__model', 'name')
+        self.fields['user_permissions'].queryset = Permission.objects.filter(content_type__in=content_types)
+        
+        # Add Bootstrap classes to form fields
+        for field_name in self.fields:
+            if field_name not in ['groups', 'user_permissions']:
+                self.fields[field_name].widget.attrs.update({'class': 'form-control'})
         
         # Initialize company admin status
         if self.instance and hasattr(self.instance, 'profile'):
@@ -125,18 +130,21 @@ class CompanyUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, widget=forms.EmailInput(attrs={'class': 'form-control'}))
     first_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
     last_name = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    is_company_admin = forms.BooleanField(required=False, initial=False, 
-                                          widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-                                          label='Make this user a company administrator')
     display_username = forms.CharField(required=True, widget=forms.TextInput(attrs={'class': 'form-control'}),
-                                      label='Username')
+                                     help_text='Username that will be displayed to the user')
+    is_company_admin = forms.BooleanField(required=False, initial=False, 
+                                        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+                                        label='Company Administrator',
+                                        help_text='Designates whether this user can manage company settings')
     
     class Meta:
         model = User
         fields = ('display_username', 'email', 'first_name', 'last_name', 'password1', 'password2', 'is_company_admin')
     
     def __init__(self, *args, **kwargs):
+        # Extract company parameter if provided
         self.company = kwargs.pop('company', None)
+        
         super().__init__(*args, **kwargs)
         # Add Bootstrap classes to password fields
         self.fields['password1'].widget.attrs.update({'class': 'form-control'})
@@ -155,19 +163,21 @@ class CompanyUserCreationForm(UserCreationForm):
     def clean_display_username(self):
         display_username = self.cleaned_data.get('display_username')
         
-        # Check if this username is already used in this specific company
-        if self.company:
-            # Get all users in this company
-            from accounts.models import UserProfile
-            company_profiles = UserProfile.objects.filter(company=self.company)
-            company_users = User.objects.filter(profile__in=company_profiles)
-            
-            # Check if any user in this company has a username that starts with this display_username
-            # followed by an underscore (which would indicate it's the same display name)
-            for user in company_users:
-                # Extract the display username from the actual username
-                if user.username.startswith(f"{display_username}_") or user.username == display_username:
-                    raise forms.ValidationError('This username is already taken within your company.')
+        # Check if the username contains invalid characters
+        if not display_username.isalnum() and not '_' in display_username:
+            raise forms.ValidationError('Username can only contain letters, numbers, and underscores.')
+        
+        # Check if the username is too short
+        if len(display_username) < 3:
+            raise forms.ValidationError('Username must be at least 3 characters long.')
+        
+        # Check if the username is too long
+        if len(display_username) > 30:
+            raise forms.ValidationError('Username must be at most 30 characters long.')
+        
+        # Check if the username is already taken (without company ID suffix)
+        if User.objects.filter(username__startswith=f"{display_username}_").exists():
+            raise forms.ValidationError('This username is already taken. Please choose another one.')
         
         return display_username
     
@@ -177,6 +187,7 @@ class CompanyUserCreationForm(UserCreationForm):
         user.email = self.cleaned_data.get('email')
         user.first_name = self.cleaned_data.get('first_name')
         user.last_name = self.cleaned_data.get('last_name')
+        user.is_active = False  # User is inactive until email is confirmed
         
         # Create a unique username by appending company ID
         display_username = self.cleaned_data.get('display_username')
@@ -213,6 +224,15 @@ class CompanyUserCreationForm(UserCreationForm):
         return user
 
 
+class UserCompanyForm(forms.Form):
+    """Form for assigning a user to a company"""
+    user = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        required=True,
+        widget=forms.Select(attrs={'class': 'form-control'})
+    )
+
+
 class CompanySettingsForm(forms.ModelForm):
     """Form for updating company settings"""
     class Meta:
@@ -228,15 +248,23 @@ class CompanySettingsForm(forms.ModelForm):
         }
 
 
-class UserCompanyForm(forms.ModelForm):
-    """Form for assigning users to companies and setting company admin status"""
-    class Meta:
-        model = UserProfile
-        fields = ('company', 'is_company_admin')
-        widgets = {
-            'company': forms.Select(attrs={'class': 'form-control'}),
-            'is_company_admin': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-        }
+class ResendConfirmationEmailForm(forms.Form):
+    """Form for resending confirmation emails"""
+    email = forms.EmailField(
+        required=True, 
+        widget=forms.EmailInput(attrs={'class': 'form-control'}),
+        help_text='Enter the email address you registered with to receive a new confirmation email.'
+    )
+    
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        try:
+            user = User.objects.get(email=email)
+            if user.is_active:
+                raise forms.ValidationError('This email address has already been confirmed.')
+        except User.DoesNotExist:
+            raise forms.ValidationError('No user with this email address exists in our system.')
+        return email
 
 
 class RegistrationForm(UserCreationForm):
@@ -281,6 +309,7 @@ class RegistrationForm(UserCreationForm):
         user.email = self.cleaned_data.get('email')
         user.first_name = self.cleaned_data.get('first_name')
         user.last_name = self.cleaned_data.get('last_name')
+        user.is_active = False  # User is inactive until email is confirmed
         
         if commit:
             user.save()

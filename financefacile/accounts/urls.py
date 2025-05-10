@@ -35,6 +35,10 @@ urlpatterns = [
     # Registration page
     path('register/', views.RegistrationView.as_view(), name='register'),
     
+    # Email confirmation
+    path('confirm-email/<str:uidb64>/<str:token>/', views.confirm_email, name='confirm-email'),
+    path('resend-confirmation/', views.ResendConfirmationEmailView.as_view(), name='resend-confirmation'),
+    
     # Include namespaced URL patterns
     path('auth/', include((auth_patterns, 'auth'))),
     path('users/', include((users_patterns, 'users'))),

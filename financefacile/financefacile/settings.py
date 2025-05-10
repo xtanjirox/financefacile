@@ -133,3 +133,14 @@ LOGIN_URL = "/login/"
 
 DJANGO_TABLES2_TEMPLATE = "django_tables2/bootstrap4-responsive.html"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
+
+# Email configuration
+# Use SMTP for all environments
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Or your email provider's SMTP server
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', 'mehdi.studies@gmail.com')  # Set this in your .env file
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', 'vwwyaewbxpphrdex')  # Set this in your .env file
+
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'mehdi.studies@gmail.com')

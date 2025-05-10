@@ -21,8 +21,8 @@ class EmailBackend(ModelBackend):
                 Q(username=username) | Q(email=username)
             ).first()
             
-            # Check if we got a user and if the password is correct
-            if user and user.check_password(password):
+            # Check if we got a user, if the password is correct, and if the user is active
+            if user and user.check_password(password) and self.user_can_authenticate(user):
                 return user
                 
         except Exception as e:

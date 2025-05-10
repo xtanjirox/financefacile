@@ -4,10 +4,11 @@ from django.urls import reverse_lazy
 from core import models, tables, filters
 
 from .base import BaseListView, FormViewMixin, BaseDeleteView
+from .auth_mixins import CategoryPermissionMixin, BaseViewMixin
 from django_select2 import forms as s2forms
 
 
-class CategoryListView(BaseListView):
+class CategoryListView(CategoryPermissionMixin, BaseListView):
     model = models.EntryCategory
     table_class = tables.EntryCategoryTable
     filter_class = filters.EntryCategoryFilter
@@ -26,7 +27,7 @@ class CategoryListView(BaseListView):
         return queryset.none()
 
 
-class CategoryCreateView(CreateView, FormViewMixin):
+class CategoryCreateView(CategoryPermissionMixin, CreateView):
     model = models.EntryCategory
     template_name = 'generic/create.html'
     fields = ['category_title', 'finance_entry_type']
@@ -64,7 +65,7 @@ class CategoryCreateView(CreateView, FormViewMixin):
         return super().form_valid(form)
 
 
-class CategoryUpdateView(UpdateView, FormViewMixin):
+class CategoryUpdateView(CategoryPermissionMixin, UpdateView):
     model = models.EntryCategory
     template_name = 'generic/detail.html'
     fields = ['category_title', 'finance_entry_type']
@@ -84,7 +85,7 @@ class CategoryUpdateView(UpdateView, FormViewMixin):
         return queryset.none()
 
 
-class CategoryDeleteView(BaseDeleteView):
+class CategoryDeleteView(CategoryPermissionMixin, BaseDeleteView):
     model = models.EntryCategory
     success_url = reverse_lazy('category-list')
     
