@@ -36,10 +36,17 @@
                     </h5>
                 </div>
                 <div class="card-body p-4">
+                    {% if is_uncategorized %}
+                    <div class="alert alert-danger">
+                        <i class="fas fa-ban me-2"></i>
+                        <strong>Not Allowed:</strong> The "Uncategorized" category is a system category and cannot be deleted. This category is used as a default for products when their original category is deleted.
+                    </div>
+                    {% else %}
                     <div class="alert alert-warning">
                         <i class="fas fa-exclamation-circle me-2"></i>
-                        <strong>Warning:</strong> This action cannot be undone. Deleting this category will also delete all related products.
+                        <strong>Warning:</strong> This action cannot be undone. Deleting this category will move all related products to the "Uncategorized" category.
                     </div>
+                    {% endif %}
                     
                     <div class="mb-4">
                         <h6 class="fw-bold">Category Details:</h6>
@@ -85,9 +92,15 @@
                             <a href="{% url 'category-list' %}" class="btn btn-secondary">
                                 <i class="fas fa-times me-1"></i> Cancel
                             </a>
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-trash-alt me-1"></i> Delete Category and Related Products
+                            {% if is_uncategorized %}
+                            <button type="button" class="btn btn-danger" disabled>
+                                <i class="fas fa-ban me-1"></i> Cannot Delete System Category
                             </button>
+                            {% else %}
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash-alt me-1"></i> Delete Category
+                            </button>
+                            {% endif %}
                         </div>
                     </form>
                 </div>
