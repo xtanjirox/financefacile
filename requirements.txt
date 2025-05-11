@@ -10,3 +10,4 @@ crispy-bootstrap4==2024.1
 django-ninja==1.1.0
 django-ninja-extra==0.20.7
 requests==2.32.3
+reportlab==4.4.0

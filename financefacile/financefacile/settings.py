@@ -11,6 +11,7 @@ ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ['https://*.ngrok-free.app',
                         'http://localhost', 'http://127.0.0.1',
+                        '.vercel.app'
                         ]
 
 # Authentication settings
@@ -69,7 +70,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'financefacile.wsgi.application'
+WSGI_APPLICATION = 'financefacile.wsgi.app'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
