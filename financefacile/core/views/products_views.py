@@ -428,6 +428,14 @@ class ProductDetailView(ProductPermissionMixin, DetailView):
         # Find all InvoiceItems for this product
         invoice_items = models.InvoiceItem.objects.filter(product=self.object).select_related('invoice')
         
+        # Calculate total quantity sold
+        total_quantity_sold = sum(item.quantity for item in invoice_items)
+        context['total_quantity_sold'] = total_quantity_sold
+        
+        # Calculate total revenue from this product
+        total_revenue = sum(item.total_price for item in invoice_items)
+        context['total_revenue'] = total_revenue
+        
         # Get the unique invoices containing this product
         invoices_data = []
         for item in invoice_items:

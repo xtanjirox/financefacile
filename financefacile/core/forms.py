@@ -282,12 +282,25 @@ class InvoiceItemForm(forms.ModelForm):
             
         self.fields['product'].queryset = product_queryset
         
+        self.fields['product'].widget.attrs.update({
+            'class': 'form-control',
+            'data-bs-toggle': 'tooltip',
+            'title': 'Select a product'
+        })
+        
         # Add validation for quantity
         self.fields['quantity'].widget.attrs.update({
             'min': '1', 
             'class': 'form-control',
             'data-bs-toggle': 'tooltip',
             'title': 'Enter quantity (must not exceed available stock)'
+        })
+        
+        self.fields['selling_price'].widget.attrs.update({
+            'min': '0', 
+            'class': 'form-control',
+            'data-bs-toggle': 'tooltip',
+            'title': 'Enter selling price'
         })
         
         # Add help text
@@ -359,7 +372,7 @@ InvoiceItemFormSet = inlineformset_factory(
 )
 
 
-class ProductCategoryWidget(s2forms.ModelSelect2Widget):
+class ProductCategoryWidget(s2forms.Select2Widget):
     model = models.ProductCategory
     search_fields = ['name__icontains']
 
@@ -368,7 +381,8 @@ class ProductCategoryWidget(s2forms.ModelSelect2Widget):
         attrs.update({
             'data-placeholder': 'Select a category...',
             'data-minimum-input-length': 0,
-            'class': 'form-control select2-widget',
+            'class': 'form-control selectpicker',
+            'data-live-search': 'true',
             'style': 'width: 100%;'
         })
         return attrs
@@ -383,7 +397,7 @@ class ProductForm(forms.ModelForm):
         if 'category' in self.fields:
             self.fields['category'].queryset = models.ProductCategory.objects.all(
             ).order_by('name')
-            
+            self.fields['category'].widget = ProductCategoryWidget()
         # Remove company field if it exists using contextlib's suppress
         from contextlib import suppress
         with suppress(KeyError):

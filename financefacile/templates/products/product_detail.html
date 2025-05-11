@@ -61,32 +61,48 @@
               </div>
             </div>
           </div>
+          <!-- First row of cards -->  
           <div class="row mb-4 g-3">
-            <div class="col-6 col-md-3">
+            <div class="col-6 col-md-6">
               <div class="shadow-sm p-3 rounded-4 text-center h-100" style="background: #e3f2fd; border: 1px solid rgba(124, 185, 232, 0.2);">
-                <div class="mb-2 text-secondary small fw-semibold"><i class="fas fa-layer-group me-1" style="color: #7cb9e8;"></i> Quantity</div>
+                <div class="mb-2 text-secondary small fw-semibold"><i class="fas fa-layer-group me-1" style="color: #7cb9e8;"></i> In Stock</div>
                 <span class="fw-bold fs-3" style="color: #1976d2;">{{ object.quantity }}</span>
               </div>
             </div>
-            <div class="col-6 col-md-3">
+            <div class="col-6 col-md-6">
+              <div class="shadow-sm p-3 rounded-4 text-center h-100" style="background: #e1f5fe; border: 1px solid rgba(79, 195, 247, 0.2);">
+                <div class="mb-2 text-secondary small fw-semibold"><i class="fas fa-shopping-cart me-1" style="color: #4fc3f7;"></i> Total Sold</div>
+                <span class="fw-bold fs-3" style="color: #0288d1;">{{ total_quantity_sold }}</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Second row of cards -->  
+          <div class="row mb-4 g-3">
+            <div class="col-6 col-md-6">
               <div class="shadow-sm p-3 rounded-4 text-center h-100" style="background: #e8f5e9; border: 1px solid rgba(129, 199, 132, 0.2);">
                 <div class="mb-2 text-secondary small fw-semibold"><i class="fas fa-coins me-1" style="color: #81c784;"></i> Unit Cost</div>
                 <span class="fw-bold fs-3" style="color: #2e7d32;">{{ object.unit_cost }}</span>
               </div>
             </div>
-            <div class="col-6 col-md-3">
+            <div class="col-6 col-md-6">
               <div class="shadow-sm p-3 rounded-4 text-center h-100" style="background: #fff8e1; border: 1px solid rgba(255, 213, 79, 0.2);">
                 <div class="mb-2 text-secondary small fw-semibold"><i class="fas fa-tag me-1" style="color: #ffd54f;"></i> Selling Price</div>
                 <span class="fw-bold fs-3" style="color: #f57f17;">{{ object.selling_price }}</span>
               </div>
             </div>
-            <div class="col-6 col-md-3">
+          </div>
+          
+          <!-- Third row of cards -->  
+          <div class="row mb-4 g-3">
+            <div class="col-12">
               <div class="shadow-sm p-3 rounded-4 text-center h-100" style="background: #f3e5f5; border: 1px solid rgba(186, 104, 200, 0.2);">
-                <div class="mb-2 text-secondary small fw-semibold"><i class="fas fa-chart-line me-1" style="color: #ba68c8;"></i> Current Value</div>
-                <span class="fw-bold fs-3" style="color: #6a1b9a;">{{ object.value_current }}</span>
+                <div class="mb-2 text-secondary small fw-semibold"><i class="fas fa-chart-line me-1" style="color: #ba68c8;"></i> Total Revenue Generated</div>
+                <span class="fw-bold fs-3" style="color: #6a1b9a;">{{ total_revenue|floatformat:2 }} €</span>
               </div>
             </div>
           </div>
+          
           <div class="row mb-4 g-3">
             <div class="col-md-4">
               <div class="card shadow-sm border-0 h-100" style="border-radius: 10px; background: #e3f2fd;">
