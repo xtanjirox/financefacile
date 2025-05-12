@@ -5,13 +5,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-8l$kord4hy&q0+sa4s_wx!=u7%17+cowlkvdkekijtz-9(kf5!'
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ['https://*.ngrok-free.app',
                         'http://localhost', 'http://127.0.0.1',
                         'https://*.vercel.app', 'http://*.vercel.app',
+                        'http://*zarrcreations.com', 'https://*zarrcreations.com'
                         ]
 
 # Authentication settings
@@ -74,14 +75,26 @@ WSGI_APPLICATION = 'financefacile.wsgi.app'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'financefacile',
-        'USER': 'financefacile',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres.izqxndlqonhnpvpletrp',
+            'PASSWORD': 'salah1993A!MEHDI',
+            'HOST': 'aws-0-eu-west-3.pooler.supabase.com',
+            'PORT': '5432',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'financefacile',
+            'USER': 'financefacile',
         'PASSWORD': 'financefacile',
         'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': '5431',
+        'PORT': '5432',
     }
 }
 
