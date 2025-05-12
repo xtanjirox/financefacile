@@ -6,7 +6,7 @@ services:
     image: postgres:15
     restart: always
     ports:
-      - "5431:5432"
+      - "5432:5432"
     environment:
       POSTGRES_PASSWORD: financefacile
       POSTGRES_DB: financefacile

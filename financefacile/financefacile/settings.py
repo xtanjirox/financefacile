@@ -11,7 +11,8 @@ ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ['https://*.ngrok-free.app',
                         'http://localhost', 'http://127.0.0.1',
-                        '.vercel.app'
+                        'https://*.vercel.app', 'http://*.vercel.app',
+                        'http://*zarrcreations.com', 'https://*zarrcreations.com'
                         ]
 
 # Authentication settings
@@ -74,14 +75,26 @@ WSGI_APPLICATION = 'financefacile.wsgi.app'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'financefacile',
-        'USER': 'financefacile',
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres.izqxndlqonhnpvpletrp',
+            'PASSWORD': 'salah1993A!MEHDI',
+            'HOST': 'aws-0-eu-west-3.pooler.supabase.com',
+            'PORT': '5432',
+        }
+    }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'financefacile',
+            'USER': 'financefacile',
         'PASSWORD': 'financefacile',
         'HOST': os.getenv('DB_HOST', 'localhost'),
-        'PORT': '5431',
+        'PORT': '5432',
     }
 }
 
@@ -137,7 +150,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 
 # Email configuration
 # Use SMTP for all environments
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' if DEBUG else 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'  # Or your email provider's SMTP server
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

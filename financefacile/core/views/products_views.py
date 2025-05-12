@@ -8,6 +8,7 @@ from django.views.generic.edit import CreateView
 from django.views import View
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
@@ -125,7 +126,39 @@ class ProductCategoryDeleteView(BaseDeleteView, CompanyFilterMixin):
         related_products = self.object.products.all()
         context['related_products'] = related_products[:10]  # Limit to 10 products to avoid large pages
         context['related_products_count'] = related_products.count()
+        
+        # Check if this is the Uncategorized category
+        if self.object.name == 'Uncategorized':
+            context['is_uncategorized'] = True
+        
         return context
+        
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        
+        # Prevent deletion of the Uncategorized category
+        if self.object.name == 'Uncategorized':
+            messages.error(request, "The 'Uncategorized' category cannot be deleted as it's a system category.")
+            return redirect('category-list')
+            
+        # Get related products for this category
+        related_products_count = self.object.products.count()
+        
+        # If there are related products, show a warning
+        if related_products_count > 0:
+            messages.warning(request, f"This category has {related_products_count} related products. These products will be moved to the 'Uncategorized' category.")
+            
+            # Find or create Uncategorized category for this company
+            uncategorized, created = models.ProductCategory.objects.get_or_create(
+                company=self.object.company,
+                name='Uncategorized',
+                defaults={'parent': None}
+            )
+            
+            # Move all products to the Uncategorized category
+            self.object.products.update(category=uncategorized)
+        
+        return super().post(request, *args, **kwargs)
 
 
 from django.http import JsonResponse
