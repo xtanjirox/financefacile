@@ -5,14 +5,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-8l$kord4hy&q0+sa4s_wx!=u7%17+cowlkvdkekijtz-9(kf5!'
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
 CSRF_TRUSTED_ORIGINS = ['https://*.ngrok-free.app',
                         'http://localhost', 'http://127.0.0.1',
                         'https://*.vercel.app', 'http://*.vercel.app',
-                        'http://*zarrcreations.com', 'https://*zarrcreations.com'
+                        'http://*.zarrcreations.com', 'https://*.zarrcreations.com',
+                        'https://financefacile.zarrcreations.com'
                         ]
 
 # Authentication settings
@@ -79,17 +80,6 @@ if DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'postgres',
-            'USER': 'postgres.izqxndlqonhnpvpletrp',
-            'PASSWORD': 'salah1993A!MEHDI',
-            'HOST': 'aws-0-eu-west-3.pooler.supabase.com',
-            'PORT': '5432',
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'financefacile',
             'USER': 'financefacile',
         'PASSWORD': 'financefacile',
@@ -97,6 +87,17 @@ else:
         'PORT': '5432',
     }
 }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'postgres',
+            'USER': 'postgres.izqxndlqonhnpvpletrp',
+            'PASSWORD': 'salah1993A!MEHDI',
+            'HOST': 'aws-0-eu-west-3.pooler.supabase.com',
+            'PORT': '5432',
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = [
     {
