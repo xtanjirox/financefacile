@@ -2,3 +2,14 @@ data/
 __data/
 _data/
 data_/
+
+.venv/
+
+/.venv/
+*.venv/
+
+__pycache__
+__pycache__/
+__pycache__/*
+__pycache__/*/*
+.venv/*
