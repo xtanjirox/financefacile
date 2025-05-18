@@ -1,11 +1,12 @@
+import logging
 import django_tables2 as tables
 from . import models
 
 ACTIONS_BUTTONS_TEMPLATE = """
-    <a href="{{record.get_absolute_url}}" class="btn btn-sm shadow-sm me-1" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit">
+    <a href="get_absolute_url" class="btn btn-sm shadow-sm me-1" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit">
         <i class="fas fa-edit"></i>
     </a>
-    <a href="{{record.get_delete_url}}" class="btn btn-sm shadow-sm me-1" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete">
+    <a href="get_delete_url" class="btn btn-sm shadow-sm me-1" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete">
         <i class="fas fa-trash"></i>
     </a>
 """
@@ -30,12 +31,33 @@ class ProductTable(tables.Table):
 
 
 class ProductCategoryTable(tables.Table):
-    actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE)
-
+    actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE, orderable=False, verbose_name='Actions')
+    parent = tables.Column(accessor='parent.name', verbose_name='Parent Category')
+    
     class Meta:
         model = models.ProductCategory
-        attrs = DEFAULT_TABLE_ATTRS
-        fields = ('name', 'parent')
+        attrs = {
+            'class': 'table table-striped table-hover',
+            'id': 'categoriesTable',
+            'style': 'width: 100%',
+        }
+        fields = ('name', 'parent', 'actions')
+        order_by = 'name'
+        
+    def render_actions(self, value, record):
+        if value is None:
+            value = ''
+        try:
+            url = value.replace('get_absolute_url', record.get_absolute_url())
+            if hasattr(record, 'get_delete_url') and record.get_delete_url():
+                url = url.replace('get_delete_url', record.get_delete_url())
+            if hasattr(record, 'get_update_url') and record.get_update_url():
+                url = url.replace('get_update_url', record.get_update_url())
+            return url
+        except Exception as e:
+            logger = logging.getLogger(__name__)
+            logger.error(f"Error rendering actions for record {record.id}: {str(e)}")
+            return ''
 '''
 class EntryCategoryTable(tables.Table):
     actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE)

@@ -1,4 +1,5 @@
 import logging
+from django.conf import settings
 
 from django.views.generic import (
     DetailView, UpdateView, 
@@ -35,39 +36,105 @@ class ProductCategoryListView(BaseListView):
     detail = True
     
     def get_queryset(self):
+        logger.info("\n=== Starting get_queryset for user: %s ===", self.request.user)
         # Start with the base queryset
         queryset = super().get_queryset()
         user = self.request.user
         
-        # Superusers and staff can see all categories if needed
-        if user.is_superuser or user.is_staff:
-            # For debugging purposes, we'll still filter by company
-            if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
-                return queryset.filter(company=user.profile.company)
-            return queryset.none()
+        # Log user and profile info for debugging
+        logger.info(f"User: {user} (ID: {user.id if user.id else 'anon'})")
+        logger.info(f"User attributes: is_authenticated={user.is_authenticated}, is_staff={user.is_staff}, is_superuser={user.is_superuser}")
         
-        # Regular users can only see their company's categories
+        if user.is_authenticated:
+            logger.info("User is authenticated")
+            if hasattr(user, 'profile'):
+                logger.info(f"User has profile: {user.profile}")
+                if hasattr(user.profile, 'company'):
+                    logger.info(f"User's company: {user.profile.company} (ID: {user.profile.company.id if user.profile.company else 'None'})")
+                else:
+                    logger.warning("User's profile has no company attribute")
+            else:
+                logger.warning("User has no profile")
+        else:
+            logger.warning("User is not authenticated")
+        
+        # Log all categories in the database with their company info
+        try:
+            all_categories = list(queryset.values('id', 'name', 'company__id', 'company__name'))
+            logger.info(f"\n=== All categories in database ===")
+            for cat in all_categories:
+                logger.info(f"- {cat['name']} (ID: {cat['id']}) - Company: {cat['company__name']} (ID: {cat['company__id']})")
+        except Exception as e:
+            logger.error(f"Error fetching categories: {str(e)}")
+        
+        # Superusers and staff can see all categories
+        if user.is_superuser or user.is_staff:
+            logger.info("\n=== User is superuser or staff, returning all categories ===")
+            return queryset
+        
+        # Regular users can see their company's categories
         if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
             company = user.profile.company
+            logger.info(f"\n=== Filtering categories for company: {company.name} (ID: {company.id}) ===")
+            company_categories = list(queryset.filter(company=company).values('id', 'name'))
+            logger.info(f"Found {len(company_categories)} categories for this company")
+            for cat in company_categories:
+                logger.info(f"- {cat['name']} (ID: {cat['id']})")
             return queryset.filter(company=company)
         
-        # Users without a company can't see any categories
+        # Log if user has no company
+        if hasattr(user, 'profile'):
+            logger.warning("\n=== User has profile but no company assigned ===")
+        else:
+            logger.warning("\n=== User has no profile ===")
+            
+        # For debugging, return all categories if in development
+        if settings.DEBUG:
+            logger.warning("\n=== DEBUG mode: Returning all categories ===")
+            return queryset
+            
+        logger.warning("\n=== No categories to return ===")
         return queryset.none()
+    
+    def get_context_data(self, **kwargs):
+        logger.info("\n=== Starting get_context_data ===")
+        context = super().get_context_data(**kwargs)
+        
+        # Get the filtered queryset
+        queryset = self.get_queryset()
+        context['has_categories'] = queryset.exists()
+        logger.info(f"has_categories: {context['has_categories']}")
+        
+        # Initialize the table with the filtered queryset and request
+        table = self.table_class(queryset, order_by='name')
+        
+        # Configure the table's request attribute for URL generation
+        if not hasattr(table, 'request'):
+            table.request = self.request
+        
+        # Add the table to the context
+        context['table'] = table
+        context['segment'] = self.segment
+        context['create_url'] = self.create_url
+        
+        # Configure the table for rendering
+        table.paginate(page=self.request.GET.get('page', 1), per_page=10)
+        
+        # Log table data for debugging
+        if hasattr(table, 'rows'):
+            rows = list(table.rows)
+            logger.info(f"Number of rows in table: {len(rows)}")
+            for i, row in enumerate(rows, 1):
+                logger.info(f"Row {i}: {row}")
+        else:
+            logger.warning("Table has no rows attribute")
+            
+        logger.info(f"Context keys: {context.keys()}")
+        return context
     
     def get(self, request, *args, **kwargs):
         # Always render the list view - the template will handle showing the empty state
         return super().get(request, *args, **kwargs)
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Add a flag indicating whether there are any categories
-        context['has_categories'] = self.get_queryset().exists()
-        
-        # Log the table data being passed to the template
-        if hasattr(context, 'table') and hasattr(context['table'], 'rows'):
-            logger.info(f"Number of rows in table: {len(context['table'].rows)}")
-        
-        return context
 
 
 class ProductCategoryCreateView(CreateView, FormViewMixin):

@@ -32,6 +32,10 @@ class ProductCategory(models.Model):
     def get_delete_url(self):
         from django.urls import reverse_lazy
         return reverse_lazy('category-delete', kwargs={'pk': self.pk})
+        
+    def get_update_url(self):
+        from django.urls import reverse_lazy
+        return reverse_lazy('category-update', kwargs={'pk': self.pk})
 
 
 class Product(models.Model):

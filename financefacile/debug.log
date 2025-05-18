@@ -1,0 +1,476 @@
+INFO 2025-05-18 11:08:21,625 autoreload Watching for file changes with StatReloader
+INFO 2025-05-18 11:08:56,512 products_views 
+=== Starting get_queryset ===
+INFO 2025-05-18 11:08:56,512 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-18 11:08:56,512 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-18 11:08:56,512 products_views User is authenticated
+INFO 2025-05-18 11:08:56,514 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-18 11:08:56,516 products_views User's company: accuro (ID: 1)
+INFO 2025-05-18 11:08:56,519 products_views 
+=== All categories in database ===
+INFO 2025-05-18 11:08:56,519 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:08:56,519 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:08:56,519 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-18 11:08:56,520 products_views Found 2 categories for this company
+INFO 2025-05-18 11:08:56,520 products_views - Uncategorized (ID: 1)
+INFO 2025-05-18 11:08:56,520 products_views - Pantalon (ID: 2)
+INFO 2025-05-18 11:08:56,521 products_views 
+=== Starting get_queryset ===
+INFO 2025-05-18 11:08:56,521 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-18 11:08:56,521 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-18 11:08:56,521 products_views User is authenticated
+INFO 2025-05-18 11:08:56,521 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-18 11:08:56,521 products_views User's company: accuro (ID: 1)
+INFO 2025-05-18 11:08:56,522 products_views 
+=== All categories in database ===
+INFO 2025-05-18 11:08:56,522 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:08:56,522 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:08:56,522 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-18 11:08:56,523 products_views Found 2 categories for this company
+INFO 2025-05-18 11:08:56,523 products_views - Uncategorized (ID: 1)
+INFO 2025-05-18 11:08:56,523 products_views - Pantalon (ID: 2)
+INFO 2025-05-18 11:08:56,542 basehttp "GET /app/categories/ HTTP/1.1" 200 13356
+INFO 2025-05-18 11:08:56,573 basehttp "GET /static/assets/css/finance_facile.css HTTP/1.1" 200 1993
+INFO 2025-05-18 11:08:56,573 basehttp "GET /static/assets/css/app.css HTTP/1.1" 200 198751
+INFO 2025-05-18 11:08:56,576 basehttp "GET /static/assets/js/datatables.min.js HTTP/1.1" 200 83898
+INFO 2025-05-18 11:08:56,577 basehttp "GET /static/assets/js/jquery-3.7.1.min.js HTTP/1.1" 200 87533
+INFO 2025-05-18 11:08:56,582 basehttp "GET /static/assets/css/light.css HTTP/1.1" 200 674179
+INFO 2025-05-18 11:08:56,598 basehttp "GET /static/assets/js/app.js HTTP/1.1" 200 900842
+WARNING 2025-05-18 11:08:56,734 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-18 11:08:56,738 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-18 11:08:57,151 basehttp "GET /static/assets/img/icons/icon-48x48.png HTTP/1.1" 200 3533
+INFO 2025-05-18 11:09:53,916 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/tables.py changed, reloading.
+INFO 2025-05-18 11:09:54,376 autoreload Watching for file changes with StatReloader
+INFO 2025-05-18 11:10:03,558 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/tables.py changed, reloading.
+INFO 2025-05-18 11:10:03,894 autoreload Watching for file changes with StatReloader
+INFO 2025-05-18 11:10:17,350 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/views/products_views.py changed, reloading.
+INFO 2025-05-18 11:10:17,694 autoreload Watching for file changes with StatReloader
+INFO 2025-05-18 11:10:33,216 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/views/products_views.py changed, reloading.
+INFO 2025-05-18 11:10:33,582 autoreload Watching for file changes with StatReloader
+INFO 2025-05-18 11:10:50,059 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/views/products_views.py changed, reloading.
+INFO 2025-05-18 11:10:50,399 autoreload Watching for file changes with StatReloader
+INFO 2025-05-18 11:10:57,692 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/views/products_views.py changed, reloading.
+INFO 2025-05-18 11:10:57,994 autoreload Watching for file changes with StatReloader
+INFO 2025-05-18 11:15:58,225 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-18 11:15:58,227 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-18 11:15:58,228 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-18 11:15:58,228 products_views User is authenticated
+INFO 2025-05-18 11:15:58,231 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-18 11:15:58,233 products_views User's company: accuro (ID: 1)
+INFO 2025-05-18 11:15:58,236 products_views 
+=== All categories in database ===
+INFO 2025-05-18 11:15:58,237 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:15:58,237 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:15:58,237 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-18 11:15:58,238 products_views Found 2 categories for this company
+INFO 2025-05-18 11:15:58,238 products_views - Uncategorized (ID: 1)
+INFO 2025-05-18 11:15:58,239 products_views - Pantalon (ID: 2)
+INFO 2025-05-18 11:15:58,239 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-18 11:15:58,241 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-18 11:15:58,242 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-18 11:15:58,242 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-18 11:15:58,242 products_views User is authenticated
+INFO 2025-05-18 11:15:58,242 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-18 11:15:58,242 products_views User's company: accuro (ID: 1)
+INFO 2025-05-18 11:15:58,243 products_views 
+=== All categories in database ===
+INFO 2025-05-18 11:15:58,243 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:15:58,243 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:15:58,243 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-18 11:15:58,245 products_views Found 2 categories for this company
+INFO 2025-05-18 11:15:58,245 products_views - Uncategorized (ID: 1)
+INFO 2025-05-18 11:15:58,245 products_views - Pantalon (ID: 2)
+INFO 2025-05-18 11:15:58,246 products_views has_categories: True
+INFO 2025-05-18 11:15:58,248 products_views Number of rows in table: 2
+INFO 2025-05-18 11:15:58,248 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10762f1d0>
+INFO 2025-05-18 11:15:58,248 products_views Row 2: <django_tables2.rows.BoundRow object at 0x107641650>
+INFO 2025-05-18 11:15:58,249 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-18 11:15:58,357 log Internal Server Error: /app/categories/
+Traceback (most recent call last):
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/backends/django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/defaulttags.py", line 326, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/defaulttags.py", line 326, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/defaulttags.py", line 242, in render
+    nodelist.append(node.render_annotated(context))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/defaulttags.py", line 197, in render
+    values = list(values)
+             ^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django_tables2/rows.py", line 134, in __iter__
+    for column, value in self.items():
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django_tables2/rows.py", line 244, in items
+    column.current_value = self.get_cell(column.name)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django_tables2/rows.py", line 197, in get_cell
+    return self._get_and_render_with(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django_tables2/rows.py", line 173, in _get_and_render_with
+    return render_func(bound_column, value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django_tables2/rows.py", line 206, in _call_render
+    content = call_with_appropriate(bound_column.render, render_kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django_tables2/utils.py", line 572, in call_with_appropriate
+    return fn(**kwargs)
+           ^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/financefacile/core/tables.py", line 47, in render_actions
+    url = value.replace('get_absolute_url', record.get_absolute_url())
+          ^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'replace'
+ERROR 2025-05-18 11:15:58,359 basehttp "GET /app/categories/ HTTP/1.1" 500 245563
+WARNING 2025-05-18 11:15:58,481 log Not Found: /favicon.ico
+WARNING 2025-05-18 11:15:58,481 basehttp "GET /favicon.ico HTTP/1.1" 404 4225
+INFO 2025-05-18 11:15:59,225 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-18 11:15:59,226 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-18 11:15:59,226 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-18 11:15:59,226 products_views User is authenticated
+INFO 2025-05-18 11:15:59,229 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-18 11:15:59,232 products_views User's company: accuro (ID: 1)
+INFO 2025-05-18 11:15:59,235 products_views 
+=== All categories in database ===
+INFO 2025-05-18 11:15:59,235 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:15:59,235 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:15:59,235 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-18 11:15:59,236 products_views Found 2 categories for this company
+INFO 2025-05-18 11:15:59,236 products_views - Uncategorized (ID: 1)
+INFO 2025-05-18 11:15:59,237 products_views - Pantalon (ID: 2)
+INFO 2025-05-18 11:15:59,237 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-18 11:15:59,239 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-18 11:15:59,239 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-18 11:15:59,239 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-18 11:15:59,239 products_views User is authenticated
+INFO 2025-05-18 11:15:59,239 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-18 11:15:59,239 products_views User's company: accuro (ID: 1)
+INFO 2025-05-18 11:15:59,241 products_views 
+=== All categories in database ===
+INFO 2025-05-18 11:15:59,241 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:15:59,241 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:15:59,241 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-18 11:15:59,242 products_views Found 2 categories for this company
+INFO 2025-05-18 11:15:59,242 products_views - Uncategorized (ID: 1)
+INFO 2025-05-18 11:15:59,242 products_views - Pantalon (ID: 2)
+INFO 2025-05-18 11:15:59,259 products_views has_categories: True
+INFO 2025-05-18 11:15:59,262 products_views Number of rows in table: 2
+INFO 2025-05-18 11:15:59,262 products_views Row 1: <django_tables2.rows.BoundRow object at 0x1074609d0>
+INFO 2025-05-18 11:15:59,262 products_views Row 2: <django_tables2.rows.BoundRow object at 0x1076ef350>
+INFO 2025-05-18 11:15:59,262 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-18 11:15:59,311 log Internal Server Error: /app/categories/
+Traceback (most recent call last):
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/core/handlers/base.py", line 220, in _get_response
+    response = response.render()
+               ^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/response.py", line 114, in render
+    self.content = self.rendered_content
+                   ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/response.py", line 92, in rendered_content
+    return template.render(context, self._request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/backends/django.py", line 61, in render
+    return self.template.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 171, in render
+    return self._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/loader_tags.py", line 159, in render
+    return compiled_parent._render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 163, in _render
+    return self.nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/loader_tags.py", line 65, in render
+    result = block.nodelist.render(context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/defaulttags.py", line 326, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/defaulttags.py", line 326, in render
+    return nodelist.render(context)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in render
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 1000, in <listcomp>
+    return SafeString("".join([node.render_annotated(context) for node in self]))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/defaulttags.py", line 242, in render
+    nodelist.append(node.render_annotated(context))
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/base.py", line 961, in render_annotated
+    return self.render(context)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django/template/defaulttags.py", line 197, in render
+    values = list(values)
+             ^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django_tables2/rows.py", line 134, in __iter__
+    for column, value in self.items():
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django_tables2/rows.py", line 244, in items
+    column.current_value = self.get_cell(column.name)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django_tables2/rows.py", line 197, in get_cell
+    return self._get_and_render_with(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django_tables2/rows.py", line 173, in _get_and_render_with
+    return render_func(bound_column, value)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django_tables2/rows.py", line 206, in _call_render
+    content = call_with_appropriate(bound_column.render, render_kwargs)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/.venv/lib/python3.11/site-packages/django_tables2/utils.py", line 572, in call_with_appropriate
+    return fn(**kwargs)
+           ^^^^^^^^^^^^
+  File "/Users/mehdi/Documents/my_projects/financefacile/financefacile/core/tables.py", line 47, in render_actions
+    url = value.replace('get_absolute_url', record.get_absolute_url())
+          ^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'replace'
+ERROR 2025-05-18 11:15:59,312 basehttp "GET /app/categories/ HTTP/1.1" 500 245563
+INFO 2025-05-18 11:16:38,693 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/tables.py changed, reloading.
+INFO 2025-05-18 11:16:39,172 autoreload Watching for file changes with StatReloader
+INFO 2025-05-18 11:16:44,458 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/tables.py changed, reloading.
+INFO 2025-05-18 11:16:44,793 autoreload Watching for file changes with StatReloader
+INFO 2025-05-18 11:16:58,213 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/tables.py changed, reloading.
+INFO 2025-05-18 11:16:58,546 autoreload Watching for file changes with StatReloader
+INFO 2025-05-18 11:17:08,932 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/models.py changed, reloading.
+INFO 2025-05-18 11:17:09,285 autoreload Watching for file changes with StatReloader
+INFO 2025-05-18 11:17:21,675 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/views/products_views.py changed, reloading.
+INFO 2025-05-18 11:17:22,017 autoreload Watching for file changes with StatReloader
+INFO 2025-05-18 11:17:59,713 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-18 11:17:59,713 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-18 11:17:59,713 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-18 11:17:59,713 products_views User is authenticated
+INFO 2025-05-18 11:17:59,716 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-18 11:17:59,718 products_views User's company: accuro (ID: 1)
+INFO 2025-05-18 11:17:59,722 products_views 
+=== All categories in database ===
+INFO 2025-05-18 11:17:59,723 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:17:59,723 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:17:59,723 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-18 11:17:59,724 products_views Found 2 categories for this company
+INFO 2025-05-18 11:17:59,724 products_views - Uncategorized (ID: 1)
+INFO 2025-05-18 11:17:59,724 products_views - Pantalon (ID: 2)
+INFO 2025-05-18 11:17:59,724 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-18 11:17:59,727 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-18 11:17:59,727 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-18 11:17:59,727 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-18 11:17:59,727 products_views User is authenticated
+INFO 2025-05-18 11:17:59,727 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-18 11:17:59,727 products_views User's company: accuro (ID: 1)
+INFO 2025-05-18 11:17:59,729 products_views 
+=== All categories in database ===
+INFO 2025-05-18 11:17:59,729 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:17:59,729 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:17:59,729 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-18 11:17:59,730 products_views Found 2 categories for this company
+INFO 2025-05-18 11:17:59,730 products_views - Uncategorized (ID: 1)
+INFO 2025-05-18 11:17:59,730 products_views - Pantalon (ID: 2)
+INFO 2025-05-18 11:17:59,731 products_views has_categories: True
+INFO 2025-05-18 11:17:59,734 products_views Number of rows in table: 2
+INFO 2025-05-18 11:17:59,734 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10ad2c050>
+INFO 2025-05-18 11:17:59,734 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10ad43b90>
+INFO 2025-05-18 11:17:59,734 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-18 11:17:59,754 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-18 11:17:59,755 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-18 11:17:59,756 basehttp "GET /app/categories/ HTTP/1.1" 200 19620
+INFO 2025-05-18 11:17:59,832 basehttp "GET /static/assets/css/app.css HTTP/1.1" 200 198751
+INFO 2025-05-18 11:17:59,853 basehttp "GET /static/assets/css/finance_facile.css HTTP/1.1" 200 1993
+INFO 2025-05-18 11:17:59,864 basehttp "GET /static/css/datatables_pastel.css HTTP/1.1" 200 756
+INFO 2025-05-18 11:17:59,867 basehttp "GET /static/assets/js/datatables.min.js HTTP/1.1" 200 83898
+INFO 2025-05-18 11:17:59,868 basehttp "GET /static/assets/js/jquery-3.7.1.min.js HTTP/1.1" 200 87533
+INFO 2025-05-18 11:17:59,873 basehttp "GET /static/assets/css/light.css HTTP/1.1" 200 674179
+INFO 2025-05-18 11:17:59,874 basehttp "GET /static/assets/js/app.js HTTP/1.1" 200 900842
+WARNING 2025-05-18 11:18:00,054 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-18 11:18:00,058 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-18 11:18:00,211 basehttp "GET /static/assets/img/icons/icon-48x48.png HTTP/1.1" 200 3533
+INFO 2025-05-18 11:18:09,467 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 14932
+WARNING 2025-05-18 11:18:09,604 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-18 11:18:09,620 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-18 11:18:11,776 basehttp "GET /app/products/ HTTP/1.1" 200 21611
+WARNING 2025-05-18 11:18:11,897 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-18 11:18:11,907 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-18 11:18:14,874 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-18 11:18:14,876 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-18 11:18:14,876 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-18 11:18:14,876 products_views User is authenticated
+INFO 2025-05-18 11:18:14,882 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-18 11:18:14,885 products_views User's company: accuro (ID: 1)
+INFO 2025-05-18 11:18:14,890 products_views 
+=== All categories in database ===
+INFO 2025-05-18 11:18:14,891 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:18:14,891 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:18:14,891 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-18 11:18:14,892 products_views Found 2 categories for this company
+INFO 2025-05-18 11:18:14,892 products_views - Uncategorized (ID: 1)
+INFO 2025-05-18 11:18:14,892 products_views - Pantalon (ID: 2)
+INFO 2025-05-18 11:18:14,892 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-18 11:18:14,894 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-18 11:18:14,895 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-18 11:18:14,895 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-18 11:18:14,895 products_views User is authenticated
+INFO 2025-05-18 11:18:14,895 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-18 11:18:14,895 products_views User's company: accuro (ID: 1)
+INFO 2025-05-18 11:18:14,896 products_views 
+=== All categories in database ===
+INFO 2025-05-18 11:18:14,896 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:18:14,896 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-18 11:18:14,896 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-18 11:18:14,897 products_views Found 2 categories for this company
+INFO 2025-05-18 11:18:14,897 products_views - Uncategorized (ID: 1)
+INFO 2025-05-18 11:18:14,897 products_views - Pantalon (ID: 2)
+INFO 2025-05-18 11:18:14,899 products_views has_categories: True
+INFO 2025-05-18 11:18:14,902 products_views Number of rows in table: 2
+INFO 2025-05-18 11:18:14,902 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10af39c90>
+INFO 2025-05-18 11:18:14,902 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10ad31210>
+INFO 2025-05-18 11:18:14,902 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-18 11:18:14,905 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-18 11:18:14,905 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-18 11:18:14,906 basehttp "GET /app/categories/ HTTP/1.1" 200 19620
+WARNING 2025-05-18 11:18:15,001 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-18 11:18:15,035 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-18 11:18:58,221 autoreload Watching for file changes with StatReloader
