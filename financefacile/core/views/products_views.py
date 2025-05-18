@@ -1,28 +1,27 @@
 import logging
-from django.views.generic import DetailView, UpdateView, DeleteView, ListView, CreateView, TemplateView
-from django_select2 import forms as s2forms
-from core.forms import DateRangeFilterForm, DateRangeCategoryFilterForm, DateRangeFilterFormNew
-from django.db.models import Q, Sum
-from django.forms import modelformset_factory
-from django.views.generic.edit import CreateView
+
+from django.views.generic import (
+    DetailView, UpdateView, 
+    DeleteView, ListView, CreateView)
+from django.db.models import Sum
 from django.views import View
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.http import JsonResponse, HttpResponse
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.contrib import messages
 
 from core import models, tables
-from core.models import InvoiceItem
 import core.forms
+from core.forms import DateRangeFilterFormNew
+from accounts import models as ac_models
+
+
 from .base import BaseListView, FormViewMixin, BaseDeleteView
 from .auth_mixins import BaseViewMixin, ProductPermissionMixin, InvoicePermissionMixin, CompanyFilterMixin
-from accounts.models import CompanySettings
 
 
-import logging
+from django.http import JsonResponse
+
+
 logger = logging.getLogger(__name__)
 
 class ProductCategoryListView(BaseListView):
@@ -161,11 +160,6 @@ class ProductCategoryDeleteView(BaseDeleteView, CompanyFilterMixin):
         return super().post(request, *args, **kwargs)
 
 
-from django.http import JsonResponse
-from django.views.generic import TemplateView
-from django.urls import reverse
-from django.utils.html import format_html
-
 class ProductListView(ProductPermissionMixin, CompanyFilterMixin, ListView):
     model = models.Product
     template_name = 'products/product_list.html'
@@ -227,9 +221,9 @@ class ProductListView(ProductPermissionMixin, CompanyFilterMixin, ListView):
         currency_symbol = 'DT'  # Default currency
         if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
             try:
-                company_settings = CompanySettings.objects.get(company=user.profile.company)
+                company_settings = ac_models.CompanySettings.objects.get(company=user.profile.company)
                 currency_symbol = company_settings.currency
-            except CompanySettings.DoesNotExist:
+            except ac_models.CompanySettings.DoesNotExist:
                 pass
         context['currency_symbol'] = currency_symbol
         
@@ -614,9 +608,9 @@ class InvoiceCreateView(InvoicePermissionMixin, CreateView, FormViewMixin):
             if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
                 company = self.request.user.profile.company
                 # Get company settings directly
-                from accounts.models import CompanySettings
+                # from accounts.models import CompanySettings
                 try:
-                    settings = CompanySettings.objects.get(company=company)
+                    settings = ac_models.CompanySettings.objects.get(company=company)
                     default_tva_rate = settings.default_tva_rate
                     logger.info(f"Got default TVA rate from company settings: {default_tva_rate}")
                 except Exception as e:
@@ -791,7 +785,7 @@ class InvoiceListView(InvoicePermissionMixin, ListView):
                 filter_kwargs['created_at__date__lte'] = end_date
             
             filtered_invoices = invoice_queryset.filter(**filter_kwargs)
-            filtered_invoice_items = InvoiceItem.objects.filter(
+            filtered_invoice_items = models.InvoiceItem.objects.filter(
                 invoice__in=filtered_invoices
             )
 
@@ -811,7 +805,7 @@ class InvoiceListView(InvoicePermissionMixin, ListView):
         
         if company:
             # Filter invoice items by the user's company
-            company_invoice_items = InvoiceItem.objects.filter(invoice__company=company)
+            company_invoice_items = models.InvoiceItem.objects.filter(invoice__company=company)
             
             # Calculate stats based on company's data only
             total_items_sold = company_invoice_items.aggregate(
@@ -834,9 +828,9 @@ class InvoiceListView(InvoicePermissionMixin, ListView):
         currency_symbol = 'DT'  # Default currency
         if company:
             try:
-                company_settings = CompanySettings.objects.get(company=company)
+                company_settings = ac_models.CompanySettings.objects.get(company=company)
                 currency_symbol = company_settings.currency
-            except CompanySettings.DoesNotExist:
+            except ac_models.CompanySettings.DoesNotExist:
                 pass
         
         context.update({
@@ -979,9 +973,9 @@ class InvoiceUpdateView(InvoicePermissionMixin, UpdateView, FormViewMixin):
             if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
                 company = self.request.user.profile.company
                 # Get company settings directly
-                from accounts.models import CompanySettings
+                # from accounts.models import CompanySettings
                 try:
-                    settings = CompanySettings.objects.get(company=company)
+                    settings = ac_models.CompanySettings.objects.get(company=company)
                     default_tva_rate = settings.default_tva_rate
                     logger.info(f"Got default TVA rate from company settings: {default_tva_rate}")
                 except Exception as e:
@@ -1109,9 +1103,9 @@ class InvoiceDetailView(InvoicePermissionMixin, DetailView):
         currency_symbol = 'DT'  # Default currency
         if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
             try:
-                company_settings = CompanySettings.objects.get(company=user.profile.company)
+                company_settings = ac_models.CompanySettings.objects.get(company=user.profile.company)
                 currency_symbol = company_settings.currency
-            except CompanySettings.DoesNotExist:
+            except ac_models.CompanySettings.DoesNotExist:
                 pass
         context['currency_symbol'] = currency_symbol
         

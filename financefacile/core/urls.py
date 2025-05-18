@@ -54,14 +54,15 @@ urlpatterns = [
     path('api/live-search/', search_api.live_search, name='live-search-api'),
     path(r'', login_required(views.home), name='home'),
 
-    path(r'finance_entry', views.FianceEntryListView.as_view(), name='entry-list'),
-    path(r'finance_entry/update/<pk>', views.FianceEntryUpdateView.as_view(), name='entry-update'),
-    path(r'finance_entry/create/', views.FianceEntryCreateView.as_view(), name='entry-create'),
-    path(r'finance_entry/delete/<pk>', views.FianceEntryDeleteView.as_view(), name='entry-delete'),
+    
+    #path(r'finance_entry', views.FianceEntryListView.as_view(), name='entry-list'),
+    #path(r'finance_entry/update/<pk>', views.FianceEntryUpdateView.as_view(), name='entry-update'),
+    #path(r'finance_entry/create/', views.FianceEntryCreateView.as_view(), name='entry-create'),
+    #path(r'finance_entry/delete/<pk>', views.FianceEntryDeleteView.as_view(), name='entry-delete'),
+    
+    # path(r'revenue', views.RevenueListView.as_view(), name='revenue-list'),
 
-    path(r'revenue', views.RevenueListView.as_view(), name='revenue-list'),
-
-    path(r'charge', views.ChargeListView.as_view(), name='charge-list'),
+#    path(r'charge', views.ChargeListView.as_view(), name='charge-list'),
 
 
 

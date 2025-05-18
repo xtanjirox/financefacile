@@ -28,14 +28,6 @@ class ProductTable(tables.Table):
         attrs = {"class": "table table-material"}
         fields = ('name', 'sku', 'category', 'quantity', 'unit_cost', 'selling_price')
 
-class EntriesTable(tables.Table):
-    actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE)
-
-    class Meta:
-        model = models.FinanceEntry
-        attrs = DEFAULT_TABLE_ATTRS
-        fields = ('entry_label', 'entry_category', 'finance_entry_type', 'entry_value', 'entry_date')
-
 
 class ProductCategoryTable(tables.Table):
     actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE)
@@ -44,7 +36,7 @@ class ProductCategoryTable(tables.Table):
         model = models.ProductCategory
         attrs = DEFAULT_TABLE_ATTRS
         fields = ('name', 'parent')
-
+'''
 class EntryCategoryTable(tables.Table):
     actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE)
 
@@ -52,3 +44,14 @@ class EntryCategoryTable(tables.Table):
         model = models.EntryCategory
         attrs = DEFAULT_TABLE_ATTRS
         fields = ('category_title', 'finance_entry_type')
+'''
+
+'''
+class EntriesTable(tables.Table):
+    actions = tables.TemplateColumn(ACTIONS_BUTTONS_TEMPLATE)
+
+    class Meta:
+        model = models.FinanceEntry
+        attrs = DEFAULT_TABLE_ATTRS
+        fields = ('entry_label', 'entry_category', 'finance_entry_type', 'entry_value', 'entry_date')
+'''

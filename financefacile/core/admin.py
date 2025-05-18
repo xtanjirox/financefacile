@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.contrib.admin.sites import AlreadyRegistered
 from . import models
 
 # Base class for all company-specific model admins
@@ -36,17 +35,13 @@ class CompanyModelAdmin(admin.ModelAdmin):
                 kwargs["queryset"] = db_field.related_model.objects.filter(company=request.user.profile.company)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
+'''
 @admin.register(models.FinanceEntry)
 class FinanceEntryAdmin(CompanyModelAdmin):
     list_display = ('entry_label', 'finance_entry_type', 'entry_category', 'entry_value', 'entry_date', 'company')
     list_filter = ('company', 'finance_entry_type', 'entry_category')
     search_fields = ('entry_label',)
-
-@admin.register(models.EntryCategory)
-class EntryCategoryAdmin(CompanyModelAdmin):
-    list_display = ('category_title', 'finance_entry_type', 'company')
-    list_filter = ('company', 'finance_entry_type')
-    search_fields = ('category_title',)
+'''
 
 @admin.register(models.ExpenseCategory)
 class ExpenseCategoryAdmin(CompanyModelAdmin):
