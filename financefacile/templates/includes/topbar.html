@@ -1,20 +1,15 @@
 {% load static %}
 {% block content %}
-<nav class="navbar navbar-expand navbar-light navbar-bg">
-    <a class="sidebar-toggle js-sidebar-toggle">
-        <i class="hamburger align-self-center"></i>
+<nav class="navbar navbar-expand navbar-light navbar-bg" style="background-color: white; border-bottom: 1px solid #f1f5f9; padding: 0.75rem 1.5rem;">
+    <a class="sidebar-toggle js-sidebar-toggle" style="margin-right: 1rem;">
+        <i class="fas fa-bars" style="color: #64748b;"></i>
     </a>
     <form class="d-none d-sm-inline-block position-relative" autocomplete="off" onsubmit="return false;">
-        <div class="input-group input-group-navbar">
+        <div class="input-group input-group-navbar" style="background-color: #f8fafc; border-radius: 8px; overflow: hidden;">
             <input type="text" class="form-control" id="live-search-input" name="q" placeholder="Search…"
-                aria-label="Search" autocomplete="off">
-            <button class="btn" type="submit">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                    class="feather feather-search align-middle">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
+                aria-label="Search" autocomplete="off" style="border: none; background-color: #f8fafc; padding: 0.5rem 1rem;">
+            <button class="btn" type="submit" style="background-color: #f8fafc; border: none;">
+                <i class="fas fa-search" style="color: #64748b;"></i>
             </button>
         </div>
         <div id="live-search-dropdown" class="dropdown-menu"

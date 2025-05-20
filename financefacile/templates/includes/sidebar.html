@@ -1,99 +1,133 @@
 {% load static %}
 {% block content %}
-<nav id="sidebar" class="sidebar js-sidebar">
-    <div class="sidebar-content js-simplebar">
+<nav id="sidebar" class="sidebar">
+    <div class="sidebar-content">
+        <div class="brand-container">
         <a class="sidebar-brand" href="/">
-            <span class="align-middle">Finance Facile</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M2 12H9L11 8L15 16L17 12H22" stroke="#6c5dd3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span>Finance Facile</span>
         </a>
 
         <ul class="sidebar-nav">
+
             <li class="sidebar-header">
-                Management
+                MANAGEMENT
             </li>
-            <li class="sidebar-item active">
-                <a class="sidebar-link" href="/">
-                    <i class="align-middle fa-solid fa-chart-line"></i>
-                    <span class="align-middle">Dashboard</span>
+            <li class="sidebar-item {% if request.path == '/app/' %}active{% endif %}">
+                <a class="sidebar-link" href="/app/">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="3" y="3" width="7" height="7" rx="1" stroke="#64748b" stroke-width="2"/>
+                        <rect x="14" y="3" width="7" height="7" rx="1" stroke="#64748b" stroke-width="2"/>
+                        <rect x="3" y="14" width="7" height="7" rx="1" stroke="#64748b" stroke-width="2"/>
+                        <rect x="14" y="14" width="7" height="7" rx="1" stroke="#64748b" stroke-width="2"/>
+                    </svg>
+                    <span>Dashboard</span>
                 </a>
             </li>
-            <li class="sidebar-item active">
+            <li class="sidebar-item {% if '/products' in request.path %}active{% endif %}">
                 <a class="sidebar-link" href="{% url 'product-list' %}">
-                    <i class="fa-solid fa-box"></i>
-                    <span class="align-middle">Products</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21 7L12 2L3 7M21 7L12 12M21 7V17L12 22M12 12L3 7M12 12V22M3 7V17L12 22" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Products</span>
                 </a>
             </li>
-            <li class="sidebar-item active">
+            <li class="sidebar-item {% if '/invoices' in request.path %}active{% endif %}">
                 <a class="sidebar-link" href="{% url 'invoice-list' %}">
-                    <i class="fa-solid fa-file-invoice"></i>
-                    <span class="align-middle">Invoices</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 17H8" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M16 13H8" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M10 9H9H8" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Invoices</span>
                 </a>
             </li>
-            <li class="sidebar-item active">
+            <li class="sidebar-item {% if '/expenses' in request.path and not '/categories' in request.path %}active{% endif %}">
                 <a class="sidebar-link" href="{% url 'expenses-list' %}">
-                    <i class="fa-solid fa-money-bill-wave"></i>
-                    <span class="align-middle">Expenses</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 1V23" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M17 5H9.5C8.57174 5 7.6815 5.36875 7.02513 6.02513C6.36875 6.6815 6 7.57174 6 8.5C6 9.42826 6.36875 10.3185 7.02513 10.9749C7.6815 11.6313 8.57174 12 9.5 12H14.5C15.4283 12 16.3185 12.3687 16.9749 13.0251C17.6313 13.6815 18 14.5717 18 15.5C18 16.4283 17.6313 17.3185 16.9749 17.9749C16.3185 18.6313 15.4283 19 14.5 19H6" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                    <span>Expenses</span>
                 </a>
             </li>
-            <li class="sidebar-item active">
+            <li class="sidebar-item {% if request.path == '/app/calendar/' %}active{% endif %}">
                 <a class="sidebar-link" href="{% url 'calendar-display' %}">
-                    <i class="fa-solid fa-calendar-days"></i>
-                    <span class="align-middle">Calendar</span>
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Calendar</span>
                 </a>
             </li>
-            <li class="sidebar-item active">
+            <li class="sidebar-item {% if '/calendar/list/' in request.path %}active{% endif %}">
                 <a class="sidebar-link" href="{% url 'calendar-event-list' %}">
-                    <i class="fa-solid fa-list-ul"></i>
-                    <span class="align-middle">Event List</span>
+                    <i class="fas fa-list"></i>
+                    <span>Event List</span>
                 </a>
             </li>
-            <li class="sidebar-header">
-                Categories Management
+            <li>
+                <span class="sidebar-divider lg"></span>
             </li>
-            <li class="sidebar-item active">
+            
+            <li class="sidebar-header">
+                CATEGORIES
+            </li>
+            <li class="sidebar-item {% if '/expense-categories' in request.path %}active{% endif %}">
                 <a class="sidebar-link" href="{% url 'expense-categories-list' %}">
-                    <i class="fa-solid fa-tags"></i>
-                    <span class="align-middle">Expense Categories</span>
+                    <i class="fas fa-tags"></i>
+                    <span>Expense Categories</span>
                 </a>
             </li>
-            <li class="sidebar-item active">
+            <li class="sidebar-item {% if '/categories' in request.path %}active{% endif %}">
                 <a class="sidebar-link" href="{% url 'category-list' %}">
-                    <i class="fa-solid fa-list"></i>
-                    <span class="align-middle">Product Categories</span>
+                    <i class="fas fa-th-list"></i>
+                    <span>Product Categories</span>
                 </a>
             </li>
+            <li>
+                <span class="sidebar-divider lg"></span>
+            </li>
+            
             <li class="sidebar-header">
-                Company Management
+                COMPANY
             </li>
             {% if user.is_company_admin or user.is_staff or user.is_superuser %}
-            <li class="sidebar-item active">
+            <li class="sidebar-item {% if '/company-list' in request.path %}active{% endif %}">
                 <a class="sidebar-link" href="{% url 'organizations:company-list' %}">
-                    <i class="fa-solid fa-building"></i>
-                    <span class="align-middle">Companies</span>
+                    <i class="fas fa-building"></i>
+                    <span>Companies</span>
                 </a>
             </li>
             {% endif %}
             {% if user.profile.company %}
-            <li class="sidebar-item active">
+            <li class="sidebar-item {% if '/companies' in request.path %}active{% endif %}">
                 <a class="sidebar-link" href="{% url 'organizations:company-detail' user.profile.company.id %}">
-                    <i class="fa-solid fa-building-user"></i>
-                    <span class="align-middle">Company Details</span>
+                    <i class="fas fa-building-user"></i>
+                    <span>Company Details</span>
                 </a>
             </li>
             {% endif %}
-            <li class="sidebar-header">
-                Account Management
+
+            <li>
+                <span class="sidebar-divider lg"></span>
             </li>
-            <li class="sidebar-item active">
+            
+            <li class="sidebar-header">
+                ACCOUNT
+            </li>
+            <li class="sidebar-item {% if '/profile' in request.path %}active{% endif %}">
                 <a class="sidebar-link" href="{% url 'auth:profile' %}">
-                    <i class="fa-solid fa-user-circle"></i>
-                    <span class="align-middle">My Profile</span>
+                    <i class="fas fa-user-circle"></i>
+                    <span>My Profile</span>
                 </a>
             </li>
             {% if user.is_staff or user.is_superuser %}
-            <li class="sidebar-item active">
+            <li class="sidebar-item {% if '/users-list' in request.path %}active{% endif %}">
                 <a class="sidebar-link" href="{% url 'users:users-list' %}">
-                    <i class="fa-solid fa-users"></i>
-                    <span class="align-middle">User Management</span>
+                    <i class="fas fa-users"></i>
+                    <span>User Management</span>
+                    <span class="pro-badge">Pro</span>
                 </a>
             </li>
             {% endif %}

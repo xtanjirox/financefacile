@@ -1,0 +1,279 @@
+/* MatDash Sidebar - Clean implementation */
+
+/* Sidebar container */
+#sidebar {
+  width: 240px;
+  background-color: white;
+  border-right: 1px solid #f1f5f9;
+}
+
+/* Sidebar styling */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 1030;
+  transition: margin 0.3s ease-in-out;
+}
+
+/* Sidebar content */
+.sidebar-content {
+  background-color: white;
+  padding: 16px 0;
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* Brand container */
+.brand-container {
+  padding: 0 20px;
+  margin-bottom: 30px;
+}
+
+/* Brand link */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.sidebar-brand svg {
+  margin-right: 10px;
+}
+
+.sidebar-brand span {
+  font-size: 18px;
+  font-weight: 600;
+  color: #6c5dd3;
+}
+
+/* Navigation */
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Section headers */
+.sidebar-header {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+  padding: 12px 20px;
+  margin-top: 10px;
+  text-transform: uppercase;
+}
+
+
+
+
+/* Clean sidebar styling to match ApexCharts */
+
+/* Basic sidebar structure */
+.sidebar {
+  background-color: #fff !important;
+  width: 240px;
+  height: 100vh;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  border-right: 1px solid #f0f0f0;
+}
+
+/* Sidebar content */
+.sidebar-content {
+  padding: 0;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #fff !important;
+}
+
+/* Brand container */
+.brand-container {
+  padding: 16px 20px;
+  margin-bottom: 20px;
+}
+
+/* Brand link */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  padding: 2px 0;
+}
+
+.sidebar-brand svg {
+  margin-right: 10px;
+  width: 26px;
+  height: 26px;
+}
+
+.sidebar-brand span {
+  font-size: 20px;
+  font-weight: 600;
+  color: #635AFF;
+}
+
+/* Section headers */
+.sidebar-header {
+  font-size: 12px;
+  color: #94a3b8;
+  font-weight: 600;
+  padding: 18px 20px 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Sidebar items */
+.sidebar-item {
+  margin: 4px 16px;
+}
+
+/* Sidebar links */
+.sidebar-link {
+  display: flex !important;
+  align-items: center !important;
+  padding: 12px 14px !important;
+  border-radius: 12px !important;
+  color: #2E2E2E !important;
+  font-size: 15px !important;
+  font-weight: 500 !important;
+  text-decoration: none !important;
+  transition: all 0.2s ease !important;
+  white-space: nowrap !important;
+}
+
+/* Active state */
+.sidebar-item.active .sidebar-link,
+.sidebar-link.active {
+  background-color: #635AFF !important;
+  color: #fff !important;
+  box-shadow: 0px 8px 16px -4px rgba(99, 90, 255, 0.25) !important;
+}
+
+/* Icons in sidebar */
+.sidebar-link svg,
+.sidebar-link i {
+  width: 22px !important;
+  height: 22px !important;
+  margin-right: 14px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  vertical-align: middle !important;
+  flex-shrink: 0 !important;
+}
+
+/* Icon colors */
+.sidebar-link svg path,
+.sidebar-link svg rect {
+  stroke: #2E2E2E !important;
+  transition: stroke 0.2s ease !important;
+}
+
+.sidebar-link i {
+  font-size: 16px !important;
+  color: #2E2E2E !important;
+  transition: color 0.2s ease !important;
+}
+
+/* Text in sidebar links */
+.sidebar-link span {
+  display: inline-block !important;
+  vertical-align: middle !important;
+  line-height: 20px !important;
+  font-size: 14px !important;
+}
+
+/* Active icon colors */
+.sidebar-item.active .sidebar-link svg path,
+.sidebar-item.active .sidebar-link svg rect,
+.sidebar-link.active svg path,
+.sidebar-link.active svg rect {
+  stroke: white !important;
+}
+
+.sidebar-item.active .sidebar-link i,
+.sidebar-link.active i {
+  color: white !important;
+}
+
+/* Active text color */
+.sidebar-item.active .sidebar-link span,
+.sidebar-link.active span {
+  color: white !important;
+}
+
+/* Pro badge */
+.pro-badge {
+  background-color: #E0FFFA;
+  color: #00937F;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 12px;
+  margin-left: auto;
+}
+
+/* Sidebar divider */
+.sidebar-divider {
+  display: block;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.1);
+  margin: 10px 16px;
+}
+
+/* Large sidebar divider */
+.sidebar-divider.lg {
+  margin: 15px 16px;
+}
+
+/* Pro badge */
+.pro-badge {
+  background-color: #e0e7ff;
+  color: #6c5dd3;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  margin-left: auto;
+}
+
+/* Main content */
+.main {
+  margin-left: 240px;
+  transition: margin 0.3s ease-in-out, width 0.3s ease-in-out;
+  width: calc(100% - 240px);
+}
+
+/* Collapsed state */
+body.sidebar-toggled #sidebar {
+  margin-left: -240px;
+}
+
+body.sidebar-toggled .main {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  #sidebar {
+    margin-left: -240px;
+  }
+  
+  .main {
+    margin-left: 0;
+    width: 100%;
+  }
+  
+  body.sidebar-mobile-open #sidebar {
+    margin-left: 0;
+  }
+  
+  body.sidebar-mobile-open .main {
+    margin-left: 240px;
+  }
+}
+

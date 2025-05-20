@@ -1,0 +1,313 @@
+/* Modern Sidebar Styling - ApexCharts Style */
+:root {
+  --sidebar-bg: #ffffff;
+  --sidebar-text: #64748b;
+  --sidebar-active-bg: #6c5dd3;
+  --sidebar-active-text: #ffffff;
+  --sidebar-hover-bg: #f8fafc;
+  --sidebar-brand-color: #6c5dd3;
+  --sidebar-icon-color: #6c5dd3;
+  --sidebar-header-color: #94a3b8;
+  --sidebar-shadow: none;
+  --sidebar-width: 240px;
+  --sidebar-collapsed-width: 70px;
+  --sidebar-item-radius: 8px;
+  --sidebar-item-margin: 4px 10px;
+  --sidebar-item-padding: 10px 12px;
+  --sidebar-transition: all 0.2s ease;
+  --pro-badge-bg: #e0e7ff;
+  --pro-badge-color: #6c5dd3;
+}
+
+/* Sidebar Container */
+.sidebar {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  background-color: var(--sidebar-bg);
+  box-shadow: var(--sidebar-shadow);
+  z-index: 1000;
+  transition: var(--sidebar-transition);
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-right: 1px solid #f1f5f9;
+}
+
+/* Main content positioning */
+.wrapper {
+  display: flex;
+  width: 100%;
+  align-items: stretch;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+  min-height: 100vh;
+  margin-left: var(--sidebar-width);
+  transition: var(--sidebar-transition);
+  background-color: #f8fafc;
+}
+
+.content {
+  padding: 1.5rem 1.5rem 0.75rem;
+  flex: 1;
+}
+
+/* Fix for any existing styles that might interfere */
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Ensure proper content width */
+.container-fluid, 
+.container {
+  width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+/* Card styling to match MatDash */
+.card {
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  background-color: white;
+  margin-bottom: 1.5rem;
+}
+
+.card-header {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 1.25rem 1.5rem;
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* Sidebar Content */
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 1.25rem 0;
+}
+
+/* Brand */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  padding: 0 1.25rem;
+  margin-bottom: 1.5rem;
+  text-decoration: none;
+}
+
+.sidebar-brand i {
+  font-size: 1.5rem;
+  color: var(--sidebar-brand-color);
+  margin-right: 10px;
+}
+
+.sidebar-brand span {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--sidebar-brand-color);
+}
+
+/* Navigation List */
+.sidebar-nav {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Section Headers */
+.sidebar-header {
+  padding: 1.25rem 1.25rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--sidebar-header-color);
+  letter-spacing: 0.5px;
+}
+
+/* Navigation Items */
+.sidebar-item {
+  margin: var(--sidebar-item-margin);
+  border-radius: var(--sidebar-item-radius);
+  transition: var(--sidebar-transition);
+}
+
+.sidebar-item.active {
+  background-color: var(--sidebar-active-bg);
+}
+
+.sidebar-item:hover:not(.active) {
+  background-color: var(--sidebar-hover-bg);
+}
+
+/* Navigation Links */
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  padding: var(--sidebar-item-padding);
+  color: var(--sidebar-text);
+  text-decoration: none;
+  border-radius: var(--sidebar-item-radius);
+  transition: var(--sidebar-transition);
+  font-family: 'Inter', sans-serif;
+}
+
+.sidebar-item.active .sidebar-link {
+  color: var(--sidebar-active-text);
+}
+
+.sidebar-link i {
+  font-size: 1rem;
+  width: 20px;
+  color: var(--sidebar-icon-color);
+  margin-right: 10px;
+  text-align: center;
+  opacity: 0.75;
+}
+
+.sidebar-item.active .sidebar-link i {
+  color: var(--sidebar-active-text);
+  opacity: 1;
+}
+
+.sidebar-link span {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+/* Pro Badge */
+.pro-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  font-size: 0.65rem;
+  font-weight: 500;
+  background-color: var(--pro-badge-bg);
+  color: var(--pro-badge-color);
+  border-radius: 12px;
+  margin-left: auto;
+}
+
+/* Override default styles that might be interfering */
+#sidebar,
+#sidebar.sidebar,
+#sidebar.sidebar.js-sidebar,
+body #sidebar {
+  background-color: white !important;
+  border-right: 1px solid #f1f5f9 !important;
+  box-shadow: none !important;
+}
+
+#sidebar .sidebar-content,
+#sidebar .sidebar-content.js-simplebar,
+.js-simplebar,
+.simplebar-content-wrapper,
+.simplebar-content {
+  background-color: white !important;
+  box-shadow: none !important;
+}
+
+#sidebar .sidebar-nav {
+  padding-top: 0 !important;
+  background-color: white !important;
+}
+
+#sidebar .sidebar-item {
+  background: transparent !important;
+}
+
+#sidebar .sidebar-item.active {
+  background-color: var(--sidebar-active-bg) !important;
+}
+
+#sidebar .sidebar-link {
+  padding: var(--sidebar-item-padding) !important;
+  color: var(--sidebar-text) !important;
+}
+
+#sidebar .sidebar-item.active .sidebar-link {
+  color: var(--sidebar-active-text) !important;
+}
+
+/* Force white background on all sidebar elements */
+#sidebar *:not(.sidebar-item.active):not(.sidebar-item.active *) {
+  background-color: white !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    margin-left: calc(-1 * var(--sidebar-width));
+  }
+  
+  .sidebar.show {
+    margin-left: 0;
+  }
+}
+
+/* Collapsed Sidebar */
+.sidebar-collapsed .sidebar {
+  width: var(--sidebar-collapsed-width);
+}
+
+.sidebar-collapsed .sidebar-brand span,
+.sidebar-collapsed .sidebar-link span,
+.sidebar-collapsed .sidebar-header {
+  display: none;
+}
+
+.sidebar-collapsed .sidebar-item {
+  display: flex;
+  justify-content: center;
+}
+
+.sidebar-collapsed .sidebar-link {
+  padding: 12px;
+  justify-content: center;
+}
+
+.sidebar-collapsed .sidebar-link i {
+  margin-right: 0;
+}
+
+.sidebar-collapsed .pro-badge {
+  display: none;
+}
+
+/* Simplebar Custom Styling */
+.simplebar-scrollbar::before {
+  background-color: rgba(1, 0, 11, 0.3);
+}
+
+/* Fix for any other elements that might be affecting the sidebar */
+.js-simplebar {
+  background-color: white !important;
+}
+
+/* Fix for any dark mode or theme overrides */
+.sidebar, 
+.sidebar-content,
+.sidebar-nav,
+.sidebar-header,
+.sidebar-item:not(.active),
+.sidebar-link:not(.active) {
+  background-color: white !important;
+}

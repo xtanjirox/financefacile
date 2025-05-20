@@ -1,0 +1,217 @@
+/* MatDash Layout - Comprehensive layout fixes */
+
+/* Reset and base styles */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: #f8fafc;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Main layout structure */
+.wrapper {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Sidebar positioning */
+#sidebar, 
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 240px;
+  background-color: white !important;
+  border-right: 1px solid #f1f5f9 !important;
+  box-shadow: none !important;
+  z-index: 1030;
+  overflow-y: auto;
+  transition: margin 0.3s ease-in-out;
+}
+
+/* Sidebar collapsed state */
+body.sidebar-toggled #sidebar {
+  margin-left: -240px;
+}
+
+/* Main content area */
+.main {
+  width: calc(100% - 240px);
+  margin-left: 240px;
+  min-height: 100vh;
+  background-color: #f8fafc;
+  position: relative;
+  transition: margin 0.3s ease-in-out, width 0.3s ease-in-out;
+  overflow-x: hidden;
+}
+
+/* Main content when sidebar is toggled */
+body.sidebar-toggled .main {
+  width: 100%;
+  margin-left: 0;
+}
+
+/* Content padding */
+.content {
+  padding: 1.75rem 1.25rem 0.75rem 3.75rem;
+  width: 100%;
+  margin: 0;
+  box-sizing: border-box;
+  position: relative;
+}
+
+/* Navbar styling */
+.navbar {
+  background-color: white !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  padding: 0.75rem 1.5rem !important;
+  height: 64px;
+  box-shadow: none !important;
+}
+
+/* Search input styling */
+.input-group-navbar {
+  background-color: #f8fafc;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.input-group-navbar .form-control {
+  border: none;
+  background-color: #f8fafc;
+  padding: 0.5rem 1rem;
+}
+
+.input-group-navbar .btn {
+  background-color: #f8fafc;
+  border: none;
+}
+
+/* Card styling */
+.card {
+  border-radius: 8px;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  background-color: white;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+
+.card-header {
+  background-color: transparent;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 0.75rem 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-body {
+  padding: 0.75rem 0.5rem;
+}
+
+/* Container and row spacing */
+.container-fluid {
+  width: 100%;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin: 0;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.container {
+  width: 100%;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  margin: 0;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.row {
+  margin-left: -0.25rem;
+  margin-right: -0.25rem;
+  width: 100%;
+}
+
+.col, .col-1, .col-2, .col-3, .col-4, .col-5, .col-6, .col-7, .col-8, .col-9, .col-10, .col-11, .col-12,
+.col-sm, .col-sm-1, .col-sm-2, .col-sm-3, .col-sm-4, .col-sm-5, .col-sm-6, .col-sm-7, .col-sm-8, .col-sm-9, .col-sm-10, .col-sm-11, .col-sm-12,
+.col-md, .col-md-1, .col-md-2, .col-md-3, .col-md-4, .col-md-5, .col-md-6, .col-md-7, .col-md-8, .col-md-9, .col-md-10, .col-md-11, .col-md-12,
+.col-lg, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12,
+.col-xl, .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+}
+
+/* Page header styling */
+.page-header {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0;
+}
+
+/* Button styling */
+.btn {
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background-color: #6c5dd3;
+  border-color: #6c5dd3;
+}
+
+.btn-primary:hover {
+  background-color: #5a4cbe;
+  border-color: #5a4cbe;
+}
+
+/* Sidebar toggle button */
+.sidebar-toggle {
+  margin-right: 1rem;
+  cursor: pointer;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  #sidebar, 
+  .sidebar {
+    margin-left: -240px;
+    transition: all 0.3s ease;
+  }
+  
+  .main {
+    width: 100%;
+    margin-left: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .sidebar-show #sidebar, 
+  .sidebar-show .sidebar {
+    margin-left: 0;
+  }
+  
+  .sidebar-show .main {
+    margin-left: 240px;
+  }
+}
+
+
+
+

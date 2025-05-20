@@ -88,6 +88,19 @@ class ExpenseListView(BaseViewMixin, ExpensePermissionMixin, CompanyFilterMixin,
             context['is_filtered'] = True
             context['filter_description'] = ", ".join(filter_description)
             context['filtered_total'] = expense_queryset.filter(filter_query).aggregate(total=Sum('amount'))['total'] or 0
+            
+            # Get expense data by category for the filtered data
+            expense_by_category = expense_queryset.filter(filter_query).values('category__name').annotate(
+                total=Sum('amount')
+            ).order_by('-total')
+            
+            # Prepare data for ApexCharts
+            expense_categories_labels = [item['category__name'] or 'Uncategorized' for item in expense_by_category]
+            expense_categories_series = [float(item['total']) for item in expense_by_category]
+            
+            # Add to context
+            context['expense_categories_labels'] = expense_categories_labels
+            context['expense_categories_series'] = expense_categories_series
         
         # Calculate current month stats regardless of filter
         month_expenses = expense_queryset.filter(month_filter)
@@ -108,6 +121,20 @@ class ExpenseListView(BaseViewMixin, ExpensePermissionMixin, CompanyFilterMixin,
         else:
             context['month_change_percent'] = ((context['total_expenses'] - prev_total) / prev_total) * 100
         
+        # Get expense data by category for the current month (non-filtered view)
+        if not is_filtered:
+            expense_by_category = expense_queryset.filter(month_filter).values('category__name').annotate(
+                total=Sum('amount')
+            ).order_by('-total')
+            
+            # Prepare data for ApexCharts
+            expense_categories_labels = [item['category__name'] or 'Uncategorized' for item in expense_by_category]
+            expense_categories_series = [float(item['total']) for item in expense_by_category]
+            
+            # Add to context
+            context['expense_categories_labels'] = expense_categories_labels
+            context['expense_categories_series'] = expense_categories_series
+            
         # Add currency symbol to context
         currency_symbol = 'DT'  # Default currency
         if hasattr(self.request.user, 'profile') and hasattr(self.request.user.profile, 'company') and self.request.user.profile.company:

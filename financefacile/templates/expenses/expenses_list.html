@@ -15,12 +15,121 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
 <style>
+  /* Modern Dashboard Card Styles */
+  .dashboard-card {
+      border: none;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      min-height: 120px;
+      background: #fff;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
+  }
 
-  .filter-card {
-    background: #f8f9fa;
-    border-radius: 10px;
-    padding: 15px;
-    margin-bottom: 20px;
+  .dashboard-card:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      transform: translateY(-5px);
+  }
+
+  .dashboard-card .icon-wrapper {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+  }
+
+  .dashboard-card .icon {
+      font-size: 1.5rem;
+      color: #fff;
+  }
+
+  .dashboard-card .card-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #6c757d;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+  }
+
+  .dashboard-card .card-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #333;
+  }
+
+  .dashboard-card .card-subtitle {
+      font-size: 0.8rem;
+      color: #6c757d;
+      margin-top: auto;
+      margin-bottom: 0.5rem;
+  }
+
+  .dashboard-card .progress-wrapper {
+      height: 8px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      margin-top: auto;
+  }
+
+  .dashboard-card .progress-bar {
+      height: 100%;
+      border-radius: 4px;
+  }
+
+  .dashboard-card .badge-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+      margin-bottom: 0.8rem;
+  }
+
+  .dashboard-card .badge-container .badge {
+      font-size: 0.7rem;
+      padding: 0.3rem 0.6rem;
+      border-radius: 50px;
+  }
+
+  .dashboard-card .change-indicator {
+      display: flex;
+      align-items: center;
+      font-size: 0.8rem;
+      margin-bottom: 0.8rem;
+  }
+
+  .dashboard-card .change-indicator .label {
+      color: #6c757d;
+      margin-right: 0.5rem;
+  }
+
+  .dashboard-card .change-indicator .value {
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+  }
+
+  .dashboard-card .change-indicator .value i {
+      margin-right: 0.2rem;
+  }
+
+  /* Card color schemes */
+  .dashboard-card.expense .icon-wrapper {
+      background-color: rgba(239, 83, 80, 0.2);
+  }
+  .dashboard-card.expense .icon {
+      color: #EF5350;
+  }
+  .dashboard-card.expense .progress-bar {
+      background-color: #EF5350;
   }
   
   /* Select2 Custom Styling */
@@ -64,6 +173,13 @@
     background-color: #7cb9e8;
     color: white;
   }
+  
+  .filter-card {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+  }
 </style>
 {% endblock %}
 
@@ -88,45 +204,63 @@
 
   <!-- Stats Cards -->
   <div class="row mb-4">
-    <div class="col-12 col-md-6 col-lg-4 mx-auto">
-      <div class="card shadow-sm border-0" style="background: #e7f1fa; border-radius: 1rem;">
-        <div class="card-body d-flex align-items-center">
-          <div class="me-3">
-            <i class="fa-solid fa-coins" style="font-size: 2rem; color: #7cb9e8;"></i>
+    <!-- Monthly Expense Card -->
+    <div class="col-md-4">
+      <div class="dashboard-card expense">
+        <div class="icon-wrapper">
+          <i class="fa-solid fa-coins icon"></i>
+        </div>
+        
+        {% if is_filtered %}
+          <div class="card-title">Filtered Expenses</div>
+          <div class="card-subtitle">{{ filter_description }}</div>
+          <div class="card-value">{% format_currency filtered_total %}</div>
+          
+          {% if filter_category_names %}
+          <div class="badge-container">
+            {% for category in filter_category_names %}
+            <span class="badge bg-info">{{ category }}</span>
+            {% endfor %}
           </div>
-          <div>
-            <div class="fw-bold text-secondary" style="font-size: 1rem;">
-              {% if is_filtered %}
-                Filtered Expenses
-                <div class="small text-muted mb-1">{{ filter_description }}</div>
-                <div class="fw-bold" style="font-size: 2rem; color: #39739d;">
-                  {% format_currency filtered_total %}
-                </div>
-                {% if filter_category_names %}
-                <div class="mt-1">
-                  {% for category in filter_category_names %}
-                  <span class="badge bg-info me-1">{{ category }}</span>
-                  {% endfor %}
-                </div>
-                {% endif %}
-              {% else %}
-                Total Expenses (This Month)
-                <div class="fw-bold" style="font-size: 2rem; color: #39739d;">
-                  {% format_currency total_expenses %}
-                </div>
-                <div class="mt-1">
-                  <span class="text-secondary" style="font-size: 0.95rem;">Previous Month: {% format_currency previous_month_expenses %}</span>
-                  {% if month_change_percent > 0 %}
-                    <span class="ms-2 fw-bold text-danger"><i class="fa fa-arrow-up"></i> +{{ month_change_percent|floatformat:1 }}%</span>
-                  {% elif month_change_percent < 0 %}
-                    <span class="ms-2 fw-bold text-success"><i class="fa fa-arrow-down"></i> {{ month_change_percent|floatformat:1 }}%</span>
-                  {% else %}
-                    <span class="ms-2 fw-bold text-muted">0%</span>
-                  {% endif %}
-                </div>
-              {% endif %}
-            </div>
+          {% endif %}
+        {% else %}
+          <div class="card-title">Total Expenses (This Month)</div>
+          <div class="card-value">{% format_currency total_expenses %}</div>
+          
+          <div class="card-subtitle">Previous Month: {% format_currency previous_month_expenses %}</div>
+          
+          <div class="change-indicator">
+            <span class="label">Month-over-Month:</span>
+            {% if month_change_percent > 0 %}
+              <span class="value text-danger">
+                <i class="fas fa-arrow-up"></i>{{ month_change_percent|floatformat:1 }}%
+              </span>
+            {% elif month_change_percent < 0 %}
+              <span class="value text-success">
+                <i class="fas fa-arrow-down"></i>{{ month_change_percent|floatformat:1|cut:'-' }}%
+              </span>
+            {% else %}
+              <span class="value text-muted">0%</span>
+            {% endif %}
           </div>
+        {% endif %}
+        
+        <div class="progress-wrapper">
+          <div class="progress-bar" style="width: 70%"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Expenses by Category Chart -->
+    <div class="col-md-8">
+      <div class="card shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
+        <div class="card-header py-3" style="background: #f8f9fa; border-bottom: 1px solid #e0e6ed;">
+          <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
+            <i class="fas fa-chart-pie me-2" style="color: #EF5350;"></i>Expenses by Category
+          </h5>
+        </div>
+        <div class="card-body p-3">
+          <div id="chart-expenses-category" style="height: 300px;"></div>
         </div>
       </div>
     </div>
@@ -316,10 +450,151 @@
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
 <script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+
+<!-- ApexCharts JS -->
+<script src="https://cdn.jsdelivr.net/npm/apexcharts@3.40.0/dist/apexcharts.min.js"></script>
 <script>
   $(document).ready(function() {
     // Initialize tooltips
     $('[data-bs-toggle="tooltip"]').tooltip();
+    
+    // Initialize expense chart if element exists
+    const expensesCategoryEl = document.getElementById('chart-expenses-category');
+    if (expensesCategoryEl) {
+      // Data for expense categories chart
+      let expenseSeries = [];
+      let expenseLabels = [];
+      let currencySymbol = '$';
+      
+      {% if expense_categories_series %}
+        expenseSeries = [{{ expense_categories_series|join:', ' }}];
+        expenseLabels = [{% for label in expense_categories_labels %}'{{ label|escapejs }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
+      {% else %}
+        // Sample data if no data is provided from backend
+        expenseSeries = [30, 25, 15, 10, 20];
+        expenseLabels = ['Rent', 'Utilities', 'Food', 'Transportation', 'Others'];
+      {% endif %}
+      
+      {% if currency_symbol %}
+        currencySymbol = '{{ currency_symbol|escapejs }}';
+      {% endif %}
+      
+      // Common chart options
+      const commonOptions = {
+        chart: {
+          fontFamily: 'Inter, sans-serif',
+          foreColor: '#6c757d',
+          toolbar: {
+            show: false
+          },
+          animations: {
+            enabled: true,
+            easing: 'easeinout',
+            speed: 800
+          }
+        },
+        tooltip: {
+          enabled: true,
+          theme: 'light',
+          style: {
+            fontSize: '12px',
+            fontFamily: 'Inter, sans-serif'
+          }
+        },
+        legend: {
+          position: 'bottom',
+          horizontalAlign: 'center',
+          fontSize: '13px',
+          fontFamily: 'Inter, sans-serif',
+          offsetY: 8,
+          markers: {
+            width: 10,
+            height: 10,
+            radius: 6
+          }
+        },
+        stroke: {
+          width: 2,
+          curve: 'smooth'
+        },
+        grid: {
+          borderColor: '#e0e6ed',
+          strokeDashArray: 5,
+          xaxis: {
+            lines: {
+              show: true
+            }
+          },
+          yaxis: {
+            lines: {
+              show: true
+            }
+          },
+          padding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 10
+          }
+        }
+      };
+      
+      // Expenses by Category Chart (Donut)
+      const expenseOptions = {
+        ...commonOptions,
+        chart: {
+          ...commonOptions.chart,
+          type: 'donut',
+          height: 300
+        },
+        colors: ['#EF5350', '#42A5F5', '#66BB6A', '#FFA726', '#AB47BC', '#EC407A', '#7E57C2', '#26A69A'],
+        series: expenseSeries,
+        labels: expenseLabels,
+        dataLabels: {
+          enabled: false
+        },
+        plotOptions: {
+          pie: {
+            donut: {
+              size: '60%',
+              labels: {
+                show: true,
+                name: {
+                  show: true,
+                  fontSize: '16px',
+                  fontWeight: 600,
+                  color: '#333',
+                  offsetY: -10
+                },
+                value: {
+                  show: true,
+                  fontSize: '20px',
+                  fontWeight: 700,
+                  color: '#333',
+                  formatter: function(val) {
+                    return currencySymbol + ' ' + parseFloat(val).toLocaleString();
+                  }
+                },
+                total: {
+                  show: true,
+                  label: 'Total',
+                  color: '#6c757d',
+                  fontSize: '14px',
+                  fontWeight: 600,
+                  formatter: function(w) {
+                    const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                    return currencySymbol + ' ' + total.toLocaleString();
+                  }
+                }
+              }
+            }
+          }
+        }
+      };
+      
+      const expenseChart = new ApexCharts(expensesCategoryEl, expenseOptions);
+      expenseChart.render();
+    }
   });
 </script>
 {% endblock %}
