@@ -1,0 +1,251 @@
+{% load static %}
+
+<!-- Calendar Widget -->
+<div class="card h-100">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h6 class="m-0 font-weight-bold text-primary">Calendar</h6>
+        <a href="{% url 'calendar' %}" class="btn btn-sm btn-outline-primary">View All</a>
+    </div>
+    <div class="card-body p-0">
+        <div id="dashboard-calendar"></div>
+    </div>
+    <div class="card-footer text-center">
+        <a href="{% url 'calendar-event-create' %}" class="btn btn-sm btn-primary">
+            <i class="fas fa-plus fa-sm"></i> Add Event
+        </a>
+    </div>
+</div>
+
+<style>
+#dashboard-calendar {
+    min-height: 300px;
+}
+
+.fc .fc-toolbar-title {
+    font-size: 1.1em;
+}
+
+.fc .fc-button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    line-height: 1.5;
+}
+
+.fc .fc-toolbar.fc-header-toolbar {
+    margin-bottom: 0.5em;
+    padding: 0.5rem;
+}
+
+.fc .fc-view-harness {
+    min-height: 250px;
+}
+
+.fc-event {
+    font-size: 0.85em;
+    padding: 2px 4px;
+    cursor: pointer;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('dashboard-calendar');
+    
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: ''
+        },
+        height: 'auto',
+        events: '{% url "calendar-events-json" %}',
+        eventClick: function(info) {
+            info.jsEvent.preventDefault();
+            if (info.event.extendedProps.isMoreLink) {
+                // Handle "More" link click
+                const date = info.event.start;
+                const dateStr = date.toISOString().split('T')[0];
+                window.location.href = `{% url 'calendar-event-list' %}?date=${dateStr}`;
+            } else if (info.event.url) {
+                window.location.href = info.event.url;
+            }
+        },
+        dayMaxEvents: 3, // Show a maximum of 3 events per day
+        eventOrder: 'start',
+        eventOrderStrict: true,
+        eventTimeFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        },
+        eventContent: function(arg) {
+            // Skip rendering for the "more" link as we'll handle it in dayCellContent
+            if (arg.event.extendedProps.isMoreLink) {
+                return { html: '' }; // Empty content, we'll handle it in dayCellContent
+            }
+            
+            // Regular event content
+            var titleEl = document.createElement('div');
+            titleEl.classList.add('fc-event-title');
+            titleEl.textContent = arg.event.title;
+            
+            var timeEl = document.createElement('div');
+            timeEl.classList.add('fc-event-time');
+            
+            if (arg.event.allDay) {
+                timeEl.textContent = 'All day';
+            } else {
+                var startTime = arg.event.start ? arg.timeText : '';
+                var endTime = arg.event.end ? ' - ' + arg.event.end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                timeEl.textContent = startTime + endTime;
+            }
+            
+            var wrapper = document.createElement('div');
+            wrapper.appendChild(timeEl);
+            wrapper.appendChild(titleEl);
+            
+            return { domNodes: [wrapper] };
+        },
+        dayCellContent: function(arg) {
+            // Create the default content
+            const dayNumberEl = document.createElement('div');
+            dayNumberEl.classList.add('fc-daygrid-day-number');
+            dayNumberEl.textContent = arg.dayNumberText.replace('\n', '');
+            
+            // Create a container for the day cell content
+            const container = document.createElement('div');
+            container.classList.add('fc-daygrid-day-top');
+            container.appendChild(dayNumberEl);
+            
+            // Return the default content
+            return { domNodes: [container] };
+        },
+        dayMaxEventRows: 3, // Show a maximum of 3 events per day
+        moreLinkClick: 'day', // When "more" link is clicked, go to day view
+        moreLinkContent: function(arg) {
+            // Create a custom "more" link
+            const link = document.createElement('a');
+            link.href = '#';
+            link.classList.add('fc-more-link');
+            link.textContent = arg.num.toString() + ' more';
+            link.dataset.date = arg.date.toISOString().split('T')[0];
+            
+            // Add click handler
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const dateStr = this.dataset.date;
+                window.location.href = `{% url 'calendar-event-list' %}?date=${dateStr}`;
+            });
+            
+            return { domNodes: [link] };
+        },
+        eventDidMount: function(arg) {
+            if (arg.event.extendedProps.theme && !arg.event.extendedProps.isMoreLink) {
+                arg.el.classList.add('fc-event-theme-' + arg.event.extendedProps.theme);
+            }
+        }
+    });
+    
+    calendar.render();
+    
+    // Refresh calendar when navigating back to the page
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            calendar.refetchEvents();
+        }
+    });
+});
+</script>
+
+<style>
+/* Event theme colors */
+.fc-event-theme-primary { background-color: #4e73df; border-color: #4e73df; }
+.fc-event-theme-secondary { background-color: #858796; border-color: #858796; }
+.fc-event-theme-success { background-color: #1cc88a; border-color: #1cc88a; }
+.fc-event-theme-info { background-color: #36b9cc; border-color: #36b9cc; }
+.fc-event-theme-warning { background-color: #f6c23e; border-color: #f6c23e; color: #000; }
+.fc-event-theme-danger { background-color: #e74a3b; border-color: #e74a3b; }
+.fc-event-theme-dark { background-color: #5a5c69; border-color: #5a5c69; }
+
+/* Event styling */
+.fc-event {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 2px 4px;
+    margin: 1px 0;
+    font-size: 0.85em;
+    cursor: pointer;
+}
+
+.fc-event .fc-event-time {
+    font-weight: bold;
+    font-size: 0.8em;
+    margin-bottom: 2px;
+    opacity: 0.9;
+}
+
+.fc-event .fc-event-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.9em;
+}
+
+/* More link styling */
+.fc-daygrid-more-link {
+    margin-top: 4px;
+    font-size: 0.8em !important;
+    color: #4e73df !important;
+    text-decoration: none !important;
+    padding: 2px 4px;
+    display: block;
+    text-align: left;
+    background-color: rgba(78, 115, 223, 0.1);
+    border-radius: 3px;
+    transition: background-color 0.2s;
+}
+
+.fc-daygrid-more-link:hover {
+    background-color: rgba(78, 115, 223, 0.2);
+    text-decoration: underline !important;
+}
+
+/* Adjust day cell padding */
+.fc-daygrid-day-events {
+    min-height: 0;
+    margin: 0 2px 2px 2px;
+}
+
+/* Ensure day number is visible */
+.fc-daygrid-day-number {
+    padding: 2px 4px;
+    color: #4e73df;
+    font-weight: bold;
+}
+
+/* Adjust today's date styling */
+.fc-day-today {
+    background-color: rgba(78, 115, 223, 0.05) !important;
+}
+
+.fc-day-today .fc-daygrid-day-number {
+    font-weight: bold;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .fc-event .fc-event-title {
+        font-size: 0.8em;
+    }
+    
+    .fc-event .fc-event-time {
+        font-size: 0.7em;
+    }
+    
+    .fc-daygrid-more-link {
+        font-size: 0.7em !important;
+    }
+}
+</style>

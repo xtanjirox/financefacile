@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block title %}Confirm Delete Event{% endblock %}
+
+{% block extra_css %}
+<style>
+  .delete-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  }
+  .delete-header {
+    background-color: #e74a3b;
+    color: white;
+    padding: 20px;
+    border-radius: 10px 10px 0 0;
+  }
+  .delete-body {
+    padding: 25px;
+  }
+  .btn-action {
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .btn-danger {
+    background-color: #e74a3b;
+    border-color: #e74a3b;
+  }
+  .btn-danger:hover {
+    background-color: #d52a1a;
+    border-color: #d52a1a;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <div class="d-flex align-items-center">
+      <h2 class="fw-bold mb-0" style="color: #39739d;">
+        <i class="fa-solid fa-calendar-xmark me-2" style="color: #e74a3b;"></i>
+        Confirm Delete Event
+      </h2>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'calendar-event-list' %}" class="btn btn-outline-secondary shadow-sm rounded-pill px-4">
+        <i class="fas fa-arrow-left me-1"></i> Back to Calendar
+      </a>
+    </div>
+  </div>
+
+  <div class="card delete-card mb-4">
+    <div class="delete-header">
+      <h3 class="mb-0 fw-bold">Delete Event</h3>
+    </div>
+    <div class="delete-body">
+      <p class="mb-4">Are you sure you want to delete the event "<strong>{{ object.title }}</strong>"?</p>
+      
+      <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        This action cannot be undone. The event will be permanently deleted.
+      </div>
+      
+      <div class="mt-4">
+        <h5 class="fw-bold mb-3" style="color: #39739d;">Event Details</h5>
+        <ul class="list-group mb-4">
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span class="fw-medium">Title:</span>
+            <span>{{ object.title }}</span>
+          </li>
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span class="fw-medium">Date:</span>
+            <span>
+              {% if object.all_day %}
+                {% if object.start_date.date == object.end_date.date %}
+                  {{ object.start_date|date:"F j, Y" }} (All day)
+                {% else %}
+                  {{ object.start_date|date:"F j, Y" }} - {{ object.end_date|date:"F j, Y" }} (All day)
+                {% endif %}
+              {% else %}
+                {% if object.start_date.date == object.end_date.date %}
+                  {{ object.start_date|date:"F j, Y" }}, {{ object.start_date|date:"g:i A" }} - {{ object.end_date|date:"g:i A" }}
+                {% else %}
+                  {{ object.start_date|date:"F j, Y g:i A" }} - {{ object.end_date|date:"F j, Y g:i A" }}
+                {% endif %}
+              {% endif %}
+            </span>
+          </li>
+        </ul>
+      </div>
+      
+      <form method="post">
+        {% csrf_token %}
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-danger btn-action">
+            <i class="fas fa-trash-alt me-1"></i> Delete Event
+          </button>
+          <a href="{% url 'calendar-event-detail' object.pk %}" class="btn btn-outline-secondary btn-action">
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

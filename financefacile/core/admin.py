@@ -96,3 +96,11 @@ class InvoiceAdmin(CompanyModelAdmin):
 
 # Register the Invoice model with the custom admin
 admin.site.register(models.Invoice, InvoiceAdmin)
+
+
+@admin.register(models.CalendarEvent)
+class CalendarEventAdmin(CompanyModelAdmin):
+    list_display = ('title', 'start_date', 'end_date', 'all_day', 'theme', 'company')
+    list_filter = ('theme', 'all_day', 'company')
+    search_fields = ('title', 'description')
+    date_hierarchy = 'start_date'

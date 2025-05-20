@@ -1,16 +1,46 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.http import *
 from django.views.generic import TemplateView
 from django.conf import settings
 from django.db.models import Sum, Func, CharField
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from core import models
+from core.models import CalendarEvent
+from accounts.models import Company
 
 from datetime import timedelta
 
 import json
 from django.utils import timezone
+
+
+class CompanyMixin(LoginRequiredMixin):
+    """
+    Mixin to handle company-specific functionality for class-based views.
+    Assumes the user is authenticated and has a profile with a company.
+    """
+    def get_company(self):
+        """Get the user's company."""
+        if not hasattr(self.request.user, 'profile'):
+            raise ValueError("User has no profile")
+        if not hasattr(self.request.user.profile, 'company'):
+            raise ValueError("User's profile has no company")
+        return self.request.user.profile.company
+        
+    def get_queryset(self):
+        """Filter queryset by user's company."""
+        queryset = super().get_queryset()
+        if hasattr(queryset, 'filter'):
+            return queryset.filter(company=self.get_company())
+        return queryset
+        
+    def form_valid(self, form):
+        """Set the company before saving the form."""
+        if hasattr(form.instance, 'company') and not form.instance.company_id:
+            form.instance.company = self.get_company()
+        return super().form_valid(form)
 
 
 
@@ -35,6 +65,19 @@ def home(request):
     # Get the user's company and currency
     user_company = None
     currency_symbol = 'DT'  # Default currency
+    upcoming_events = []
+    
+    # Get upcoming calendar events if user is authenticated
+    if request.user.is_authenticated and hasattr(request.user, 'profile') and hasattr(request.user.profile, 'company'):
+        user_company = request.user.profile.company
+        # Get next 10 upcoming events starting from the current date, ordered by start date
+        today = timezone.localdate() 
+        upcoming_events = CalendarEvent.objects.filter(
+            company=user_company,
+            start_date__date__gte=today
+        ).order_by('start_date')[:10]
+    else:
+        upcoming_events = []
     
     if hasattr(request.user, 'profile') and hasattr(request.user.profile, 'company'):
         user_company = request.user.profile.company
@@ -199,6 +242,7 @@ def home(request):
         'total_invoice_price': total_invoice_price,
         'recent_invoices': recent_invoices_query,
         'currency_symbol': currency_symbol,  # Add currency symbol to context
+        'upcoming_events': upcoming_events,  # Add upcoming events to context
     }
     return render(request, 'index.html', context)
 

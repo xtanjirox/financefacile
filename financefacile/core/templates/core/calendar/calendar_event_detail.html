@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Event Details</h1>
+        <div>
+            <a href="{% url 'calendar-event-update' event.pk %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                <i class="fas fa-edit fa-sm text-white-50"></i> Edit Event
+            </a>
+            <a href="{% url 'calendar-event-list' %}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm ml-2">
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to Calendar
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">{{ event.title }}</h6>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Start:</strong> {{ event.start_date|date:"F j, Y g:i A" }}</p>
+                    <p><strong>End:</strong> {{ event.end_date|date:"F j, Y g:i A" }}</p>
+                    {% if event.all_day %}
+                        <p><strong>All Day:</strong> Yes</p>
+                    {% endif %}
+                </div>
+                <div class="col-md-6">
+                    {% if event.location %}
+                        <p><strong>Location:</strong> {{ event.location }}</p>
+                    {% endif %}
+                    <p><strong>Created by:</strong> {{ event.created_by.get_full_name|default:event.created_by.username }}</p>
+                    <p><strong>Created at:</strong> {{ event.created_at|date:"F j, Y g:i A" }}</p>
+                </div>
+            </div>
+            
+            {% if event.description %}
+                <div class="mt-4">
+                    <h5>Description</h5>
+                    <div class="border p-3 bg-light">
+                        {{ event.description|linebreaksbr }}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .card {
+        border: none;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    }
+    .card-header {
+        background-color: #f8f9fc;
+        border-bottom: 1px solid #e3e6f0;
+    }
+</style>
+{% endblock %}

@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django_filters',
     'crispy_bootstrap4',
     'ninja_extra',
-    'django.contrib.sites'
+    'django.contrib.sites',
+    'django.contrib.humanize'
 ]
 
 MIDDLEWARE = [

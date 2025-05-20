@@ -247,8 +247,58 @@ class InvoiceFees(models.Model):
     def __str__(self):
         return f"{self.invoice_fee_name}"
 
-    def get_absolute_url(self):
-        return reverse_lazy('invoice_fee-detail', kwargs={'pk': self.pk})
 
+class CalendarEvent(models.Model):
+    """Model to store calendar events for the dashboard."""
+    THEME_CHOICES = [
+        ('primary', 'Primary'),
+        ('secondary', 'Secondary'),
+        ('success', 'Success'),
+        ('info', 'Info'),
+        ('warning', 'Warning'),
+        ('danger', 'Danger'),
+        ('dark', 'Dark'),
+    ]
+    
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='calendar_events')
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    all_day = models.BooleanField(default=False)
+    theme = models.CharField(max_length=20, choices=THEME_CHOICES, default='primary')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_events')
+    participants = models.ManyToManyField(User, related_name='participating_events', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['start_date']
+        verbose_name = 'Calendar Event'
+        verbose_name_plural = 'Calendar Events'
+
+    def __str__(self):
+        return f"{self.title} - {self.start_date.strftime('%Y-%m-%d')}"
+        
+    def get_absolute_url(self):
+        return reverse_lazy('calendar-event-detail', kwargs={'pk': self.pk})
+        
+    def get_update_url(self):
+        return reverse_lazy('calendar-event-update', kwargs={'pk': self.pk})
+        
     def get_delete_url(self):
-        return reverse_lazy('invoice_fee-delete', kwargs={"pk": self.pk})
+        return reverse_lazy('calendar-event-delete', kwargs={'pk': self.pk})
+        
+    @property
+    def color(self):
+        """Return the theme color for FullCalendar."""
+        theme_colors = {
+            'primary': '#4e73df',
+            'secondary': '#858796',
+            'success': '#1cc88a',
+            'info': '#36b9cc',
+            'warning': '#f6c23e',
+            'danger': '#e74a3b',
+            'dark': '#5a5c69',
+        }
+        return theme_colors.get(self.theme, '#4e73df')  # Default to primary color

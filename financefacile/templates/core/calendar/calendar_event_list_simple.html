@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block title %}Calendar{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+<style>
+  .fc-event {
+    cursor: pointer;
+  }
+  
+  .event-card {
+    margin-bottom: 15px;
+    border-left: 4px solid #4e73df;
+  }
+  
+  .event-card.primary { border-left-color: #4e73df; }
+  .event-card.secondary { border-left-color: #858796; }
+  .event-card.success { border-left-color: #1cc88a; }
+  .event-card.info { border-left-color: #36b9cc; }
+  .event-card.warning { border-left-color: #f6c23e; }
+  .event-card.danger { border-left-color: #e74a3b; }
+  .event-card.dark { border-left-color: #5a5c69; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Calendar</h1>
+    <a href="{% url 'calendar-event-create' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+      <i class="fas fa-plus fa-sm text-white-50"></i> Add Event
+    </a>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">Calendar</h6>
+        </div>
+        <div class="card-body">
+          <div id="calendar"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow mb-4">
+        <div class="card-header py-3">
+          <h6 class="m-0 font-weight-bold text-primary">Upcoming Events</h6>
+        </div>
+        <div class="card-body">
+          <div id="events-container" class="row">
+            <!-- Events will be loaded here -->
+            <div class="col-12 text-center">
+              <div class="spinner-border text-primary" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Format date for display
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleString('en-US', {
+        weekday: 'short',
+        month: 'short',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        hour12: true
+      });
+    }
+    
+    // Display events in container
+    function displayEvents(events) {
+      const container = document.getElementById('events-container');
+      container.innerHTML = '';
+      
+      if (events.length === 0) {
+        container.innerHTML = '<div class="col-12"><div class="alert alert-info">No events found.</div></div>';
+        return;
+      }
+      
+      events.forEach(event => {
+        const themeClass = event.className ? event.className.replace('bg-', '') : 'primary';
+        
+        const eventCol = document.createElement('div');
+        eventCol.className = 'col-md-6 col-lg-4';
+        
+        const eventCard = `
+          <div class="card event-card ${themeClass} mb-3">
+            <div class="card-body">
+              <h5 class="card-title">${event.title}</h5>
+              <p class="card-text">
+                <strong>Start:</strong> ${formatDate(event.start)}<br>
+                <strong>End:</strong> ${formatDate(event.end)}<br>
+                ${event.description ? `<strong>Description:</strong> ${event.description}` : ''}
+              </p>
+              <a href="${event.url}" class="btn btn-sm btn-primary">View Details</a>
+            </div>
+          </div>
+        `;
+        
+        eventCol.innerHTML = eventCard;
+        container.appendChild(eventCol);
+      });
+    }
+    
+    // Initialize calendar
+    var calendarEl = document.getElementById('calendar');
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+      initialView: 'dayGridMonth',
+      initialDate: '2025-05-18',
+      headerToolbar: {
+        left: 'prev,next today',
+        center: 'title',
+        right: 'dayGridMonth,timeGridWeek,timeGridDay'
+      },
+      events: function(info, successCallback, failureCallback) {
+        fetch('/app/calendar/events/?start=' + info.startStr + '&end=' + info.endStr)
+          .then(response => response.json())
+          .then(data => {
+            console.log('Events loaded:', data);
+            successCallback(data);
+            
+            // Also display events in the list
+            displayEvents(data);
+          })
+          .catch(error => {
+            console.error('Error loading events:', error);
+            failureCallback(error);
+          });
+      },
+      eventClick: function(info) {
+        if (info.event.url) {
+          window.location.href = info.event.url;
+          info.jsEvent.preventDefault();
+        }
+      }
+    });
+    
+    calendar.render();
+    
+    // Load initial events
+    fetch('/app/calendar/events/?start=2025-05-01&end=2025-05-31')
+      .then(response => response.json())
+      .then(data => {
+        console.log('Initial events loaded:', data);
+        displayEvents(data);
+      })
+      .catch(error => {
+        console.error('Error loading initial events:', error);
+      });
+  });
+</script>
+{% endblock %}

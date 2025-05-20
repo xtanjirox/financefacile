@@ -1,0 +1,440 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load currency_tags %}
+
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+  .theme-badge {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+  
+  .theme-primary { background-color: #4e73df; }
+  .theme-secondary { background-color: #858796; }
+  .theme-success { background-color: #1cc88a; }
+  .theme-info { background-color: #36b9cc; }
+  .theme-warning { background-color: #f6c23e; }
+  .theme-danger { background-color: #e74a3b; }
+  .theme-dark { background-color: #5a5c69; }
+  
+  /* Filter styles */
+  .filter-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .filter-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 200px;
+  }
+  
+  .filter-group label {
+    font-weight: 600;
+    color: #39739d;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+  }
+  
+  .date-inputs {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .select2-container--default .select2-selection--multiple {
+    border-color: #e0e6ed;
+    border-radius: 8px;
+  }
+  
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #e3f2fd;
+    border-color: #c5e3fc;
+    color: #1976d2;
+    border-radius: 50px;
+    padding: 2px 8px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <div class="d-flex align-items-center">
+      <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-calendar-days me-2" style="color: #7cb9e8;"></i>Calendar Events</h2>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'calendar-event-create' %}" class="btn btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+        <i class="fa fa-plus"></i> Add Event
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card mb-3 shadow-sm border-0" style="background: #e3f2fd; border-radius: 14px;">
+        <div class="card-body">
+          <h5 class="card-title" style="color: #1976d2; font-weight: 600;">
+            Total Events
+          </h5>
+          <p class="card-text display-6" style="color: #1976d2; font-weight: 700;">
+            {{ events|length }}
+          </p>
+          <p class="text-muted small">Total calendar events</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-3 shadow-sm border-0" style="background: #e8f5e9; border-radius: 14px;">
+        <div class="card-body">
+          <h5 class="card-title" style="color: #388e3c; font-weight: 600;">
+            Upcoming Events
+          </h5>
+          <p class="card-text display-6" style="color: #388e3c; font-weight: 700;">
+            {{ upcoming_events|length }}
+          </p>
+          <p class="text-muted small">Events in the next 7 days</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card mb-3 shadow-sm border-0" style="background: #e1f5fe; border-radius: 14px;">
+        <div class="card-body">
+          <h5 class="card-title" style="color: #0288d1; font-weight: 600;">
+            All-day Events
+          </h5>
+          <p class="card-text display-6" style="color: #0288d1; font-weight: 700;">
+            {{ all_day_events|length }}
+          </p>
+          <p class="text-muted small">Full-day events in calendar</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Events Table Card -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="card shadow-sm border-0" style="border-radius: 14px; background: #fafdff;">
+        <div class="card-header py-3" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
+          <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
+            <i class="fas fa-calendar-alt me-2" style="color: #7cb9e8;"></i>Calendar Events
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          {% if events %}
+          <!-- DataTables CSS -->
+          <style>
+            /* Custom DataTables styling */
+            .dataTables_wrapper .dataTables_info {
+              color: #39739d;
+              font-size: 0.9rem;
+              padding-top: 1rem;
+            }
+            
+            .dataTables_wrapper .dataTables_paginate .paginate_button {
+              border-radius: 50px;
+              margin: 0 3px;
+              border: none !important;
+              background: #f8f9fa;
+              color: #39739d !important;
+            }
+            
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+              background: #e3f2fd !important;
+              color: #1976d2 !important;
+              font-weight: 600;
+              border: none !important;
+            }
+            
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+              background: #e3f2fd !important;
+              color: #1976d2 !important;
+              border: none !important;
+            }
+            
+            .dataTables_wrapper .dataTables_length select {
+              border-color: #e0e6ed;
+              background-color: #f8f9fa;
+              color: #39739d;
+              border-radius: 8px;
+              padding: 5px 10px;
+            }
+            
+            .dataTables_wrapper .dataTables_filter input {
+              border-color: #e0e6ed;
+              background-color: #f8f9fa;
+              color: #39739d;
+              border-radius: 50px;
+              padding: 8px 15px;
+            }
+            
+            table.dataTable thead th {
+              background-color: #f8f9fa;
+              color: #39739d;
+              font-weight: 600;
+              border-bottom: 1px solid #e0e6ed;
+              padding: 12px 10px;
+            }
+            
+            table.dataTable tbody td {
+              padding: 12px 10px;
+              border-bottom: 1px solid #f1f3f4;
+              vertical-align: middle;
+            }
+            
+            table.dataTable tbody tr:hover {
+              background-color: rgba(124, 185, 232, 0.1);
+            }
+            
+            .badge {
+              padding: 6px 10px;
+              font-weight: 500;
+              border-radius: 50px;
+            }
+          </style>
+          <table id="events-table" class="table table-hover align-middle">
+            <thead>
+              <tr>
+                <th>Title</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>All Day</th>
+                <th>Theme</th>
+                <th>Description</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for event in events %}
+              <tr data-theme="{{ event.theme }}" data-start-date="{{ event.start_date|date:'Y-m-d\TH:i:s' }}" data-end-date="{{ event.end_date|date:'Y-m-d\TH:i:s' }}">
+                <td>{{ event.title }}</td>
+                <td>{{ event.start_date|date:"M d, Y g:i A" }}</td>
+                <td>{{ event.end_date|date:"M d, Y g:i A" }}</td>
+                <td>{% if event.all_day %}<span class="badge bg-light text-dark">Yes</span>{% else %}<span class="badge bg-light text-dark">No</span>{% endif %}</td>
+                <td>
+                  <span class="theme-badge theme-{{ event.theme }}"></span>
+                  <span class="badge bg-light text-dark">{{ event.theme|title }}</span>
+                </td>
+                <td>{{ event.description|default:"-"|truncatechars:50 }}</td>
+                <td>
+                  <a href="{% url 'calendar-event-detail' event.id %}" class="btn btn-sm shadow-sm me-1" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View"><i class="fas fa-eye"></i></a>
+                  <a href="{% url 'calendar-event-update' event.id %}" class="btn btn-sm shadow-sm me-1" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i></a>
+                  <a href="{% url 'calendar-event-delete' event.id %}" class="btn btn-sm shadow-sm me-1" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete"><i class="fas fa-trash"></i></a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <!-- DataTables JS -->
+          <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+          <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+          <script>
+            $(document).ready(function() {
+              // Create filter container above the table
+              var filterContainerHtml = `
+                <div class="filter-container">
+                  <div class="filter-group">
+                    <label>Theme Filter</label>
+                    <select id="theme-filter" class="form-control" multiple="multiple">
+                      <option value="primary">Primary</option>
+                      <option value="secondary">Secondary</option>
+                      <option value="success">Success</option>
+                      <option value="info">Info</option>
+                      <option value="warning">Warning</option>
+                      <option value="danger">Danger</option>
+                      <option value="dark">Dark</option>
+                    </select>
+                  </div>
+                  <div class="filter-group">
+                    <label>Date Range</label>
+                    <div class="date-inputs">
+                      <input type="date" id="start-date" class="form-control form-control-sm" placeholder="Start Date">
+                      <input type="date" id="end-date" class="form-control form-control-sm" placeholder="End Date">
+                    </div>
+                  </div>
+                  <div class="filter-group" style="justify-content: flex-end;">
+                    <button id="apply-filters" class="btn btn-primary btn-sm px-4" style="background: #7cb9e8; border: none; font-weight: 600; border-radius: 50px;">
+                      <i class="fas fa-filter me-1"></i> Apply Filters
+                    </button>
+                    <button id="reset-filters" class="btn btn-secondary btn-sm px-4 mt-2" style="border-radius: 50px; font-weight: 600;">
+                      <i class="fas fa-undo me-1"></i> Reset
+                    </button>
+                  </div>
+                </div>
+              `;
+              
+              // Add filter container before the table
+              $(filterContainerHtml).insertBefore('#events-table');
+              
+              // Initialize Select2 for theme filter
+              $('#theme-filter').select2({
+                placeholder: "Select themes",
+                allowClear: true
+              });
+              
+              // Initialize DataTable
+              var table = $('#events-table').DataTable({
+                responsive: true,
+                pageLength: 10,
+                lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],
+                language: {
+                  search: "_INPUT_",
+                  searchPlaceholder: "Search events...",
+                  lengthMenu: "Show _MENU_ events",
+                  info: "Showing _START_ to _END_ of _TOTAL_ events",
+                  infoEmpty: "Showing 0 to 0 of 0 events",
+                  infoFiltered: "(filtered from _MAX_ total events)"
+                },
+                dom: '<"row"<"col-sm-6"l><"col-sm-6"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-5"i><"col-sm-7"p>>'
+              });
+              
+              // Theme filtering function
+              $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                var selectedThemes = $('#theme-filter').val();
+                if (!selectedThemes || selectedThemes.length === 0) {
+                  return true; // Show all rows if no themes selected
+                }
+                
+                // Get the theme from the hidden data attribute
+                var row = table.row(dataIndex).node();
+                var eventTheme = $(row).attr('data-theme');
+                
+                // Check if the event theme is in the selected themes
+                return selectedThemes.includes(eventTheme);
+              });
+              
+              // Date range filtering function
+              $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+                var startDateStr = $('#start-date').val();
+                var endDateStr = $('#end-date').val();
+                
+                if (!startDateStr && !endDateStr) {
+                  return true; // Show all rows if no dates selected
+                }
+                
+                try {
+                  // Get the start and end dates from the hidden data attributes
+                  var row = table.row(dataIndex).node();
+                  var rawStartDate = $(row).attr('data-start-date');
+                  var rawEndDate = $(row).attr('data-end-date');
+                  
+                  console.log('Raw Start Date:', rawStartDate);
+                  console.log('Raw End Date:', rawEndDate);
+                  
+                  // Parse the ISO format dates
+                  var eventStartDate = new Date(rawStartDate);
+                  var eventEndDate = new Date(rawEndDate);
+                  
+                  console.log('Parsed Event Start Date:', eventStartDate);
+                  console.log('Parsed Event End Date:', eventEndDate);
+                  
+                  // Create filter dates
+                  var filterStartDate = startDateStr ? new Date(startDateStr) : null;
+                  var filterEndDate = endDateStr ? new Date(endDateStr) : null;
+                  
+                  // Set time to beginning/end of day for more accurate filtering
+                  if (filterStartDate) {
+                    filterStartDate.setHours(0, 0, 0, 0);
+                  }
+                  if (filterEndDate) {
+                    filterEndDate.setHours(23, 59, 59, 999);
+                  }
+                  
+                  console.log('Filter Start Date:', filterStartDate);
+                  console.log('Filter End Date:', filterEndDate);
+                  
+                  // Apply filter based on available dates
+                  if (filterStartDate && !filterEndDate) {
+                    // If only start date is provided, show events that start on or after the start date
+                    return eventStartDate >= filterStartDate;
+                  }
+                  
+                  if (!filterStartDate && filterEndDate) {
+                    // If only end date is provided, show events that end on or before the end date
+                    return eventEndDate <= filterEndDate;
+                  }
+                  
+                  // Both start and end dates are provided
+                  // Show events that fall within the date range (start and end are both in range)
+                  // or events that overlap with the range
+                  return (eventStartDate >= filterStartDate && eventStartDate <= filterEndDate) || // Event starts within range
+                         (eventEndDate >= filterStartDate && eventEndDate <= filterEndDate) ||     // Event ends within range
+                         (eventStartDate <= filterStartDate && eventEndDate >= filterEndDate);     // Event spans the entire range
+                  
+                } catch (error) {
+                  console.error('Error parsing dates:', error);
+                  return true; // Show the row if there's an error
+                }
+              });
+              
+              // Apply filters button
+              $('#apply-filters').on('click', function() {
+                console.log('Applying filters...');
+                console.log('Start Date:', $('#start-date').val());
+                console.log('End Date:', $('#end-date').val());
+                console.log('Selected Themes:', $('#theme-filter').val());
+                table.draw();
+              });
+              
+              // Reset filters button
+              $('#reset-filters').on('click', function() {
+                $('#theme-filter').val(null).trigger('change');
+                $('#start-date').val('');
+                $('#end-date').val('');
+                table.draw();
+              });
+              
+              // Initialize tooltips
+              var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+              var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+              });
+            });
+          </script>
+          {% else %}
+          <div class="col-12">
+            <div class="card shadow-sm border-0" style="border-radius: 1.2rem; background: #fafdff;">
+              <div class="card-body text-center py-5">
+                <i class="fas fa-calendar-alt mb-3" style="font-size: 3rem; color: #7cb9e8;"></i>
+                <h4 class="mb-3">No Events Found</h4>
+                <p class="text-muted">You haven't created any calendar events yet. Click the "Add Event" button above to create your first event.</p>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+{% endblock %}

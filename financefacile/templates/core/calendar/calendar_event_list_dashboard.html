@@ -1,0 +1,381 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block title %}Calendar{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
+<style>
+    /* Calendar container */
+    .calendar-container {
+        background-color: #fff;
+        border-radius: 0.35rem;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        overflow: hidden;
+    }
+    
+    /* Calendar toolbar */
+    .calendar-toolbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background-color: #f8f9fc;
+        border-bottom: 1px solid #e3e6f0;
+    }
+    
+    /* Calendar styles */
+    #calendar {
+        min-height: 600px;
+    }
+    
+    /* FullCalendar overrides */
+    .fc .fc-toolbar-title {
+        font-size: 1.25em;
+        font-weight: 600;
+    }
+    
+    .fc .fc-button {
+        padding: 0.375rem 0.75rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+    
+    .fc .fc-toolbar.fc-header-toolbar {
+        margin-bottom: 1em;
+        padding: 0.5rem;
+    }
+    
+    .fc .fc-view-harness {
+        min-height: 500px;
+    }
+    
+    /* Event theme colors */
+    .fc-event-theme-primary { background-color: #4e73df; border-color: #4e73df; }
+    .fc-event-theme-secondary { background-color: #858796; border-color: #858796; }
+    .fc-event-theme-success { background-color: #1cc88a; border-color: #1cc88a; }
+    .fc-event-theme-info { background-color: #36b9cc; border-color: #36b9cc; }
+    .fc-event-theme-warning { background-color: #f6c23e; border-color: #f6c23e; color: #000; }
+    .fc-event-theme-danger { background-color: #e74a3b; border-color: #e74a3b; }
+    .fc-event-theme-dark { background-color: #5a5c69; border-color: #5a5c69; }
+    
+    /* Event styling */
+    .fc-event {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 2px 4px;
+        margin: 1px 0;
+        font-size: 0.85em;
+        cursor: pointer;
+    }
+    
+    .fc-event .fc-event-time {
+        font-weight: bold;
+        font-size: 0.8em;
+        margin-bottom: 2px;
+    }
+    
+    .fc-event .fc-event-title {
+        font-weight: 500;
+    }
+    
+    .fc-daygrid-more-link {
+        font-weight: bold;
+        color: #4e73df;
+        cursor: pointer;
+    }
+    
+    .fc-daygrid-day:hover {
+        background-color: rgba(78, 115, 223, 0.05);
+    }
+    
+    .fc-daygrid-day-number {
+        font-weight: 500;
+    }
+    
+    /* Upcoming events list */
+    .upcoming-events-list .list-group-item {
+        border-left: 3px solid #4e73df;
+        transition: all 0.2s;
+    }
+    
+    .upcoming-events-list .list-group-item:hover {
+        background-color: #f8f9fc;
+    }
+    
+    .upcoming-events-list .list-group-item.primary { border-left-color: #4e73df; }
+    .upcoming-events-list .list-group-item.secondary { border-left-color: #858796; }
+    .upcoming-events-list .list-group-item.success { border-left-color: #1cc88a; }
+    .upcoming-events-list .list-group-item.info { border-left-color: #36b9cc; }
+    .upcoming-events-list .list-group-item.warning { border-left-color: #f6c23e; }
+    .upcoming-events-list .list-group-item.danger { border-left-color: #e74a3b; }
+    .upcoming-events-list .list-group-item.dark { border-left-color: #5a5c69; }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .fc-event .fc-event-title {
+            font-size: 0.8em;
+        }
+        
+        .fc-event .fc-event-time {
+            font-size: 0.7em;
+        }
+        
+        .fc-daygrid-more-link {
+            font-size: 0.7em !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Calendar</h1>
+        <a href="{% url 'calendar-event-create' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Add Event
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Calendar Widget -->
+        <div class="col-lg-8">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                    <h6 class="m-0 font-weight-bold text-primary">Calendar</h6>
+                </div>
+                <div class="card-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upcoming Events -->
+        <div class="col-lg-4">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-primary">Upcoming Events</h6>
+                </div>
+                <div class="card-body p-0">
+                    {% if upcoming_events %}
+                        <div class="list-group list-group-flush upcoming-events-list">
+                            {% for event in upcoming_events %}
+                                <a href="{{ event.get_absolute_url }}" 
+                                   class="list-group-item list-group-item-action {{ event.theme }}">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <h6 class="mb-1">{{ event.title }}</h6>
+                                        <small class="text-muted">{{ event.start_date|date:"M d" }}</small>
+                                    </div>
+                                    <p class="mb-1">
+                                        <small class="text-muted">
+                                            {% if event.all_day %}
+                                                All day
+                                            {% else %}
+                                                {{ event.start_date|time:"g:i A" }}
+                                                {% if event.end_date %}- {{ event.end_date|time:"g:i A" }}{% endif %}
+                                            {% endif %}
+                                        </small>
+                                    </p>
+                                    {% if event.description %}
+                                        <small class="text-muted">{{ event.description|truncatechars:50 }}</small>
+                                    {% endif %}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center p-4">
+                            <p class="text-muted mb-0">No upcoming events</p>
+                            <a href="{% url 'calendar-event-create' %}" class="btn btn-sm btn-primary mt-2">
+                                <i class="fas fa-plus fa-sm"></i> Add Event
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var calendarEl = document.getElementById('calendar');
+    
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        height: 'auto',
+        events: function(info, successCallback, failureCallback) {
+            // Calculate start and end dates for the API request
+            const startDate = info.start;
+            const endDate = info.end;
+            
+            // Format dates for API
+            const startStr = startDate.toISOString().split('T')[0];
+            const endStr = endDate.toISOString().split('T')[0];
+            
+            console.log(`Calendar: Fetching events from ${startStr} to ${endStr}`);
+            
+            // Add a timestamp to prevent caching
+            const timestamp = new Date().getTime();
+            
+            // Make API request
+            fetch(`/app/calendar/events/?start=${startStr}&end=${endStr}&_=${timestamp}`, {
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Calendar: Fetched events:', data);
+                    successCallback(data);
+                })
+                .catch(error => {
+                    console.error('Error fetching events:', error);
+                    failureCallback(error);
+                });
+        },
+        eventClick: function(info) {
+            info.jsEvent.preventDefault();
+            if (info.event.url) {
+                window.location.href = info.event.url;
+            }
+        },
+        dayMaxEvents: 3, // Show a maximum of 3 events per day
+        dayMaxEventRows: 3, // Show a maximum of 3 events per day
+        eventOrder: 'start,-duration',
+        eventDisplay: 'block',
+        displayEventTime: true,
+        displayEventEnd: false,
+        eventTimeFormat: {
+            hour: '2-digit',
+            minute: '2-digit',
+            meridiem: true
+        },
+        // Add a date click handler to redirect to the date events page
+        dateClick: function(info) {
+            // Format the date as YYYY/MM/DD
+            const dateStr = info.dateStr.split('T')[0];
+            const [year, month, day] = dateStr.split('-');
+            
+            // Redirect to the date events page
+            window.location.href = `/app/calendar/date/${year}/${month}/${day}/`;
+        },
+        // Add a "more" link when there are more events than can be displayed
+        moreLinkClick: function(info) {
+            // Prevent default behavior
+            info.jsEvent.preventDefault();
+            
+            // Get the date
+            const date = info.date;
+            const year = date.getFullYear();
+            const month = date.getMonth() + 1; // getMonth() is zero-based
+            const day = date.getDate();
+            
+            // Redirect to the date events page
+            window.location.href = `/app/calendar/date/${year}/${month}/${day}/`;
+            
+            return false; // Prevent default FullCalendar behavior
+        },
+        // Custom event rendering to make events more visually appealing
+        eventContent: function(arg) {
+            // Skip rendering for the "more" link as we'll handle it in dayCellContent
+            if (arg.event.extendedProps.isMoreLink) {
+                return { html: '' }; // Empty content, we'll handle it in dayCellContent
+            }
+            
+            // Regular event content
+            var titleEl = document.createElement('div');
+            titleEl.classList.add('fc-event-title');
+            titleEl.textContent = arg.event.title;
+            
+            var timeEl = document.createElement('div');
+            timeEl.classList.add('fc-event-time');
+            
+            if (arg.event.allDay) {
+                timeEl.textContent = 'All day';
+            } else {
+                var startTime = arg.event.start ? arg.timeText : '';
+                timeEl.textContent = startTime;
+            }
+            
+            var wrapper = document.createElement('div');
+            wrapper.appendChild(timeEl);
+            wrapper.appendChild(titleEl);
+            
+            return { domNodes: [wrapper] };
+        },
+        dayCellContent: function(arg) {
+            // Create the default content
+            const dayNumberEl = document.createElement('div');
+            dayNumberEl.classList.add('fc-daygrid-day-number');
+            dayNumberEl.textContent = arg.dayNumberText.replace('\n', '');
+            
+            // Create a container for the day cell content
+            const container = document.createElement('div');
+            container.classList.add('fc-daygrid-day-top');
+            container.appendChild(dayNumberEl);
+            
+            // Return the default content
+            return { domNodes: [container] };
+        },
+        moreLinkContent: function(arg) {
+            // Create a custom "more" link
+            const link = document.createElement('a');
+            link.href = '#';
+            link.classList.add('fc-more-link');
+            link.textContent = arg.num.toString() + ' more';
+            link.dataset.date = arg.date.toISOString().split('T')[0];
+            
+            // Add click handler
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const dateStr = this.dataset.date;
+                const [year, month, day] = dateStr.split('-');
+                window.location.href = `/app/calendar/date/${year}/${month}/${day}/`;
+            });
+            
+            return { domNodes: [link] };
+        },
+        eventDidMount: function(arg) {
+            if (arg.event.extendedProps.theme && !arg.event.extendedProps.isMoreLink) {
+                arg.el.classList.add('fc-event-theme-' + arg.event.extendedProps.theme);
+            }
+        }
+    });
+    
+    calendar.render();
+    
+    // Refresh calendar when navigating back to the page
+    document.addEventListener('visibilitychange', function() {
+        if (!document.hidden) {
+            calendar.refetchEvents();
+        }
+    });
+});
+</script>
+{% endblock %}
