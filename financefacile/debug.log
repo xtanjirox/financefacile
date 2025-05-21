@@ -12450,3 +12450,698 @@ INFO 2025-05-20 23:27:46,985 calendar_views Processing event: 30 - dzdamza - 202
 DEBUG 2025-05-20 23:27:46,985 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
 INFO 2025-05-20 23:27:46,985 calendar_views Returning 9 events
 INFO 2025-05-20 23:27:46,985 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747783666955 HTTP/1.1" 200 2739
+INFO 2025-05-20 23:29:47,424 models Invoice #1: get_total called
+INFO 2025-05-20 23:29:47,425 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-20 23:29:47,425 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-20 23:29:47,426 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-20 23:29:47,426 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-20 23:29:47,426 models Invoice #1: Final total: 397.0000
+INFO 2025-05-20 23:29:47,442 models Invoice #1: get_total called
+INFO 2025-05-20 23:29:47,444 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-20 23:29:47,444 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-20 23:29:47,445 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-20 23:29:47,445 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-20 23:29:47,445 models Invoice #1: Final total: 397.0000
+INFO 2025-05-20 23:29:47,449 basehttp "GET /app/ HTTP/1.1" 200 56110
+INFO 2025-05-20 23:29:47,513 basehttp "GET /static/assets/css/sidebar-toggle.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:29:47,514 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 200 2403
+INFO 2025-05-20 23:29:47,515 basehttp "GET /static/assets/css/font-manrope.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:29:47,516 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 304 0
+INFO 2025-05-20 23:29:47,516 basehttp "GET /static/assets/js/sidebar-active.js HTTP/1.1" 304 0
+WARNING 2025-05-20 23:29:47,516 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-20 23:29:47,863 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-20 23:29:47,866 calendar_views Found company for user: accuro
+INFO 2025-05-20 23:29:47,878 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-20 23:29:47,879 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-20 23:29:47,879 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-20 23:29:47,879 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-20 23:29:47,879 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-20 23:29:47,879 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-20 23:29:47,879 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-20 23:29:47,879 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-20 23:29:47,880 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-20 23:29:47,880 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-20 23:29:47,880 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-20 23:29:47,880 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-20 23:29:47,880 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-20 23:29:47,880 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-20 23:29:47,880 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-20 23:29:47,880 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-20 23:29:47,880 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-20 23:29:47,880 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-20 23:29:47,880 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-20 23:29:47,880 calendar_views Returning 9 events
+INFO 2025-05-20 23:29:47,881 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747783787844 HTTP/1.1" 200 2739
+INFO 2025-05-20 23:29:50,465 basehttp "GET /companies/1/ HTTP/1.1" 200 22171
+WARNING 2025-05-20 23:29:50,496 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-20 23:29:54,263 basehttp "GET /auth/profile/ HTTP/1.1" 200 21204
+WARNING 2025-05-20 23:29:54,322 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-20 23:29:54,339 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+INFO 2025-05-20 23:30:01,607 models Invoice #1: get_total called
+INFO 2025-05-20 23:30:01,608 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-20 23:30:01,608 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-20 23:30:01,611 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-20 23:30:01,611 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-20 23:30:01,611 models Invoice #1: Final total: 397.0000
+INFO 2025-05-20 23:30:01,620 models Invoice #1: get_total called
+INFO 2025-05-20 23:30:01,622 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-20 23:30:01,622 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-20 23:30:01,623 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-20 23:30:01,623 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-20 23:30:01,623 models Invoice #1: Final total: 397.0000
+INFO 2025-05-20 23:30:01,628 basehttp "GET /app/ HTTP/1.1" 200 56110
+WARNING 2025-05-20 23:30:01,672 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-20 23:30:01,691 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+INFO 2025-05-20 23:30:01,759 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-20 23:30:01,763 calendar_views Found company for user: accuro
+INFO 2025-05-20 23:30:01,767 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-20 23:30:01,768 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-20 23:30:01,769 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-20 23:30:01,769 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-20 23:30:01,769 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-20 23:30:01,769 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-20 23:30:01,769 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-20 23:30:01,769 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-20 23:30:01,769 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-20 23:30:01,769 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-20 23:30:01,769 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-20 23:30:01,769 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-20 23:30:01,769 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-20 23:30:01,769 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-20 23:30:01,769 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-20 23:30:01,769 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-20 23:30:01,769 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-20 23:30:01,769 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-20 23:30:01,769 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-20 23:30:01,769 calendar_views Returning 9 events
+INFO 2025-05-20 23:30:01,769 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747783801732 HTTP/1.1" 200 2739
+INFO 2025-05-20 23:30:07,298 basehttp "GET /app/products/ HTTP/1.1" 200 28491
+INFO 2025-05-20 23:30:07,383 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+WARNING 2025-05-20 23:30:07,384 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-20 23:30:07,415 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-20 23:30:07,448 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-20 23:30:09,215 models Invoice #1: get_total called
+INFO 2025-05-20 23:30:09,217 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-20 23:30:09,218 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-20 23:30:09,219 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-20 23:30:09,220 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-20 23:30:09,220 models Invoice #1: Final total: 397.0000
+INFO 2025-05-20 23:30:09,221 basehttp "GET /app/invoices/ HTTP/1.1" 200 28667
+WARNING 2025-05-20 23:30:09,291 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-20 23:30:09,305 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 304 0
+INFO 2025-05-20 23:30:12,406 basehttp "GET /app/expenses/ HTTP/1.1" 200 26912
+WARNING 2025-05-20 23:30:12,461 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-20 23:30:12,505 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-20 23:30:12,513 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-20 23:30:14,840 basehttp "GET /app/products/ HTTP/1.1" 200 28491
+INFO 2025-05-20 23:30:14,877 basehttp "GET /static/assets/css/light.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:30:14,899 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+WARNING 2025-05-20 23:30:14,901 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-20 23:30:14,956 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-20 23:30:14,984 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-20 23:36:39,229 basehttp "GET /app/products/ HTTP/1.1" 200 30554
+INFO 2025-05-20 23:36:39,294 basehttp "GET /static/assets/css/modern-table.css HTTP/1.1" 200 3526
+INFO 2025-05-20 23:36:39,297 basehttp "GET /static/assets/css/topbar-enhanced.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:36:39,307 basehttp "GET /static/assets/css/sidebar-toggle.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:36:39,307 basehttp "GET /static/assets/css/matdash_layout.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:36:39,307 basehttp "GET /static/assets/css/matdash_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:36:39,308 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+INFO 2025-05-20 23:36:39,308 basehttp "GET /static/assets/js/actions-menu.js HTTP/1.1" 200 831
+INFO 2025-05-20 23:36:39,310 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 304 0
+WARNING 2025-05-20 23:36:39,310 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-20 23:36:39,354 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-20 23:36:39,366 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-20 23:38:27,245 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+INFO 2025-05-20 23:38:27,325 basehttp "GET /static/assets/css/modern-table.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:38:27,327 basehttp "GET /static/assets/css/sidebar-toggle.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:38:27,331 basehttp "GET /static/assets/js/actions-menu.js HTTP/1.1" 304 0
+INFO 2025-05-20 23:38:27,336 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 304 0
+WARNING 2025-05-20 23:38:27,337 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-20 23:38:27,337 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+INFO 2025-05-20 23:38:27,337 basehttp "GET /static/assets/css/font-manrope.css HTTP/1.1" 304 0
+WARNING 2025-05-20 23:38:27,374 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-20 23:38:27,382 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-20 23:40:17,114 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+INFO 2025-05-20 23:40:17,205 basehttp "GET /static/assets/js/sidebar-active.js HTTP/1.1" 304 0
+INFO 2025-05-20 23:40:17,207 basehttp "GET /static/assets/css/sidebar-toggle.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:40:17,209 basehttp "GET /static/assets/css/modern-table.css HTTP/1.1" 200 3544
+INFO 2025-05-20 23:40:17,210 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 304 0
+INFO 2025-05-20 23:40:17,211 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+INFO 2025-05-20 23:40:17,212 basehttp "GET /static/assets/js/actions-menu.js HTTP/1.1" 304 0
+WARNING 2025-05-20 23:40:17,213 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-20 23:40:17,245 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-20 23:40:17,250 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-20 23:40:36,435 basehttp "GET /static/assets/css/modern-table.css HTTP/1.1" 304 0
+WARNING 2025-05-20 23:40:36,448 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-05-20 23:40:36,448 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4336
+INFO 2025-05-20 23:44:35,479 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-20 23:44:35,525 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-05-20 23:44:35,525 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4336
+INFO 2025-05-20 23:44:35,607 basehttp "GET /static/assets/css/light.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:44:35,608 basehttp "GET /static/assets/css/topbar-enhanced.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:44:35,610 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+WARNING 2025-05-20 23:44:35,610 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-20 23:44:35,612 basehttp "GET /static/assets/css/sidebar-toggle.css HTTP/1.1" 304 0
+INFO 2025-05-20 23:44:35,613 basehttp "GET /static/assets/js/actions-menu.js HTTP/1.1" 304 0
+INFO 2025-05-20 23:44:35,613 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 304 0
+INFO 2025-05-20 23:44:35,613 basehttp "GET /static/assets/css/modern-table.css HTTP/1.1" 200 3607
+WARNING 2025-05-20 23:44:35,701 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-20 23:44:35,765 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 07:32:45,195 models Invoice #1: get_total called
+INFO 2025-05-21 07:32:45,198 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 07:32:45,198 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 07:32:45,203 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 07:32:45,203 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 07:32:45,203 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 07:32:45,204 basehttp "GET /app/invoices/ HTTP/1.1" 200 28800
+INFO 2025-05-21 07:32:45,291 basehttp "GET /static/assets/css/light.css HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:45,293 basehttp "GET /static/assets/css/modern-table.css HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:45,294 basehttp "GET /static/assets/css/matdash_layout.css HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:45,294 basehttp "GET /static/assets/css/matdash_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:45,295 basehttp "GET /static/assets/css/font-manrope.css HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:45,296 basehttp "GET /static/assets/css/topbar-enhanced.css HTTP/1.1" 304 0
+WARNING 2025-05-21 07:32:45,296 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:32:45,296 basehttp "GET /static/assets/js/sidebar-active.js HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:45,296 basehttp "GET /static/assets/css/sidebar-toggle.css HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:45,297 basehttp "GET /static/assets/js/actions-menu.js HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:45,297 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:45,297 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:48,270 basehttp "GET /app/expenses/ HTTP/1.1" 200 27045
+WARNING 2025-05-21 07:32:48,337 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:32:48,357 basehttp "GET /static/admin/js/vendor/select2/select2.full.min.js HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:48,359 basehttp "GET /static/admin/js/vendor/select2/i18n/fr.js HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:48,359 basehttp "GET /static/django_select2/django_select2.css HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:48,359 basehttp "GET /static/admin/css/vendor/select2/select2.min.css HTTP/1.1" 304 0
+INFO 2025-05-21 07:32:48,360 basehttp "GET /static/django_select2/django_select2.js HTTP/1.1" 304 0
+WARNING 2025-05-21 07:32:48,383 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 07:32:48,393 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 07:33:23,407 basehttp "GET /app/calendar/ HTTP/1.1" 200 19597
+WARNING 2025-05-21 07:33:23,446 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:33:26,042 basehttp "GET /app/expenses/ HTTP/1.1" 200 27045
+WARNING 2025-05-21 07:33:26,088 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 07:33:26,174 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 07:33:26,185 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 07:33:27,247 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 45572
+WARNING 2025-05-21 07:33:27,303 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 07:33:27,352 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 07:33:27,395 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 07:33:35,626 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 18836
+WARNING 2025-05-21 07:33:35,667 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 07:33:35,741 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 07:33:35,778 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 07:33:37,240 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 07:33:37,241 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 07:33:37,241 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 07:33:37,241 products_views User is authenticated
+INFO 2025-05-21 07:33:37,242 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 07:33:37,242 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 07:33:37,244 products_views 
+=== All categories in database ===
+INFO 2025-05-21 07:33:37,244 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 07:33:37,244 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 07:33:37,244 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 07:33:37,244 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 07:33:37,245 products_views Found 2 categories for this company
+INFO 2025-05-21 07:33:37,245 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 07:33:37,245 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 07:33:37,245 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 07:33:37,247 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 07:33:37,247 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 07:33:37,247 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 07:33:37,247 products_views User is authenticated
+INFO 2025-05-21 07:33:37,247 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 07:33:37,247 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 07:33:37,248 products_views 
+=== All categories in database ===
+INFO 2025-05-21 07:33:37,248 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 07:33:37,248 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 07:33:37,248 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 07:33:37,248 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 07:33:37,248 products_views Found 2 categories for this company
+INFO 2025-05-21 07:33:37,248 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 07:33:37,248 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 07:33:37,249 products_views has_categories: True
+INFO 2025-05-21 07:33:37,252 products_views Number of rows in table: 2
+INFO 2025-05-21 07:33:37,252 products_views Row 1: <django_tables2.rows.BoundRow object at 0x1057eefd0>
+INFO 2025-05-21 07:33:37,252 products_views Row 2: <django_tables2.rows.BoundRow object at 0x1056608d0>
+INFO 2025-05-21 07:33:37,252 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 07:33:37,255 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 07:33:37,255 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 07:33:37,255 basehttp "GET /app/categories/ HTTP/1.1" 200 23524
+WARNING 2025-05-21 07:33:37,323 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:33:42,914 basehttp "GET /companies/1/ HTTP/1.1" 200 22304
+WARNING 2025-05-21 07:33:42,961 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:33:49,394 basehttp "GET / HTTP/1.1" 302 0
+INFO 2025-05-21 07:33:49,419 basehttp "GET /landing/ HTTP/1.1" 302 0
+INFO 2025-05-21 07:33:49,493 models Invoice #1: get_total called
+INFO 2025-05-21 07:33:49,496 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 07:33:49,496 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 07:33:49,497 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 07:33:49,498 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 07:33:49,498 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 07:33:49,502 models Invoice #1: get_total called
+INFO 2025-05-21 07:33:49,503 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 07:33:49,503 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 07:33:49,504 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 07:33:49,504 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 07:33:49,504 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 07:33:49,506 basehttp "GET /app/ HTTP/1.1" 200 54737
+WARNING 2025-05-21 07:33:49,573 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:33:49,661 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 07:33:49,668 calendar_views Found company for user: accuro
+INFO 2025-05-21 07:33:49,674 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 07:33:49,676 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 07:33:49,677 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 07:33:49,677 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 07:33:49,677 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 07:33:49,677 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 07:33:49,678 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 07:33:49,678 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 07:33:49,678 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 07:33:49,678 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 07:33:49,678 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 07:33:49,678 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 07:33:49,679 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 07:33:49,679 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 07:33:49,679 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 07:33:49,679 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 07:33:49,679 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 07:33:49,679 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 07:33:49,679 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 07:33:49,679 calendar_views Returning 9 events
+INFO 2025-05-21 07:33:49,680 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747812829635 HTTP/1.1" 200 2739
+WARNING 2025-05-21 07:33:55,610 log Not Found: /.well-known/appspecific/com.chrome.devtools.json
+WARNING 2025-05-21 07:33:55,610 basehttp "GET /.well-known/appspecific/com.chrome.devtools.json HTTP/1.1" 404 4336
+INFO 2025-05-21 07:34:32,100 basehttp "GET /auth/profile/ HTTP/1.1" 200 21337
+WARNING 2025-05-21 07:34:32,161 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:34:34,306 basehttp "GET /companies/1/ HTTP/1.1" 200 22304
+WARNING 2025-05-21 07:34:34,379 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:34:45,700 basehttp "GET / HTTP/1.1" 302 0
+INFO 2025-05-21 07:34:45,731 basehttp "GET /landing/ HTTP/1.1" 302 0
+INFO 2025-05-21 07:34:45,853 models Invoice #1: get_total called
+INFO 2025-05-21 07:34:45,853 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 07:34:45,853 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 07:34:45,855 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 07:34:45,855 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 07:34:45,855 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 07:34:45,860 models Invoice #1: get_total called
+INFO 2025-05-21 07:34:45,864 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 07:34:45,864 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 07:34:45,866 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 07:34:45,866 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 07:34:45,866 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 07:34:45,871 basehttp "GET /app/ HTTP/1.1" 200 54737
+WARNING 2025-05-21 07:34:45,931 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:34:46,009 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 07:34:46,015 calendar_views Found company for user: accuro
+INFO 2025-05-21 07:34:46,022 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 07:34:46,024 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 07:34:46,024 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 07:34:46,024 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 07:34:46,025 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 07:34:46,025 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 07:34:46,025 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 07:34:46,025 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 07:34:46,025 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 07:34:46,025 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 07:34:46,025 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 07:34:46,025 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 07:34:46,025 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 07:34:46,025 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 07:34:46,026 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 07:34:46,026 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 07:34:46,026 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 07:34:46,026 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 07:34:46,026 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 07:34:46,026 calendar_views Returning 9 events
+INFO 2025-05-21 07:34:46,026 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747812885980 HTTP/1.1" 200 2739
+INFO 2025-05-21 07:34:48,272 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 07:34:48,324 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 07:34:48,385 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 07:34:48,423 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 07:47:39,536 basehttp "GET / HTTP/1.1" 302 0
+INFO 2025-05-21 07:47:39,572 basehttp "GET /landing/ HTTP/1.1" 302 0
+INFO 2025-05-21 07:47:39,639 models Invoice #1: get_total called
+INFO 2025-05-21 07:47:39,639 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 07:47:39,640 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 07:47:39,644 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 07:47:39,644 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 07:47:39,644 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 07:47:39,650 models Invoice #1: get_total called
+INFO 2025-05-21 07:47:39,652 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 07:47:39,652 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 07:47:39,653 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 07:47:39,653 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 07:47:39,654 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 07:47:39,658 basehttp "GET /app/ HTTP/1.1" 200 54737
+WARNING 2025-05-21 07:47:39,724 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:47:40,146 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 07:47:40,149 calendar_views Found company for user: accuro
+INFO 2025-05-21 07:47:40,155 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 07:47:40,159 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 07:47:40,160 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 07:47:40,160 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 07:47:40,160 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 07:47:40,160 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 07:47:40,160 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 07:47:40,160 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 07:47:40,160 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 07:47:40,160 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 07:47:40,160 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 07:47:40,160 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 07:47:40,160 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 07:47:40,160 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 07:47:40,160 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 07:47:40,160 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 07:47:40,160 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 07:47:40,160 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 07:47:40,160 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 07:47:40,161 calendar_views Returning 9 events
+INFO 2025-05-21 07:47:40,161 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747813660121 HTTP/1.1" 200 2739
+INFO 2025-05-21 07:47:51,156 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 07:47:51,220 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 07:47:51,261 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 07:47:51,285 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 07:48:02,645 models Invoice #1: get_total called
+INFO 2025-05-21 07:48:02,646 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 07:48:02,646 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 07:48:02,648 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 07:48:02,648 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 07:48:02,648 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 07:48:02,648 basehttp "GET /app/invoices/ HTTP/1.1" 200 28800
+WARNING 2025-05-21 07:48:02,695 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:48:05,119 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 07:48:05,120 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 07:48:05,120 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 07:48:05,121 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 07:48:05,121 models Invoice #1: get_total called
+INFO 2025-05-21 07:48:05,122 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 07:48:05,122 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 07:48:05,123 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 07:48:05,123 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 07:48:05,123 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 07:48:05,123 basehttp "GET /app/invoices/1/ HTTP/1.1" 200 20283
+WARNING 2025-05-21 07:48:05,169 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:48:09,128 basehttp "GET /app/expenses/ HTTP/1.1" 200 27045
+WARNING 2025-05-21 07:48:09,171 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 07:48:09,231 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 07:48:09,245 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 07:48:14,806 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 18836
+WARNING 2025-05-21 07:48:14,853 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 07:48:14,918 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 07:48:14,962 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 07:48:21,592 search_api Live search query: 'je' from user: mehdi.studies, company: accuro
+INFO 2025-05-21 07:48:21,598 search_api Found 1 products matching 'je'
+INFO 2025-05-21 07:48:21,602 search_api Found 0 invoices matching 'je'
+INFO 2025-05-21 07:48:21,605 search_api Found 0 categories matching 'je'
+INFO 2025-05-21 07:48:21,607 basehttp "GET /api/live-search/?q=je HTTP/1.1" 200 118
+INFO 2025-05-21 07:48:21,786 search_api Live search query: 'jea' from user: mehdi.studies, company: accuro
+INFO 2025-05-21 07:48:21,788 search_api Found 1 products matching 'jea'
+INFO 2025-05-21 07:48:21,790 search_api Found 0 invoices matching 'jea'
+INFO 2025-05-21 07:48:21,792 search_api Found 0 categories matching 'jea'
+INFO 2025-05-21 07:48:21,793 basehttp "GET /api/live-search/?q=jea HTTP/1.1" 200 118
+INFO 2025-05-21 07:48:23,218 basehttp "GET /app/products/2/ HTTP/1.1" 200 25129
+WARNING 2025-05-21 07:48:23,260 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 07:48:40,759 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 07:48:40,825 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 07:48:40,873 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 07:48:40,914 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:54:39,808 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+INFO 2025-05-21 15:54:39,882 basehttp "GET /static/assets/css/matdash_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,882 basehttp "GET /static/assets/css/finance_facile.css HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,891 basehttp "GET /static/assets/css/modern-table.css HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,891 basehttp "GET /static/assets/css/topbar-enhanced.css HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,893 basehttp "GET /static/assets/css/matdash_layout.css HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,894 basehttp "GET /static/assets/css/sidebar-toggle.css HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,896 basehttp "GET /static/assets/css/light.css HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,896 basehttp "GET /static/assets/css/font-manrope.css HTTP/1.1" 304 0
+WARNING 2025-05-21 15:54:39,897 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:54:39,897 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,898 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,898 basehttp "GET /static/assets/js/sidebar-active.js HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,899 basehttp "GET /static/assets/js/jquery-3.7.1.min.js HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,900 basehttp "GET /static/assets/js/datatables.min.js HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,900 basehttp "GET /static/assets/js/app.js HTTP/1.1" 304 0
+INFO 2025-05-21 15:54:39,901 basehttp "GET /static/assets/js/actions-menu.js HTTP/1.1" 304 0
+WARNING 2025-05-21 15:54:39,941 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:54:39,955 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:54:41,440 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 200 2403
+INFO 2025-05-21 15:54:41,442 basehttp "GET /static/assets/js/sidebar-active.js HTTP/1.1" 200 0
+INFO 2025-05-21 15:54:41,442 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 200 1814
+WARNING 2025-05-21 15:54:41,444 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:54:44,030 models Invoice #1: get_total called
+INFO 2025-05-21 15:54:44,031 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:54:44,031 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 15:54:44,032 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 15:54:44,032 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 15:54:44,032 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 15:54:44,032 basehttp "GET /app/invoices/ HTTP/1.1" 200 28782
+WARNING 2025-05-21 15:54:44,063 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:54:49,295 basehttp "GET /app/expenses/ HTTP/1.1" 200 27045
+WARNING 2025-05-21 15:54:49,330 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:54:49,399 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:54:49,427 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:54:52,305 basehttp "GET /app/calendar/ HTTP/1.1" 200 19597
+WARNING 2025-05-21 15:54:52,347 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:54:53,481 basehttp "GET /app/expenses/ HTTP/1.1" 200 27045
+WARNING 2025-05-21 15:54:53,538 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:54:53,583 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:54:53,622 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:54:56,682 basehttp "GET /app/expenses/create/ HTTP/1.1" 200 22994
+WARNING 2025-05-21 15:54:56,723 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:55:14,207 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 18836
+WARNING 2025-05-21 15:55:14,243 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:55:14,307 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:55:14,320 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:55:15,612 basehttp "GET /app/expense-categories/create/ HTTP/1.1" 200 18396
+WARNING 2025-05-21 15:55:15,649 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:55:19,345 basehttp "POST /app/expense-categories/create/ HTTP/1.1" 302 0
+INFO 2025-05-21 15:55:19,372 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 22730
+WARNING 2025-05-21 15:55:19,458 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:55:19,490 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:55:19,522 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:55:21,674 basehttp "GET /app/expenses/ HTTP/1.1" 200 27090
+WARNING 2025-05-21 15:55:21,718 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:55:21,774 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:55:21,819 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:55:23,144 basehttp "GET /app/expenses/create/ HTTP/1.1" 200 23034
+WARNING 2025-05-21 15:55:23,179 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:55:31,158 basehttp "POST /app/expenses/create/ HTTP/1.1" 302 0
+INFO 2025-05-21 15:55:31,190 basehttp "GET /app/expenses/ HTTP/1.1" 200 32030
+WARNING 2025-05-21 15:55:31,278 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:55:31,303 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:55:31,316 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:55:39,768 basehttp "GET /app/calendar/ HTTP/1.1" 200 19597
+WARNING 2025-05-21 15:55:39,807 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:55:40,963 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 45554
+WARNING 2025-05-21 15:55:40,999 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:55:41,055 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:55:41,094 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:55:43,809 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 22730
+WARNING 2025-05-21 15:55:43,874 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:55:43,911 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:55:43,936 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:55:45,502 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 15:55:45,503 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 15:55:45,503 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 15:55:45,503 products_views User is authenticated
+INFO 2025-05-21 15:55:45,504 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 15:55:45,505 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 15:55:45,507 products_views 
+=== All categories in database ===
+INFO 2025-05-21 15:55:45,507 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 15:55:45,507 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 15:55:45,507 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 15:55:45,507 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 15:55:45,508 products_views Found 2 categories for this company
+INFO 2025-05-21 15:55:45,508 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 15:55:45,509 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 15:55:45,509 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 15:55:45,511 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 15:55:45,511 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 15:55:45,511 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 15:55:45,511 products_views User is authenticated
+INFO 2025-05-21 15:55:45,511 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 15:55:45,511 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 15:55:45,512 products_views 
+=== All categories in database ===
+INFO 2025-05-21 15:55:45,512 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 15:55:45,512 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 15:55:45,512 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 15:55:45,513 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 15:55:45,514 products_views Found 2 categories for this company
+INFO 2025-05-21 15:55:45,514 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 15:55:45,514 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 15:55:45,515 products_views has_categories: True
+INFO 2025-05-21 15:55:45,517 products_views Number of rows in table: 2
+INFO 2025-05-21 15:55:45,517 products_views Row 1: <django_tables2.rows.BoundRow object at 0x105670710>
+INFO 2025-05-21 15:55:45,517 products_views Row 2: <django_tables2.rows.BoundRow object at 0x1058e7290>
+INFO 2025-05-21 15:55:45,517 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 15:55:45,521 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 15:55:45,521 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 15:55:45,522 basehttp "GET /app/categories/ HTTP/1.1" 200 23524
+WARNING 2025-05-21 15:55:45,561 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:55:46,900 models Invoice #1: get_total called
+INFO 2025-05-21 15:55:46,900 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:55:46,900 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 15:55:46,902 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 15:55:46,902 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 15:55:46,902 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 15:55:46,914 models Invoice #1: get_total called
+INFO 2025-05-21 15:55:46,916 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:55:46,916 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 15:55:46,919 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 15:55:46,919 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 15:55:46,921 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 15:55:46,924 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 15:55:46,979 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:55:47,060 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 15:55:47,066 calendar_views Found company for user: accuro
+INFO 2025-05-21 15:55:47,072 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 15:55:47,075 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 15:55:47,075 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 15:55:47,075 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 15:55:47,075 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 15:55:47,075 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 15:55:47,075 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 15:55:47,076 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 15:55:47,076 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 15:55:47,076 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 15:55:47,076 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 15:55:47,076 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 15:55:47,076 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 15:55:47,077 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 15:55:47,077 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 15:55:47,077 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 15:55:47,077 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 15:55:47,077 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 15:55:47,077 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 15:55:47,077 calendar_views Returning 9 events
+INFO 2025-05-21 15:55:47,078 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747842947030 HTTP/1.1" 200 2739
+INFO 2025-05-21 15:55:47,671 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 15:55:47,709 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:55:47,759 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:55:47,783 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:57:51,428 models Invoice #1: get_total called
+INFO 2025-05-21 15:57:51,431 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:57:51,431 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 15:57:51,434 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 15:57:51,435 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 15:57:51,435 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 15:57:51,436 basehttp "GET /app/invoices/ HTTP/1.1" 200 28554
+WARNING 2025-05-21 15:57:51,528 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:57:58,270 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 15:57:58,339 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:57:58,378 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:57:58,396 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:57:59,974 models Invoice #1: get_total called
+INFO 2025-05-21 15:57:59,976 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:57:59,976 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 15:57:59,978 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 15:57:59,978 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 15:57:59,978 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 15:57:59,979 basehttp "GET /app/invoices/ HTTP/1.1" 200 28554
+WARNING 2025-05-21 15:58:00,009 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:58:03,530 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 15:58:03,571 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:58:03,625 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:58:03,654 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:58:11,880 models Invoice #1: get_total called
+INFO 2025-05-21 15:58:11,884 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:58:11,884 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 15:58:11,886 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 15:58:11,886 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 15:58:11,886 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 15:58:11,887 basehttp "GET /app/invoices/ HTTP/1.1" 200 28554
+INFO 2025-05-21 15:58:11,891 basehttp - Broken pipe from ('127.0.0.1', 54228)
+INFO 2025-05-21 15:58:11,929 models Invoice #1: get_total called
+INFO 2025-05-21 15:58:11,931 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:58:11,931 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 15:58:11,932 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 15:58:11,932 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 15:58:11,932 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 15:58:11,932 basehttp "GET /app/invoices/ HTTP/1.1" 200 28554
+WARNING 2025-05-21 15:58:11,961 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:58:15,109 models Invoice #1: get_total called
+INFO 2025-05-21 15:58:15,112 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:58:15,112 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 15:58:15,117 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 15:58:15,117 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 15:58:15,117 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 15:58:15,119 basehttp "GET /app/invoices/ HTTP/1.1" 200 28554
+WARNING 2025-05-21 15:58:15,190 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:58:23,591 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 15:58:23,637 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:58:23,698 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:58:23,729 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:58:35,229 basehttp "GET /app/expenses/ HTTP/1.1" 200 31957
+WARNING 2025-05-21 15:58:35,267 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:58:35,323 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:58:35,335 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:58:40,120 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 46013
+WARNING 2025-05-21 15:58:40,186 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 15:58:40,223 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 15:58:40,262 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 15:59:04,272 models Invoice #1: get_total called
+INFO 2025-05-21 15:59:04,272 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:59:04,272 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 15:59:04,274 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 15:59:04,275 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 15:59:04,275 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 15:59:04,286 models Invoice #1: get_total called
+INFO 2025-05-21 15:59:04,288 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:59:04,288 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 15:59:04,291 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 15:59:04,291 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 15:59:04,291 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 15:59:04,294 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 15:59:04,337 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:59:04,422 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 15:59:04,424 calendar_views Found company for user: accuro
+INFO 2025-05-21 15:59:04,428 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 15:59:04,429 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 15:59:04,430 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 15:59:04,430 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 15:59:04,430 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 15:59:04,430 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 15:59:04,430 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 15:59:04,430 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 15:59:04,430 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 15:59:04,430 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 15:59:04,430 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 15:59:04,430 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 15:59:04,430 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 15:59:04,430 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 15:59:04,430 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 15:59:04,430 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 15:59:04,430 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 15:59:04,430 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 15:59:04,430 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 15:59:04,430 calendar_views Returning 9 events
+INFO 2025-05-21 15:59:04,430 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747843144402 HTTP/1.1" 200 2739
+INFO 2025-05-21 15:59:13,624 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:59:13,625 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:59:13,625 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 15:59:13,626 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 15:59:13,626 models Invoice #1: get_total called
+INFO 2025-05-21 15:59:13,628 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 15:59:13,628 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 15:59:13,628 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 15:59:13,628 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 15:59:13,628 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 15:59:13,629 basehttp "GET /app/invoices/1/ HTTP/1.1" 200 20283
+WARNING 2025-05-21 15:59:13,674 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:59:19,022 basehttp "GET /auth/profile/ HTTP/1.1" 200 21337
+WARNING 2025-05-21 15:59:19,066 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 15:59:21,794 basehttp "GET /companies/1/ HTTP/1.1" 200 22304
+WARNING 2025-05-21 15:59:21,836 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941

@@ -26,6 +26,7 @@
     <link href="{% static 'assets/css/matdash_sidebar.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/topbar-enhanced.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/sidebar-toggle.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/modern-table.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/font-manrope.css' %}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
@@ -73,9 +74,12 @@
     <script src="{% static 'assets/js/app.js' %}"></script>
     <script src="{% static 'assets/js/sidebar-active.js' %}"></script>
     <script src="{% static 'assets/js/sidebar-toggle.js' %}"></script>
+    <script src="{% static 'assets/js/dropdown-fix.js' %}"></script>
+    <script src="{% static 'assets/js/actions-menu.js' %}"></script>
     {% block script_content %}
     {% endblock script_content %}
     <script src="https://kit.fontawesome.com/304487a008.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Datatables Orders

@@ -272,7 +272,7 @@
               border-radius: 50px;
             }
           </style>
-          <table id="invoices-table" class="table table-hover align-middle">
+          <table id="invoices-table" class="modern-table">
             <thead style="background: #e3f2fd; color: #1976d2; font-weight: 600;">
               <tr>
                 <th>ID</th>
@@ -288,19 +288,25 @@
                 <td>{{ invoice.created_at|date:'Y-m-d H:i' }}</td>
                 <td>{{ invoice.get_total|currency:currency_symbol }}</td>
                 <td>
-  
-                    <a href="{% url 'invoice-detail' invoice.pk %}" class="btn btn-sm shadow-sm me-1" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View">
-                      <i class="fas fa-eye"></i>
-                    </a>
-                    <a href="{% url 'invoice-update' invoice.pk %}" class="btn btn-sm shadow-sm me-1" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit">
-                      <i class="fas fa-edit"></i>
-                    </a>
-                    <a href="{% url 'invoice-pdf' invoice.pk %}" class="btn btn-sm shadow-sm me-1" style="background: #e8f5e9; color: #388e3c; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Export PDF">
-                      <i class="fas fa-file-pdf"></i>
-                    </a>
-                    <a href="{% url 'invoice-delete' invoice.pk %}" class="btn btn-sm shadow-sm me-1" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete">
-                      <i class="fas fa-trash"></i>
-                    </a>
+                  <div class="actions-menu">
+                    <button class="actions-button" onclick="toggleActionsMenu(this)">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="actions-dropdown">
+                      <a href="{% url 'invoice-detail' invoice.pk %}" class="action-item">
+                        <i class="fas fa-eye"></i> View
+                      </a>
+                      <a href="{% url 'invoice-update' invoice.pk %}" class="action-item">
+                        <i class="fas fa-edit"></i> Edit
+                      </a>
+                      <a href="{% url 'invoice-pdf' invoice.pk %}" class="action-item">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                      </a>
+                      <a href="{% url 'invoice-delete' invoice.pk %}" class="action-item delete">
+                        <i class="fas fa-trash"></i> Delete
+                      </a>
+                    </div>
+                  </div>
                 </td>
               </tr>
               {% empty %}
