@@ -13145,3 +13145,1219 @@ INFO 2025-05-21 15:59:19,022 basehttp "GET /auth/profile/ HTTP/1.1" 200 21337
 WARNING 2025-05-21 15:59:19,066 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
 INFO 2025-05-21 15:59:21,794 basehttp "GET /companies/1/ HTTP/1.1" 200 22304
 WARNING 2025-05-21 15:59:21,836 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:11:59,008 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 16:12:55,843 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 16:13:48,379 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 16:13:57,651 basehttp "GET /companies/1/ HTTP/1.1" 200 22304
+WARNING 2025-05-21 16:13:57,730 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:14:04,288 models Invoice #1: get_total called
+INFO 2025-05-21 16:14:04,288 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 16:14:04,288 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 16:14:04,290 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 16:14:04,290 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 16:14:04,290 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 16:14:04,299 models Invoice #1: get_total called
+INFO 2025-05-21 16:14:04,300 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 16:14:04,300 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 16:14:04,301 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 16:14:04,301 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 16:14:04,301 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 16:14:04,307 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 16:14:04,355 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:14:04,428 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 16:14:04,431 calendar_views Found company for user: accuro
+INFO 2025-05-21 16:14:04,438 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 16:14:04,439 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 16:14:04,439 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 16:14:04,439 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 16:14:04,439 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 16:14:04,439 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 16:14:04,439 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 16:14:04,439 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 16:14:04,439 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 16:14:04,440 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 16:14:04,440 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 16:14:04,440 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 16:14:04,440 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 16:14:04,440 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 16:14:04,440 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 16:14:04,440 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 16:14:04,440 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 16:14:04,440 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 16:14:04,440 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 16:14:04,440 calendar_views Returning 9 events
+INFO 2025-05-21 16:14:04,440 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747844044411 HTTP/1.1" 200 2739
+INFO 2025-05-21 16:14:07,915 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 16:14:07,948 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:14:08,016 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:14:08,049 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:14:16,818 models Invoice #1: get_total called
+INFO 2025-05-21 16:14:16,819 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 16:14:16,819 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 16:14:16,821 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 16:14:16,821 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 16:14:16,821 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 16:14:16,821 basehttp "GET /app/invoices/ HTTP/1.1" 200 28554
+WARNING 2025-05-21 16:14:16,855 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:14:19,783 basehttp "GET /app/expenses/ HTTP/1.1" 200 31957
+WARNING 2025-05-21 16:14:19,834 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:14:19,880 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:14:19,903 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:14:22,041 basehttp "GET /app/calendar/ HTTP/1.1" 200 19597
+WARNING 2025-05-21 16:14:22,081 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:14:23,209 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 46013
+WARNING 2025-05-21 16:14:23,234 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:14:23,296 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:14:23,314 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:14:28,702 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 16:14:28,758 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:14:28,802 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:14:28,832 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:14:30,392 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 46013
+WARNING 2025-05-21 16:14:30,431 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:14:30,500 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:14:30,532 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:14:34,380 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 22771
+WARNING 2025-05-21 16:14:34,418 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:14:34,475 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:14:34,501 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:14:36,857 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:14:36,858 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:14:36,859 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:14:36,859 products_views User is authenticated
+INFO 2025-05-21 16:14:36,863 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:14:36,865 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:14:36,869 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:14:36,869 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:14:36,869 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:14:36,869 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:14:36,869 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:14:36,870 products_views Found 2 categories for this company
+INFO 2025-05-21 16:14:36,870 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:14:36,870 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:14:36,871 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 16:14:36,873 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:14:36,873 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:14:36,873 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:14:36,873 products_views User is authenticated
+INFO 2025-05-21 16:14:36,874 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:14:36,874 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:14:36,875 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:14:36,875 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:14:36,875 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:14:36,875 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:14:36,875 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:14:36,877 products_views Found 2 categories for this company
+INFO 2025-05-21 16:14:36,877 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:14:36,877 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:14:36,879 products_views has_categories: True
+INFO 2025-05-21 16:14:36,883 products_views Number of rows in table: 2
+INFO 2025-05-21 16:14:36,883 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10a6d6e50>
+INFO 2025-05-21 16:14:36,883 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10a643110>
+INFO 2025-05-21 16:14:36,883 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 16:14:36,887 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 16:14:36,887 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 16:14:36,888 basehttp "GET /app/categories/ HTTP/1.1" 200 23524
+WARNING 2025-05-21 16:14:36,932 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:16:13,988 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/tables.py changed, reloading.
+INFO 2025-05-21 16:16:14,496 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 16:18:46,059 models Invoice #1: get_total called
+INFO 2025-05-21 16:18:46,061 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 16:18:46,061 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 16:18:46,062 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 16:18:46,062 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 16:18:46,062 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 16:18:46,063 basehttp "GET /app/invoices/ HTTP/1.1" 200 28554
+WARNING 2025-05-21 16:18:46,202 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:21:55,089 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:21:55,089 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:21:55,090 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:21:55,090 products_views User is authenticated
+INFO 2025-05-21 16:21:55,091 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:21:55,092 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:21:55,095 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:21:55,095 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:21:55,095 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:21:55,095 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:21:55,095 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:21:55,096 products_views Found 2 categories for this company
+INFO 2025-05-21 16:21:55,096 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:21:55,096 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:21:55,097 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 16:21:55,099 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:21:55,099 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:21:55,099 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:21:55,099 products_views User is authenticated
+INFO 2025-05-21 16:21:55,099 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:21:55,099 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:21:55,099 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:21:55,100 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:21:55,100 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:21:55,100 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:21:55,100 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:21:55,101 products_views Found 2 categories for this company
+INFO 2025-05-21 16:21:55,101 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:21:55,101 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:21:55,102 products_views has_categories: True
+INFO 2025-05-21 16:21:55,105 products_views Number of rows in table: 2
+INFO 2025-05-21 16:21:55,105 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10bb1f950>
+INFO 2025-05-21 16:21:55,105 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10b9633d0>
+INFO 2025-05-21 16:21:55,105 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 16:21:55,109 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 16:21:55,110 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 16:21:55,110 basehttp "GET /app/categories/ HTTP/1.1" 200 23440
+WARNING 2025-05-21 16:21:55,196 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:23:07,262 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:23:07,263 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:23:07,263 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:23:07,263 products_views User is authenticated
+INFO 2025-05-21 16:23:07,264 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:23:07,265 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:23:07,266 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:23:07,266 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:07,266 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:07,266 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:23:07,266 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:23:07,266 products_views Found 2 categories for this company
+INFO 2025-05-21 16:23:07,266 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:23:07,266 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:23:07,267 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 16:23:07,267 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:23:07,267 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:23:07,267 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:23:07,267 products_views User is authenticated
+INFO 2025-05-21 16:23:07,267 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:23:07,268 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:23:07,268 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:23:07,268 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:07,268 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:07,268 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:23:07,268 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:23:07,269 products_views Found 2 categories for this company
+INFO 2025-05-21 16:23:07,269 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:23:07,270 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:23:07,271 products_views has_categories: True
+INFO 2025-05-21 16:23:07,274 products_views Number of rows in table: 2
+INFO 2025-05-21 16:23:07,274 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10bb40c90>
+INFO 2025-05-21 16:23:07,274 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10bb43d90>
+INFO 2025-05-21 16:23:07,274 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 16:23:07,277 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 16:23:07,277 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 16:23:07,278 basehttp "GET /app/categories/ HTTP/1.1" 200 23440
+WARNING 2025-05-21 16:23:07,312 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:23:08,168 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:23:08,168 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:23:08,169 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:23:08,169 products_views User is authenticated
+INFO 2025-05-21 16:23:08,179 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:23:08,181 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:23:08,189 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:23:08,189 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:08,189 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:08,189 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:23:08,190 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:23:08,191 products_views Found 2 categories for this company
+INFO 2025-05-21 16:23:08,193 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:23:08,193 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:23:08,193 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 16:23:08,195 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:23:08,196 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:23:08,196 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:23:08,196 products_views User is authenticated
+INFO 2025-05-21 16:23:08,196 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:23:08,196 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:23:08,201 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:23:08,201 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:08,201 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:08,201 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:23:08,201 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:23:08,202 products_views Found 2 categories for this company
+INFO 2025-05-21 16:23:08,202 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:23:08,202 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:23:08,203 products_views has_categories: True
+INFO 2025-05-21 16:23:08,205 products_views Number of rows in table: 2
+INFO 2025-05-21 16:23:08,205 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10bb54790>
+INFO 2025-05-21 16:23:08,206 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10ba3efd0>
+INFO 2025-05-21 16:23:08,206 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 16:23:08,207 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 16:23:08,207 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 16:23:08,207 basehttp "GET /app/categories/ HTTP/1.1" 200 23440
+WARNING 2025-05-21 16:23:08,255 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:23:09,225 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:23:09,225 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:23:09,225 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:23:09,225 products_views User is authenticated
+INFO 2025-05-21 16:23:09,227 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:23:09,229 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:23:09,231 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:23:09,231 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:09,231 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:09,231 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:23:09,231 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:23:09,232 products_views Found 2 categories for this company
+INFO 2025-05-21 16:23:09,232 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:23:09,232 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:23:09,232 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 16:23:09,234 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:23:09,234 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:23:09,234 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:23:09,234 products_views User is authenticated
+INFO 2025-05-21 16:23:09,234 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:23:09,234 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:23:09,236 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:23:09,237 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:09,238 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:09,238 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:23:09,238 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:23:09,243 products_views Found 2 categories for this company
+INFO 2025-05-21 16:23:09,243 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:23:09,243 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:23:09,250 products_views has_categories: True
+INFO 2025-05-21 16:23:09,254 products_views Number of rows in table: 2
+INFO 2025-05-21 16:23:09,254 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10bb563d0>
+INFO 2025-05-21 16:23:09,254 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10b97ab10>
+INFO 2025-05-21 16:23:09,254 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 16:23:09,255 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 16:23:09,255 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 16:23:09,256 basehttp "GET /app/categories/ HTTP/1.1" 200 23440
+WARNING 2025-05-21 16:23:09,277 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:23:14,680 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:23:14,681 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:23:14,681 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:23:14,681 products_views User is authenticated
+INFO 2025-05-21 16:23:14,684 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:23:14,685 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:23:14,687 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:23:14,687 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:14,687 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:14,687 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:23:14,687 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:23:14,688 products_views Found 2 categories for this company
+INFO 2025-05-21 16:23:14,688 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:23:14,688 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:23:14,688 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 16:23:14,689 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:23:14,689 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:23:14,689 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:23:14,689 products_views User is authenticated
+INFO 2025-05-21 16:23:14,689 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:23:14,689 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:23:14,690 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:23:14,690 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:14,690 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:14,690 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:23:14,690 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:23:14,691 products_views Found 2 categories for this company
+INFO 2025-05-21 16:23:14,691 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:23:14,691 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:23:14,692 products_views has_categories: True
+INFO 2025-05-21 16:23:14,693 products_views Number of rows in table: 2
+INFO 2025-05-21 16:23:14,693 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10bc3f250>
+INFO 2025-05-21 16:23:14,693 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10b9798d0>
+INFO 2025-05-21 16:23:14,693 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 16:23:14,694 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 16:23:14,695 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 16:23:14,695 basehttp "GET /app/categories/ HTTP/1.1" 200 23440
+WARNING 2025-05-21 16:23:14,719 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:23:19,020 basehttp "GET /app/expenses/ HTTP/1.1" 200 31957
+WARNING 2025-05-21 16:23:19,053 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:23:19,107 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:23:19,121 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:23:23,058 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:23:23,060 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:23:23,060 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:23:23,061 products_views User is authenticated
+INFO 2025-05-21 16:23:23,071 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:23:23,073 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:23:23,078 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:23:23,078 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:23,079 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:23,079 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:23:23,079 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:23:23,081 products_views Found 2 categories for this company
+INFO 2025-05-21 16:23:23,081 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:23:23,081 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:23:23,081 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 16:23:23,083 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:23:23,083 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:23:23,083 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:23:23,083 products_views User is authenticated
+INFO 2025-05-21 16:23:23,083 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:23:23,083 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:23:23,084 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:23:23,085 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:23,085 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:23:23,085 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:23:23,085 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:23:23,086 products_views Found 2 categories for this company
+INFO 2025-05-21 16:23:23,086 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:23:23,086 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:23:23,087 products_views has_categories: True
+INFO 2025-05-21 16:23:23,089 products_views Number of rows in table: 2
+INFO 2025-05-21 16:23:23,089 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10bb48550>
+INFO 2025-05-21 16:23:23,089 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10bb41010>
+INFO 2025-05-21 16:23:23,089 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 16:23:23,091 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 16:23:23,092 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 16:23:23,093 basehttp "GET /app/categories/ HTTP/1.1" 200 23440
+WARNING 2025-05-21 16:23:23,154 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:24:16,617 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:24:16,618 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:24:16,618 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:24:16,618 products_views User is authenticated
+INFO 2025-05-21 16:24:16,621 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:24:16,625 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:24:16,629 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:24:16,629 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:24:16,629 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:24:16,629 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:24:16,629 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:24:16,632 products_views Found 2 categories for this company
+INFO 2025-05-21 16:24:16,632 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:24:16,632 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:24:16,633 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 16:24:16,635 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:24:16,635 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:24:16,635 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:24:16,635 products_views User is authenticated
+INFO 2025-05-21 16:24:16,635 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:24:16,635 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:24:16,636 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:24:16,636 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:24:16,636 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:24:16,636 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:24:16,636 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:24:16,637 products_views Found 2 categories for this company
+INFO 2025-05-21 16:24:16,637 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:24:16,637 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:24:16,637 products_views has_categories: True
+INFO 2025-05-21 16:24:16,639 products_views Number of rows in table: 2
+INFO 2025-05-21 16:24:16,639 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10bc52810>
+INFO 2025-05-21 16:24:16,639 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10bb41e50>
+INFO 2025-05-21 16:24:16,639 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 16:24:16,640 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 16:24:16,640 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 16:24:16,641 basehttp "GET /app/categories/ HTTP/1.1" 200 23440
+WARNING 2025-05-21 16:24:16,678 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:24:24,709 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:24:24,710 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:24:24,710 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:24:24,710 products_views User is authenticated
+INFO 2025-05-21 16:24:24,715 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:24:24,721 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:24:24,724 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:24:24,724 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:24:24,724 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:24:24,724 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:24:24,724 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:24:24,726 products_views Found 2 categories for this company
+INFO 2025-05-21 16:24:24,726 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:24:24,726 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:24:24,728 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 16:24:24,731 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:24:24,731 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:24:24,731 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:24:24,731 products_views User is authenticated
+INFO 2025-05-21 16:24:24,731 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:24:24,731 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:24:24,732 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:24:24,732 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:24:24,733 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:24:24,733 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:24:24,733 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:24:24,734 products_views Found 2 categories for this company
+INFO 2025-05-21 16:24:24,734 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:24:24,734 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:24:24,735 products_views has_categories: True
+INFO 2025-05-21 16:24:24,738 products_views Number of rows in table: 2
+INFO 2025-05-21 16:24:24,738 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10ba68ed0>
+INFO 2025-05-21 16:24:24,738 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10bc52ed0>
+INFO 2025-05-21 16:24:24,738 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 16:24:24,740 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 16:24:24,740 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 16:24:24,741 basehttp "GET /app/categories/ HTTP/1.1" 200 23440
+WARNING 2025-05-21 16:24:24,823 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:30:37,722 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:30:37,722 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:30:37,722 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:30:37,722 products_views User is authenticated
+INFO 2025-05-21 16:30:37,724 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:30:37,725 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:30:37,727 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:30:37,727 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:30:37,727 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:30:37,727 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:30:37,727 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:30:37,728 products_views Found 2 categories for this company
+INFO 2025-05-21 16:30:37,728 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:30:37,728 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:30:37,728 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 16:30:37,729 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:30:37,729 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:30:37,729 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:30:37,729 products_views User is authenticated
+INFO 2025-05-21 16:30:37,729 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:30:37,729 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:30:37,730 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:30:37,730 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:30:37,730 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:30:37,730 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:30:37,730 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:30:37,730 products_views Found 2 categories for this company
+INFO 2025-05-21 16:30:37,730 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:30:37,730 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:30:37,731 products_views has_categories: True
+INFO 2025-05-21 16:30:37,733 products_views Number of rows in table: 2
+INFO 2025-05-21 16:30:37,733 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10b979250>
+INFO 2025-05-21 16:30:37,733 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10ba3c6d0>
+INFO 2025-05-21 16:30:37,733 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 16:30:37,735 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 16:30:37,735 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 16:30:37,736 basehttp "GET /app/categories/ HTTP/1.1" 200 23440
+WARNING 2025-05-21 16:30:37,812 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:30:51,847 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 22771
+WARNING 2025-05-21 16:30:51,920 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:30:51,959 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:30:51,974 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:30:53,223 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:30:53,224 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:30:53,224 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:30:53,224 products_views User is authenticated
+INFO 2025-05-21 16:30:53,227 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:30:53,231 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:30:53,233 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:30:53,234 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:30:53,234 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:30:53,234 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:30:53,234 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:30:53,234 products_views Found 2 categories for this company
+INFO 2025-05-21 16:30:53,235 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:30:53,235 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:30:53,235 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 16:30:53,236 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 16:30:53,236 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 16:30:53,236 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 16:30:53,236 products_views User is authenticated
+INFO 2025-05-21 16:30:53,236 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 16:30:53,236 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 16:30:53,236 products_views 
+=== All categories in database ===
+INFO 2025-05-21 16:30:53,236 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:30:53,236 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 16:30:53,236 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 16:30:53,236 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 16:30:53,237 products_views Found 2 categories for this company
+INFO 2025-05-21 16:30:53,237 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 16:30:53,237 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 16:30:53,238 products_views has_categories: True
+INFO 2025-05-21 16:30:53,240 products_views Number of rows in table: 2
+INFO 2025-05-21 16:30:53,240 products_views Row 1: <django_tables2.rows.BoundRow object at 0x10b974510>
+INFO 2025-05-21 16:30:53,240 products_views Row 2: <django_tables2.rows.BoundRow object at 0x10bb54e90>
+INFO 2025-05-21 16:30:53,240 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 16:30:53,241 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 16:30:53,242 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 16:30:53,242 basehttp "GET /app/categories/ HTTP/1.1" 200 23440
+WARNING 2025-05-21 16:30:53,310 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:30:55,984 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 22771
+WARNING 2025-05-21 16:30:56,020 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:30:56,075 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:30:56,113 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:31:04,455 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 46013
+WARNING 2025-05-21 16:31:04,485 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:31:04,548 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:31:04,571 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:31:09,759 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 22771
+WARNING 2025-05-21 16:31:09,800 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:31:09,853 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:31:09,881 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:31:13,886 basehttp "GET /app/expense-categories/update/1/ HTTP/1.1" 200 18415
+WARNING 2025-05-21 16:31:13,919 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:31:25,822 models Invoice #1: get_total called
+INFO 2025-05-21 16:31:25,822 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 16:31:25,822 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 16:31:25,824 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 16:31:25,824 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 16:31:25,824 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 16:31:25,830 models Invoice #1: get_total called
+INFO 2025-05-21 16:31:25,831 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 16:31:25,831 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 16:31:25,832 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 16:31:25,832 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 16:31:25,832 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 16:31:25,835 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 16:31:25,870 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:31:25,948 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 16:31:25,951 calendar_views Found company for user: accuro
+INFO 2025-05-21 16:31:25,954 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 16:31:25,955 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 16:31:25,955 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 16:31:25,955 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 16:31:25,955 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 16:31:25,955 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 16:31:25,955 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 16:31:25,955 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 16:31:25,955 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 16:31:25,955 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 16:31:25,955 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 16:31:25,955 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 16:31:25,955 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 16:31:25,955 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 16:31:25,956 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 16:31:25,956 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 16:31:25,956 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 16:31:25,956 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 16:31:25,956 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 16:31:25,956 calendar_views Returning 9 events
+INFO 2025-05-21 16:31:25,956 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747845085937 HTTP/1.1" 200 2739
+INFO 2025-05-21 16:31:29,499 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 16:31:29,560 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:31:29,603 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:31:29,634 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:31:31,839 models Invoice #1: get_total called
+INFO 2025-05-21 16:31:31,842 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 16:31:31,842 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 16:31:31,845 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 16:31:31,845 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 16:31:31,845 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 16:31:31,846 basehttp "GET /app/invoices/ HTTP/1.1" 200 28554
+WARNING 2025-05-21 16:31:31,905 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:31:37,758 basehttp "GET /app/expenses/ HTTP/1.1" 200 31957
+WARNING 2025-05-21 16:31:37,798 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:31:37,846 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:31:37,857 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:31:43,216 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 46013
+WARNING 2025-05-21 16:31:43,275 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:31:43,319 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:31:43,355 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:32:24,550 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 16:32:24,585 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:32:24,651 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:32:24,691 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:32:26,241 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 46013
+WARNING 2025-05-21 16:32:26,309 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:32:26,353 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:32:26,378 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:38:55,126 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 50110
+WARNING 2025-05-21 16:38:55,162 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:38:55,232 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:38:55,254 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:39:30,072 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 50110
+WARNING 2025-05-21 16:39:30,148 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:39:30,187 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:39:30,201 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:39:41,665 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 16:39:41,707 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:39:41,756 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:39:41,787 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:45:55,669 basehttp "GET /app/products/create/ HTTP/1.1" 200 34958
+WARNING 2025-05-21 16:45:55,733 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:45:55,771 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:46:22,481 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 50110
+WARNING 2025-05-21 16:46:22,533 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:46:22,571 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:46:22,582 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:46:31,561 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 16:46:31,598 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:46:31,651 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:46:31,660 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:46:34,693 basehttp "GET /app/products/create/ HTTP/1.1" 200 34958
+WARNING 2025-05-21 16:46:34,732 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:47:52,552 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/forms.py changed, reloading.
+INFO 2025-05-21 16:47:53,212 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 16:48:03,671 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/forms.py changed, reloading.
+INFO 2025-05-21 16:48:04,086 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 16:48:15,531 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/forms.py changed, reloading.
+INFO 2025-05-21 16:48:15,985 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 16:48:19,303 basehttp "GET / HTTP/1.1" 302 0
+INFO 2025-05-21 16:48:19,328 basehttp "GET /landing/ HTTP/1.1" 302 0
+INFO 2025-05-21 16:48:19,380 models Invoice #1: get_total called
+INFO 2025-05-21 16:48:19,380 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 16:48:19,380 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 16:48:19,381 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 16:48:19,381 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 16:48:19,381 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 16:48:19,396 models Invoice #1: get_total called
+INFO 2025-05-21 16:48:19,398 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 16:48:19,398 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 16:48:19,399 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 16:48:19,399 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 16:48:19,399 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 16:48:19,403 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 16:48:19,478 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:48:19,708 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 16:48:19,711 calendar_views Found company for user: accuro
+INFO 2025-05-21 16:48:19,719 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 16:48:19,720 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 16:48:19,720 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 16:48:19,720 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 16:48:19,720 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 16:48:19,720 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 16:48:19,721 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 16:48:19,721 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 16:48:19,721 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 16:48:19,721 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 16:48:19,721 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 16:48:19,721 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 16:48:19,721 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 16:48:19,721 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 16:48:19,721 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 16:48:19,721 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 16:48:19,721 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 16:48:19,721 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 16:48:19,721 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 16:48:19,721 calendar_views Returning 9 events
+INFO 2025-05-21 16:48:19,721 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747846099689 HTTP/1.1" 200 2739
+INFO 2025-05-21 16:48:28,498 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/forms.py changed, reloading.
+INFO 2025-05-21 16:48:28,993 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 16:48:44,594 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/forms.py changed, reloading.
+INFO 2025-05-21 16:48:45,116 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 16:50:13,772 basehttp "GET / HTTP/1.1" 302 0
+INFO 2025-05-21 16:50:13,785 basehttp "GET /landing/ HTTP/1.1" 200 19396
+WARNING 2025-05-21 16:50:14,899 log Not Found: /favicon.ico
+WARNING 2025-05-21 16:50:14,899 basehttp "GET /favicon.ico HTTP/1.1" 404 4225
+INFO 2025-05-21 16:50:15,962 basehttp "GET /register/ HTTP/1.1" 200 9903
+INFO 2025-05-21 16:50:16,000 basehttp "GET /static/assets/css/app.css HTTP/1.1" 200 198751
+INFO 2025-05-21 16:50:16,001 basehttp "GET /static/assets/css/light.css HTTP/1.1" 200 674230
+INFO 2025-05-21 16:50:16,404 basehttp "GET /static/assets/img/icons/icon-48x48.png HTTP/1.1" 200 3533
+INFO 2025-05-21 16:50:31,547 basehttp "GET /register/ HTTP/1.1" 200 9903
+INFO 2025-05-21 16:51:53,983 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 16:51:54,023 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 16:51:54,089 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 16:51:54,101 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 16:51:55,685 basehttp "GET /app/products/create/ HTTP/1.1" 200 36227
+WARNING 2025-05-21 16:51:55,707 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:52:06,679 models Invoice #1: get_total called
+INFO 2025-05-21 16:52:06,680 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 16:52:06,680 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 16:52:06,682 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 16:52:06,682 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 16:52:06,682 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 16:52:06,683 basehttp "GET /app/invoices/ HTTP/1.1" 200 28554
+WARNING 2025-05-21 16:52:06,715 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:52:07,742 basehttp "GET /app/invoices/create/ HTTP/1.1" 200 27296
+WARNING 2025-05-21 16:52:07,775 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 16:52:07,794 basehttp "GET /static/js/invoice_item_autofill.js HTTP/1.1" 304 0
+INFO 2025-05-21 16:52:59,479 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/forms.py changed, reloading.
+INFO 2025-05-21 16:53:00,036 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 16:53:10,467 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/forms.py changed, reloading.
+INFO 2025-05-21 16:53:11,007 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 16:54:09,369 basehttp "GET /app/invoices/create/ HTTP/1.1" 200 29659
+WARNING 2025-05-21 16:54:09,429 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:42:07,308 basehttp "GET /app/invoices/create/ HTTP/1.1" 200 29687
+WARNING 2025-05-21 20:42:07,382 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:42:07,384 basehttp "GET /static/assets/css/matdash_layout.css HTTP/1.1" 200 4282
+INFO 2025-05-21 20:42:07,385 basehttp "GET /static/assets/css/matdash_sidebar.css HTTP/1.1" 200 4900
+INFO 2025-05-21 20:42:07,385 basehttp "GET /static/assets/css/sidebar-toggle.css HTTP/1.1" 200 1281
+INFO 2025-05-21 20:42:07,385 basehttp "GET /static/assets/css/topbar-enhanced.css HTTP/1.1" 200 2109
+INFO 2025-05-21 20:42:07,386 basehttp "GET /static/assets/css/modern-table.css HTTP/1.1" 200 3607
+INFO 2025-05-21 20:42:07,388 basehttp "GET /static/assets/js/actions-menu.js HTTP/1.1" 200 831
+INFO 2025-05-21 20:42:07,388 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 200 2403
+INFO 2025-05-21 20:42:07,389 basehttp "GET /static/assets/css/font-manrope.css HTTP/1.1" 200 889
+INFO 2025-05-21 20:42:07,389 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 200 1814
+INFO 2025-05-21 20:42:07,390 basehttp "GET /static/assets/js/sidebar-active.js HTTP/1.1" 200 0
+INFO 2025-05-21 20:42:07,391 basehttp "GET /static/assets/css/light.css HTTP/1.1" 200 674230
+INFO 2025-05-21 20:42:12,207 models Invoice #1: get_total called
+INFO 2025-05-21 20:42:12,208 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:42:12,208 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:42:12,211 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:42:12,211 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:42:12,212 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:42:12,221 models Invoice #1: get_total called
+INFO 2025-05-21 20:42:12,225 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:42:12,225 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:42:12,226 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:42:12,227 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:42:12,227 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:42:12,234 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 20:42:12,278 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:42:12,359 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 20:42:12,362 calendar_views Found company for user: accuro
+INFO 2025-05-21 20:42:12,369 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 20:42:12,371 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 20:42:12,371 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 20:42:12,371 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 20:42:12,371 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 20:42:12,371 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 20:42:12,371 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 20:42:12,371 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 20:42:12,371 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 20:42:12,371 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 20:42:12,371 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 20:42:12,371 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 20:42:12,371 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 20:42:12,371 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 20:42:12,371 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 20:42:12,371 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 20:42:12,371 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 20:42:12,371 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 20:42:12,371 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 20:42:12,371 calendar_views Returning 9 events
+INFO 2025-05-21 20:42:12,372 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747860132339 HTTP/1.1" 200 2739
+INFO 2025-05-21 20:42:15,251 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 20:42:15,295 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 20:42:15,350 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 20:42:15,369 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 20:42:18,060 models Invoice #1: get_total called
+INFO 2025-05-21 20:42:18,062 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:42:18,062 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:42:18,066 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:42:18,066 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:42:18,066 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:42:18,067 basehttp "GET /app/invoices/ HTTP/1.1" 200 28554
+WARNING 2025-05-21 20:42:18,113 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:42:20,658 basehttp "GET /app/expenses/ HTTP/1.1" 200 31957
+WARNING 2025-05-21 20:42:20,719 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:42:20,735 basehttp "GET /static/django_select2/django_select2.js HTTP/1.1" 304 0
+INFO 2025-05-21 20:42:20,737 basehttp "GET /static/admin/css/vendor/select2/select2.min.css HTTP/1.1" 304 0
+INFO 2025-05-21 20:42:20,738 basehttp "GET /static/admin/js/vendor/select2/select2.full.min.js HTTP/1.1" 304 0
+INFO 2025-05-21 20:42:20,738 basehttp "GET /static/django_select2/django_select2.css HTTP/1.1" 304 0
+INFO 2025-05-21 20:42:20,738 basehttp "GET /static/admin/js/vendor/select2/i18n/fr.js HTTP/1.1" 304 0
+WARNING 2025-05-21 20:42:20,755 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 20:42:20,765 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 20:42:35,884 basehttp "GET /app/calendar/ HTTP/1.1" 200 19597
+WARNING 2025-05-21 20:42:35,923 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:42:36,643 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 50110
+WARNING 2025-05-21 20:42:36,685 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 20:42:36,758 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 20:42:36,793 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 20:42:41,969 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 22771
+WARNING 2025-05-21 20:42:42,008 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 20:42:42,067 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 20:42:42,090 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 20:42:43,296 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 20:42:43,297 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 20:42:43,297 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 20:42:43,297 products_views User is authenticated
+INFO 2025-05-21 20:42:43,298 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 20:42:43,300 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 20:42:43,302 products_views 
+=== All categories in database ===
+INFO 2025-05-21 20:42:43,302 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 20:42:43,302 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 20:42:43,302 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 20:42:43,302 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 20:42:43,303 products_views Found 2 categories for this company
+INFO 2025-05-21 20:42:43,303 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 20:42:43,303 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 20:42:43,303 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-21 20:42:43,305 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-21 20:42:43,305 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-21 20:42:43,305 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-21 20:42:43,305 products_views User is authenticated
+INFO 2025-05-21 20:42:43,305 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-21 20:42:43,305 products_views User's company: accuro (ID: 1)
+INFO 2025-05-21 20:42:43,306 products_views 
+=== All categories in database ===
+INFO 2025-05-21 20:42:43,306 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-21 20:42:43,306 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-21 20:42:43,306 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-21 20:42:43,307 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-21 20:42:43,307 products_views Found 2 categories for this company
+INFO 2025-05-21 20:42:43,307 products_views - Uncategorized (ID: 1)
+INFO 2025-05-21 20:42:43,307 products_views - Pantalon (ID: 2)
+INFO 2025-05-21 20:42:43,308 products_views has_categories: True
+INFO 2025-05-21 20:42:43,309 products_views Number of rows in table: 2
+INFO 2025-05-21 20:42:43,309 products_views Row 1: <django_tables2.rows.BoundRow object at 0x1070c1d90>
+INFO 2025-05-21 20:42:43,310 products_views Row 2: <django_tables2.rows.BoundRow object at 0x1070bab50>
+INFO 2025-05-21 20:42:43,310 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-21 20:42:43,311 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-21 20:42:43,312 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-21 20:42:43,312 basehttp "GET /app/categories/ HTTP/1.1" 200 23440
+WARNING 2025-05-21 20:42:43,372 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:42:45,582 basehttp "GET /companies/1/ HTTP/1.1" 200 22304
+WARNING 2025-05-21 20:42:45,619 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:42:48,299 models Invoice #1: get_total called
+INFO 2025-05-21 20:42:48,300 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:42:48,300 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:42:48,302 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:42:48,302 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:42:48,302 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:42:48,307 models Invoice #1: get_total called
+INFO 2025-05-21 20:42:48,309 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:42:48,309 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:42:48,311 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:42:48,311 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:42:48,311 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:42:48,316 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 20:42:48,350 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:42:48,424 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 20:42:48,426 calendar_views Found company for user: accuro
+INFO 2025-05-21 20:42:48,431 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 20:42:48,434 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 20:42:48,434 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 20:42:48,434 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 20:42:48,434 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 20:42:48,434 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 20:42:48,434 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 20:42:48,434 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 20:42:48,434 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 20:42:48,434 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 20:42:48,434 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 20:42:48,434 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 20:42:48,434 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 20:42:48,434 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 20:42:48,435 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 20:42:48,435 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 20:42:48,435 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 20:42:48,435 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 20:42:48,435 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 20:42:48,435 calendar_views Returning 9 events
+INFO 2025-05-21 20:42:48,435 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747860168409 HTTP/1.1" 200 2739
+INFO 2025-05-21 20:44:10,030 basehttp "GET / HTTP/1.1" 302 0
+INFO 2025-05-21 20:44:10,076 basehttp "GET /landing/ HTTP/1.1" 302 0
+INFO 2025-05-21 20:44:10,157 models Invoice #1: get_total called
+INFO 2025-05-21 20:44:10,157 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:44:10,157 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:44:10,159 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:44:10,159 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:44:10,160 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:44:10,165 models Invoice #1: get_total called
+INFO 2025-05-21 20:44:10,167 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:44:10,167 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:44:10,169 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:44:10,170 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:44:10,170 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:44:10,176 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 20:44:10,263 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:44:10,669 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 20:44:10,671 calendar_views Found company for user: accuro
+INFO 2025-05-21 20:44:10,676 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 20:44:10,677 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 20:44:10,677 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 20:44:10,677 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 20:44:10,677 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 20:44:10,677 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 20:44:10,677 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 20:44:10,677 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 20:44:10,677 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 20:44:10,677 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 20:44:10,678 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 20:44:10,678 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 20:44:10,678 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 20:44:10,678 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 20:44:10,678 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 20:44:10,678 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 20:44:10,678 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 20:44:10,678 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 20:44:10,678 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 20:44:10,678 calendar_views Returning 9 events
+INFO 2025-05-21 20:44:10,678 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747860250658 HTTP/1.1" 200 2739
+INFO 2025-05-21 20:47:29,373 models Invoice #1: get_total called
+INFO 2025-05-21 20:47:29,376 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:47:29,376 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:47:29,379 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:47:29,379 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:47:29,379 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:47:29,395 models Invoice #1: get_total called
+INFO 2025-05-21 20:47:29,397 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:47:29,397 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:47:29,402 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:47:29,402 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:47:29,402 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:47:29,408 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 20:47:29,476 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:47:29,948 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 20:47:29,959 calendar_views Found company for user: accuro
+INFO 2025-05-21 20:47:29,968 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 20:47:29,970 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 20:47:29,970 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 20:47:29,970 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 20:47:29,971 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 20:47:29,971 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 20:47:29,971 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 20:47:29,971 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 20:47:29,971 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 20:47:29,971 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 20:47:29,971 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 20:47:29,971 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 20:47:29,971 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 20:47:29,971 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 20:47:29,971 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 20:47:29,971 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 20:47:29,971 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 20:47:29,971 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 20:47:29,971 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 20:47:29,971 calendar_views Returning 9 events
+INFO 2025-05-21 20:47:29,971 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747860449919 HTTP/1.1" 200 2739
+INFO 2025-05-21 20:47:39,379 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 20:47:39,432 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 20:47:39,470 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 20:47:39,477 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 20:51:33,395 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 20:51:33,453 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 20:51:33,508 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 20:51:33,521 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 20:51:35,424 models Invoice #1: get_total called
+INFO 2025-05-21 20:51:35,424 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:51:35,424 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:51:35,428 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:51:35,429 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:51:35,429 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:51:35,443 models Invoice #1: get_total called
+INFO 2025-05-21 20:51:35,445 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:51:35,445 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:51:35,447 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:51:35,447 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:51:35,447 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:51:35,458 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 20:51:35,540 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:51:35,596 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 20:51:35,598 calendar_views Found company for user: accuro
+INFO 2025-05-21 20:51:35,602 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 20:51:35,604 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 20:51:35,604 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 20:51:35,604 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 20:51:35,604 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 20:51:35,604 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 20:51:35,604 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 20:51:35,604 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 20:51:35,604 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 20:51:35,604 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 20:51:35,604 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 20:51:35,604 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 20:51:35,604 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 20:51:35,605 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 20:51:35,605 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 20:51:35,605 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 20:51:35,605 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 20:51:35,605 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 20:51:35,605 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 20:51:35,605 calendar_views Returning 9 events
+INFO 2025-05-21 20:51:35,605 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747860695567 HTTP/1.1" 200 2739
+INFO 2025-05-21 20:54:46,485 models Invoice #1: get_total called
+INFO 2025-05-21 20:54:46,486 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:54:46,486 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:54:46,488 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:54:46,488 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:54:46,488 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:54:46,498 models Invoice #1: get_total called
+INFO 2025-05-21 20:54:46,499 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:54:46,499 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:54:46,501 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:54:46,501 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:54:46,501 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:54:46,503 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 20:54:46,570 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 20:54:47,041 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 20:54:47,044 calendar_views Found company for user: accuro
+INFO 2025-05-21 20:54:47,050 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 20:54:47,052 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 20:54:47,052 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 20:54:47,052 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 20:54:47,052 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 20:54:47,052 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 20:54:47,052 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 20:54:47,052 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 20:54:47,053 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 20:54:47,053 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 20:54:47,053 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 20:54:47,053 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 20:54:47,053 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 20:54:47,053 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 20:54:47,053 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 20:54:47,053 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 20:54:47,053 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 20:54:47,053 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 20:54:47,054 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 20:54:47,054 calendar_views Returning 9 events
+INFO 2025-05-21 20:54:47,054 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747860886995 HTTP/1.1" 200 2739
+INFO 2025-05-21 20:54:49,536 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 20:54:49,594 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 20:54:49,643 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 20:54:49,677 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 20:54:51,067 models Invoice #1: get_total called
+INFO 2025-05-21 20:54:51,068 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 20:54:51,068 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 20:54:51,068 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 20:54:51,068 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 20:54:51,068 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 20:54:51,069 basehttp "GET /app/invoices/ HTTP/1.1" 200 28554
+WARNING 2025-05-21 20:54:51,105 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 21:49:27,468 models Invoice #1: get_total called
+INFO 2025-05-21 21:49:27,468 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 21:49:27,468 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 21:49:27,477 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 21:49:27,478 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 21:49:27,478 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 21:49:27,485 models Invoice #1: get_total called
+INFO 2025-05-21 21:49:27,488 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 21:49:27,488 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 21:49:27,489 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 21:49:27,489 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 21:49:27,490 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 21:49:27,494 basehttp "GET /app/ HTTP/1.1" 200 54710
+INFO 2025-05-21 21:49:27,553 basehttp "GET /static/assets/css/light.css HTTP/1.1" 304 0
+INFO 2025-05-21 21:49:27,553 basehttp "GET /static/assets/css/matdash_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-21 21:49:27,555 basehttp "GET /static/assets/css/font-manrope.css HTTP/1.1" 304 0
+INFO 2025-05-21 21:49:27,555 basehttp "GET /static/assets/css/topbar-enhanced.css HTTP/1.1" 304 0
+WARNING 2025-05-21 21:49:27,578 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 21:49:27,579 basehttp "GET /static/assets/css/matdash_layout.css HTTP/1.1" 304 0
+INFO 2025-05-21 21:49:27,579 basehttp "GET /static/assets/css/modern-table.css HTTP/1.1" 304 0
+INFO 2025-05-21 21:49:27,579 basehttp "GET /static/assets/css/sidebar-toggle.css HTTP/1.1" 304 0
+INFO 2025-05-21 21:49:27,579 basehttp "GET /static/assets/js/sidebar-active.js HTTP/1.1" 304 0
+INFO 2025-05-21 21:49:27,580 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 304 0
+INFO 2025-05-21 21:49:27,582 basehttp "GET /static/assets/js/actions-menu.js HTTP/1.1" 304 0
+INFO 2025-05-21 21:49:27,588 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+INFO 2025-05-21 21:49:27,965 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 21:49:27,968 calendar_views Found company for user: accuro
+INFO 2025-05-21 21:49:27,973 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 21:49:27,974 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 21:49:27,974 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 21:49:27,974 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 21:49:27,974 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 21:49:27,975 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 21:49:27,975 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 21:49:27,975 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 21:49:27,975 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 21:49:27,975 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 21:49:27,975 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 21:49:27,975 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 21:49:27,975 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 21:49:27,975 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 21:49:27,975 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 21:49:27,975 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 21:49:27,975 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 21:49:27,975 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 21:49:27,975 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 21:49:27,975 calendar_views Returning 9 events
+INFO 2025-05-21 21:49:27,975 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747864167950 HTTP/1.1" 200 2739
+INFO 2025-05-21 21:49:31,824 basehttp "GET /app/products/ HTTP/1.1" 200 28956
+WARNING 2025-05-21 21:49:31,873 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 21:49:31,926 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 21:49:31,959 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 21:49:33,939 models Invoice #1: get_total called
+INFO 2025-05-21 21:49:33,944 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 21:49:33,944 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 21:49:33,948 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 21:49:33,948 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 21:49:33,948 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 21:49:33,949 basehttp "GET /app/invoices/ HTTP/1.1" 200 28554
+WARNING 2025-05-21 21:49:33,990 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 21:49:35,094 basehttp "GET /app/expenses/ HTTP/1.1" 200 31957
+WARNING 2025-05-21 21:49:35,131 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 21:49:35,186 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 21:49:35,196 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 21:49:38,173 basehttp "GET /app/calendar/ HTTP/1.1" 200 19597
+WARNING 2025-05-21 21:49:38,208 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 21:49:39,388 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 50110
+WARNING 2025-05-21 21:49:39,420 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 21:49:39,491 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 21:49:39,515 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 21:50:11,862 models Invoice #1: get_total called
+INFO 2025-05-21 21:50:11,863 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 21:50:11,864 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 21:50:11,866 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 21:50:11,866 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 21:50:11,866 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 21:50:11,874 models Invoice #1: get_total called
+INFO 2025-05-21 21:50:11,877 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 21:50:11,877 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 21:50:11,879 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 21:50:11,879 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 21:50:11,879 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 21:50:11,884 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 21:50:11,929 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 21:50:12,024 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 21:50:12,027 calendar_views Found company for user: accuro
+INFO 2025-05-21 21:50:12,034 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 21:50:12,038 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 21:50:12,038 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 21:50:12,038 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 21:50:12,038 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 21:50:12,038 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 21:50:12,038 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 21:50:12,038 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 21:50:12,038 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 21:50:12,038 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 21:50:12,038 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 21:50:12,038 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 21:50:12,038 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 21:50:12,038 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 21:50:12,038 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 21:50:12,038 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 21:50:12,038 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 21:50:12,039 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 21:50:12,039 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 21:50:12,039 calendar_views Returning 9 events
+INFO 2025-05-21 21:50:12,039 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747864211989 HTTP/1.1" 200 2739

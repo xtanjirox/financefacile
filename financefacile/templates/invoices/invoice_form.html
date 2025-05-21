@@ -26,10 +26,85 @@
 {% endblock footer %}
 
 {% block content %}
+<style>
+  /* Select2 Styling */
+  .select2-container--default .select2-selection--single {
+    border-color: #e0e6ed;
+    border-radius: 8px;
+    background-color: #f9f8ff;
+    height: 38px;
+    padding: 5px 10px;
+  }
+  
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #6259FF;
+    line-height: 28px;
+  }
+  
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 36px;
+  }
+  
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #eae9ff;
+    color: #6259FF;
+  }
+  
+  .select2-dropdown {
+    border-color: #d7d5ff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(98, 89, 255, 0.08);
+  }
+  
+  .select2-container--open .select2-dropdown--below {
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  
+  .select2-container--default .select2-search--dropdown .select2-search__field {
+    border-color: #e0e6ed;
+    border-radius: 4px;
+    padding: 8px;
+  }
+  
+  /* Modern table styling for invoice items */
+  .modern-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(98, 89, 255, 0.08);
+  }
+  
+  .modern-table thead th {
+    padding: 12px 15px;
+    font-weight: 600;
+    color: #6259FF;
+  }
+  
+  .modern-table tbody tr {
+    transition: all 0.2s ease;
+  }
+  
+  .modern-table tbody tr:hover {
+    background-color: #f9f8ff;
+  }
+  
+  .modern-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eae9ff;
+  }
+  
+  .modern-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+</style>
 <div class="container-fluid p-0">
     <div class="col-12 col-lg-12 col-xxl-12 d-flex">
         <div class="card flex-fill shadow-lg" style="border-radius: 0.5rem;">
-  <div class="card-header d-flex align-items-center" style="background: linear-gradient(90deg,#e3f2fd 0%,#fafdff 100%); border-bottom: 1px solid #e0e6ed; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+  <div class="card-header d-flex align-items-center" style="background: linear-gradient(90deg,#eae9ff 0%,#f9f8ff 100%); border-bottom: 1px solid #e0e6ed; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
     <h3 class="card-title mb-0 text-dark d-flex align-items-center">
       <i class="fas fa-file-invoice me-2" style="color: #7cb9e8; font-size: 2rem;"></i>Invoice Form
     </h3>
@@ -130,7 +205,7 @@
   {{ formset.management_form }}
   <div class="table-responsive">
     <table class="modern-table" id="invoice-items-table">
-      <thead style="background: #e3f2fd; color: #39739d;">
+      <thead style="background: #eae9ff; color: #39739d;">
         <tr>
           <th>Product</th>
           <th>Quantity</th>
@@ -172,14 +247,14 @@
 </div>
                     <div class="row mt-4 mb-2 justify-content-end">
   <div class="col-md-4">
-    <div class="p-3" style="background: #e3f2fd; border-radius: 0.5rem;">
+    <div class="p-3" style="background: #eae9ff; border-radius: 0.5rem;">
       <label for="invoice-total-price" class="fw-bold mb-2" style="color: #39739d;">Invoice Total</label>
       <input type="number" step="0.01" class="form-control form-control-lg invoice-grand-total" id="invoice-total-price" name="invoice_total" value="" placeholder="Total invoice amount" />
     </div>
   </div>
 </div>
 <div class="mt-4 d-flex justify-content-end">
-  <button type="submit" class="btn rounded shadow-sm px-5" style="background: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;">
+  <button type="submit" class="btn rounded shadow-sm px-5" style="background: #eae9ff; color: #39739d; border: 1px solid #dbeafe;">
     <i class="fas fa-save me-1"></i> Save Invoice
   </button>
   <a href="{% url 'invoice-list' %}" class="btn btn-secondary ms-3">Cancel</a>
@@ -192,6 +267,21 @@
 {% block script_content %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Select2 for all product dropdowns
+        $('.select2').select2({
+            width: '100%',
+            dropdownCssClass: 'select2-dropdown-modern',
+            theme: 'classic'
+        });
+        
+        // Initialize Select2 for any new product fields added dynamically
+        function initializeNewSelect2() {
+            $('.select2:not(.select2-hidden-accessible)').select2({
+                width: '100%',
+                dropdownCssClass: 'select2-dropdown-modern',
+                theme: 'classic'
+            });
+        }
         const addButton = document.getElementById('add-item');
         const tbody = document.getElementById('invoice-items-body');
         function updateFormCount() {
@@ -231,6 +321,8 @@
             tbody.appendChild(newRow);
             updateFormCount();
             setupDeleteButtons();
+            // Initialize Select2 for any new select fields
+            initializeNewSelect2();
             console.log('[Invoice JS] Added a new item row.');
         });
     });

@@ -369,9 +369,16 @@
                   <td>{{ expense.description|default:'—' }}</td>
                   <td>
                     {% if expense.attachment %}
-                      <a href="{{ expense.attachment.url }}" target="_blank" class="btn btn-sm shadow-sm" style="background: #e1f5fe; color: #0288d1; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View Attachment">
-                        <i class="fas fa-paperclip"></i>
-                      </a>
+                      <div class="actions-menu">
+                        <button class="actions-button" onclick="toggleActionsMenu(this)">
+                          <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <div class="actions-dropdown">
+                          <a href="{{ expense.attachment.url }}" target="_blank" class="action-item">
+                            <i class="fas fa-paperclip"></i> View Attachment
+                          </a>
+                        </div>
+                      </div>
                     {% else %}
                       <span class="text-muted">—</span>
                     {% endif %}

@@ -281,12 +281,8 @@ class InvoiceItemForm(forms.ModelForm):
             product_queryset = product_queryset.filter(company=company)
             
         self.fields['product'].queryset = product_queryset
-        
-        self.fields['product'].widget.attrs.update({
-            'class': 'form-control',
-            'data-bs-toggle': 'tooltip',
-            'title': 'Select a product'
-        })
+        self.fields['product'].widget = ProductWidget()
+        self.fields['product'].help_text = 'Select a product from inventory'
         
         # Add validation for quantity
         self.fields['quantity'].widget.attrs.update({
@@ -372,16 +368,33 @@ InvoiceItemFormSet = inlineformset_factory(
 )
 
 
-class ProductCategoryWidget(s2forms.Select2Widget):
+class ProductCategoryWidget(s2forms.Select2MultipleWidget):
     model = models.ProductCategory
     search_fields = ['name__icontains']
 
     def build_attrs(self, *args, **kwargs):
         attrs = super().build_attrs(*args, **kwargs)
         attrs.update({
-            'data-placeholder': 'Select a category...',
-            'data-minimum-input-length': 0,
-            'class': 'form-control selectpicker',
+            'data-placeholder': 'Select categories...',
+            'data-allow-clear': 'true',
+            'data-close-on-select': 'false',
+            'class': 'form-control select2',
+            'data-live-search': 'true',
+            'style': 'width: 100%;'
+        })
+        return attrs
+
+
+class ProductWidget(s2forms.Select2Widget):
+    model = models.Product
+    search_fields = ['name__icontains']
+
+    def build_attrs(self, *args, **kwargs):
+        attrs = super().build_attrs(*args, **kwargs)
+        attrs.update({
+            'data-placeholder': 'Select a product...',
+            'data-allow-clear': 'true',
+            'class': 'form-control select2',
             'data-live-search': 'true',
             'style': 'width: 100%;'
         })
@@ -390,18 +403,40 @@ class ProductCategoryWidget(s2forms.Select2Widget):
 
 class ProductForm(forms.ModelForm):
     debug_marker = "THIS IS THE REAL ProductForm"
+    categories = forms.ModelMultipleChoiceField(
+        queryset=models.ProductCategory.objects.none(),
+        required=False,
+        widget=ProductCategoryWidget(),
+        help_text="Select one or more categories for this product"
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Ensure the category queryset is populated
-        if 'category' in self.fields:
-            self.fields['category'].queryset = models.ProductCategory.objects.all(
-            ).order_by('name')
-            self.fields['category'].widget = ProductCategoryWidget()
+        # Ensure the categories queryset is populated
+        self.fields['categories'].queryset = models.ProductCategory.objects.all().order_by('name')
+        
+        # Set initial values for categories if editing an existing product
+        if self.instance and self.instance.pk:
+            self.fields['categories'].initial = self.instance.category.all()
+            
         # Remove company field if it exists using contextlib's suppress
         from contextlib import suppress
         with suppress(KeyError):
             del self.fields['company']
+            
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        
+        # Save the instance first to ensure it has a primary key
+        if commit:
+            instance.save()
+            
+            # Clear existing categories and add the selected ones
+            instance.category.clear()
+            for category in self.cleaned_data.get('categories', []):
+                instance.category.add(category)
+                
+        return instance
 
     class Meta:
         model = models.Product

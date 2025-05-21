@@ -3,12 +3,19 @@ import django_tables2 as tables
 from . import models
 
 ACTIONS_BUTTONS_TEMPLATE = """
-    <a href="get_absolute_url" class="btn btn-sm shadow-sm me-1" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit">
-        <i class="fas fa-edit"></i>
-    </a>
-    <a href="get_delete_url" class="btn btn-sm shadow-sm me-1" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Delete">
-        <i class="fas fa-trash"></i>
-    </a>
+    <div class="actions-menu">
+        <button class="actions-button" onclick="toggleActionsMenu(this)">
+            <i class="fas fa-ellipsis-v"></i>
+        </button>
+        <div class="actions-dropdown">
+            <a href="get_absolute_url" class="action-item">
+                <i class="fas fa-edit"></i> Edit
+            </a>
+            <a href="get_delete_url" class="action-item delete">
+                <i class="fas fa-trash"></i> Delete
+            </a>
+        </div>
+    </div>
 """
 
 DEFAULT_TABLE_ATTRS = {
