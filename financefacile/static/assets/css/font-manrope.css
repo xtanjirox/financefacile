@@ -1,0 +1,48 @@
+/* Set Manrope as the default font for the entire application */
+html, body, 
+h1, h2, h3, h4, h5, h6,
+p, span, div, a, button, input, select, textarea,
+table, th, td, tr,
+.sidebar, .sidebar-link, .sidebar-header,
+.card, .card-header, .card-body,
+.btn, .form-control, .nav-link {
+  font-family: "Manrope", sans-serif !important;
+}
+
+/* Adjust font weights */
+h1, h2, h3, h4, h5, h6, 
+.sidebar-header, 
+.btn-primary, 
+.nav-link, 
+.card-header {
+  font-weight: 600 !important;
+}
+
+/* Regular text */
+p, div, span, 
+.sidebar-link, 
+.form-control, 
+td, th {
+  font-weight: 400 !important;
+}
+
+/* Light text */
+.text-muted, 
+small, 
+.small {
+  font-weight: 300 !important;
+}
+
+/* Sidebar specific font adjustments */
+.sidebar-brand span {
+  font-weight: 700 !important;
+}
+
+.sidebar-header {
+  font-weight: 700 !important;
+  letter-spacing: 0.5px;
+}
+
+.sidebar-link {
+  font-weight: 500 !important;
+}

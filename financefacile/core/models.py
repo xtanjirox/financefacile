@@ -1,41 +1,16 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.exceptions import ValidationError
-from django.utils import timezone
 from django.urls import reverse_lazy
-from datetime import datetime
-from accounts.models import Company, CompanySettings
+from accounts.models import Company
 
 
 def product_image_path(instance, filename):
-    # File will be uploaded to MEDIA_ROOT/products/company_<id>/<sku>_<filename>
     return f'products/company_{instance.company.id}/{instance.sku}_{filename}'
 
 
-class EntryType(models.IntegerChoices):
-    CHARGE = 1, 'DEPENSE'
-    REVENUE = 2, 'REVENUE'
 
 
-class EntryCategory(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='entry_categories', null=True, blank=True)
-    category_title = models.CharField(max_length=50)
-    finance_entry_type = models.IntegerField(choices=EntryType.choices)
-
-    class Meta:
-        db_table = 'entry_category'
-        verbose_name_plural = 'categories'
-        unique_together = ['company', 'category_title']
-
-    def __str__(self):
-        return self.category_title
-
-    def get_absolute_url(self):
-        return reverse_lazy('category-update', kwargs={'pk': self.pk})
-
-    def get_delete_url(self):
-        return reverse_lazy('category-delete', kwargs={"pk": self.pk})
-
+# Products
 
 class ProductCategory(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='product_categories', null=True, blank=True)
@@ -57,6 +32,10 @@ class ProductCategory(models.Model):
     def get_delete_url(self):
         from django.urls import reverse_lazy
         return reverse_lazy('category-delete', kwargs={'pk': self.pk})
+        
+    def get_update_url(self):
+        from django.urls import reverse_lazy
+        return reverse_lazy('category-update', kwargs={'pk': self.pk})
 
 
 class Product(models.Model):
@@ -67,6 +46,7 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     unit_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     selling_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    # selling price
     value_current = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     value_1_month = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     value_2_month = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -107,6 +87,8 @@ class Product(models.Model):
     def get_delete_url(self):
         return reverse_lazy('product-delete', kwargs={"pk": self.pk})
 
+
+# Invoices
 class Invoice(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='invoices', null=True, blank=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_invoices')
@@ -211,6 +193,9 @@ class InvoiceItem(models.Model):
     def __str__(self):
         return f"{self.product} x {self.quantity} @ {self.selling_price}"
 
+
+# Expenses
+
 class ExpenseCategory(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='expense_categories', null=True, blank=True)
     name = models.CharField(max_length=100)
@@ -251,32 +236,69 @@ class Expense(models.Model):
         return reverse_lazy('expense-delete', kwargs={"pk": self.pk})
 
 
-class FinanceEntry(models.Model):
-    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='finance_entries', null=True, blank=True)
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_entries')
-    finance_entry_type = models.IntegerField(choices=EntryType.choices)
-    entry_category = models.ForeignKey(EntryCategory, on_delete=models.DO_NOTHING)
-    entry_value = models.FloatField(default=0)
-    entry_label = models.CharField(max_length=20)
-    entry_date = models.DateField(default=timezone.now())
+class InvoiceFees(models.Model):
+    invoice_fee_name = models.TextField()
+    invoice_fee_value = models.DecimalField(max_digits=12, decimal_places=2)
 
     class Meta:
-        db_table = 'finance_entries'
-        verbose_name_plural = 'entries'
+        verbose_name = 'InvoiceFees'
+        verbose_name_plural = 'InvoiceFees'
 
     def __str__(self):
-        return str(self.pk) + str(self.entry_label)
+        return f"{self.invoice_fee_name}"
 
+
+class CalendarEvent(models.Model):
+    """Model to store calendar events for the dashboard."""
+    THEME_CHOICES = [
+        ('primary', 'Primary'),
+        ('secondary', 'Secondary'),
+        ('success', 'Success'),
+        ('info', 'Info'),
+        ('warning', 'Warning'),
+        ('danger', 'Danger'),
+        ('dark', 'Dark'),
+    ]
+    
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='calendar_events')
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    start_date = models.DateTimeField()
+    end_date = models.DateTimeField()
+    all_day = models.BooleanField(default=False)
+    theme = models.CharField(max_length=20, choices=THEME_CHOICES, default='primary')
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='created_events')
+    participants = models.ManyToManyField(User, related_name='participating_events', blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ['start_date']
+        verbose_name = 'Calendar Event'
+        verbose_name_plural = 'Calendar Events'
+
+    def __str__(self):
+        return f"{self.title} - {self.start_date.strftime('%Y-%m-%d')}"
+        
     def get_absolute_url(self):
-        return reverse_lazy('entry-update', kwargs={'pk': self.pk})
-
+        return reverse_lazy('calendar-event-detail', kwargs={'pk': self.pk})
+        
+    def get_update_url(self):
+        return reverse_lazy('calendar-event-update', kwargs={'pk': self.pk})
+        
     def get_delete_url(self):
-        return reverse_lazy('entry-delete', kwargs={"pk": self.pk})
-
+        return reverse_lazy('calendar-event-delete', kwargs={'pk': self.pk})
+        
     @property
-    def month_year(self):
-        return datetime(self.entry_date.year, self.entry_date.month, 1).strftime("%B%Y")
-
-
-# SiteSettings is now replaced by CompanySettings in the accounts app
-
+    def color(self):
+        """Return the theme color for FullCalendar."""
+        theme_colors = {
+            'primary': '#4e73df',
+            'secondary': '#858796',
+            'success': '#1cc88a',
+            'info': '#36b9cc',
+            'warning': '#f6c23e',
+            'danger': '#e74a3b',
+            'dark': '#5a5c69',
+        }
+        return theme_colors.get(self.theme, '#4e73df')  # Default to primary color

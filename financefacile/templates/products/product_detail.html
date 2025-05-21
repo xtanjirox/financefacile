@@ -214,7 +214,7 @@
               border-radius: 50px;
             }
           </style>
-          <table id="invoices-table" class="table table-hover align-middle">
+          <table id="invoices-table" class="modern-table">
             <thead>
               <tr>
                 <th>Invoice Number</th>
@@ -246,9 +246,16 @@
                   {% endif %}
                 </td>
                 <td>
-                  <a href="{{ invoice.url }}" class="btn btn-sm shadow-sm" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View">
-                    <i class="fas fa-eye me-1"></i>
-                  </a>
+                  <div class="actions-menu">
+                    <button class="actions-button" onclick="toggleActionsMenu(this)">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="actions-dropdown">
+                      <a href="{{ invoice.url }}" class="action-item">
+                        <i class="fas fa-eye"></i> View
+                      </a>
+                    </div>
+                  </div>
                 </td>
               </tr>
               {% endfor %}

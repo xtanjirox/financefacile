@@ -22,11 +22,19 @@
     <link href="{% static 'assets/css/app.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/light.css' %}" rel="stylesheet">
     <link href="{% static 'assets/css/finance_facile.css' %}" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <link href="{% static 'assets/css/matdash_layout.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/matdash_sidebar.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/topbar-enhanced.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/sidebar-toggle.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/modern-table.css' %}" rel="stylesheet">
+    <link href="{% static 'assets/css/font-manrope.css' %}" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="{% static 'assets/js/jquery-3.7.1.min.js' %}"></script>
     <script src="{% static 'assets/js/datatables.min.js' %}"></script>
+    <script src="{% static 'assets/js/app.js' %}"></script>
+    <script src="{% static 'assets/js/finance_facile.js' %}"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     {% block extra_css %}
@@ -49,41 +57,8 @@
 <body>
     <div class="wrapper">
         {% block sidebar %}
-<nav id="sidebar" class="sidebar js-sidebar">
-    <div class="sidebar-content js-simplebar">
-        <a class="sidebar-brand" href="/">
-            <span class="align-middle">Finance Facile</span>
-        </a>
-        <ul class="sidebar-nav">
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/">
-                    <i class="fas fa-home align-middle"></i> <span class="align-middle">Dashboard</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/products">
-                    <i class="fas fa-boxes align-middle"></i> <span class="align-middle">Products</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/invoices/">
-                    <i class="fas fa-file-invoice align-middle"></i> <span class="align-middle">Invoices</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/expenses/">
-                    <i class="fas fa-money-bill-wave align-middle"></i> <span class="align-middle">Expenses</span>
-                </a>
-            </li>
-            <li class="sidebar-item">
-                <a class="sidebar-link" href="/expense-categories/">
-                    <i class="fas fa-tags align-middle"></i> <span class="align-middle">Expense Categories</span>
-                </a>
-            </li>
-        </ul>
-    </div>
-</nav>
-{% endblock sidebar %}
+        {% include 'includes/sidebar.html' %}
+        {% endblock sidebar %}
         <div class="main">
             {% block topbar %}
             {% endblock topbar %}
@@ -97,9 +72,14 @@
         </div>
     </div>
     <script src="{% static 'assets/js/app.js' %}"></script>
+    <script src="{% static 'assets/js/sidebar-active.js' %}"></script>
+    <script src="{% static 'assets/js/sidebar-toggle.js' %}"></script>
+    <script src="{% static 'assets/js/dropdown-fix.js' %}"></script>
+    <script src="{% static 'assets/js/actions-menu.js' %}"></script>
     {% block script_content %}
     {% endblock script_content %}
     <script src="https://kit.fontawesome.com/304487a008.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             // Datatables Orders

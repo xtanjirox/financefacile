@@ -16782,7 +16782,7 @@ body[data-theme=colored] .sidebar-content {
 }
 
 .sidebar-link,a.sidebar-link {
-    background: #222e3c;
+    background: #ffffff;
     border-left: 3px solid transparent;
     color: rgba(233,236,239,.5);
     cursor: pointer;
@@ -16792,6 +16792,15 @@ body[data-theme=colored] .sidebar-content {
     position: relative;
     text-decoration: none;
     transition: background .1s ease-in-out
+}
+
+.sidebar-link:hover {
+    background: #ffffff;
+    border-left-color: transparent
+}
+
+.sidebar-link:hover span {
+    color: #635AFF;
 }
 
 body[data-theme=dark] .sidebar-link,body[data-theme=dark] a.sidebar-link {

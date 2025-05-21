@@ -1,19 +1,48 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.http import *
 from django.views.generic import TemplateView
 from django.conf import settings
-
-from django.db.models.functions import ExtractMonth, ExtractYear, Concat
 from django.db.models import Sum, Func, CharField
-
-from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from core import models
+from core.models import CalendarEvent
+from accounts.models import Company
 
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 import json
+from django.utils import timezone
+
+
+class CompanyMixin(LoginRequiredMixin):
+    """
+    Mixin to handle company-specific functionality for class-based views.
+    Assumes the user is authenticated and has a profile with a company.
+    """
+    def get_company(self):
+        """Get the user's company."""
+        if not hasattr(self.request.user, 'profile'):
+            raise ValueError("User has no profile")
+        if not hasattr(self.request.user.profile, 'company'):
+            raise ValueError("User's profile has no company")
+        return self.request.user.profile.company
+        
+    def get_queryset(self):
+        """Filter queryset by user's company."""
+        queryset = super().get_queryset()
+        if hasattr(queryset, 'filter'):
+            return queryset.filter(company=self.get_company())
+        return queryset
+        
+    def form_valid(self, form):
+        """Set the company before saving the form."""
+        if hasattr(form.instance, 'company') and not form.instance.company_id:
+            form.instance.company = self.get_company()
+        return super().form_valid(form)
+
+
 
 
 class MonthName(Func):
@@ -24,7 +53,7 @@ class MonthName(Func):
 
 def generate_ls_month_year():
     ls_month_year = []
-    current_date = datetime.now()
+    current_date = timezone.now()
     for i in range(12):
         month_year = current_date.strftime("%B%Y")
         ls_month_year.append(month_year)
@@ -32,22 +61,23 @@ def generate_ls_month_year():
     return ls_month_year[::-1]
 
 
-def generate_stat_by_entry_type(queryset, entry_type, ls_month_year):
-    stat_list = []
-    for month_year in ls_month_year:
-        try:
-            stat_list.append(queryset.get(
-                finance_entry_type=entry_type,
-                month_year=month_year).get('total_sum'))
-        except ObjectDoesNotExist:
-            stat_list.append(0)
-    return stat_list
-
-
 def home(request):
     # Get the user's company and currency
     user_company = None
     currency_symbol = 'DT'  # Default currency
+    upcoming_events = []
+    
+    # Get upcoming calendar events if user is authenticated
+    if request.user.is_authenticated and hasattr(request.user, 'profile') and hasattr(request.user.profile, 'company'):
+        user_company = request.user.profile.company
+        # Get next 10 upcoming events starting from the current date, ordered by start date
+        today = timezone.localdate() 
+        upcoming_events = CalendarEvent.objects.filter(
+            company=user_company,
+            start_date__date__gte=today
+        ).order_by('start_date')[:10]
+    else:
+        upcoming_events = []
     
     if hasattr(request.user, 'profile') and hasattr(request.user.profile, 'company'):
         user_company = request.user.profile.company
@@ -61,50 +91,9 @@ def home(request):
             except Exception:
                 # Use default if settings not found
                 pass
-    
-    # Filter finance entries by company
-    finance_entries_charge = models.FinanceEntry.objects.filter(finance_entry_type=models.EntryType.CHARGE)
-    finance_entries_revenue = models.FinanceEntry.objects.filter(finance_entry_type=models.EntryType.REVENUE)
-    finance_entries_all = models.FinanceEntry.objects.all()
-    
-    # Apply company filter if user has a company
-    if user_company:
-        finance_entries_charge = finance_entries_charge.filter(company=user_company)
-        finance_entries_revenue = finance_entries_revenue.filter(company=user_company)
-        finance_entries_all = finance_entries_all.filter(company=user_company)
-    
-    total_charge = sum(finance_entries_charge.values_list('entry_value', flat=True) or [0])
-    total_revenue = sum(finance_entries_revenue.values_list('entry_value', flat=True) or [0])
-
-    qs_stats = finance_entries_all.annotate(
-        month=ExtractMonth("entry_date"),
-        year=ExtractYear('entry_date'),
-        month_name=MonthName('entry_date')
-    ).annotate(
-        month_year=Concat('month_name', 'year', output_field=CharField())
-    ).values('month_year', 'finance_entry_type').annotate(
-        total_sum=Sum('entry_value')
-    ).order_by('month_year', 'finance_entry_type')
-
-    ls_month_year = generate_ls_month_year()
-    revenue_stats = generate_stat_by_entry_type(qs_stats, models.EntryType.REVENUE, ls_month_year)
-    charge_stats = generate_stat_by_entry_type(qs_stats, models.EntryType.CHARGE, ls_month_year)
-
-    stats = {
-        'labels': ls_month_year,
-        'datasets': [{
-            "label": "Revenues (dt)",
-            "data": revenue_stats
-        }, {
-            "label": "Charges (dt)",
-            "data": charge_stats
-        }
-        ]
-    }
 
     # --- Product stats for warehouse flash cards ---
-    from datetime import timedelta
-    from django.utils import timezone
+    
     now = timezone.now()
     
     # Get all active products (exclude archived)
@@ -140,7 +129,10 @@ def home(request):
         parent_categories_query = parent_categories_query.filter(company=user_company)
         
     # Get products with category information (exclude archived)
-    products_with_category = models.Product.objects.select_related('category').filter(is_archived=False)
+    products_with_category = models.Product.objects \
+        .select_related('category') \
+        .filter(is_archived=False)
+
     if user_company:
         products_with_category = products_with_category.filter(company=user_company)
     category_qty = {}
@@ -165,7 +157,6 @@ def home(request):
     }
 
     # --- Pie chart: inventory value by parent category ---
-    from django.utils import timezone
     now = timezone.now()
     value_by_parent = {}
     
@@ -199,7 +190,7 @@ def home(request):
     }
 
     # --- Pie chart: sold products by parent category (invoices) ---
-    from core.models import InvoiceItem
+    
     sold_qty_by_parent = {}
     
     for parent in parent_categories_query:
@@ -210,7 +201,7 @@ def home(request):
             descendants.add(cat.id)
             stack.extend(list(cat.children.all()))
         # Get invoice items query
-        invoice_items_query = InvoiceItem.objects.filter(product__category_id__in=descendants)
+        invoice_items_query = models.InvoiceItem.objects.filter(product__category_id__in=descendants)
         # Filter by company if user has a company
         if user_company:
             invoice_items_query = invoice_items_query.filter(invoice__company=user_company)
@@ -242,9 +233,6 @@ def home(request):
     recent_invoices_query = recent_invoices_query.order_by('-created_at')[:10]
 
     context = {
-        'total_charge': total_charge,
-        'total_revenue': total_revenue,
-        'stats': stats,
         'pie_products_by_category': json.dumps(pie_products_by_category),
         'pie_value_by_category': json.dumps(pie_value_by_category),
         'pie_invoice_by_category': json.dumps(pie_invoice_by_category),
@@ -254,6 +242,7 @@ def home(request):
         'total_invoice_price': total_invoice_price,
         'recent_invoices': recent_invoices_query,
         'currency_symbol': currency_symbol,  # Add currency symbol to context
+        'upcoming_events': upcoming_events,  # Add upcoming events to context
     }
     return render(request, 'index.html', context)
 

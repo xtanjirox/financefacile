@@ -51,43 +51,137 @@
   </div>
 
   <!-- Stats Cards -->
+  <style>
+    /* Modern Dashboard Card Styles */
+    .dashboard-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 1.5rem;
+        min-height: 120px;
+        background: #fff;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+    }
+
+    .dashboard-card:hover {
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+    }
+
+    .dashboard-card .icon-wrapper {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .dashboard-card .icon {
+        font-size: 1.5rem;
+        color: #fff;
+    }
+
+    .dashboard-card .card-title {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .dashboard-card .card-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .dashboard-card .progress-wrapper {
+        height: 8px;
+        background-color: #f0f0f0;
+        border-radius: 4px;
+        margin-top: auto;
+    }
+
+    .dashboard-card .progress-bar {
+        height: 100%;
+        border-radius: 4px;
+    }
+
+    /* Card color schemes */
+    .dashboard-card.products .icon-wrapper {
+        background-color: rgba(77, 182, 172, 0.2);
+    }
+    .dashboard-card.products .icon {
+        color: #4DB6AC;
+    }
+    .dashboard-card.products .progress-bar {
+        background-color: #4DB6AC;
+    }
+
+    .dashboard-card.inventory .icon-wrapper {
+        background-color: rgba(66, 165, 245, 0.2);
+    }
+    .dashboard-card.inventory .icon {
+        color: #42A5F5;
+    }
+    .dashboard-card.inventory .progress-bar {
+        background-color: #42A5F5;
+    }
+
+    .dashboard-card.revenue .icon-wrapper {
+        background-color: rgba(255, 167, 38, 0.2);
+    }
+    .dashboard-card.revenue .icon {
+        color: #FFA726;
+    }
+    .dashboard-card.revenue .progress-bar {
+        background-color: #FFA726;
+    }
+  </style>
+  
   <div class="row mb-4">
     <div class="col-md-4">
-      <div class="card mb-3 shadow-sm border-0" style="background: #e3f2fd; border-radius: 14px;">
-        <div class="card-body">
-          <h5 class="card-title" style="color: #1976d2; font-weight: 600;">
-            Total Products
-          </h5>
-          <p class="card-text display-6" style="color: #1976d2; font-weight: 700;">
-            {{ total_products }}
-          </p>
-          <p class="text-muted small">Total items in inventory</p>
+      <div class="dashboard-card products">
+        <div class="icon-wrapper">
+          <i class="fas fa-boxes-stacked icon"></i>
+        </div>
+        <div class="card-title">Total Products</div>
+        <div class="card-value">{{ total_products }}</div>
+        <div class="progress-wrapper">
+          <div class="progress-bar" style="width: 85%"></div>
         </div>
       </div>
     </div>
     <div class="col-md-4">
-      <div class="card mb-3 shadow-sm border-0" style="background: #e8f5e9; border-radius: 14px;">
-        <div class="card-body">
-          <h5 class="card-title" style="color: #388e3c; font-weight: 600;">
-            Total Inventory Value
-          </h5>
-          <p class="card-text display-6" style="color: #388e3c; font-weight: 700;">
-            {% format_currency total_inventory_value %}
-          </p>
-          <p class="text-muted small">Based on unit cost × quantity</p>
+      <div class="dashboard-card inventory">
+        <div class="icon-wrapper">
+          <i class="fas fa-warehouse icon"></i>
+        </div>
+        <div class="card-title">Total Inventory Value</div>
+        <div class="card-value">{% format_currency total_inventory_value %}</div>
+        <div class="progress-wrapper">
+          <div class="progress-bar" style="width: 70%"></div>
         </div>
       </div>
     </div>
     <div class="col-md-4">
-      <div class="card mb-3 shadow-sm border-0" style="background: #e1f5fe; border-radius: 14px;">
-        <div class="card-body">
-          <h5 class="card-title" style="color: #0288d1; font-weight: 600;">
-            Potential Revenue
-          </h5>
-          <p class="card-text display-6" style="color: #0288d1; font-weight: 700;">
-            {% format_currency total_potential_revenue %}
-          </p>
-          <p class="text-muted small">Based on selling price × quantity</p>
+      <div class="dashboard-card revenue">
+        <div class="icon-wrapper">
+          <i class="fas fa-chart-line icon"></i>
+        </div>
+        <div class="card-title">Potential Revenue</div>
+        <div class="card-value">{% format_currency total_potential_revenue %}</div>
+        <div class="progress-wrapper">
+          <div class="progress-bar" style="width: 65%"></div>
         </div>
       </div>
     </div>
@@ -163,7 +257,7 @@
               border-radius: 50px;
             }
           </style>
-          <table id="productsss-table" class="table table-hover align-middle">
+          <table id="productsss-table" class="modern-table">
             <thead>
               <tr>
                 <th>Name</th>
@@ -181,18 +275,38 @@
                 <td>{{ product.name }}</td>
                 <td>{{ product.sku|default:'-' }}</td>
                 <td>{{ product.category.name|default:'-' }}</td>
-                <td>{{ product.quantity }}</td>
+                <td>
+                  {% if product.quantity > 0 %}
+                    <span class="status-badge active"><i class="fas fa-circle"></i> {{ product.quantity }}</span>
+                  {% else %}
+                    <span class="status-badge offline"><i class="fas fa-circle"></i> {{ product.quantity }}</span>
+                  {% endif %}
+                </td>
                 <td>{{ product.unit_cost|currency:currency_symbol }}</td>
                 <td>{{ product.selling_price|currency:currency_symbol }}</td>
                 <td>
-                    <a href="{% url 'product-detail' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #e3f2fd; color: #1976d2; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View"><i class="fas fa-eye"></i></a>
-                    <a href="{% url 'product-update' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #fffde7; color: #f9a825; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Edit"><i class="fas fa-edit"></i></a>
-                    
-                    {% if product.is_archived %}
-                    <a href="{% url 'product-restore' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #e8f5e9; color: #4caf50; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Restore"><i class="fas fa-undo-alt"></i></a>
-                    {% else %}
-                    <a href="{% url 'product-delete' product.id %}" class="btn btn-sm shadow-sm me-1" style="background: #ffebee; color: #c62828; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Archive"><i class="fas fa-archive"></i></a>
-                    {% endif %}
+                  <div class="actions-menu">
+                    <button class="actions-button" onclick="toggleActionsMenu(this)">
+                      <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <div class="actions-dropdown">
+                      <a href="{% url 'product-detail' product.id %}" class="action-item">
+                        <i class="fas fa-eye"></i> View
+                      </a>
+                      <a href="{% url 'product-update' product.id %}" class="action-item">
+                        <i class="fas fa-edit"></i> Edit
+                      </a>
+                      {% if product.is_archived %}
+                      <a href="{% url 'product-restore' product.id %}" class="action-item">
+                        <i class="fas fa-undo-alt"></i> Restore
+                      </a>
+                      {% else %}
+                      <a href="{% url 'product-delete' product.id %}" class="action-item delete">
+                        <i class="fas fa-archive"></i> Archive
+                      </a>
+                      {% endif %}
+                    </div>
+                  </div>
                 </td>
               </tr>
               {% empty %}

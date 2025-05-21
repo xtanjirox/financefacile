@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Calendar Events{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Calendar Events</h1>
+        <div>
+            <a href="{% url 'calendar-event-create' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+                <i class="fas fa-plus fa-sm text-white-50"></i> Add Event
+            </a>
+            <a href="{% url 'calendar-event-list' %}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm ml-2">
+                <i class="fas fa-calendar-alt fa-sm text-white-50"></i> Calendar View
+            </a>
+        </div>
+    </div>
+
+    <!-- Events List -->
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+            <h6 class="m-0 font-weight-bold text-primary">Events</h6>
+            <div class="dropdown no-arrow">
+                <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in" aria-labelledby="dropdownMenuLink">
+                    <a class="dropdown-item" href="{% url 'calendar-event-list' %}?filter=upcoming">Upcoming</a>
+                    <a class="dropdown-item" href="{% url 'calendar-event-list' %}?filter=past">Past Events</a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="{% url 'calendar-event-list' %}">All Events</a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Theme</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in events %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="event-color" data-color="{{ event.color }}"></div>
+                                    <strong>{{ event.title }}</strong>
+                                </div>
+                                {% if event.description %}
+                                <small class="text-muted d-block mt-1">{{ event.description|truncatechars:60 }}</small>
+                                {% endif %}
+                            </td>
+                            <td>{{ event.start_date|date:"M j, Y" }}
+                                {% if event.end_date and event.end_date != event.start_date %}
+                                - {{ event.end_date|date:"M j, Y" }}
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if event.all_day %}
+                                    All day
+                                {% else %}
+                                    {{ event.start_time|time:"g:i A" }}
+                                    {% if event.end_time %}- {{ event.end_time|time:"g:i A" }}{% endif %}
+                                {% endif %}
+                            </td>
+                            <td>
+                                <span class="badge event-badge" data-color="{{ event.color }}">
+                                    {{ event.get_theme_display }}
+                                </span>
+                            </td>
+                            <td class="text-nowrap">
+                                <a href="{% url 'calendar-event-update' event.id %}" class="btn btn-sm btn-primary" title="Edit">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'calendar-event-delete' event.id %}" class="btn btn-sm btn-danger" title="Delete">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No events found.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    .event-color {
+        --event-color: #4e73df;  /* Default color */
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+        background-color: var(--event-color);
+    }
+    
+    .event-badge {
+        --event-color: #4e73df;  /* Default color */
+        color: white;
+        background-color: var(--event-color);
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    // Apply dynamic colors using JavaScript
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.event-color').forEach(function(el) {
+            const color = el.getAttribute('data-color');
+            if (color) {
+                el.style.setProperty('--event-color', color);
+            }
+        });
+        
+        document.querySelectorAll('.event-badge').forEach(function(el) {
+            const color = el.getAttribute('data-color');
+            if (color) {
+                el.style.setProperty('--event-color', color);
+            }
+        });
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        $('#dataTable').DataTable({
+            "order": [[1, "asc"]],  // Sort by date column
+            "columnDefs": [
+                { "orderable": false, "targets": [0, 4] }  // Disable sorting on first and last columns
+            ]
+        });
+    });
+</script>
+{% endblock %}

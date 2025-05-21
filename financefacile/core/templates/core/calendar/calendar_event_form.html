@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ form_title|default:'Event Form' }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">{{ form_title|default:'Event Form' }}</h1>
+        <div>
+            <a href="{% url 'calendar-event-list' %}" class="d-none d-sm-inline-block btn btn-sm btn-secondary shadow-sm">
+                <i class="fas fa-arrow-left fa-sm text-white-50"></i> Back to Calendar
+            </a>
+        </div>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Event Details</h6>
+        </div>
+        <div class="card-body">
+            <form method="post" id="eventForm">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form.title|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form.start_date|as_crispy_field }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.end_date|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        {{ form.all_day|as_crispy_field }}
+                    </div>
+                    <div class="col-md-6">
+                        {{ form.theme|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        {{ form.description|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-md-12">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Save Event
+                        </button>
+                        <a href="{% url 'calendar-event-list' %}" class="btn btn-secondary">
+                            <i class="fas fa-times"></i> Cancel
+                        </a>
+                        {% if object %}
+                        <a href="{% url 'calendar-event-delete' object.pk %}" class="btn btn-danger float-right">
+                            <i class="fas fa-trash"></i> Delete
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+    .form-group.required > label:after { 
+        content: " *";
+        color: #e74a3b;
+    }
+    .flatpickr-input {
+        background-color: white;
+        cursor: pointer;
+    }
+    .flatpickr-calendar {
+        z-index: 1060 !important;
+    }
+    .card {
+        border: none;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+    }
+    .card-header {
+        background-color: #f8f9fc;
+        border-bottom: 1px solid #e3e6f0;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Flatpickr JS -->
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://npmcdn.com/flatpickr/dist/l10n/fr.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Common config for datetime pickers
+        const datetimeConfig = {
+            enableTime: true,
+            dateFormat: 'Y-m-d H:i:S',
+            altInput: true,
+            altFormat: 'F j, Y H:i',
+            time_24hr: true,
+            locale: 'fr',
+            minDate: 'today',
+            allowInput: true,
+            clickOpens: true,
+            static: true
+        };
+
+        // Initialize datetime picker for start date
+        const startDatePicker = flatpickr('#id_start_date', {
+            ...datetimeConfig,
+            onChange: function(selectedDates, dateStr, instance) {
+                // Update end date min date when start date changes
+                if (selectedDates.length > 0) {
+                    endDatePicker.set('minDate', selectedDates[0]);
+                    
+                    // If end date is before start date, update it
+                    const endDate = endDatePicker.selectedDates[0];
+                    if (endDate && selectedDates[0] > endDate) {
+                        endDatePicker.setDate(selectedDates[0]);
+                    }
+                }
+            }
+        });
+
+        // Initialize datetime picker for end date
+        const endDatePicker = flatpickr('#id_end_date', {
+            ...datetimeConfig,
+            minDate: 'today'
+        });
+        
+        // Make sure inputs are not read-only
+        document.getElementById('id_start_date').removeAttribute('readonly');
+        document.getElementById('id_end_date').removeAttribute('readonly');
+
+        // Toggle time fields based on all_day checkbox
+        function toggleTimeFields() {
+            const isAllDay = document.getElementById('id_all_day').checked;
+            
+            // Update the date picker configuration based on all_day selection
+            startDatePicker.set({
+                enableTime: !isAllDay,
+                dateFormat: isAllDay ? 'Y-m-d' : 'Y-m-d H:i:S',
+                altFormat: isAllDay ? 'F j, Y' : 'F j, Y H:i',
+                noCalendar: false,
+                time_24hr: !isAllDay
+            });
+            
+            endDatePicker.set({
+                enableTime: !isAllDay,
+                dateFormat: isAllDay ? 'Y-m-d' : 'Y-m-d H:i:S',
+                altFormat: isAllDay ? 'F j, Y' : 'F j, Y H:i',
+                noCalendar: false,
+                time_24hr: !isAllDay
+            });
+        }
+
+        // Handle all_day checkbox change
+        document.getElementById('id_all_day').addEventListener('change', toggleTimeFields);
+
+        // Initial toggle
+        toggleTimeFields();
+    });
+</script>
+{% endblock %}

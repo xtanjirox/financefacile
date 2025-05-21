@@ -16,6 +16,11 @@ from .views.invoice_pdf import generate_invoice_pdf
 from .views.product_pdf import generate_product_pdf
 from .views.expense_pdf import generate_expense_pdf
 from django.contrib.auth.decorators import login_required
+from .views.calendar_views import (
+    CalendarEventListView, CalendarEventCreateView, CalendarEventUpdateView, 
+    CalendarEventDeleteView, CalendarEventDetailView, calendar_events_json, date_events
+)
+from .views.calendar_display import CalendarDisplayView
 
 urlpatterns = [
     path('expenses/', ExpenseListView.as_view(), name='expenses-list'),
@@ -49,19 +54,30 @@ urlpatterns = [
     path('products/update/<int:pk>/', ProductUpdateView.as_view(), name='product-update'),
     path('products/delete/<int:pk>/', ProductDeleteView.as_view(), name='product-delete'),
     path('products/restore/<int:pk>/', ProductRestoreView.as_view(), name='product-restore'),
+    
+    # Calendar URLs
+    path('calendar/', CalendarDisplayView.as_view(), name='calendar-display'),
+    path('calendar/list/', CalendarEventListView.as_view(), name='calendar-event-list'),
+    path('calendar/events/', calendar_events_json, name='calendar-events-json'),
+    path('calendar/events/create/', CalendarEventCreateView.as_view(), name='calendar-event-create'),
+    path('calendar/events/<int:pk>/', CalendarEventDetailView.as_view(), name='calendar-event-detail'),
+    path('calendar/events/update/<int:pk>/', CalendarEventUpdateView.as_view(), name='calendar-event-update'),
+    path('calendar/events/delete/<int:pk>/', CalendarEventDeleteView.as_view(), name='calendar-event-delete'),
+    path('calendar/date/<int:year>/<int:month>/<int:day>/', date_events, name='calendar-date-events'),
     path('products/pdf/<int:pk>/', generate_product_pdf, name='product-pdf'),
     path('search/', search_views.global_search, name='global-search'),
     path('api/live-search/', search_api.live_search, name='live-search-api'),
     path(r'', login_required(views.home), name='home'),
 
-    path(r'finance_entry', views.FianceEntryListView.as_view(), name='entry-list'),
-    path(r'finance_entry/update/<pk>', views.FianceEntryUpdateView.as_view(), name='entry-update'),
-    path(r'finance_entry/create/', views.FianceEntryCreateView.as_view(), name='entry-create'),
-    path(r'finance_entry/delete/<pk>', views.FianceEntryDeleteView.as_view(), name='entry-delete'),
+    
+    #path(r'finance_entry', views.FianceEntryListView.as_view(), name='entry-list'),
+    #path(r'finance_entry/update/<pk>', views.FianceEntryUpdateView.as_view(), name='entry-update'),
+    #path(r'finance_entry/create/', views.FianceEntryCreateView.as_view(), name='entry-create'),
+    #path(r'finance_entry/delete/<pk>', views.FianceEntryDeleteView.as_view(), name='entry-delete'),
+    
+    # path(r'revenue', views.RevenueListView.as_view(), name='revenue-list'),
 
-    path(r'revenue', views.RevenueListView.as_view(), name='revenue-list'),
-
-    path(r'charge', views.ChargeListView.as_view(), name='charge-list'),
+#    path(r'charge', views.ChargeListView.as_view(), name='charge-list'),
 
 
 

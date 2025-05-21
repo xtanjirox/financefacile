@@ -1,19 +1,10 @@
 from django_tables2 import SingleTableView
 from django.forms import modelform_factory
 from django.views import generic
-from django.db.models import F, Q, Sum
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Q
 
-from core import forms, models
+from core import forms
 from .auth_mixins import BaseViewMixin
-
-import random
-import json
-
-
-def generate_color(n):
-    chars = '0123456789ABCDEF'
-    return ['#' + ''.join(random.sample(chars, 6)) for i in range(n)]
 
 
 class BaseListView(BaseViewMixin, SingleTableView):
@@ -38,52 +29,6 @@ class BaseListView(BaseViewMixin, SingleTableView):
                 q_entry_type = Q()
             return self.filter.qs.filter(q_entry_type)
         return super().get_queryset()
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        if self.filter_class:
-            form = forms.FilterForm(self.filter.form)
-            context.update({
-                'filter': self.filter,
-                'helper': form.helper
-            })
-        if self.get_stats:
-            qs = context.get('object_list')
-            total_charge = sum(
-                qs.filter(finance_entry_type=models.EntryType.CHARGE).values_list('entry_value', flat=True))
-            total_revenue = sum(
-                qs.filter(finance_entry_type=models.EntryType.REVENUE).values_list('entry_value', flat=True))
-
-            total_charge_per_category = qs.filter(finance_entry_type=models.EntryType.CHARGE).values(
-                'entry_category'
-            ).annotate(total_sum=Sum('entry_value')).annotate(category_name=F('entry_category__category_title'))
-            total_charge_per_category = total_charge_per_category.values('category_name', 'total_sum')
-
-            stats_charge_pie = {
-                "labels": list(total_charge_per_category.values_list('category_name', flat=True)),
-                "datasets": [{
-                    "data": list(total_charge_per_category.values_list('total_sum', flat=True)),
-                    "backgroundColor": generate_color(len(total_charge_per_category)),
-                    "borderWidth": 5
-                }]
-            }
-
-            context.update({
-                'total_charge': total_charge,
-                'total_revenue': total_revenue,
-                'total_benefice': total_revenue - total_charge,
-                'ls_stats': [total_revenue, total_charge],
-                'data': json.dumps(stats_charge_pie),
-                'pie_charge': total_charge_per_category
-            })
-
-        context.update({
-            'segment': self.segment,
-            'create_url': self.create_url,
-            'detail': self.detail
-        })
-        return context
-
 
 class FormViewMixin(BaseViewMixin, generic.FormView):
     model = None

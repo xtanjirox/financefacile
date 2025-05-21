@@ -1,0 +1,267 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Calendar{% endblock %}
+
+{% block extra_css %}
+<!-- FullCalendar CSS -->
+<link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
+<!-- Custom styles -->
+<style>
+    /* Calendar Styles */
+    #calendar {
+        background-color: #fff;
+        border-radius: 0.35rem;
+        box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+        padding: 1.5rem;
+        margin-top: 1.5rem;
+    }
+    
+    .fc-header-toolbar {
+        margin-bottom: 1.5em;
+    }
+    
+    .fc-toolbar-title {
+        font-size: 1.5em;
+        font-weight: 600;
+    }
+    
+    .fc-button {
+        background-color: #4e73df;
+        border: 1px solid #4e73df;
+        color: white;
+    }
+    
+    .fc-button:hover {
+        background-color: #2e59d9;
+        border-color: #2e59d9;
+        color: white;
+    }
+    
+    .fc-button-primary:not(:disabled).fc-button-active, 
+    .fc-button-primary:not(:disabled):active {
+        background-color: #2653d4;
+        border-color: #244ec9;
+        color: white;
+    }
+    
+    .fc-button-group .fc-button {
+        margin: 0 2px;
+    }
+    
+    .fc-day-today {
+        background-color: #f8f9fc !important;
+    }
+    
+    .fc-event {
+        border: 1px solid #4e73df;
+        background-color: #4e73df;
+        color: white;
+        padding: 2px 5px;
+        border-radius: 3px;
+        font-size: 0.85em;
+        cursor: pointer;
+    }
+    
+    .fc-event:hover {
+        opacity: 0.9;
+    }
+    
+    .fc-event-title {
+        font-weight: 500;
+    }
+    
+    .fc-daygrid-event-dot {
+        border-color: white !important;
+    }
+    
+    .fc-daygrid-dot-event .fc-event-title {
+        font-weight: normal;
+    }
+    
+    .fc-daygrid-day-number {
+        color: #5a5c69;
+        font-weight: 600;
+    }
+    
+    .fc-col-header-cell-cushion {
+        color: #5a5c69;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+    
+    .fc-toolbar-chunk {
+        display: flex;
+        align-items: center;
+    }
+    
+    @media (max-width: 768px) {
+        .fc-toolbar {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .fc-toolbar-chunk {
+            margin-top: 5px;
+        }
+    }
+    
+    /* Event List Styles */
+    .event-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 8px;
+    }
+    
+    .event-badge {
+        color: white;
+    }
+    
+    .fc-daygrid-event-dot {
+        margin-right: 4px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Calendar</h1>
+        <a href="{% url 'calendar-event-create' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            <i class="fas fa-plus fa-sm text-white-50"></i> Add Event
+        </a>
+    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            <h6 class="m-0 font-weight-bold text-primary">Calendar View</h6>
+        </div>
+        <div class="card-body">
+            <div id="calendar"></div>
+        </div>
+    </div>
+    {% endblock %}
+</div>
+
+<!-- Event Details Modal -->
+<div class="modal fade" id="eventModal" tabindex="-1" role="dialog" aria-labelledby="eventModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="eventModalLabel">Event Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="eventModalBody">
+                <!-- Event details will be loaded here via JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <a href="#" class="btn btn-primary" id="eventEditBtn">Edit</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- FullCalendar JS -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+<!-- DataTables JS -->
+<script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+<script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var eventModal = new bootstrap.Modal(document.getElementById('eventModal'));
+        var eventEditBtn = document.getElementById('eventEditBtn');
+        
+        // Initialize the calendar
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            },
+            themeSystem: 'bootstrap',
+            events: '{% url 'calendar-events-json' %}',
+            eventClick: function(info) {
+                // Format the event date and time
+                const start = new Date(info.event.start);
+                const end = info.event.end ? new Date(info.event.end) : null;
+                
+                let eventHtml = `
+                    <h5><strong>${info.event.title}</strong></h5>
+                    <p>${info.event.extendedProps.description || 'No description'}</p>
+                    <p><strong>Start:</strong> ${start.toLocaleString()}</p>
+                `;
+                
+                if (end) {
+                    eventHtml += `<p><strong>End:</strong> ${end.toLocaleString()}</p>`;
+                }
+                
+                if (info.event.allDay) {
+                    eventHtml += '<p><strong>All Day:</strong> Yes</p>';
+                }
+                
+                // Update modal content
+                document.getElementById('eventModalBody').innerHTML = eventHtml;
+                
+                // Set the edit button URL
+                if (info.event.url) {
+                    eventEditBtn.href = info.event.url;
+                    eventEditBtn.style.display = 'inline-block';
+                } else {
+                    eventEditBtn.style.display = 'none';
+                }
+                
+                // Show the modal
+                eventModal.show();
+                
+                // Prevent default click behavior
+                info.jsEvent.preventDefault();
+            },
+            eventDidMount: function(info) {
+                // Apply custom styling based on event properties
+                if (info.event.extendedProps.theme) {
+                    info.el.style.borderColor = info.event.backgroundColor;
+                    info.el.style.backgroundColor = info.event.backgroundColor + '20'; // Add transparency
+                    info.el.style.color = '#000';
+                }
+            },
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            },
+            buttonText: {
+                today: 'Today',
+                month: 'Month',
+                week: 'Week',
+                day: 'Day',
+                list: 'List'
+            },
+            editable: false,
+            selectable: false,
+            selectMirror: true,
+            dayMaxEvents: true,
+            navLinks: true,
+            nowIndicator: true
+        });
+        
+        // Render the calendar
+        calendar.render();
+        
+        // Refresh the calendar when the modal is closed
+        document.getElementById('eventModal').addEventListener('hidden.bs.modal', function () {
+            calendar.refetchEvents();
+        });
+    });
+</script>
+{% endblock %}

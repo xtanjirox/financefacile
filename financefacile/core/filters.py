@@ -3,7 +3,7 @@ from . import models
 from django_select2 import forms as s2forms
 from django import forms
 
-
+'''
 class FinanceEntryFilter(django_filters.FilterSet):
     entry_date = django_filters.DateFromToRangeFilter(
         widget=django_filters.widgets.RangeWidget(
@@ -21,8 +21,9 @@ class FinanceEntryFilter(django_filters.FilterSet):
     class Meta:
         model = models.FinanceEntry
         fields = ['entry_date', 'entry_category']
+'''
 
-
+'''
 class EntryCategoryFilter(django_filters.FilterSet):
     category_title = django_filters.ModelChoiceFilter(
         queryset=models.EntryCategory.objects.all(),
@@ -34,3 +35,4 @@ class EntryCategoryFilter(django_filters.FilterSet):
     class Meta:
         model = models.EntryCategory
         fields = ['category_title']
+'''

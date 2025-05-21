@@ -1,0 +1,352 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block title %}{% if object %}Edit Event{% else %}Create Event{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+  .event-form-card {
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 0.15rem 1.75rem 0 rgba(58, 59, 69, 0.15);
+  }
+  .event-header {
+    background-color: #7cb9e8;
+    color: white;
+    padding: 20px;
+    border-radius: 10px 10px 0 0;
+  }
+  .event-body {
+    padding: 25px;
+  }
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  .form-label {
+    font-weight: 600;
+    color: #39739d;
+    margin-bottom: 0.5rem;
+  }
+  .form-control {
+    border-radius: 6px;
+    border: 1px solid #e3e6f0;
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+  .form-control:focus {
+    border-color: #7cb9e8;
+    box-shadow: 0 0 0 0.25rem rgba(124, 185, 232, 0.25);
+  }
+  .form-check-input:checked {
+    background-color: #7cb9e8;
+    border-color: #7cb9e8;
+  }
+  .btn-action {
+    border-radius: 50px;
+    padding: 8px 20px;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .btn-primary {
+    background-color: #7cb9e8;
+    border-color: #7cb9e8;
+  }
+  .btn-primary:hover {
+    background-color: #6ba7d6;
+    border-color: #6ba7d6;
+  }
+  .btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+  }
+  .btn-outline-secondary:hover {
+    background-color: #6c757d;
+    color: white;
+  }
+  /* Date/time picker enhancements */
+  input[type="datetime-local"] {
+    padding: 0.75rem;
+    border-radius: 6px;
+    border: 1px solid #e3e6f0;
+  }
+  /* Participants selection */
+  .participants-selection {
+    margin-top: 10px;
+  }
+  .select2-container--default .select2-selection--multiple {
+    border-radius: 6px;
+    border: 1px solid #e3e6f0;
+    padding: 0.25rem;
+  }
+  .select2-container--default.select2-container--focus .select2-selection--multiple {
+    border-color: #7cb9e8;
+    box-shadow: 0 0 0 0.25rem rgba(124, 185, 232, 0.25);
+  }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #7cb9e8;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 2px 8px;
+  }
+  .select2-container--default .select2-selection__choice__remove {
+    color: white;
+    margin-right: 5px;
+  }
+  
+  /* Theme selector */
+  .theme-selector {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 10px;
+  }
+  .theme-option-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+  }
+  .theme-option {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    display: block;
+  }
+  .theme-radio {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  .theme-radio:checked + .theme-option {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 2px white, 0 0 0 4px #39739d;
+  }
+  .theme-option:hover {
+    transform: scale(1.1);
+  }
+  .theme-name {
+    font-size: 0.7rem;
+    color: #6c757d;
+    text-align: center;
+  }
+  .theme-primary { background-color: #4e73df; }
+  .theme-success { background-color: #1cc88a; }
+  .theme-info { background-color: #36b9cc; }
+  .theme-warning { background-color: #f6c23e; }
+  .theme-danger { background-color: #e74a3b; }
+  .theme-secondary { background-color: #858796; }
+  .theme-dark { background-color: #5a5c69; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <div class="d-flex align-items-center">
+      <h2 class="fw-bold mb-0" style="color: #39739d;">
+        <i class="fa-solid fa-calendar-plus me-2" style="color: #7cb9e8;"></i>
+        {% if object %}Edit Event{% else %}Create Event{% endif %}
+      </h2>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'calendar-event-list' %}" class="btn btn-outline-secondary shadow-sm rounded-pill px-4">
+        <i class="fas fa-arrow-left me-1"></i> Back to Calendar
+      </a>
+    </div>
+  </div>
+
+  <div class="card event-form-card mb-4">
+    <div class="event-header">
+      <h3 class="mb-0 fw-bold">{% if object %}Edit{% else %}New{% endif %} Event</h3>
+    </div>
+    <div class="event-body">
+      <form method="post" novalidate>
+        {% csrf_token %}
+        
+        <div class="form-group">
+          <label for="id_title" class="form-label">Event Title</label>
+          {{ form.title.errors }}
+          <input type="text" name="title" id="id_title" class="form-control {% if form.title.errors %}is-invalid{% endif %}" 
+                 value="{{ form.title.value|default:'' }}" placeholder="Enter event title" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="id_description" class="form-label">Description</label>
+          {{ form.description.errors }}
+          <textarea name="description" id="id_description" class="form-control {% if form.description.errors %}is-invalid{% endif %}" 
+                    rows="4" placeholder="Enter event description">{{ form.description.value|default:'' }}</textarea>
+        </div>
+        
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="id_start_date" class="form-label">Start Date/Time</label>
+              {{ form.start_date.errors }}
+              <input type="datetime-local" name="start_date" id="id_start_date" 
+                     class="form-control {% if form.start_date.errors %}is-invalid{% endif %}" 
+                     value="{{ form.start_date.value|date:'Y-m-d\TH:i'|default:'' }}" required>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="id_end_date" class="form-label">End Date/Time</label>
+              {{ form.end_date.errors }}
+              <input type="datetime-local" name="end_date" id="id_end_date" 
+                     class="form-control {% if form.end_date.errors %}is-invalid{% endif %}" 
+                     value="{{ form.end_date.value|date:'Y-m-d\TH:i'|default:'' }}" required>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <div class="form-check">
+            {{ form.all_day.errors }}
+            <input type="checkbox" name="all_day" id="id_all_day" class="form-check-input"
+                   {% if form.all_day.value %}checked{% endif %}>
+            <label for="id_all_day" class="form-check-label">All Day Event</label>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Event Theme</label>
+          {{ form.theme.errors }}
+          
+          <div class="theme-selector mt-2 d-flex flex-wrap gap-3">
+            <!-- Primary -->
+            <div class="theme-option-container">
+              <input type="radio" name="theme" id="theme_primary" value="primary" class="theme-radio" 
+                     {% if form.theme.value == 'primary' or not form.theme.value %}checked{% endif %}>
+              <label for="theme_primary" class="theme-option theme-primary" title="Primary"></label>
+              <span class="theme-name">Primary</span>
+            </div>
+            
+            <!-- Success -->
+            <div class="theme-option-container">
+              <input type="radio" name="theme" id="theme_success" value="success" class="theme-radio" 
+                     {% if form.theme.value == 'success' %}checked{% endif %}>
+              <label for="theme_success" class="theme-option theme-success" title="Success"></label>
+              <span class="theme-name">Success</span>
+            </div>
+            
+            <!-- Info -->
+            <div class="theme-option-container">
+              <input type="radio" name="theme" id="theme_info" value="info" class="theme-radio" 
+                     {% if form.theme.value == 'info' %}checked{% endif %}>
+              <label for="theme_info" class="theme-option theme-info" title="Info"></label>
+              <span class="theme-name">Info</span>
+            </div>
+            
+            <!-- Warning -->
+            <div class="theme-option-container">
+              <input type="radio" name="theme" id="theme_warning" value="warning" class="theme-radio" 
+                     {% if form.theme.value == 'warning' %}checked{% endif %}>
+              <label for="theme_warning" class="theme-option theme-warning" title="Warning"></label>
+              <span class="theme-name">Warning</span>
+            </div>
+            
+            <!-- Danger -->
+            <div class="theme-option-container">
+              <input type="radio" name="theme" id="theme_danger" value="danger" class="theme-radio" 
+                     {% if form.theme.value == 'danger' %}checked{% endif %}>
+              <label for="theme_danger" class="theme-option theme-danger" title="Danger"></label>
+              <span class="theme-name">Danger</span>
+            </div>
+            
+            <!-- Secondary -->
+            <div class="theme-option-container">
+              <input type="radio" name="theme" id="theme_secondary" value="secondary" class="theme-radio" 
+                     {% if form.theme.value == 'secondary' %}checked{% endif %}>
+              <label for="theme_secondary" class="theme-option theme-secondary" title="Secondary"></label>
+              <span class="theme-name">Secondary</span>
+            </div>
+            
+            <!-- Dark -->
+            <div class="theme-option-container">
+              <input type="radio" name="theme" id="theme_dark" value="dark" class="theme-radio" 
+                     {% if form.theme.value == 'dark' %}checked{% endif %}>
+              <label for="theme_dark" class="theme-option theme-dark" title="Dark"></label>
+              <span class="theme-name">Dark</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Participants</label>
+          {{ form.participants.errors }}
+          <div class="participants-selection">
+            {{ form.participants }}
+            <small class="text-muted">Select users from your company who will participate in this event. Hold Ctrl/Cmd to select multiple users.</small>
+          </div>
+        </div>
+        
+        <div class="d-flex gap-2 mt-4">
+          <button type="submit" class="btn btn-primary btn-action">
+            <i class="fas fa-save me-1"></i> {% if object %}Update{% else %}Create{% endif %} Event
+          </button>
+          <a href="{% url 'calendar-event-list' %}" class="btn btn-outline-secondary btn-action">
+            Cancel
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Select2 for participants
+    $('#id_participants').select2({
+      placeholder: 'Select participants...',
+      allowClear: true,
+      width: '100%',
+      theme: 'bootstrap4',
+      closeOnSelect: false
+    });
+    
+    // All day event toggle
+    const allDayCheckbox = document.getElementById('id_all_day');
+    const startDateInput = document.getElementById('id_start_date');
+    const endDateInput = document.getElementById('id_end_date');
+    
+    function updateDateTimeFields() {
+      if (allDayCheckbox.checked) {
+        // If all day is checked, set time to 00:00 for start and 23:59 for end
+        const startDate = startDateInput.value ? new Date(startDateInput.value) : new Date();
+        const endDate = endDateInput.value ? new Date(endDateInput.value) : new Date();
+        
+        startDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 0, 0);
+        
+        startDateInput.value = startDate.toISOString().slice(0, 16);
+        endDateInput.value = endDate.toISOString().slice(0, 16);
+      }
+    }
+    
+    allDayCheckbox.addEventListener('change', updateDateTimeFields);
+    
+    // Initialize on page load
+    if (allDayCheckbox.checked) {
+      updateDateTimeFields();
+    }
+  });
+</script>
+{% endblock %}

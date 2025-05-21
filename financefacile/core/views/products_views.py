@@ -1,28 +1,28 @@
 import logging
-from django.views.generic import DetailView, UpdateView, DeleteView, ListView, CreateView, TemplateView
-from django_select2 import forms as s2forms
-from core.forms import DateRangeFilterForm, DateRangeCategoryFilterForm, DateRangeFilterFormNew
-from django.db.models import Q, Sum
-from django.forms import modelformset_factory
-from django.views.generic.edit import CreateView
+from django.conf import settings
+
+from django.views.generic import (
+    DetailView, UpdateView, 
+    DeleteView, ListView, CreateView)
+from django.db.models import Sum
 from django.views import View
 from django.urls import reverse_lazy
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.http import JsonResponse, HttpResponse
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.contrib import messages
 
 from core import models, tables
-from core.models import InvoiceItem
 import core.forms
+from core.forms import DateRangeFilterFormNew
+from accounts import models as ac_models
+
+
 from .base import BaseListView, FormViewMixin, BaseDeleteView
 from .auth_mixins import BaseViewMixin, ProductPermissionMixin, InvoicePermissionMixin, CompanyFilterMixin
-from accounts.models import CompanySettings
 
 
-import logging
+from django.http import JsonResponse
+
+
 logger = logging.getLogger(__name__)
 
 class ProductCategoryListView(BaseListView):
@@ -36,39 +36,105 @@ class ProductCategoryListView(BaseListView):
     detail = True
     
     def get_queryset(self):
+        logger.info("\n=== Starting get_queryset for user: %s ===", self.request.user)
         # Start with the base queryset
         queryset = super().get_queryset()
         user = self.request.user
         
-        # Superusers and staff can see all categories if needed
-        if user.is_superuser or user.is_staff:
-            # For debugging purposes, we'll still filter by company
-            if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
-                return queryset.filter(company=user.profile.company)
-            return queryset.none()
+        # Log user and profile info for debugging
+        logger.info(f"User: {user} (ID: {user.id if user.id else 'anon'})")
+        logger.info(f"User attributes: is_authenticated={user.is_authenticated}, is_staff={user.is_staff}, is_superuser={user.is_superuser}")
         
-        # Regular users can only see their company's categories
+        if user.is_authenticated:
+            logger.info("User is authenticated")
+            if hasattr(user, 'profile'):
+                logger.info(f"User has profile: {user.profile}")
+                if hasattr(user.profile, 'company'):
+                    logger.info(f"User's company: {user.profile.company} (ID: {user.profile.company.id if user.profile.company else 'None'})")
+                else:
+                    logger.warning("User's profile has no company attribute")
+            else:
+                logger.warning("User has no profile")
+        else:
+            logger.warning("User is not authenticated")
+        
+        # Log all categories in the database with their company info
+        try:
+            all_categories = list(queryset.values('id', 'name', 'company__id', 'company__name'))
+            logger.info(f"\n=== All categories in database ===")
+            for cat in all_categories:
+                logger.info(f"- {cat['name']} (ID: {cat['id']}) - Company: {cat['company__name']} (ID: {cat['company__id']})")
+        except Exception as e:
+            logger.error(f"Error fetching categories: {str(e)}")
+        
+        # Superusers and staff can see all categories
+        if user.is_superuser or user.is_staff:
+            logger.info("\n=== User is superuser or staff, returning all categories ===")
+            return queryset
+        
+        # Regular users can see their company's categories
         if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
             company = user.profile.company
+            logger.info(f"\n=== Filtering categories for company: {company.name} (ID: {company.id}) ===")
+            company_categories = list(queryset.filter(company=company).values('id', 'name'))
+            logger.info(f"Found {len(company_categories)} categories for this company")
+            for cat in company_categories:
+                logger.info(f"- {cat['name']} (ID: {cat['id']})")
             return queryset.filter(company=company)
         
-        # Users without a company can't see any categories
+        # Log if user has no company
+        if hasattr(user, 'profile'):
+            logger.warning("\n=== User has profile but no company assigned ===")
+        else:
+            logger.warning("\n=== User has no profile ===")
+            
+        # For debugging, return all categories if in development
+        if settings.DEBUG:
+            logger.warning("\n=== DEBUG mode: Returning all categories ===")
+            return queryset
+            
+        logger.warning("\n=== No categories to return ===")
         return queryset.none()
+    
+    def get_context_data(self, **kwargs):
+        logger.info("\n=== Starting get_context_data ===")
+        context = super().get_context_data(**kwargs)
+        
+        # Get the filtered queryset
+        queryset = self.get_queryset()
+        context['has_categories'] = queryset.exists()
+        logger.info(f"has_categories: {context['has_categories']}")
+        
+        # Initialize the table with the filtered queryset and request
+        table = self.table_class(queryset, order_by='name')
+        
+        # Configure the table's request attribute for URL generation
+        if not hasattr(table, 'request'):
+            table.request = self.request
+        
+        # Add the table to the context
+        context['table'] = table
+        context['segment'] = self.segment
+        context['create_url'] = self.create_url
+        
+        # Configure the table for rendering
+        table.paginate(page=self.request.GET.get('page', 1), per_page=10)
+        
+        # Log table data for debugging
+        if hasattr(table, 'rows'):
+            rows = list(table.rows)
+            logger.info(f"Number of rows in table: {len(rows)}")
+            for i, row in enumerate(rows, 1):
+                logger.info(f"Row {i}: {row}")
+        else:
+            logger.warning("Table has no rows attribute")
+            
+        logger.info(f"Context keys: {context.keys()}")
+        return context
     
     def get(self, request, *args, **kwargs):
         # Always render the list view - the template will handle showing the empty state
         return super().get(request, *args, **kwargs)
-    
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        # Add a flag indicating whether there are any categories
-        context['has_categories'] = self.get_queryset().exists()
-        
-        # Log the table data being passed to the template
-        if hasattr(context, 'table') and hasattr(context['table'], 'rows'):
-            logger.info(f"Number of rows in table: {len(context['table'].rows)}")
-        
-        return context
 
 
 class ProductCategoryCreateView(CreateView, FormViewMixin):
@@ -161,11 +227,6 @@ class ProductCategoryDeleteView(BaseDeleteView, CompanyFilterMixin):
         return super().post(request, *args, **kwargs)
 
 
-from django.http import JsonResponse
-from django.views.generic import TemplateView
-from django.urls import reverse
-from django.utils.html import format_html
-
 class ProductListView(ProductPermissionMixin, CompanyFilterMixin, ListView):
     model = models.Product
     template_name = 'products/product_list.html'
@@ -227,9 +288,9 @@ class ProductListView(ProductPermissionMixin, CompanyFilterMixin, ListView):
         currency_symbol = 'DT'  # Default currency
         if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
             try:
-                company_settings = CompanySettings.objects.get(company=user.profile.company)
+                company_settings = ac_models.CompanySettings.objects.get(company=user.profile.company)
                 currency_symbol = company_settings.currency
-            except CompanySettings.DoesNotExist:
+            except ac_models.CompanySettings.DoesNotExist:
                 pass
         context['currency_symbol'] = currency_symbol
         
@@ -614,9 +675,9 @@ class InvoiceCreateView(InvoicePermissionMixin, CreateView, FormViewMixin):
             if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
                 company = self.request.user.profile.company
                 # Get company settings directly
-                from accounts.models import CompanySettings
+                # from accounts.models import CompanySettings
                 try:
-                    settings = CompanySettings.objects.get(company=company)
+                    settings = ac_models.CompanySettings.objects.get(company=company)
                     default_tva_rate = settings.default_tva_rate
                     logger.info(f"Got default TVA rate from company settings: {default_tva_rate}")
                 except Exception as e:
@@ -791,7 +852,7 @@ class InvoiceListView(InvoicePermissionMixin, ListView):
                 filter_kwargs['created_at__date__lte'] = end_date
             
             filtered_invoices = invoice_queryset.filter(**filter_kwargs)
-            filtered_invoice_items = InvoiceItem.objects.filter(
+            filtered_invoice_items = models.InvoiceItem.objects.filter(
                 invoice__in=filtered_invoices
             )
 
@@ -811,7 +872,7 @@ class InvoiceListView(InvoicePermissionMixin, ListView):
         
         if company:
             # Filter invoice items by the user's company
-            company_invoice_items = InvoiceItem.objects.filter(invoice__company=company)
+            company_invoice_items = models.InvoiceItem.objects.filter(invoice__company=company)
             
             # Calculate stats based on company's data only
             total_items_sold = company_invoice_items.aggregate(
@@ -834,9 +895,9 @@ class InvoiceListView(InvoicePermissionMixin, ListView):
         currency_symbol = 'DT'  # Default currency
         if company:
             try:
-                company_settings = CompanySettings.objects.get(company=company)
+                company_settings = ac_models.CompanySettings.objects.get(company=company)
                 currency_symbol = company_settings.currency
-            except CompanySettings.DoesNotExist:
+            except ac_models.CompanySettings.DoesNotExist:
                 pass
         
         context.update({
@@ -979,9 +1040,9 @@ class InvoiceUpdateView(InvoicePermissionMixin, UpdateView, FormViewMixin):
             if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
                 company = self.request.user.profile.company
                 # Get company settings directly
-                from accounts.models import CompanySettings
+                # from accounts.models import CompanySettings
                 try:
-                    settings = CompanySettings.objects.get(company=company)
+                    settings = ac_models.CompanySettings.objects.get(company=company)
                     default_tva_rate = settings.default_tva_rate
                     logger.info(f"Got default TVA rate from company settings: {default_tva_rate}")
                 except Exception as e:
@@ -1109,9 +1170,9 @@ class InvoiceDetailView(InvoicePermissionMixin, DetailView):
         currency_symbol = 'DT'  # Default currency
         if hasattr(user, 'profile') and hasattr(user.profile, 'company') and user.profile.company:
             try:
-                company_settings = CompanySettings.objects.get(company=user.profile.company)
+                company_settings = ac_models.CompanySettings.objects.get(company=user.profile.company)
                 currency_symbol = company_settings.currency
-            except CompanySettings.DoesNotExist:
+            except ac_models.CompanySettings.DoesNotExist:
                 pass
         context['currency_symbol'] = currency_symbol
         

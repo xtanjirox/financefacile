@@ -1,9 +1,9 @@
-from django.forms import inlineformset_factory
+from django.forms import inlineformset_factory, ModelForm
 from django import forms
 from django.utils import timezone
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Div, Layout, Submit, Button, HTML
+from crispy_forms.layout import Div, Layout, Submit, HTML
 
 from core import models
 from django_select2 import forms as s2forms
@@ -483,3 +483,93 @@ class FilterForm(forms.Form):
                 css_class='row'
             )
         )
+class ParticipantSelectWidget(s2forms.Select2MultipleWidget):
+    def build_attrs(self, *args, **kwargs):
+        attrs = super().build_attrs(*args, **kwargs)
+        attrs.update({
+            'data-placeholder': 'Select participants...',
+            'data-allow-clear': 'true',
+            'data-close-on-select': 'false',
+            'style': 'width: 100%;',
+        })
+        return attrs
+
+
+class CalendarEventForm(forms.ModelForm):
+    """Form for creating and updating calendar events."""
+    
+    class Meta:
+        model = models.CalendarEvent
+        fields = ['title', 'description', 'start_date', 'end_date', 'all_day', 'theme', 'participants']
+        widgets = {
+            'title': forms.TextInput(attrs={
+                'class': 'form-control',
+                'placeholder': 'Event title',
+            }),
+            'description': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Event description (optional)',
+            }),
+            'start_date': forms.DateTimeInput(
+                attrs={
+                    'type': 'datetime-local',
+                    'class': 'form-control',
+                },
+                format='%Y-%m-%dT%H:%M'
+            ),
+            'end_date': forms.DateTimeInput(
+                attrs={
+                    'type': 'datetime-local',
+                    'class': 'form-control',
+                },
+                format='%Y-%m-%dT%H:%M'
+            ),
+            'all_day': forms.CheckboxInput(attrs={
+                'class': 'form-check-input',
+            }),
+            'theme': forms.Select(attrs={
+                'class': 'form-select',
+            }),
+            'participants': ParticipantSelectWidget(),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Set initial values for datetime fields
+        now = timezone.now()
+        if not self.instance.pk:  # New event
+            if not self.initial.get('start_date'):
+                self.initial['start_date'] = now.replace(minute=0, second=0, microsecond=0)
+            if not self.initial.get('end_date'):
+                self.initial['end_date'] = (now.replace(minute=0, second=0, microsecond=0) + 
+                                          timezone.timedelta(hours=1))
+        
+        # Set the format for datetime fields
+        if 'start_date' in self.fields:
+            self.fields['start_date'].input_formats = ['%Y-%m-%dT%H:%M']
+        if 'end_date' in self.fields:
+            self.fields['end_date'].input_formats = ['%Y-%m-%dT%H:%M']
+        
+        # Set choices for theme field
+        self.fields['theme'].choices = [
+            ('primary', 'Primary'),
+            ('secondary', 'Secondary'),
+            ('success', 'Success'),
+            ('danger', 'Danger'),
+            ('warning', 'Warning'),
+            ('info', 'Info'),
+            ('light', 'Light'),
+            ('dark', 'Dark'),
+        ]
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+        
+        if start_date and end_date and start_date > end_date:
+            self.add_error('end_date', 'End date must be after start date')
+        
+        return cleaned_data

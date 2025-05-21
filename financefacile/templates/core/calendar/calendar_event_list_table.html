@@ -1,0 +1,281 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block sidebar %}
+  {% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+  {% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+  {% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block title %}Calendar Events{% endblock %}
+
+{% block extra_css %}
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<style>
+  .theme-badge {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+  
+  .theme-primary { background-color: #4e73df; }
+  .theme-secondary { background-color: #858796; }
+  .theme-success { background-color: #1cc88a; }
+  .theme-info { background-color: #36b9cc; }
+  .theme-warning { background-color: #f6c23e; }
+  .theme-danger { background-color: #e74a3b; }
+  .theme-dark { background-color: #5a5c69; }
+  
+  .filter-card {
+    margin-bottom: 1.5rem;
+  }
+  
+  .select2-container--default .select2-selection--single {
+    height: 38px;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: 1px solid #d1d3e2;
+    border-radius: 0.35rem;
+  }
+  
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    line-height: 1.5;
+    padding-left: 0;
+  }
+  
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 38px;
+  }
+  
+  .date-filter {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .date-filter .form-group {
+    flex: 1;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="d-sm-flex align-items-center justify-content-between mb-4">
+    <h1 class="h3 mb-0 text-gray-800">Calendar Events</h1>
+    <a href="{% url 'calendar-event-create' %}" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+      <i class="fas fa-plus fa-sm text-white-50"></i> Add Event
+    </a>
+  </div>
+  
+  <!-- Filters Card -->
+  <div class="card shadow mb-4 filter-card">
+    <div class="card-header py-3">
+      <h6 class="m-0 font-weight-bold text-primary">Filters</h6>
+    </div>
+    <div class="card-body">
+      <form id="event-filter-form">
+        <div class="row">
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="title-filter">Event Title</label>
+              <input type="text" class="form-control" id="title-filter" placeholder="Search by title...">
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="theme-filter">Event Theme</label>
+              <select class="form-control" id="theme-filter">
+                <option value="">All Themes</option>
+                <option value="primary">Primary</option>
+                <option value="secondary">Secondary</option>
+                <option value="success">Success</option>
+                <option value="info">Info</option>
+                <option value="warning">Warning</option>
+                <option value="danger">Danger</option>
+                <option value="dark">Dark</option>
+              </select>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-group">
+              <label for="date-range">Date Range</label>
+              <div class="date-filter">
+                <div class="form-group">
+                  <input type="date" class="form-control" id="date-start" name="date-start">
+                </div>
+                <div class="form-group">
+                  <input type="date" class="form-control" id="date-end" name="date-end">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 text-right">
+            <button type="button" id="reset-filters" class="btn btn-secondary">Reset</button>
+            <button type="button" id="apply-filters" class="btn btn-primary">Apply Filters</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Events Table Card -->
+  <div class="card shadow mb-4">
+    <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+      <h6 class="m-0 font-weight-bold text-primary">Events</h6>
+    </div>
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-bordered" id="events-table" width="100%" cellspacing="0">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Start Date</th>
+              <th>End Date</th>
+              <th>All Day</th>
+              <th>Theme</th>
+              <th>Description</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for event in events %}
+            <tr class="event-row" 
+                data-title="{{ event.title|lower }}" 
+                data-theme="{{ event.theme }}" 
+                data-start="{{ event.start_date|date:'Y-m-d' }}" 
+                data-end="{{ event.end_date|date:'Y-m-d' }}">
+              <td>{{ event.title }}</td>
+              <td>{{ event.start_date|date:"M d, Y g:i A" }}</td>
+              <td>{{ event.end_date|date:"M d, Y g:i A" }}</td>
+              <td>{% if event.all_day %}Yes{% else %}No{% endif %}</td>
+              <td>
+                <span class="theme-badge theme-{{ event.theme }}"></span>
+                {{ event.theme|title }}
+              </td>
+              <td>{{ event.description|truncatechars:50 }}</td>
+              <td>
+                <a href="{% url 'calendar-event-detail' event.id %}" class="btn btn-info btn-sm">
+                  <i class="fas fa-eye"></i>
+                </a>
+                <a href="{% url 'calendar-event-update' event.id %}" class="btn btn-primary btn-sm">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <a href="{% url 'calendar-event-delete' event.id %}" class="btn btn-danger btn-sm">
+                  <i class="fas fa-trash"></i>
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" class="text-center">No events found. <a href="{% url 'calendar-event-create' %}">Create one</a>.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+  $(document).ready(function() {
+    // Initialize Select2
+    $('#theme-filter').select2({
+      placeholder: 'Select a theme',
+      allowClear: true
+    });
+    
+    // Set default date range to current month
+    const today = new Date();
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    
+    $('#date-start').val(firstDay.toISOString().split('T')[0]);
+    $('#date-end').val(lastDay.toISOString().split('T')[0]);
+    
+    // Apply filters function
+    $('#apply-filters').click(function() {
+      applyFilters();
+    });
+    
+    // Reset filters
+    $('#reset-filters').click(function() {
+      $('#title-filter').val('');
+      $('#theme-filter').val('').trigger('change');
+      $('#date-start').val(firstDay.toISOString().split('T')[0]);
+      $('#date-end').val(lastDay.toISOString().split('T')[0]);
+      applyFilters();
+    });
+    
+    // Filter as you type in title field
+    $('#title-filter').on('keyup', function() {
+      applyFilters();
+    });
+    
+    // Filter when theme changes
+    $('#theme-filter').on('change', function() {
+      applyFilters();
+    });
+    
+    // Filter when dates change
+    $('#date-start, #date-end').on('change', function() {
+      applyFilters();
+    });
+    
+    // Apply all filters
+    function applyFilters() {
+      const titleFilter = $('#title-filter').val().toLowerCase();
+      const themeFilter = $('#theme-filter').val();
+      const startDate = $('#date-start').val();
+      const endDate = $('#date-end').val();
+      
+      $('.event-row').each(function() {
+        const row = $(this);
+        const title = row.data('title');
+        const theme = row.data('theme');
+        const eventStart = row.data('start');
+        const eventEnd = row.data('end');
+        
+        // Check if event matches all filters
+        const matchesTitle = !titleFilter || title.includes(titleFilter);
+        const matchesTheme = !themeFilter || theme === themeFilter;
+        const matchesDateRange = (!startDate || eventEnd >= startDate) && (!endDate || eventStart <= endDate);
+        
+        // Show or hide based on filter matches
+        if (matchesTitle && matchesTheme && matchesDateRange) {
+          row.show();
+        } else {
+          row.hide();
+        }
+      });
+      
+      // Show "no events" message if all rows are hidden
+      const visibleRows = $('.event-row:visible').length;
+      if (visibleRows === 0) {
+        if ($('#no-events-row').length === 0) {
+          $('<tr id="no-events-row"><td colspan="7" class="text-center">No events match your filters.</td></tr>').appendTo('#events-table tbody');
+        }
+      } else {
+        $('#no-events-row').remove();
+      }
+    }
+    
+    // Initial filter application
+    applyFilters();
+  });
+</script>
+{% endblock %}

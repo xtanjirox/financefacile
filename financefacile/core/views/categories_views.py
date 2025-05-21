@@ -8,6 +8,7 @@ from .auth_mixins import CategoryPermissionMixin, BaseViewMixin
 from django_select2 import forms as s2forms
 
 
+'''
 class CategoryListView(CategoryPermissionMixin, BaseListView):
     model = models.EntryCategory
     table_class = tables.EntryCategoryTable
@@ -97,3 +98,4 @@ class CategoryDeleteView(CategoryPermissionMixin, BaseDeleteView):
         if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
             return queryset.filter(company=self.request.user.profile.company)
         return queryset.none()
+'''
