@@ -14361,3 +14361,916 @@ INFO 2025-05-21 21:50:12,039 calendar_views Processing event: 30 - dzdamza - 202
 DEBUG 2025-05-21 21:50:12,039 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
 INFO 2025-05-21 21:50:12,039 calendar_views Returning 9 events
 INFO 2025-05-21 21:50:12,039 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747864211989 HTTP/1.1" 200 2739
+INFO 2025-05-21 21:53:59,098 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/models.py changed, reloading.
+INFO 2025-05-21 21:53:59,635 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 21:54:19,218 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/signals.py changed, reloading.
+INFO 2025-05-21 21:54:19,672 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 21:54:44,489 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/signals.py changed, reloading.
+INFO 2025-05-21 21:54:44,935 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 21:55:04,518 models Invoice #1: get_total called
+INFO 2025-05-21 21:55:04,518 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 21:55:04,518 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 21:55:04,520 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 21:55:04,520 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 21:55:04,520 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 21:55:04,540 models Invoice #1: get_total called
+INFO 2025-05-21 21:55:04,541 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 21:55:04,541 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 21:55:04,542 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 21:55:04,543 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 21:55:04,543 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 21:55:04,547 basehttp "GET /app/ HTTP/1.1" 200 54710
+WARNING 2025-05-21 21:55:04,618 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 21:55:05,176 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 21:55:05,178 calendar_views Found company for user: accuro
+INFO 2025-05-21 21:55:05,181 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 21:55:05,182 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 21:55:05,183 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 21:55:05,183 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 21:55:05,183 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 21:55:05,183 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 21:55:05,183 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 21:55:05,183 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 21:55:05,183 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 21:55:05,183 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 21:55:05,183 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 21:55:05,183 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 21:55:05,183 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 21:55:05,183 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 21:55:05,183 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 21:55:05,183 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 21:55:05,183 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 21:55:05,183 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 21:55:05,183 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 21:55:05,183 calendar_views Returning 9 events
+INFO 2025-05-21 21:55:05,183 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747864505144 HTTP/1.1" 200 2739
+INFO 2025-05-21 21:55:21,209 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/urls.py changed, reloading.
+INFO 2025-05-21 21:55:21,695 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 21:55:32,086 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/urls.py changed, reloading.
+INFO 2025-05-21 21:55:32,598 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 21:56:40,438 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/signals.py changed, reloading.
+INFO 2025-05-21 21:56:40,934 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 21:56:53,442 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/notifications.py changed, reloading.
+INFO 2025-05-21 21:56:53,796 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 21:57:07,292 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/notifications.py changed, reloading.
+INFO 2025-05-21 21:57:07,737 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 21:57:26,342 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/models.py changed, reloading.
+INFO 2025-05-21 21:57:26,789 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 22:00:02,585 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/apps.py changed, reloading.
+INFO 2025-05-21 22:00:02,939 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 22:00:27,613 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/admin.py changed, reloading.
+INFO 2025-05-21 22:00:28,143 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 22:01:04,531 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 22:01:34,729 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 22:49:18,023 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 22:49:31,009 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 22:51:09,869 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 22:52:27,007 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 22:52:30,818 models Invoice #1: get_total called
+INFO 2025-05-21 22:52:30,818 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 22:52:30,818 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 22:52:30,820 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 22:52:30,820 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 22:52:30,820 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 22:52:30,855 models Invoice #1: get_total called
+INFO 2025-05-21 22:52:30,856 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 22:52:30,856 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 22:52:30,857 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 22:52:30,858 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 22:52:30,858 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 22:52:30,865 basehttp "GET /app/ HTTP/1.1" 200 56699
+INFO 2025-05-21 22:52:30,928 basehttp "GET /static/assets/css/matdash_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-21 22:52:30,930 basehttp "GET /static/assets/css/matdash_layout.css HTTP/1.1" 304 0
+INFO 2025-05-21 22:52:30,930 basehttp "GET /static/assets/css/topbar-enhanced.css HTTP/1.1" 304 0
+INFO 2025-05-21 22:52:30,930 basehttp "GET /static/assets/css/light.css HTTP/1.1" 304 0
+INFO 2025-05-21 22:52:30,931 basehttp "GET /static/assets/css/font-manrope.css HTTP/1.1" 304 0
+INFO 2025-05-21 22:52:30,931 basehttp "GET /static/assets/css/sidebar-toggle.css HTTP/1.1" 304 0
+INFO 2025-05-21 22:52:30,932 basehttp "GET /static/assets/css/modern-table.css HTTP/1.1" 304 0
+INFO 2025-05-21 22:52:30,933 basehttp "GET /static/assets/js/sidebar-active.js HTTP/1.1" 304 0
+INFO 2025-05-21 22:52:30,934 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 304 0
+INFO 2025-05-21 22:52:30,934 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+INFO 2025-05-21 22:52:30,934 basehttp "GET /static/assets/js/actions-menu.js HTTP/1.1" 304 0
+INFO 2025-05-21 22:52:30,935 basehttp "GET /static/js/notifications.js HTTP/1.1" 200 6448
+WARNING 2025-05-21 22:52:30,939 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 22:52:31,334 log Not Found: /api/notifications/
+WARNING 2025-05-21 22:52:31,334 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+INFO 2025-05-21 22:52:31,337 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-21 22:52:31,339 calendar_views Found company for user: accuro
+INFO 2025-05-21 22:52:31,347 calendar_views Found 9 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-21 22:52:31,348 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-21 22:52:31,349 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-21 22:52:31,349 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-21 22:52:31,349 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 22:52:31,349 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-21 22:52:31,349 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-21 22:52:31,349 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-21 22:52:31,349 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-21 22:52:31,349 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-21 22:52:31,349 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-21 22:52:31,349 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-21 22:52:31,349 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-21 22:52:31,350 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-21 22:52:31,350 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-21 22:52:31,350 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-21 22:52:31,350 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-21 22:52:31,350 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-21 22:52:31,350 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-21 22:52:31,350 calendar_views Returning 9 events
+INFO 2025-05-21 22:52:31,350 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747867951290 HTTP/1.1" 200 2739
+INFO 2025-05-21 22:52:46,009 models Invoice #1: get_total called
+INFO 2025-05-21 22:52:46,010 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 22:52:46,010 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 22:52:46,012 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 22:52:46,012 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 22:52:46,012 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 22:52:46,013 basehttp "GET /app/invoices/ HTTP/1.1" 200 30543
+WARNING 2025-05-21 22:52:46,049 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 22:52:46,114 log Not Found: /api/notifications/
+WARNING 2025-05-21 22:52:46,114 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+INFO 2025-05-21 22:52:49,738 basehttp "GET /app/invoices/create/ HTTP/1.1" 200 31676
+WARNING 2025-05-21 22:52:49,774 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 22:52:49,826 log Not Found: /api/notifications/
+WARNING 2025-05-21 22:52:49,826 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+INFO 2025-05-21 22:53:00,742 basehttp "GET /app/expenses/ HTTP/1.1" 200 33946
+WARNING 2025-05-21 22:53:00,789 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 22:53:00,841 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 22:53:00,853 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+WARNING 2025-05-21 22:53:00,854 log Not Found: /api/notifications/
+WARNING 2025-05-21 22:53:00,854 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+INFO 2025-05-21 22:53:02,450 basehttp "GET /app/expenses/create/ HTTP/1.1" 200 25023
+WARNING 2025-05-21 22:53:02,492 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 22:53:02,555 log Not Found: /api/notifications/
+WARNING 2025-05-21 22:53:02,555 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+INFO 2025-05-21 22:53:11,403 basehttp "POST /app/expenses/create/ HTTP/1.1" 302 0
+INFO 2025-05-21 22:53:11,427 basehttp "GET /app/expenses/ HTTP/1.1" 200 35197
+WARNING 2025-05-21 22:53:11,515 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 22:53:11,550 log Not Found: /api/notifications/
+WARNING 2025-05-21 22:53:11,550 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 22:53:11,550 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+WARNING 2025-05-21 22:53:11,557 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+WARNING 2025-05-21 22:53:14,379 log Not Found: /notifications/read-all/
+WARNING 2025-05-21 22:53:14,380 basehttp "POST /notifications/read-all/ HTTP/1.1" 404 4262
+WARNING 2025-05-21 22:54:12,418 log Not Found: /api/notifications/
+WARNING 2025-05-21 22:54:12,419 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+INFO 2025-05-21 22:54:22,089 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/notification_views.py changed, reloading.
+INFO 2025-05-21 22:54:22,092 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/notification_views.py changed, reloading.
+INFO 2025-05-21 22:54:22,638 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 22:54:44,378 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/notification_views.py changed, reloading.
+INFO 2025-05-21 22:54:44,755 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-21 22:55:12,435 log Not Found: /api/notifications/
+WARNING 2025-05-21 22:55:12,435 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+WARNING 2025-05-21 22:56:12,422 log Not Found: /api/notifications/
+WARNING 2025-05-21 22:56:12,423 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+INFO 2025-05-21 22:57:06,277 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-21 22:57:12,430 log Not Found: /api/notifications/
+WARNING 2025-05-21 22:57:12,430 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+INFO 2025-05-21 22:58:10,007 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/urls.py changed, reloading.
+INFO 2025-05-21 22:58:10,475 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-21 22:58:12,428 log Not Found: /api/notifications/
+WARNING 2025-05-21 22:58:12,429 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+INFO 2025-05-21 22:58:21,944 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/urls.py changed, reloading.
+INFO 2025-05-21 22:58:22,317 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 22:58:43,987 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/urls.py changed, reloading.
+INFO 2025-05-21 22:58:44,350 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-21 22:59:12,429 log Not Found: /api/notifications/
+WARNING 2025-05-21 22:59:12,429 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+INFO 2025-05-21 23:00:46,272 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-21 23:01:05,438 log Not Found: /api/notifications/
+WARNING 2025-05-21 23:01:05,438 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+WARNING 2025-05-21 23:01:32,727 log Not Found: /api/notifications/
+WARNING 2025-05-21 23:01:32,727 basehttp "GET /api/notifications/ HTTP/1.1" 404 4458
+INFO 2025-05-21 23:01:35,380 basehttp "GET /app/expenses/ HTTP/1.1" 200 35210
+WARNING 2025-05-21 23:01:35,477 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 23:01:35,480 basehttp "GET /static/js/notifications.js?v=1747868495 HTTP/1.1" 200 7498
+WARNING 2025-05-21 23:01:35,509 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 23:01:35,523 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+WARNING 2025-05-21 23:01:35,751 log Not Found: /core/api/notifications/
+WARNING 2025-05-21 23:01:35,752 basehttp "GET /core/api/notifications/ HTTP/1.1" 404 4261
+WARNING 2025-05-21 23:01:40,540 log Not Found: /core/notifications/read-all/
+WARNING 2025-05-21 23:01:40,541 basehttp "POST /core/notifications/read-all/ HTTP/1.1" 404 4277
+INFO 2025-05-21 23:01:44,737 basehttp "GET /app/expenses/ HTTP/1.1" 200 35210
+WARNING 2025-05-21 23:01:44,777 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 23:01:44,794 basehttp "GET /static/js/notifications.js?v=1747868504 HTTP/1.1" 200 7498
+WARNING 2025-05-21 23:01:44,835 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 23:01:44,838 log Not Found: /core/api/notifications/
+WARNING 2025-05-21 23:01:44,838 basehttp "GET /core/api/notifications/ HTTP/1.1" 404 4261
+WARNING 2025-05-21 23:01:44,849 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 23:01:47,679 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 52112
+WARNING 2025-05-21 23:01:47,720 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 23:01:47,741 basehttp "GET /static/js/notifications.js?v=1747868507 HTTP/1.1" 200 7498
+WARNING 2025-05-21 23:01:47,783 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 23:01:47,788 log Not Found: /core/api/notifications/
+WARNING 2025-05-21 23:01:47,789 basehttp "GET /core/api/notifications/ HTTP/1.1" 404 4261
+WARNING 2025-05-21 23:01:47,794 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 23:01:49,940 basehttp "GET /app/calendar/events/create/ HTTP/1.1" 200 29007
+WARNING 2025-05-21 23:01:49,970 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 23:01:49,998 basehttp "GET /static/js/notifications.js?v=1747868509 HTTP/1.1" 200 7498
+WARNING 2025-05-21 23:01:50,048 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 23:01:50,049 log Not Found: /core/api/notifications/
+WARNING 2025-05-21 23:01:50,049 basehttp "GET /core/api/notifications/ HTTP/1.1" 404 4261
+WARNING 2025-05-21 23:01:50,076 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 23:01:59,121 basehttp "POST /app/calendar/events/create/ HTTP/1.1" 302 0
+INFO 2025-05-21 23:01:59,150 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 53837
+INFO 2025-05-21 23:01:59,246 basehttp "GET /static/js/notifications.js?v=1747868519 HTTP/1.1" 200 7498
+WARNING 2025-05-21 23:01:59,248 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 23:01:59,278 log Not Found: /core/api/notifications/
+WARNING 2025-05-21 23:01:59,279 basehttp "GET /core/api/notifications/ HTTP/1.1" 404 4261
+WARNING 2025-05-21 23:01:59,280 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 23:01:59,297 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 23:02:21,517 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 53559
+WARNING 2025-05-21 23:02:21,552 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 23:02:21,567 basehttp "GET /static/js/notifications.js?v=1747868541 HTTP/1.1" 200 7498
+WARNING 2025-05-21 23:02:21,611 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 23:02:21,623 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+WARNING 2025-05-21 23:02:21,625 log Not Found: /core/api/notifications/
+WARNING 2025-05-21 23:02:21,625 basehttp "GET /core/api/notifications/ HTTP/1.1" 404 4261
+INFO 2025-05-21 23:02:22,496 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 53559
+INFO 2025-05-21 23:02:22,534 basehttp "GET /static/js/notifications.js?v=1747868542 HTTP/1.1" 200 7498
+WARNING 2025-05-21 23:02:22,536 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 23:02:22,588 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 23:02:22,593 log Not Found: /core/api/notifications/
+WARNING 2025-05-21 23:02:22,593 basehttp "GET /core/api/notifications/ HTTP/1.1" 404 4261
+WARNING 2025-05-21 23:02:22,623 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 23:02:33,236 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 53559
+INFO 2025-05-21 23:02:33,300 basehttp "GET /static/assets/css/app.css HTTP/1.1" 200 198751
+INFO 2025-05-21 23:02:33,317 basehttp "GET /static/assets/css/topbar-enhanced.css HTTP/1.1" 200 2109
+INFO 2025-05-21 23:02:33,318 basehttp "GET /static/assets/css/matdash_sidebar.css HTTP/1.1" 200 4900
+INFO 2025-05-21 23:02:33,318 basehttp "GET /static/assets/css/matdash_layout.css HTTP/1.1" 200 4282
+INFO 2025-05-21 23:02:33,319 basehttp "GET /static/assets/css/finance_facile.css HTTP/1.1" 200 1993
+INFO 2025-05-21 23:02:33,320 basehttp "GET /static/assets/css/modern-table.css HTTP/1.1" 200 3607
+INFO 2025-05-21 23:02:33,320 basehttp "GET /static/assets/css/font-manrope.css HTTP/1.1" 200 889
+INFO 2025-05-21 23:02:33,321 basehttp "GET /static/assets/css/sidebar-toggle.css HTTP/1.1" 200 1281
+INFO 2025-05-21 23:02:33,322 basehttp "GET /static/assets/css/light.css HTTP/1.1" 200 674230
+WARNING 2025-05-21 23:02:33,327 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 23:02:33,328 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 200 1814
+INFO 2025-05-21 23:02:33,328 basehttp "GET /static/assets/js/jquery-3.7.1.min.js HTTP/1.1" 200 87533
+INFO 2025-05-21 23:02:33,328 basehttp "GET /static/assets/js/datatables.min.js HTTP/1.1" 200 83898
+INFO 2025-05-21 23:02:33,334 basehttp "GET /static/assets/js/actions-menu.js HTTP/1.1" 200 831
+INFO 2025-05-21 23:02:33,334 basehttp "GET /static/assets/js/sidebar-active.js HTTP/1.1" 200 0
+INFO 2025-05-21 23:02:33,335 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 200 2403
+INFO 2025-05-21 23:02:33,335 basehttp "GET /static/js/notifications.js?v=1747868553 HTTP/1.1" 200 7498
+INFO 2025-05-21 23:02:33,337 basehttp "GET /static/assets/js/app.js HTTP/1.1" 200 900842
+WARNING 2025-05-21 23:02:33,608 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 23:02:33,625 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+WARNING 2025-05-21 23:02:33,657 log Not Found: /core/api/notifications/
+WARNING 2025-05-21 23:02:33,658 basehttp "GET /core/api/notifications/ HTTP/1.1" 404 4261
+INFO 2025-05-21 23:02:33,896 basehttp "GET /static/assets/img/icons/icon-48x48.png HTTP/1.1" 200 3533
+WARNING 2025-05-21 23:03:34,422 log Not Found: /core/api/notifications/
+WARNING 2025-05-21 23:03:34,422 basehttp "GET /core/api/notifications/ HTTP/1.1" 404 4261
+INFO 2025-05-21 23:04:39,972 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-21 23:05:34,430 log Not Found: /core/api/notifications/
+WARNING 2025-05-21 23:05:34,431 basehttp "GET /core/api/notifications/ HTTP/1.1" 404 4261
+INFO 2025-05-21 23:06:12,371 autoreload /Users/mehdi/Documents/my_projects/financefacile/financefacile/core/notification_views.py changed, reloading.
+INFO 2025-05-21 23:06:12,870 autoreload Watching for file changes with StatReloader
+WARNING 2025-05-21 23:06:34,437 log Not Found: /core/api/notifications/
+WARNING 2025-05-21 23:06:34,438 basehttp "GET /core/api/notifications/ HTTP/1.1" 404 4261
+INFO 2025-05-21 23:06:51,531 autoreload Watching for file changes with StatReloader
+INFO 2025-05-21 23:07:22,830 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 53559
+INFO 2025-05-21 23:07:22,919 basehttp "GET /static/js/notifications.js?v=1747868842 HTTP/1.1" 200 8873
+WARNING 2025-05-21 23:07:22,925 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+WARNING 2025-05-21 23:07:22,962 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 23:07:22,980 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 23:07:23,155 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 313
+INFO 2025-05-21 23:07:30,988 basehttp "POST /app/notifications/read/1/ HTTP/1.1" 200 98
+INFO 2025-05-21 23:07:31,033 basehttp "GET /app/calendar/events/31/ HTTP/1.1" 200 23386
+WARNING 2025-05-21 23:07:31,062 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 23:07:31,064 basehttp "GET /static/js/notifications.js?v=1747868851 HTTP/1.1" 200 8873
+WARNING 2025-05-21 23:07:31,133 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+INFO 2025-05-21 23:07:31,148 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+WARNING 2025-05-21 23:07:31,149 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 23:07:36,773 models Invoice #1: get_total called
+INFO 2025-05-21 23:07:36,775 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-21 23:07:36,775 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-21 23:07:36,778 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-21 23:07:36,778 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-21 23:07:36,778 models Invoice #1: Final total: 397.0000
+INFO 2025-05-21 23:07:36,779 basehttp "GET /app/invoices/ HTTP/1.1" 200 30556
+WARNING 2025-05-21 23:07:36,820 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 23:07:36,860 basehttp "GET /static/js/notifications.js?v=1747868856 HTTP/1.1" 200 8873
+INFO 2025-05-21 23:07:36,908 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:07:43,275 basehttp "GET /app/expenses/ HTTP/1.1" 200 35210
+WARNING 2025-05-21 23:07:43,342 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 23:07:43,367 basehttp "GET /static/js/notifications.js?v=1747868863 HTTP/1.1" 200 8873
+WARNING 2025-05-21 23:07:43,389 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 23:07:43,398 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 23:07:43,410 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:08:03,836 basehttp "GET /app/expenses/create/ HTTP/1.1" 200 25036
+WARNING 2025-05-21 23:08:03,869 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 23:08:03,873 basehttp "GET /static/js/notifications.js?v=1747868883 HTTP/1.1" 200 8873
+INFO 2025-05-21 23:08:03,960 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:08:16,141 basehttp "POST /app/expenses/create/ HTTP/1.1" 302 0
+INFO 2025-05-21 23:08:16,173 basehttp "GET /app/expenses/ HTTP/1.1" 200 36458
+WARNING 2025-05-21 23:08:16,260 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 23:08:16,261 basehttp "GET /static/js/notifications.js?v=1747868896 HTTP/1.1" 200 8873
+WARNING 2025-05-21 23:08:16,292 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-21 23:08:16,308 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 23:08:16,318 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:08:21,078 basehttp "POST /app/notifications/read-all/ HTTP/1.1" 200 68
+INFO 2025-05-21 23:08:21,112 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:08:26,414 basehttp "GET /app/products/ HTTP/1.1" 200 30958
+WARNING 2025-05-21 23:08:26,457 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-21 23:08:26,472 basehttp "GET /static/js/notifications.js?v=1747868906 HTTP/1.1" 200 8873
+WARNING 2025-05-21 23:08:26,514 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+INFO 2025-05-21 23:08:26,522 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+WARNING 2025-05-21 23:08:26,543 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-21 23:09:26,573 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:10:26,536 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:11:27,503 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:12:27,476 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:18:30,661 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:19:30,677 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:21:08,657 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:22:08,643 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:23:08,879 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-21 23:55:20,166 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 01:01:38,124 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 01:41:14,946 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 02:32:59,040 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 03:39:41,096 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 03:58:31,944 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 04:49:08,818 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 05:58:49,214 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 06:34:11,760 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:26:36,878 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:35:14,987 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:36:14,984 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:37:15,160 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:38:14,998 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:39:15,067 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:40:15,044 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:41:15,019 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:42:14,972 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:43:14,968 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:44:15,006 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:45:14,974 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:46:14,969 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:47:14,958 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:48:14,979 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:49:15,001 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:50:14,979 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:50:45,768 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:51:36,986 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:53:14,997 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:54:15,016 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:55:14,989 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:56:14,955 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:57:14,994 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:58:15,026 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 07:59:14,978 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:00:15,022 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:01:15,027 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:02:15,011 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:03:15,060 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:04:15,011 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:05:14,998 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:06:15,057 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:07:15,048 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:08:15,073 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:09:15,067 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:10:15,013 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:11:14,999 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:12:15,058 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:13:14,987 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:14:15,025 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:14:47,645 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:14:50,580 models Invoice #1: get_total called
+INFO 2025-05-22 08:14:50,588 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-22 08:14:50,588 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-22 08:14:50,591 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-22 08:14:50,591 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-22 08:14:50,591 models Invoice #1: Final total: 397.0000
+INFO 2025-05-22 08:14:50,593 basehttp "GET /app/invoices/ HTTP/1.1" 200 30556
+INFO 2025-05-22 08:14:50,695 basehttp "GET /static/assets/css/matdash_sidebar.css HTTP/1.1" 304 0
+INFO 2025-05-22 08:14:50,699 basehttp "GET /static/assets/css/matdash_layout.css HTTP/1.1" 304 0
+INFO 2025-05-22 08:14:50,701 basehttp "GET /static/assets/css/finance_facile.css HTTP/1.1" 304 0
+INFO 2025-05-22 08:14:50,704 basehttp "GET /static/assets/css/topbar-enhanced.css HTTP/1.1" 304 0
+INFO 2025-05-22 08:14:50,704 basehttp "GET /static/assets/css/light.css HTTP/1.1" 304 0
+INFO 2025-05-22 08:14:50,705 basehttp "GET /static/assets/css/sidebar-toggle.css HTTP/1.1" 304 0
+INFO 2025-05-22 08:14:50,705 basehttp "GET /static/assets/css/modern-table.css HTTP/1.1" 304 0
+INFO 2025-05-22 08:14:50,706 basehttp "GET /static/assets/js/sidebar-active.js HTTP/1.1" 304 0
+INFO 2025-05-22 08:14:50,709 basehttp "GET /static/assets/js/sidebar-toggle.js HTTP/1.1" 304 0
+INFO 2025-05-22 08:14:50,710 basehttp "GET /static/js/notifications.js?v=1747901690 HTTP/1.1" 200 8873
+INFO 2025-05-22 08:14:50,712 basehttp "GET /static/assets/js/dropdown-fix.js HTTP/1.1" 304 0
+INFO 2025-05-22 08:14:50,713 basehttp "GET /static/assets/css/font-manrope.css HTTP/1.1" 304 0
+WARNING 2025-05-22 08:14:50,715 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 08:14:50,715 basehttp "GET /static/assets/js/actions-menu.js HTTP/1.1" 304 0
+INFO 2025-05-22 08:14:51,073 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:15:51,973 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:16:51,963 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:17:51,992 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:18:51,967 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:19:51,980 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:20:51,952 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:22:14,996 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:23:15,024 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:24:14,975 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:25:15,010 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:26:15,000 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:27:14,952 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:28:14,965 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:29:14,974 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:30:14,968 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:31:14,971 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:32:15,008 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:33:14,988 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:34:15,013 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:35:14,988 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:36:15,022 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:40:51,575 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:42:30,491 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:43:30,420 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:44:30,411 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:45:30,400 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:46:30,412 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:47:30,423 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:48:30,400 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:49:30,456 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:50:30,398 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:51:30,420 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:52:30,463 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:53:30,435 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:54:30,448 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:55:30,486 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:56:30,448 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:57:30,548 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:58:30,500 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 08:59:30,562 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:00:30,578 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:01:30,541 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:02:30,467 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:03:30,428 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:04:30,444 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:05:30,426 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:06:30,514 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:07:30,640 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:08:30,464 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:09:30,463 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:10:30,494 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:11:30,443 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:12:30,494 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:13:30,516 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:14:30,486 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:15:30,491 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:16:30,443 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:17:30,432 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:18:30,441 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:19:30,447 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:20:06,597 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:20:23,944 basehttp "GET / HTTP/1.1" 302 0
+INFO 2025-05-22 09:20:23,993 basehttp "GET /landing/ HTTP/1.1" 302 0
+INFO 2025-05-22 09:20:24,103 models Invoice #1: get_total called
+INFO 2025-05-22 09:20:24,104 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-22 09:20:24,104 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-22 09:20:24,105 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-22 09:20:24,105 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-22 09:20:24,105 models Invoice #1: Final total: 397.0000
+INFO 2025-05-22 09:20:24,129 models Invoice #1: get_total called
+INFO 2025-05-22 09:20:24,132 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-22 09:20:24,134 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-22 09:20:24,141 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-22 09:20:24,142 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-22 09:20:24,142 models Invoice #1: Final total: 397.0000
+INFO 2025-05-22 09:20:24,146 basehttp "GET /app/ HTTP/1.1" 200 55202
+INFO 2025-05-22 09:20:24,264 basehttp "GET /static/js/notifications.js?v=1747905624 HTTP/1.1" 200 8873
+WARNING 2025-05-22 09:20:24,268 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:20:24,586 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-22 09:20:24,589 calendar_views Found company for user: accuro
+INFO 2025-05-22 09:20:24,599 calendar_views Found 10 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-22 09:20:24,603 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-22 09:20:24,604 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-22 09:20:24,604 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-22 09:20:24,604 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-22 09:20:24,604 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-22 09:20:24,604 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-22 09:20:24,604 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-22 09:20:24,604 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-22 09:20:24,605 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-22 09:20:24,605 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-22 09:20:24,605 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-22 09:20:24,605 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-22 09:20:24,605 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+DEBUG 2025-05-22 09:20:24,605 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-22 09:20:24,605 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-22 09:20:24,605 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-22 09:20:24,605 calendar_views Processing event: 31 - dahjazkazhe - 2025-05-21 23:00:00+00:00 to 2025-05-22 00:00:00+00:00
+DEBUG 2025-05-22 09:20:24,605 calendar_views Added event to response: dahjazkazhe on 2025-05-21 23:00:00+00:00
+INFO 2025-05-22 09:20:24,605 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-22 09:20:24,605 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-22 09:20:24,605 calendar_views Returning 10 events
+INFO 2025-05-22 09:20:24,605 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747905624533 HTTP/1.1" 200 3045
+INFO 2025-05-22 09:20:24,614 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:20:28,072 basehttp "GET /app/products/ HTTP/1.1" 200 30958
+WARNING 2025-05-22 09:20:28,112 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:20:28,128 basehttp "GET /static/js/notifications.js?v=1747905628 HTTP/1.1" 200 8873
+WARNING 2025-05-22 09:20:28,179 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+INFO 2025-05-22 09:20:28,207 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+WARNING 2025-05-22 09:20:28,219 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-22 09:20:32,985 models Invoice #1: get_total called
+INFO 2025-05-22 09:20:32,986 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-22 09:20:32,987 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-22 09:20:32,988 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-22 09:20:32,988 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-22 09:20:32,988 models Invoice #1: Final total: 397.0000
+INFO 2025-05-22 09:20:32,989 basehttp "GET /app/invoices/ HTTP/1.1" 200 30556
+WARNING 2025-05-22 09:20:33,043 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:20:33,044 basehttp "GET /static/js/notifications.js?v=1747905632 HTTP/1.1" 200 8873
+INFO 2025-05-22 09:20:33,124 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:20:34,268 basehttp "GET /app/expenses/ HTTP/1.1" 200 36458
+WARNING 2025-05-22 09:20:34,297 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:20:34,304 basehttp "GET /static/admin/css/vendor/select2/select2.min.css HTTP/1.1" 304 0
+INFO 2025-05-22 09:20:34,306 basehttp "GET /static/admin/js/vendor/select2/i18n/fr.js HTTP/1.1" 304 0
+INFO 2025-05-22 09:20:34,307 basehttp "GET /static/django_select2/django_select2.css HTTP/1.1" 304 0
+INFO 2025-05-22 09:20:34,314 basehttp "GET /static/django_select2/django_select2.js HTTP/1.1" 304 0
+INFO 2025-05-22 09:20:34,314 basehttp "GET /static/admin/js/vendor/select2/select2.full.min.js HTTP/1.1" 304 0
+INFO 2025-05-22 09:20:34,322 basehttp "GET /static/js/notifications.js?v=1747905634 HTTP/1.1" 200 8873
+WARNING 2025-05-22 09:20:34,363 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-22 09:20:34,385 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-22 09:20:34,402 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:20:36,589 basehttp "GET /app/calendar/ HTTP/1.1" 200 21599
+WARNING 2025-05-22 09:20:36,650 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:20:36,651 basehttp "GET /static/js/notifications.js?v=1747905636 HTTP/1.1" 200 8873
+INFO 2025-05-22 09:20:36,741 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:20:38,368 basehttp "GET /app/calendar/list/ HTTP/1.1" 200 53559
+WARNING 2025-05-22 09:20:38,422 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:20:38,432 basehttp "GET /static/js/notifications.js?v=1747905638 HTTP/1.1" 200 8873
+WARNING 2025-05-22 09:20:38,484 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+INFO 2025-05-22 09:20:38,510 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+WARNING 2025-05-22 09:20:38,519 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-22 09:20:41,895 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 24773
+WARNING 2025-05-22 09:20:41,936 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:20:41,950 basehttp "GET /static/js/notifications.js?v=1747905641 HTTP/1.1" 200 8873
+WARNING 2025-05-22 09:20:42,007 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+INFO 2025-05-22 09:20:42,028 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+WARNING 2025-05-22 09:20:42,049 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-22 09:20:43,151 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-22 09:20:43,151 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-22 09:20:43,151 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-22 09:20:43,151 products_views User is authenticated
+INFO 2025-05-22 09:20:43,156 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-22 09:20:43,159 products_views User's company: accuro (ID: 1)
+INFO 2025-05-22 09:20:43,163 products_views 
+=== All categories in database ===
+INFO 2025-05-22 09:20:43,164 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-22 09:20:43,164 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-22 09:20:43,164 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-22 09:20:43,164 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-22 09:20:43,165 products_views Found 2 categories for this company
+INFO 2025-05-22 09:20:43,166 products_views - Uncategorized (ID: 1)
+INFO 2025-05-22 09:20:43,167 products_views - Pantalon (ID: 2)
+INFO 2025-05-22 09:20:43,167 products_views 
+=== Starting get_context_data ===
+INFO 2025-05-22 09:20:43,179 products_views 
+=== Starting get_queryset for user: mehdi.studies ===
+INFO 2025-05-22 09:20:43,179 products_views User: mehdi.studies (ID: 2)
+INFO 2025-05-22 09:20:43,179 products_views User attributes: is_authenticated=True, is_staff=False, is_superuser=False
+INFO 2025-05-22 09:20:43,179 products_views User is authenticated
+INFO 2025-05-22 09:20:43,179 products_views User has profile: mehdi.studies's Profile
+INFO 2025-05-22 09:20:43,179 products_views User's company: accuro (ID: 1)
+INFO 2025-05-22 09:20:43,181 products_views 
+=== All categories in database ===
+INFO 2025-05-22 09:20:43,181 products_views - Uncategorized (ID: 1) - Company: accuro (ID: 1)
+INFO 2025-05-22 09:20:43,181 products_views - Pantalon (ID: 2) - Company: accuro (ID: 1)
+INFO 2025-05-22 09:20:43,181 products_views - Uncategorized (ID: 3) - Company: Demo Company (ID: 2)
+INFO 2025-05-22 09:20:43,181 products_views 
+=== Filtering categories for company: accuro (ID: 1) ===
+INFO 2025-05-22 09:20:43,182 products_views Found 2 categories for this company
+INFO 2025-05-22 09:20:43,183 products_views - Uncategorized (ID: 1)
+INFO 2025-05-22 09:20:43,183 products_views - Pantalon (ID: 2)
+INFO 2025-05-22 09:20:43,183 products_views has_categories: True
+INFO 2025-05-22 09:20:43,187 products_views Number of rows in table: 2
+INFO 2025-05-22 09:20:43,187 products_views Row 1: <django_tables2.rows.BoundRow object at 0x11322eb50>
+INFO 2025-05-22 09:20:43,187 products_views Row 2: <django_tables2.rows.BoundRow object at 0x11325d550>
+INFO 2025-05-22 09:20:43,187 products_views Context keys: dict_keys(['paginator', 'page_obj', 'is_paginated', 'object_list', 'productcategory_list', 'view', 'table', 'has_categories', 'segment', 'create_url'])
+ERROR 2025-05-22 09:20:43,192 tables Error rendering actions for record 2: replace() argument 2 must be str, not __proxy__
+ERROR 2025-05-22 09:20:43,192 tables Error rendering actions for record 1: replace() argument 2 must be str, not __proxy__
+INFO 2025-05-22 09:20:43,194 basehttp "GET /app/categories/ HTTP/1.1" 200 25442
+INFO 2025-05-22 09:20:43,280 basehttp "GET /static/js/notifications.js?v=1747905643 HTTP/1.1" 200 8873
+INFO 2025-05-22 09:20:43,282 basehttp "GET /static/css/datatables_pastel.css HTTP/1.1" 200 756
+WARNING 2025-05-22 09:20:43,282 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:20:43,351 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:20:46,058 basehttp "GET /companies/1/ HTTP/1.1" 200 24306
+WARNING 2025-05-22 09:20:46,110 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:20:46,123 basehttp "GET /static/js/notifications.js?v=1747905646 HTTP/1.1" 200 8873
+INFO 2025-05-22 09:20:46,217 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:20:49,850 basehttp "GET /auth/profile/ HTTP/1.1" 200 23339
+WARNING 2025-05-22 09:20:49,901 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:20:49,914 basehttp "GET /static/js/notifications.js?v=1747905649 HTTP/1.1" 200 8873
+INFO 2025-05-22 09:20:50,001 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:20:59,677 models Invoice #1: get_total called
+INFO 2025-05-22 09:20:59,678 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-22 09:20:59,679 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-22 09:20:59,681 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-22 09:20:59,682 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-22 09:20:59,682 models Invoice #1: Final total: 397.0000
+INFO 2025-05-22 09:20:59,698 models Invoice #1: get_total called
+INFO 2025-05-22 09:20:59,710 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-22 09:20:59,710 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-22 09:20:59,713 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-22 09:20:59,713 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-22 09:20:59,713 models Invoice #1: Final total: 397.0000
+INFO 2025-05-22 09:20:59,739 basehttp "GET /app/ HTTP/1.1" 200 55202
+WARNING 2025-05-22 09:20:59,786 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:20:59,802 basehttp "GET /static/js/notifications.js?v=1747905659 HTTP/1.1" 200 8873
+INFO 2025-05-22 09:20:59,886 calendar_views Calendar events requested for range: 2025-04-26 to 2025-06-07
+INFO 2025-05-22 09:20:59,893 calendar_views Found company for user: accuro
+INFO 2025-05-22 09:20:59,905 calendar_views Found 10 events for date range 2025-04-26 00:00:00 to 2025-06-08 00:00:00
+INFO 2025-05-22 09:20:59,911 calendar_views Processing event: 22 - test event - 2025-05-18 16:00:00+00:00 to 2025-05-18 17:00:00+00:00
+DEBUG 2025-05-22 09:20:59,911 calendar_views Added event to response: test event on 2025-05-18 16:00:00+00:00
+INFO 2025-05-22 09:20:59,911 calendar_views Processing event: 24 - test 12 - 2025-05-18 21:00:00+00:00 to 2025-05-18 22:00:00+00:00
+DEBUG 2025-05-22 09:20:59,912 calendar_views Added event to response: test 12 on 2025-05-18 21:00:00+00:00
+INFO 2025-05-22 09:20:59,912 calendar_views Processing event: 25 - drezaopaz - 2025-05-18 21:00:00+00:00 to 2025-05-21 22:00:00+00:00
+DEBUG 2025-05-22 09:20:59,912 calendar_views Added event to response: drezaopaz on 2025-05-18 21:00:00+00:00
+INFO 2025-05-22 09:20:59,913 calendar_views Processing event: 26 - real event - 2025-05-18 22:00:00+00:00 to 2025-05-18 23:00:00+00:00
+DEBUG 2025-05-22 09:20:59,913 calendar_views Added event to response: real event on 2025-05-18 22:00:00+00:00
+INFO 2025-05-22 09:20:59,913 calendar_views Processing event: 23 - erzere - 2025-05-19 16:00:00+00:00 to 2025-05-19 17:00:00+00:00
+DEBUG 2025-05-22 09:20:59,913 calendar_views Added event to response: erzere on 2025-05-19 16:00:00+00:00
+INFO 2025-05-22 09:20:59,913 calendar_views Processing event: 27 - real event 2 - 2025-05-19 22:00:00+00:00 to 2025-05-19 23:00:00+00:00
+DEBUG 2025-05-22 09:20:59,913 calendar_views Added event to response: real event 2 on 2025-05-19 22:00:00+00:00
+INFO 2025-05-22 09:20:59,914 calendar_views Processing event: 29 - dazdaz - 2025-05-20 17:00:00+00:00 to 2025-05-20 18:00:00+00:00
+INFO 2025-05-22 09:20:59,915 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+DEBUG 2025-05-22 09:20:59,917 calendar_views Added event to response: dazdaz on 2025-05-20 17:00:00+00:00
+INFO 2025-05-22 09:20:59,919 calendar_views Processing event: 28 - Test events - 2025-05-21 17:00:00+00:00 to 2025-05-21 18:00:00+00:00
+DEBUG 2025-05-22 09:20:59,922 calendar_views Added event to response: Test events on 2025-05-21 17:00:00+00:00
+INFO 2025-05-22 09:20:59,922 calendar_views Processing event: 31 - dahjazkazhe - 2025-05-21 23:00:00+00:00 to 2025-05-22 00:00:00+00:00
+DEBUG 2025-05-22 09:20:59,922 calendar_views Added event to response: dahjazkazhe on 2025-05-21 23:00:00+00:00
+INFO 2025-05-22 09:20:59,922 calendar_views Processing event: 30 - dzdamza - 2025-05-22 17:00:00+00:00 to 2025-05-22 18:00:00+00:00
+DEBUG 2025-05-22 09:20:59,922 calendar_views Added event to response: dzdamza on 2025-05-22 17:00:00+00:00
+INFO 2025-05-22 09:20:59,922 calendar_views Returning 10 events
+INFO 2025-05-22 09:20:59,922 basehttp "GET /app/calendar/events/?start=2025-04-26&end=2025-06-07&_=1747905659849 HTTP/1.1" 200 3045
+INFO 2025-05-22 09:21:00,849 basehttp "GET /app/products/ HTTP/1.1" 200 30958
+WARNING 2025-05-22 09:21:00,896 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:21:00,905 basehttp "GET /static/js/notifications.js?v=1747905660 HTTP/1.1" 200 8873
+WARNING 2025-05-22 09:21:00,955 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-22 09:21:01,004 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-22 09:21:01,010 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:21:16,298 models Invoice #1: get_total called
+INFO 2025-05-22 09:21:16,306 models Invoice #1: get_tva_rate called, self.tva_rate = 20.00
+INFO 2025-05-22 09:21:16,307 models Invoice #1: get_stamp_fee called, self.include_stamp_fee = True
+INFO 2025-05-22 09:21:16,310 models Invoice #1: Using company stamp fee: 1.00
+INFO 2025-05-22 09:21:16,310 models Invoice #1: Calculating total: subtotal=330.00, tva_amount=66.0000, stamp_fee=1.00
+INFO 2025-05-22 09:21:16,310 models Invoice #1: Final total: 397.0000
+INFO 2025-05-22 09:21:16,321 basehttp "GET /app/invoices/ HTTP/1.1" 200 30556
+WARNING 2025-05-22 09:21:16,390 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:21:16,405 basehttp "GET /static/js/notifications.js?v=1747905676 HTTP/1.1" 200 8873
+INFO 2025-05-22 09:21:16,470 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:21:20,938 basehttp "GET /app/expenses/ HTTP/1.1" 200 36458
+WARNING 2025-05-22 09:21:20,981 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:21:21,012 basehttp "GET /static/js/notifications.js?v=1747905680 HTTP/1.1" 200 8873
+WARNING 2025-05-22 09:21:21,050 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+WARNING 2025-05-22 09:21:21,060 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-22 09:21:21,073 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:21:26,313 basehttp "GET /app/expense-categories/ HTTP/1.1" 200 24773
+WARNING 2025-05-22 09:21:26,360 basehttp "GET /static/assets/js/finance_facile.js HTTP/1.1" 404 1941
+INFO 2025-05-22 09:21:26,376 basehttp "GET /static/js/notifications.js?v=1747905686 HTTP/1.1" 200 8873
+WARNING 2025-05-22 09:21:26,423 basehttp "GET /static/assets/fonts/fa-solid-900.woff2 HTTP/1.1" 404 1953
+INFO 2025-05-22 09:21:26,461 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+WARNING 2025-05-22 09:21:26,473 basehttp "GET /static/assets/fonts/fa-solid-900.ttf HTTP/1.1" 404 1947
+INFO 2025-05-22 09:22:26,485 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:23:26,494 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:24:26,435 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:25:27,418 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:26:27,466 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:27:27,494 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:28:27,457 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:29:30,428 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:30:30,447 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:31:30,437 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:32:30,425 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:35:54,551 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:47:55,689 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:48:55,698 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:49:55,718 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:50:55,705 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:51:55,726 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:52:55,673 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:53:55,733 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:54:55,654 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:55:55,687 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:56:55,668 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:57:55,694 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:58:55,668 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 09:59:55,670 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:00:55,694 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:01:55,737 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:02:55,725 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:03:55,759 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:04:55,710 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:05:55,674 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:06:55,673 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:07:55,785 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:08:55,675 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:09:55,673 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:10:55,691 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:11:55,675 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:12:55,699 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:13:55,765 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:14:55,823 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:15:55,725 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:16:55,767 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:17:55,683 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:18:55,772 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:19:55,703 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:20:55,693 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:21:55,743 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:22:55,682 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:23:55,704 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:24:55,690 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:25:55,804 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:26:55,750 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:27:55,765 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:28:55,702 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:29:55,705 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:30:55,637 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:31:55,645 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:32:55,622 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:33:55,642 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:34:55,642 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:35:55,625 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:36:55,705 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:37:55,629 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:38:55,727 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:39:55,698 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:40:52,621 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:41:55,767 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:42:55,704 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:43:55,703 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:44:55,624 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:45:55,696 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:46:55,704 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:47:55,649 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:48:55,677 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:49:55,699 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:50:55,623 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:51:55,684 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:52:55,612 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:53:55,641 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:54:55,627 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:55:55,653 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:56:55,638 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:57:55,685 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:58:55,658 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 10:59:55,665 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:00:55,611 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:01:55,680 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:02:55,602 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:03:55,642 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:04:55,685 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:05:55,675 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:06:55,694 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:07:55,660 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:08:55,620 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:09:55,617 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:10:55,663 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:11:55,659 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:12:55,691 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:13:55,656 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:14:55,726 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:15:55,649 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:16:55,672 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:17:55,662 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:18:55,652 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:19:55,670 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:20:55,667 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:21:55,724 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:22:55,636 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:23:55,642 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:24:55,671 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:25:55,659 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:26:55,630 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:27:55,646 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:28:55,698 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:29:55,680 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:30:55,726 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:31:55,674 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:32:55,686 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:33:55,693 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:34:55,699 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:35:55,642 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:36:55,712 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:37:55,645 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:38:55,721 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:39:55,664 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:40:55,753 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:41:55,686 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:42:55,727 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:43:55,665 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:44:55,741 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:45:55,709 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:46:55,719 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:47:55,656 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:48:55,657 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:49:55,654 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:50:55,653 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:51:55,662 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:52:55,646 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:53:55,696 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:54:55,688 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:55:55,674 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:56:55,647 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:57:55,642 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:58:55,675 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 11:59:55,683 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:00:55,770 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:01:55,718 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:02:55,752 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:03:55,682 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:04:55,692 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:05:55,702 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:06:55,661 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:32:41,016 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:35:39,363 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:36:39,337 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:37:39,299 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:38:39,333 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:39:39,296 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:40:39,363 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:41:39,405 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:42:39,432 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:43:39,495 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:44:39,326 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:45:39,407 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:46:39,374 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:47:39,327 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:48:39,355 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:49:39,373 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:50:39,314 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 12:51:39,334 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:23:13,747 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:24:13,643 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:25:13,635 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:31:18,565 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:32:18,520 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:35:19,886 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:36:20,041 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:37:19,819 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:38:19,836 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:39:19,842 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:40:19,873 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:41:19,832 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:42:19,895 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:43:19,825 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:44:19,857 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:45:19,828 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:47:28,789 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:48:28,637 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:49:28,664 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:50:28,629 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:51:28,686 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:52:28,623 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 13:53:28,657 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 14:01:02,492 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 14:02:02,484 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 14:03:02,455 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 14:51:02,924 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:15:19,522 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:16:19,527 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:17:19,508 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:18:19,496 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:49:56,073 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:50:56,035 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:51:56,032 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:52:56,061 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:53:56,019 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:54:56,027 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:55:56,014 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:57:03,968 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 15:58:03,802 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 16:01:19,691 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 16:02:19,649 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 16:03:19,727 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 16:52:25,090 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 17:26:06,733 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 18:14:49,516 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 18:15:49,488 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 18:36:43,074 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 18:37:40,068 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 18:38:43,078 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 18:39:43,065 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 18:40:43,084 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:25:06,736 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:26:06,752 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:27:06,804 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:28:06,788 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:29:06,739 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:30:06,755 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:31:06,847 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:32:06,752 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:33:06,747 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:34:06,760 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:35:06,813 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:36:06,767 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:37:06,758 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:38:06,826 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:39:06,809 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:40:06,813 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:41:06,785 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:42:06,748 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:43:06,720 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:44:06,848 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:45:06,776 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:46:06,804 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:47:06,698 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:56:41,064 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312
+INFO 2025-05-22 19:57:36,987 basehttp "GET /app/api/notifications/ HTTP/1.1" 200 312

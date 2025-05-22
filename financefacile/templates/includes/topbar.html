@@ -75,6 +75,31 @@
     </script>
     <div class="navbar-collapse collapse">
         <ul class="navbar-nav navbar-align">
+            <!-- Notifications Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-icon dropdown-toggle" href="#" id="notificationsDropdown" data-bs-toggle="dropdown">
+                    <div class="position-relative">
+                        <i class="fas fa-bell" style="font-size: 1.25rem; color: #6259FF;"></i>
+                        <span class="indicator" id="notification-badge" style="display: none; position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; background: #6259FF; border-radius: 50%; color: white; font-size: 0.7rem; text-align: center; line-height: 18px; font-weight: bold;">0</span>
+                    </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" id="notifications-container" style="min-width: 320px; max-height: 400px; overflow-y: auto;">
+                    <div class="dropdown-menu-header" style="background: #eae9ff; color: #6259FF;">
+                        <div class="position-relative py-2 px-3 d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 fw-bold">Notifications</h6>
+                            <a href="#" id="mark-all-read" class="text-decoration-none" style="font-size: 0.8rem; color: #6259FF;">Mark all as read</a>
+                        </div>
+                    </div>
+                    <div class="list-group list-group-flush" id="notification-list">
+                        <!-- Notifications will be loaded here via JavaScript -->
+                        <div class="text-center py-3">
+                            <div class="spinner-border text-primary" role="status" style="color: #6259FF !important;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
             
             
             <li class="nav-item dropdown">

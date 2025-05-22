@@ -21,6 +21,7 @@ from .views.calendar_views import (
     CalendarEventDeleteView, CalendarEventDetailView, calendar_events_json, date_events
 )
 from .views.calendar_display import CalendarDisplayView
+from .notification_views import get_user_notifications, mark_notification_read, mark_all_read
 
 urlpatterns = [
     path('expenses/', ExpenseListView.as_view(), name='expenses-list'),
@@ -67,6 +68,15 @@ urlpatterns = [
     path('products/pdf/<int:pk>/', generate_product_pdf, name='product-pdf'),
     path('search/', search_views.global_search, name='global-search'),
     path('api/live-search/', search_api.live_search, name='live-search-api'),
+    
+    # Notification URLs
+    path('api/notifications/', get_user_notifications, name='get-notifications'),  # Keep for backward compatibility
+    path('core/api/notifications/', get_user_notifications, name='get-notifications-core'),  # New path matching JavaScript
+    path('notifications/read/<int:notification_id>/', mark_notification_read, name='mark-notification-read'),
+    path('core/notifications/read/<int:notification_id>/', mark_notification_read, name='mark-notification-read-core'),
+    path('notifications/read-all/', mark_all_read, name='mark-all-notifications-read'),
+    path('core/notifications/read-all/', mark_all_read, name='mark-all-notifications-read-core'),
+    
     path(r'', login_required(views.home), name='home'),
 
     
