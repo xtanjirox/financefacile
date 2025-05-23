@@ -44,6 +44,8 @@ class ExpenseListView(BaseViewMixin, ExpensePermissionMixin, CompanyFilterMixin,
         # Initialize filter form with the current user
         filter_form = DateRangeFilterForm(self.request.GET or None, user=self.request.user)
         context['filter_form'] = filter_form
+        context['page_title'] = 'Expenses'
+        context['page_title_badge'] = 'Expenses'
         
         # Get filter parameters
         start_date = self.request.GET.get('start_date')

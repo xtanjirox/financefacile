@@ -1,4 +1,9 @@
-/*!
+/* GLOBAL BASE COLOR OVERRIDE */
+body, .container, .container-fluid {
+  background: #F4F7FB !important;
+}
+
+/*! 
  * AdminKit v3.0.2 (https://adminkit.io/)
  * Copyright 2021 Paul Laros
  * Copyright 2021 AdminKit

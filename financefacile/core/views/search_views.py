@@ -16,6 +16,8 @@ def global_search(request):
             Q(name__icontains=query)
         )
     return render(request, 'search_results.html', {
+        'page_title': 'Search Results',
+        'page_title_badge': 'Search Results',
         'query': query,
         'products': products,
         'invoices': invoices,

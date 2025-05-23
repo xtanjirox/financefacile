@@ -1,15 +1,323 @@
 /* Modern Table Styling */
 
-/* Main table styling */
+/* Product List Card Styles */
+.product-list .card {
+  border: none;
+  border-radius: 18px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  background: #fff;
+}
+.product-list .card-body {
+  padding: 1.5rem;
+}
+
+/* Table Styles */
+.product-list .table {
+  border-radius: 14px;
+  overflow: hidden;
+  background: #fff;
+  margin-bottom: 0;
+}
+.product-list .table thead th {
+  background: #f9fafb;
+  color: #23272e;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #ececec;
+  border-top: none;
+}
+.product-list .table tbody td {
+  background: #fff;
+  color: #23272e;
+  font-size: 15px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #f1f1f1;
+  vertical-align: middle;
+}
+.product-list .table tbody tr:last-child td {
+  border-bottom: none;
+}
+.product-list .table tbody tr:hover {
+  background: #f6f8fa;
+  transition: background 0.2s;
+}
+
+/* Checkbox Styles */
+.product-list .form-check-input[type="checkbox"] {
+  accent-color: #635BFF;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  cursor: pointer;
+  box-shadow: none;
+}
+
+/* Avatar Styles */
+.product-list .rounded-circle {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 50% !important;
+}
+
+/* Product Name & Category */
+.product-list .fw-semibold {
+  font-weight: 600 !important;
+  color: #23272e;
+}
+.product-list .fs-4 {
+  font-size: 1.1rem !important;
+}
+.product-list .ms-3 {
+  margin-left: 1rem !important;
+}
+
+/* Status Dot Styles */
+.product-list .text-bg-success.p-1.rounded-circle {
+  background: #10b981 !important;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  border-radius: 50% !important;
+  padding: 0 !important;
+}
+.product-list .text-bg-danger.p-1.rounded-circle {
+  background: #ef476f !important;
+  width: 10px;
+  height: 10px;
+  display: inline-block;
+  border-radius: 50% !important;
+  padding: 0 !important;
+}
+.product-list .d-flex.align-items-center > .mb-0.ms-2 {
+  margin-left: 8px !important;
+  font-size: 14px;
+  color: #23272e;
+}
+
+/* Actions (three dots) */
+.product-list .fs-6.text-muted {
+  color: #a0aec0 !important;
+  font-size: 22px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.product-list .fs-6.text-muted:hover {
+  color: #635BFF !important;
+}
+
+/* Pagination and Per-Page Controls */
+.product-list .pagination .page-link {
+  border: none;
+  background: #f3f4f6;
+  color: #23272e;
+  border-radius: 50% !important;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+}
+.product-list .pagination .page-link:hover {
+  background: #e0e7ef;
+}
+.product-list select.form-select {
+  border: none;
+  background: #f3f4f6;
+  font-size: 14px;
+  color: #23272e;
+  border-radius: 8px;
+  padding-right: 2rem;
+}
+
+/* Remove table borders */
+.product-list .table th,
+.product-list .table td {
+  border-right: none !important;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .product-list .table thead {
+    display: none;
+  }
+  .product-list .table tbody td {
+    display: block;
+    text-align: right;
+    padding: 12px 16px;
+    position: relative;
+  }
+  .product-list .table tbody td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 16px;
+    font-weight: 600;
+    color: #6b7280;
+  }
+  .product-list .table tbody tr {
+    display: block;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+}
+
+
+/* Table container */
 .modern-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  background-color: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-  position: relative;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  overflow: hidden;
 }
+
+/* Table header */
+.modern-table thead th {
+  background: #f9fafb;
+  color: #23272e;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #ececec;
+  border-right: none;
+  text-align: left;
+}
+
+/* Table body */
+.modern-table tbody td {
+  background: #fff;
+  color: #23272e;
+  font-size: 15px;
+  padding: 18px 20px;
+  border-bottom: 1px solid #f1f1f1;
+  border-right: none;
+  vertical-align: middle;
+}
+
+.modern-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Hover effect */
+.modern-table tbody tr:hover {
+  background: #f6f8fa;
+  transition: background 0.2s;
+}
+
+/* Checkbox styling */
+.modern-table input[type="checkbox"] {
+  accent-color: #5F5CFC;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+}
+
+/* Status dot */
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+.status-dot.instock {
+  background: #10b981;
+}
+.status-dot.outofstock {
+  background: #ef476f;
+}
+
+/* Actions menu */
+.actions-menu {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.actions-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: #a0aec0;
+  font-size: 22px;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.actions-button:hover {
+  color: #5F5CFC;
+}
+
+/* Avatar styling */
+.avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 12px;
+}
+
+.customer-info {
+  display: flex;
+  align-items: center;
+}
+
+.customer-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.customer-name {
+  font-weight: 600;
+  color: #23272e;
+  margin-bottom: 2px;
+}
+
+.customer-username {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* Remove borders between columns */
+.modern-table th,
+.modern-table td {
+  border-right: none !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modern-table thead {
+    display: none;
+  }
+  .modern-table tbody td {
+    display: block;
+    text-align: right;
+    padding: 12px 16px;
+    position: relative;
+  }
+  .modern-table tbody td::before {
+    content: attr(data-label);
+    position: absolute;
+    left: 16px;
+    font-weight: 600;
+    color: #6b7280;
+  }
+  .modern-table tbody tr {
+    display: block;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .customer-info {
+    justify-content: flex-end;
+  }
+}
+
 
 /* Table header */
 .modern-table thead th {

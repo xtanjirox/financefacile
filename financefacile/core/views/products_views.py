@@ -282,6 +282,8 @@ class ProductListView(ProductPermissionMixin, CompanyFilterMixin, ListView):
         # Add create URL and segment for template
         context['create_url'] = self.create_url
         context['segment'] = self.segment
+        context['page_title'] = "Products"
+        context['page_title_badge'] = "Products"
         
         # Add currency symbol to context
         user = self.request.user
@@ -589,7 +591,9 @@ class InvoiceCreateView(InvoicePermissionMixin, CreateView, FormViewMixin):
             context['formset'] = core.forms.InvoiceItemFormSet(self.request.POST, company=company)
         else:
             context['formset'] = core.forms.InvoiceItemFormSet(company=company)
-            
+        context['page_title'] = 'Create Invoice'
+        context['page_title_badge'] = 'Create Invoice'
+        
         self.add_products_to_context(context)
         return context
 
@@ -806,6 +810,8 @@ class InvoiceListView(InvoicePermissionMixin, ListView):
         # Initialize filter form
         filter_form = DateRangeFilterFormNew(self.request.GET or None)
         context['filter_form'] = filter_form
+        context['page_title'] = 'Invoices'
+        context['page_title_badge'] = 'Invoices'
         
         # Get filter parameters
         start_date = self.request.GET.get('start_date')
@@ -965,6 +971,8 @@ class InvoiceUpdateView(InvoicePermissionMixin, UpdateView, FormViewMixin):
         context['product_json'] = [
             {'id': p.id, 'text': p.name, 'price': float(p.selling_price)} for p in products
         ]
+        context['page_title'] = 'Update Invoice'
+        context['page_title_badge'] = 'Update Invoice'
         
         return context
         

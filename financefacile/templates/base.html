@@ -63,6 +63,7 @@
             {% block topbar %}
             {% endblock topbar %}
             <main class="content">
+                {% include 'includes/page_header.html' with page_title=page_title page_title_badge=page_title_badge %}
                 {% include 'includes/messages.html' %}
                 {% block content %}
                 {% endblock content %}

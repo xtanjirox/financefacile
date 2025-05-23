@@ -244,6 +244,8 @@ def home(request):
         'currency_symbol': currency_symbol,  # Add currency symbol to context
         'upcoming_events': upcoming_events,  # Add upcoming events to context
     }
+    context['page_title'] = 'Dashboard'
+    context['page_title_badge'] = 'Dashboard'
     return render(request, 'index.html', context)
 
 

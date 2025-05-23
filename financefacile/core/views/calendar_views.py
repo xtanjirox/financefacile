@@ -58,7 +58,8 @@ class CalendarEventListView(CompanyMixin, generic.ListView):
         
         # Add theme choices for filtering
         context['theme_choices'] = dict(CalendarEvent.THEME_CHOICES)
-        
+        context['page_title'] = 'Calendar Events'
+        context['page_title_badge'] = 'Calendar Events'
         return context
 
 
@@ -91,6 +92,8 @@ class CalendarEventCreateView(CompanyMixin, generic.CreateView):
         context = super().get_context_data(**kwargs)
         context['segment'] = 'calendar'
         context['form_title'] = 'Create New Event'
+        context['page_title'] = 'Create Event'
+        context['page_title_badge'] = 'Create Event'
         return context
 
 
@@ -124,6 +127,8 @@ class CalendarEventUpdateView(CompanyMixin, generic.UpdateView):
         context = super().get_context_data(**kwargs)
         context['segment'] = 'calendar'
         context['form_title'] = 'Update Event'
+        context['page_title'] = 'Update Event'
+        context['page_title_badge'] = 'Update Event'
         return context
 
 
@@ -138,6 +143,8 @@ class CalendarEventDetailView(CompanyMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['segment'] = 'calendar'
+        context['page_title'] = 'Event Detail'
+        context['page_title_badge'] = 'Event Detail'
         return context
 
 

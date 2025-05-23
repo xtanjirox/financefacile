@@ -184,17 +184,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid p-0">
+<div class="container-fluid p-0" style="background: #F4F7FB;">
   <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
     <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-money-bill-wave me-2" style="color: #7cb9e8;"></i>Expenses</h2>
     <div class="d-flex gap-2">
-      <a href="{% url 'expense-category-create' %}" class="btn btn-outline-primary shadow-sm rounded-pill px-4" style="border-color: #7cb9e8; color: #39739d; font-weight: 600;">
+      <a href="{% url 'expense-category-create' %}" class="btn btn-outline-primary shadow-sm px-4" style="border-color: #7cb9e8; color: #39739d; font-weight: 600;">
         <i class="fa fa-tags"></i> Add Category
       </a>
-      <a href="{% url 'expense-create' %}" class="btn btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+      <a href="{% url 'expense-create' %}" class="btn btn-primary shadow-sm px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
         <i class="fa fa-plus"></i> Add Expense
       </a>
-      <a href="{% url 'expenses-pdf' %}{% if is_filtered %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-success shadow-sm rounded-pill px-4" style="background: #81c784; border: none; font-weight: 600;">
+      <a href="{% url 'expenses-pdf' %}{% if is_filtered %}?{{ request.GET.urlencode }}{% endif %}" class="btn shadow-sm px-4" style="background: #E7F5E9; border: none; font-weight: 600;color: #388E3C;">
         <i class="fas fa-file-pdf"></i> Export PDF
       </a>
     </div>
@@ -270,7 +270,7 @@
     <div class="row mb-4">
       <div class="col-12">
         <div class="card shadow-sm border-0" style="border-radius: 1rem;">
-          <div class="card-header" style="background: #e3f2fd; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
+          <div class="card-header" style="background: #F4F3FD; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
             <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filter Expenses</h5>
           </div>
           <div class="card-body">
@@ -350,7 +350,7 @@
               }
             </style>
             <table id="expenses-table" class="modern-table">
-              <thead style="background: #e3f2fd; color: #1976d2; font-weight: 600;">
+              <thead style="background: #F4F3FD; color: #605BFD; font-weight: 600;">
                 <tr>
                   <th>Date</th>
                   <th>Category</th>
