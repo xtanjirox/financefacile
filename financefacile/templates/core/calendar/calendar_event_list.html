@@ -18,6 +18,7 @@
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/modern-action-buttons.css' %}">
 <style>
   /* Theme badge styles */
   .theme-badge {
@@ -278,30 +279,40 @@
       </div>
     </div>
   </div>
-
-  <!-- Charts Row -->
-  <div class="row mb-4">
-    <div class="col-md-6">
-      <div class="card shadow-sm border-0" style="border-radius: 14px; background: #f9f8ff;">
-        <div class="card-header py-3" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
-          <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
-            <i class="fas fa-chart-pie me-2" style="color: #7cb9e8;"></i>Events by Theme
-          </h5>
-        </div>
+  <!-- Filters Container -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="shadow-sm border-0" style="background: #ffffff;">
         <div class="card-body p-4">
-          <div id="chart-events-theme" style="height: 300px;"></div>
-        </div>
-      </div>
-    </div>
-    <div class="col-md-6">
-      <div class="card shadow-sm border-0" style="border-radius: 14px; background: #f9f8ff;">
-        <div class="card-header py-3" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
-          <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
-            <i class="fas fa-chart-line me-2" style="color: #7cb9e8;"></i>Events Timeline
-          </h5>
-        </div>
-        <div class="card-body p-4">
-          <div id="chart-events-timeline" style="height: 300px;"></div>
+          <div id="filters-container" class="filter-container">
+            <div class="filter-group">
+              <label>Theme Filter</label>
+              <select id="theme-filter" class="form-control" multiple="multiple">
+                <option value="primary">Primary</option>
+                <option value="secondary">Secondary</option>
+                <option value="success">Success</option>
+                <option value="info">Info</option>
+                <option value="warning">Warning</option>
+                <option value="danger">Danger</option>
+                <option value="dark">Dark</option>
+              </select>
+            </div>
+            <div class="filter-group">
+              <label>Date Range</label>
+              <div class="date-inputs">
+                <input type="date" id="start-date" class="form-control form-control-sm" placeholder="Start Date">
+                <input type="date" id="end-date" class="form-control form-control-sm" placeholder="End Date">
+              </div>
+            </div>
+            <div class="filter-group" style="justify-content: flex-end;">
+              <button id="apply-filters" class="btn btn-primary btn-sm px-4" style="background: #7cb9e8; border: none; font-weight: 600; border-radius: 50px;">
+                <i class="fas fa-filter me-1"></i> Apply Filters
+              </button>
+              <button id="reset-filters" class="btn btn-secondary btn-sm px-4 mt-2" style="border-radius: 50px; font-weight: 600;">
+                <i class="fas fa-undo me-1"></i> Reset
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -310,12 +321,7 @@
   <!-- Events Table Card -->
   <div class="row mt-4">
     <div class="col-12">
-      <div class="card shadow-sm border-0" style="border-radius: 14px; background: #f9f8ff;">
-        <div class="card-header py-3" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
-          <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
-            <i class="fas fa-calendar-alt me-2" style="color: #7cb9e8;"></i>Calendar Events
-          </h5>
-        </div>
+      <div class="shadow-sm border-0" style="background: #ffffff;">
         <div class="card-body p-4">
           {% if events %}
           <!-- DataTables CSS -->
@@ -388,7 +394,7 @@
               border-radius: 50px;
             }
           </style>
-          <table id="events-table" class="modern-table">
+          <table id="eventsss-table" class="modern-table">
             <thead>
               <tr>
                 <th>Title</th>
@@ -412,22 +418,17 @@
                   <span class="badge bg-light text-dark">{{ event.theme|title }}</span>
                 </td>
                 <td>{{ event.description|default:"-"|truncatechars:50 }}</td>
-                <td>
-                  <div class="actions-menu">
-                    <button class="actions-button" onclick="toggleActionsMenu(this)">
-                      <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                    <div class="actions-dropdown">
-                      <a href="{% url 'calendar-event-detail' event.id %}" class="action-item">
-                        <i class="fas fa-eye"></i> View
-                      </a>
-                      <a href="{% url 'calendar-event-update' event.id %}" class="action-item">
-                        <i class="fas fa-edit"></i> Edit
-                      </a>
-                      <a href="{% url 'calendar-event-delete' event.id %}" class="action-item delete">
-                        <i class="fas fa-trash"></i> Delete
-                      </a>
-                    </div>
+                <td class="text-center">
+                  <div class="action-buttons-container">
+                    <a href="{% url 'calendar-event-detail' event.id %}" class="action-btn action-view" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{% url 'calendar-event-update' event.id %}" class="action-btn action-edit" title="Edit">
+                      <i class="fas fa-pencil-alt"></i>
+                    </a>
+                    <a href="{% url 'calendar-event-delete' event.id %}" class="action-btn action-delete" title="Delete">
+                      <i class="fas fa-trash-alt"></i>
+                    </a>
                   </div>
                 </td>
               </tr>
@@ -441,41 +442,7 @@
           <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
           <script>
             $(document).ready(function() {
-              // Create filter container above the table
-              var filterContainerHtml = `
-                <div class="filter-container">
-                  <div class="filter-group">
-                    <label>Theme Filter</label>
-                    <select id="theme-filter" class="form-control" multiple="multiple">
-                      <option value="primary">Primary</option>
-                      <option value="secondary">Secondary</option>
-                      <option value="success">Success</option>
-                      <option value="info">Info</option>
-                      <option value="warning">Warning</option>
-                      <option value="danger">Danger</option>
-                      <option value="dark">Dark</option>
-                    </select>
-                  </div>
-                  <div class="filter-group">
-                    <label>Date Range</label>
-                    <div class="date-inputs">
-                      <input type="date" id="start-date" class="form-control form-control-sm" placeholder="Start Date">
-                      <input type="date" id="end-date" class="form-control form-control-sm" placeholder="End Date">
-                    </div>
-                  </div>
-                  <div class="filter-group" style="justify-content: flex-end;">
-                    <button id="apply-filters" class="btn btn-primary btn-sm px-4" style="background: #7cb9e8; border: none; font-weight: 600; border-radius: 50px;">
-                      <i class="fas fa-filter me-1"></i> Apply Filters
-                    </button>
-                    <button id="reset-filters" class="btn btn-secondary btn-sm px-4 mt-2" style="border-radius: 50px; font-weight: 600;">
-                      <i class="fas fa-undo me-1"></i> Reset
-                    </button>
-                  </div>
-                </div>
-              `;
-              
-              // Add filter container before the table
-              $(filterContainerHtml).insertBefore('#events-table');
+              // No need to create filter container as it's now in the HTML
               
               // Initialize Select2 for theme filter
               $('#theme-filter').select2({
@@ -484,7 +451,7 @@
               });
               
               // Initialize DataTable
-              var table = $('#events-table').DataTable({
+              var table = $('#eventsss-table').DataTable({
                 responsive: true,
                 pageLength: 10,
                 lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],

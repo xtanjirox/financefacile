@@ -1,0 +1,313 @@
+/* Modern Dashboard Tables - FinanceFacile
+   A sleek, modern table design for the dashboard
+*/
+
+/* Base Table Styles */
+.ff-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  margin-bottom: 0;
+}
+
+/* Table Header */
+.ff-table thead th {
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  font-size: 0.85rem;
+  padding: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Table Body */
+.ff-table tbody td {
+  padding: 16px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  font-size: 0.95rem;
+  vertical-align: middle;
+  transition: background 0.2s ease;
+}
+
+.ff-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.ff-table tbody tr {
+  transition: all 0.2s ease;
+}
+
+.ff-table tbody tr:hover {
+  background-color: #f8fafc;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
+}
+
+/* Table Row with Link */
+.ff-table tbody tr.clickable {
+  cursor: pointer;
+}
+
+.ff-table tbody tr.clickable:hover {
+  background-color: #f1f5f9;
+}
+
+/* Status Badges */
+.ff-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.ff-badge i {
+  margin-right: 4px;
+  font-size: 0.7rem;
+}
+
+.ff-badge-success {
+  background-color: #ecfdf5;
+  color: #10b981;
+}
+
+.ff-badge-warning {
+  background-color: #fffbeb;
+  color: #f59e0b;
+}
+
+.ff-badge-danger {
+  background-color: #fef2f2;
+  color: #ef4444;
+}
+
+.ff-badge-info {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+/* Item Icon */
+.ff-item-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.ff-item-icon i {
+  font-size: 1.2rem;
+}
+
+.ff-item-icon.invoice {
+  background-color: #eff6ff;
+  color: #3b82f6;
+}
+
+.ff-item-icon.expense {
+  background-color: #fef2f2;
+  color: #ef4444;
+}
+
+/* Item Details */
+.ff-item-details {
+  display: flex;
+  align-items: center;
+}
+
+.ff-item-info h6 {
+  margin-bottom: 2px;
+  font-weight: 600;
+  color: #334155;
+  font-size: 0.9rem;
+}
+
+.ff-item-info span {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+/* Amount Column */
+.ff-amount {
+  font-weight: 700;
+  color: #334155;
+  font-size: 0.95rem;
+}
+
+/* Tab Navigation */
+.ff-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.ff-tab-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.ff-tab-btn i {
+  font-size: 0.9rem;
+}
+
+.ff-tab-btn.active {
+  background-color: #635BFF;
+  color: white;
+}
+
+.ff-tab-btn:not(.active) {
+  background-color: #f1f5f9;
+  color: #64748b;
+}
+
+.ff-tab-btn:not(.active):hover {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+/* Empty State */
+.ff-empty-state {
+  padding: 30px;
+  text-align: center;
+  color: #64748b;
+}
+
+.ff-empty-state i {
+  font-size: 2rem;
+  margin-bottom: 10px;
+  opacity: 0.5;
+}
+
+.ff-empty-state p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .ff-item-icon {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .ff-item-icon i {
+    font-size: 1rem;
+  }
+  
+  .ff-table thead th,
+  .ff-table tbody td {
+    padding: 12px;
+  }
+  
+  .ff-badge {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+}
+
+/* Animation for tab switching */
+.ff-tab-panel {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Dropdown Menu Styles */
+.ff-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.ff-dropdown-toggle {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 5px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.ff-dropdown-toggle:hover {
+  background-color: #f1f5f9;
+  color: #334155;
+}
+
+.ff-dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  z-index: 1000;
+  min-width: 160px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  padding: 8px 0;
+  margin-top: 5px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.2s ease;
+}
+
+.ff-dropdown-menu.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.ff-dropdown-item {
+  display: block;
+  width: 100%;
+  padding: 8px 16px;
+  clear: both;
+  font-weight: 400;
+  color: #334155;
+  text-align: inherit;
+  white-space: nowrap;
+  background-color: transparent;
+  border: 0;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.ff-dropdown-item:hover {
+  background-color: #f8fafc;
+  color: #635BFF;
+}
+
+.ff-dropdown-item i {
+  margin-right: 8px;
+  font-size: 0.9em;
+  width: 16px;
+  text-align: center;
+}

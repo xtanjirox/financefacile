@@ -10,10 +10,18 @@ from core import models
 from core.models import CalendarEvent
 from accounts.models import Company
 
-from datetime import timedelta
+from datetime import timedelta, datetime
+from decimal import Decimal
 
 import json
 from django.utils import timezone
+
+# Custom JSON encoder to handle Decimal types
+class DecimalEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, Decimal):
+            return float(obj)
+        return super(DecimalEncoder, self).default(obj)
 
 
 class CompanyMixin(LoginRequiredMixin):
@@ -232,10 +240,91 @@ def home(request):
     # Now take the slice after filtering
     recent_invoices_query = recent_invoices_query.order_by('-created_at')[:10]
 
+    # Get current date information for Revenue Forecast component
+    current_date = timezone.now()
+    current_year = current_date.year
+    previous_year = current_year - 1
+    
+    # Get month names for dropdown
+    current_month = current_date.strftime("%B")
+    next_month_date = current_date.replace(day=1) + timedelta(days=32)
+    next_month_date = next_month_date.replace(day=1)
+    next_month = next_month_date.strftime("%B")
+    
+    next_next_month_date = next_month_date.replace(day=1) + timedelta(days=32)
+    next_next_month_date = next_next_month_date.replace(day=1)
+    next_next_month = next_next_month_date.strftime("%B")
+    
+    # Generate monthly revenue data for current and previous years
+    monthly_revenue_current_year = [0] * 12
+    monthly_revenue_previous_year = [0] * 12
+    
+    if user_company:
+        # Get all invoices for current and previous year - use timezone-aware datetimes
+        tz = timezone.get_current_timezone()
+        current_year_start = timezone.make_aware(datetime(current_year, 1, 1), tz)
+        current_year_end = timezone.make_aware(datetime(current_year, 12, 31, 23, 59, 59), tz)
+        previous_year_start = timezone.make_aware(datetime(previous_year, 1, 1), tz)
+        previous_year_end = timezone.make_aware(datetime(previous_year, 12, 31, 23, 59, 59), tz)
+        
+        # Get current year invoices
+        current_year_invoices = models.Invoice.objects.filter(
+            company=user_company,
+            created_at__gte=current_year_start,
+            created_at__lte=current_year_end
+        )
+        
+        # Get previous year invoices
+        previous_year_invoices = models.Invoice.objects.filter(
+            company=user_company,
+            created_at__gte=previous_year_start,
+            created_at__lte=previous_year_end
+        )
+        
+        # Calculate monthly revenue for current year
+        for invoice in current_year_invoices:
+            month_index = invoice.created_at.month - 1  # 0-based index
+            monthly_revenue_current_year[month_index] += float(invoice.get_total())
+        
+        # Calculate monthly revenue for previous year
+        for invoice in previous_year_invoices:
+            month_index = invoice.created_at.month - 1  # 0-based index
+            monthly_revenue_previous_year[month_index] += float(invoice.get_total())
+        
+        # Calculate total previous year revenue
+        previous_year_revenue = float(sum(monthly_revenue_previous_year))
+    else:
+        previous_year_revenue = 0
+    
+    # Get upcoming calendar events for the current user's company
+    upcoming_events = []
+    if user_company:
+        upcoming_events = models.CalendarEvent.objects.filter(
+            company=user_company,
+            start_date__gte=timezone.now()
+        ).order_by('start_date')[:20]  # Limit to 20 upcoming events
+        
+    # Get last 10 invoices
+    recent_invoices = []
+    if user_company:
+        recent_invoices = models.Invoice.objects.filter(
+            company=user_company
+        ).order_by('-created_at')[:10]
+        
+    # Get last 10 expenses
+    recent_expenses = []
+    if user_company:
+        recent_expenses = models.Expense.objects.filter(
+            company=user_company
+        ).order_by('-date')[:10]
+    
     context = {
-        'pie_products_by_category': json.dumps(pie_products_by_category),
-        'pie_value_by_category': json.dumps(pie_value_by_category),
-        'pie_invoice_by_category': json.dumps(pie_invoice_by_category),
+        'pie_products_by_category': json.dumps(pie_products_by_category, cls=DecimalEncoder),
+        'pie_value_by_category': json.dumps(pie_value_by_category, cls=DecimalEncoder),
+        'upcoming_events': upcoming_events,
+        'recent_invoices': recent_invoices,
+        'recent_expenses': recent_expenses,
+        'pie_invoice_by_category': json.dumps(pie_invoice_by_category, cls=DecimalEncoder),
         'product_count': product_count,
         'total_pieces': total_pieces,
         'warehouse_value': warehouse_value,
@@ -243,6 +332,16 @@ def home(request):
         'recent_invoices': recent_invoices_query,
         'currency_symbol': currency_symbol,  # Add currency symbol to context
         'upcoming_events': upcoming_events,  # Add upcoming events to context
+        
+        # Revenue Forecast context variables
+        'current_year': current_year,
+        'previous_year': previous_year,
+        'current_month': current_month,
+        'next_month': next_month,
+        'next_next_month': next_next_month,
+        'monthly_revenue_current_year': json.dumps(monthly_revenue_current_year, cls=DecimalEncoder),
+        'monthly_revenue_previous_year': json.dumps(monthly_revenue_previous_year, cls=DecimalEncoder),
+        'previous_year_revenue': previous_year_revenue,
     }
     context['page_title'] = 'Dashboard'
     context['page_title_badge'] = 'Dashboard'

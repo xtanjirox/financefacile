@@ -1,23 +1,47 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load currency_tags %}
+{% load static %}
+
 {% block sidebar %}
-  {% include 'includes/sidebar.html' %}
+{% include 'includes/sidebar.html' %}
 {% endblock sidebar %}
+
 {% block topbar %}
-  {% include 'includes/topbar.html' %}
+{% include 'includes/topbar.html' %}
 {% endblock topbar %}
+
 {% block footer %}
-  {% include 'includes/footer.html' %}
+{% include 'includes/footer.html' %}
 {% endblock footer %}
 
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/modern-action-buttons.css' %}">
 <style>
   .dataTables_wrapper .dataTables_filter {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
   }
+  
+  .dataTables_wrapper .dataTables_filter input {
+    border-color: #e0e6ed;
+    background-color: #f8f9fa;
+    color: #39739d;
+    border-radius: 20px;
+    padding: 5px 12px;
+    width: 180px;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    transition: all 0.2s ease;
+  }
+  
+  .dataTables_wrapper .dataTables_filter input:focus {
+    box-shadow: 0 2px 8px rgba(124, 185, 232, 0.25);
+    border-color: #7cb9e8;
+    outline: none;
+  }
+
   .filter-card {
     background: #f8f9fa;
     border-radius: 10px;
@@ -30,15 +54,17 @@
 {% block content %}
 <div class="container-fluid p-0">
   <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
-  <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fas fa-file-invoice-dollar me-2" style="color: #7cb9e8;"></i>Invoices</h2>
-  <a href="{% url 'invoice-create' %}" class="btn btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
-    <i class="fa fa-plus"></i> Add Invoice
-  </a>
-</div>
+    <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fas fa-file-invoice-dollar me-2"
+        style="color: #7cb9e8;"></i>Invoices</h2>
+    <a href="{% url 'invoice-create' %}" class="btn btn-primary shadow-sm rounded-pill px-4"
+      style="background: #7cb9e8; border: none; font-weight: 600;">
+      <i class="fa fa-plus"></i> Add Invoice
+    </a>
+  </div>
 
-<style>
-  /* Modern Dashboard Card Styles */
-  .dashboard-card {
+  <style>
+    /* Modern Dashboard Card Styles */
+    .dashboard-card {
       border: none;
       border-radius: 16px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
@@ -51,14 +77,14 @@
       display: flex;
       flex-direction: column;
       margin-bottom: 1rem;
-  }
+    }
 
-  .dashboard-card:hover {
+    .dashboard-card:hover {
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
       transform: translateY(-5px);
-  }
+    }
 
-  .dashboard-card .icon-wrapper {
+    .dashboard-card .icon-wrapper {
       width: 50px;
       height: 50px;
       border-radius: 12px;
@@ -66,134 +92,141 @@
       align-items: center;
       justify-content: center;
       margin-bottom: 1rem;
-  }
+    }
 
-  .dashboard-card .icon {
+    .dashboard-card .icon {
       font-size: 1.5rem;
       color: #fff;
-  }
+    }
 
-  .dashboard-card .card-title {
+    .dashboard-card .card-title {
       font-size: 0.9rem;
       font-weight: 500;
       color: #6c757d;
       margin-bottom: 0.5rem;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-  }
+    }
 
-  .dashboard-card .card-value {
+    .dashboard-card .card-value {
       font-size: 1.8rem;
       font-weight: 700;
       margin-bottom: 1rem;
       color: #333;
-  }
+    }
 
-  .dashboard-card .card-subtitle {
+    .dashboard-card .card-subtitle {
       font-size: 0.8rem;
       color: #6c757d;
       margin-top: auto;
       margin-bottom: 0.5rem;
-  }
+    }
 
-  .dashboard-card .progress-wrapper {
+    .dashboard-card .progress-wrapper {
       height: 8px;
       background-color: #f0f0f0;
       border-radius: 4px;
       margin-top: auto;
-  }
+    }
 
-  .dashboard-card .progress-bar {
+    .dashboard-card .progress-bar {
       height: 100%;
       border-radius: 4px;
-  }
+    }
 
-  /* Card color schemes */
-  .dashboard-card.items .icon-wrapper {
+    /* Card color schemes */
+    .dashboard-card.items .icon-wrapper {
       background-color: rgba(77, 182, 172, 0.2);
-  }
-  .dashboard-card.items .icon {
+    }
+
+    .dashboard-card.items .icon {
       color: #4DB6AC;
-  }
-  .dashboard-card.items .progress-bar {
+    }
+
+    .dashboard-card.items .progress-bar {
       background-color: #4DB6AC;
-  }
+    }
 
-  .dashboard-card.inventory .icon-wrapper {
+    .dashboard-card.inventory .icon-wrapper {
       background-color: rgba(66, 165, 245, 0.2);
-  }
-  .dashboard-card.inventory .icon {
+    }
+
+    .dashboard-card.inventory .icon {
       color: #42A5F5;
-  }
-  .dashboard-card.inventory .progress-bar {
+    }
+
+    .dashboard-card.inventory .progress-bar {
       background-color: #42A5F5;
-  }
+    }
 
-  .dashboard-card.invoice .icon-wrapper {
+    .dashboard-card.invoice .icon-wrapper {
       background-color: rgba(255, 167, 38, 0.2);
-  }
-  .dashboard-card.invoice .icon {
-      color: #FFA726;
-  }
-  .dashboard-card.invoice .progress-bar {
-      background-color: #FFA726;
-  }
-</style>
+    }
 
-<div class="row mb-4">
-  <div class="col-md-4">
-    <div class="dashboard-card items">
-      <div class="icon-wrapper">
-        <i class="fas fa-shopping-cart icon"></i>
+    .dashboard-card.invoice .icon {
+      color: #FFA726;
+    }
+
+    .dashboard-card.invoice .progress-bar {
+      background-color: #FFA726;
+    }
+  </style>
+
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="dashboard-card items">
+        <div class="icon-wrapper">
+          <i class="fas fa-shopping-cart icon"></i>
+        </div>
+        <div class="card-title">{% if is_filtered %}Filtered Items Sold{% else %}Total Items Sold{% endif %}</div>
+        <div class="card-value">{% if is_filtered %}{{ filtered_total_items }}{% else %}{{ total_items_sold }}{% endif %}</div>
+        {% if is_filtered %}
+        <div class="card-subtitle">Filtered period: {{ filter_start_date }} to {{ filter_end_date }}</div>
+        {% endif %}
+        <div class="progress-wrapper">
+          <div class="progress-bar" style="width: 75%"></div>
+        </div>
       </div>
-      <div class="card-title">{% if is_filtered %}Filtered Items Sold{% else %}Total Items Sold{% endif %}</div>
-      <div class="card-value">{% if is_filtered %}{{ filtered_total_items }}{% else %}{{ total_items_sold }}{% endif %}</div>
-      {% if is_filtered %}
-      <div class="card-subtitle">Filtered period: {{ filter_start_date }} to {{ filter_end_date }}</div>
-      {% endif %}
-      <div class="progress-wrapper">
-        <div class="progress-bar" style="width: 75%"></div>
+    </div>
+    <div class="col-md-4">
+      <div class="dashboard-card inventory">
+        <div class="icon-wrapper">
+          <i class="fas fa-boxes-stacked icon"></i>
+        </div>
+        <div class="card-title">{% if is_filtered %}Filtered Inventory Value{% else %}Total Inventory Value{% endif %}</div>
+        <div class="card-value">{% if is_filtered %}{{ filtered_inventory_value|currency:currency_symbol }}{% else %}{{ total_inventory_sold_value|currency:currency_symbol }}{% endif %}</div>
+        {% if is_filtered %}
+        <div class="card-subtitle">Filtered period: {{ filter_start_date }} to {{ filter_end_date }}</div>
+        {% endif %}
+        <div class="progress-wrapper">
+          <div class="progress-bar" style="width: 65%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="dashboard-card invoice">
+        <div class="icon-wrapper">
+          <i class="fas fa-file-invoice-dollar icon"></i>
+        </div>
+        <div class="card-title">{% if is_filtered %}Filtered Invoice Price{% else %}Total Invoice Price{% endif %}</div>
+        <div class="card-value">{% if is_filtered %}{{ filtered_total_price|currency:currency_symbol }}{% else %}{{ total_invoice_price|currency:currency_symbol }}{% endif %}</div>
+        {% if is_filtered %}
+        <div class="card-subtitle">Filtered period: {{ filter_start_date }} to {{ filter_end_date }}</div>
+        {% endif %}
+        <div class="progress-wrapper">
+          <div class="progress-bar" style="width: 83%"></div>
+        </div>
       </div>
     </div>
   </div>
-  <div class="col-md-4">
-    <div class="dashboard-card inventory">
-      <div class="icon-wrapper">
-        <i class="fas fa-boxes-stacked icon"></i>
-      </div>
-      <div class="card-title">{% if is_filtered %}Filtered Inventory Value{% else %}Total Inventory Value{% endif %}</div>
-      <div class="card-value">{% if is_filtered %}{% format_currency filtered_total_value %}{% else %}{% format_currency total_inventory_sold_value %}{% endif %}</div>
-      {% if is_filtered %}
-      <div class="card-subtitle">Filtered period: {{ filter_start_date }} to {{ filter_end_date }}</div>
-      {% endif %}
-      <div class="progress-wrapper">
-        <div class="progress-bar" style="width: 65%"></div>
-      </div>
-    </div>
-  </div>
-  <div class="col-md-4">
-    <div class="dashboard-card invoice">
-      <div class="icon-wrapper">
-        <i class="fas fa-file-invoice-dollar icon"></i>
-      </div>
-      <div class="card-title">{% if is_filtered %}Filtered Invoice Price{% else %}Total Invoice Price{% endif %}</div>
-      <div class="card-value">{% if is_filtered %}{% format_currency filtered_total_price %}{% else %}{% format_currency total_invoice_price %}{% endif %}</div>
-      {% if is_filtered %}
-      <div class="card-subtitle">Filtered period: {{ filter_start_date }} to {{ filter_end_date }}</div>
-      {% endif %}
-      <div class="progress-wrapper">
-        <div class="progress-bar" style="width: 83%"></div>
-      </div>
-    </div>
-  </div>
-</div>
 
   <!-- Date Range Filter -->
   <div class="row mb-4">
     <div class="col-12">
-      <div class="card shadow-sm border-0" style="border-radius: 1rem;">
-        <div class="card-header" style="background: #F4F3FD; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-          <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filter Invoices</h5>
+      <div class="card shadow-sm border-0">
+        <div class="card-header"
+          style="background: #ffffff; ">
+          <h5 class="mb-0" style="color: #39739D;"><i class="fas fa-filter me-2"></i>Filter Invoices</h5>
         </div>
         <div class="card-body">
           {% crispy filter_form %}
@@ -205,39 +238,43 @@
   <!-- Stats Cards -->
   <div class="row mt-4">
     <div class="col-12">
-      <div class="card shadow-sm border-0" style="border-radius: 14px; background: #fafdff;">
-        <div class="card-header py-3" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
-          <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
-            <i class="fas fa-file-invoice me-2" style="color: #7cb9e8;"></i>Invoices
-          </h5>
-        </div>
+      <div class="shadow-sm border-0" style="background: #ffffff;">
         <div class="card-body p-4">
           {% if invoices %}
           <!-- DataTables CSS -->
           <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
           <style>
             /* Custom DataTables styling */
-            .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+            .dataTables_wrapper .dataTables_length,
+            .dataTables_wrapper .dataTables_filter,
+            .dataTables_wrapper .dataTables_info,
+            .dataTables_wrapper .dataTables_processing,
+            .dataTables_wrapper .dataTables_paginate {
               color: #39739d;
               margin-bottom: 15px;
             }
-            .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
               background: #e7f1fa;
               border-color: #7cb9e8;
               color: #39739d !important;
               border-radius: 50px;
             }
+
             .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
               background: #e7f1fa;
               border-color: #7cb9e8;
               color: #39739d !important;
               border-radius: 50px;
             }
+
             .dataTables_wrapper .dataTables_paginate .paginate_button {
               color: #39739d !important;
               border-radius: 50px;
               margin: 0 3px;
             }
+
             .dataTables_wrapper .dataTables_length select {
               border-color: #e0e6ed;
               background-color: #f8f9fa;
@@ -245,6 +282,7 @@
               border-radius: 8px;
               padding: 5px 10px;
             }
+
             .dataTables_wrapper .dataTables_filter input {
               border-color: #e0e6ed;
               background-color: #f8f9fa;
@@ -253,27 +291,32 @@
               padding: 8px 15px;
               width: 250px;
             }
-            table.dataTable thead th, table.dataTable thead td {
+
+            table.dataTable thead th,
+            table.dataTable thead td {
               border-bottom: 1px solid #e0e6ed;
               padding: 12px 10px;
               font-weight: 600;
               color: #39739d;
               background-color: #FAFDFF;
             }
+
             table.dataTable.no-footer {
               border-bottom: 1px solid #e0e6ed;
             }
+
             table.dataTable tbody tr:hover {
               background-color: rgba(124, 185, 232, 0.1);
             }
+
             .badge {
               padding: 6px 10px;
               font-weight: 500;
               border-radius: 50px;
             }
           </style>
-          <table id="invoices-table" class="modern-table">
-            <thead style="background: #F4F3FD; color: #605BFD; font-weight: 600;">
+          <table id="invoicessss-table" class="modern-table">
+            <thead>
               <tr>
                 <th>ID</th>
                 <th>Date</th>
@@ -287,76 +330,73 @@
                 <td>{{ invoice.pk }}</td>
                 <td>{{ invoice.created_at|date:'Y-m-d H:i' }}</td>
                 <td>{{ invoice.get_total|currency:currency_symbol }}</td>
-                <td>
-                  <div class="actions-menu">
-                    <button class="actions-button" onclick="toggleActionsMenu(this)">
-                      <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                    <div class="actions-dropdown">
-                      <a href="{% url 'invoice-detail' invoice.pk %}" class="action-item">
-                        <i class="fas fa-eye"></i> View
-                      </a>
-                      <a href="{% url 'invoice-update' invoice.pk %}" class="action-item">
-                        <i class="fas fa-edit"></i> Edit
-                      </a>
-                      <a href="{% url 'invoice-pdf' invoice.pk %}" class="action-item">
-                        <i class="fas fa-file-pdf"></i> Export PDF
-                      </a>
-                      <a href="{% url 'invoice-delete' invoice.pk %}" class="action-item delete">
-                        <i class="fas fa-trash"></i> Delete
-                      </a>
-                    </div>
+                <td class="text-center">
+                  <div class="action-buttons-container">
+                    <a href="{% url 'invoice-detail' invoice.pk %}" class="action-btn action-view" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{% url 'invoice-update' invoice.pk %}" class="action-btn action-edit" title="Edit">
+                      <i class="fas fa-pencil-alt"></i>
+                    </a>
+                    <a href="{% url 'invoice-pdf' invoice.pk %}" class="action-btn action-download" title="Export PDF">
+                      <i class="fas fa-file-pdf"></i>
+                    </a>
+                    <a href="{% url 'invoice-delete' invoice.pk %}" class="action-btn action-delete" title="Delete">
+                      <i class="fas fa-trash-alt"></i>
+                    </a>
                   </div>
                 </td>
               </tr>
               {% empty %}
-              <tr><td colspan="4" class="text-center">No invoices found.</td></tr>
+              <tr>
+                <td colspan="4" class="text-center">No invoices found.</td>
+              </tr>
               {% endfor %}
             </tbody>
           </table>
-          <!-- DataTables JS -->
-          <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-          <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-          <script>
-            $(document).ready(function() {
-              $('#invoices-table').DataTable({
-                responsive: true,
-                pageLength: 5,
-                lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],
-                language: {
-                  search: "_INPUT_",
-                  searchPlaceholder: "Search invoices...",
-                  lengthMenu: "Show _MENU_ invoices",
-                  info: "Showing _START_ to _END_ of _TOTAL_ invoices",
-                  infoEmpty: "Showing 0 to 0 of 0 invoices",
-                  infoFiltered: "(filtered from _MAX_ total invoices)"
-                },
-                dom: '<"row"<"col-sm-6"l><"col-sm-6"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-5"i><"col-sm-7"p>>'
-              });
-            });
-          </script>
           {% else %}
           <div class="col-12">
-            <div class="card shadow-sm border-0" style="border-radius: 1.2rem; background: #fafdff;">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-tags mb-3" style="font-size: 3rem; color: #7cb9e8;"></i>
-                    <h4 class="mb-3">No Invoices Found</h4>
-                    <p class="text-muted">You haven't created any invoices yet. Click the "Add Invoice" button above to create your first invoice.</p>
-                </div>
+            <div class="shadow-sm border-0" style="background: #fff;">
+              <div class="card-body text-center py-5">
+                <i class="fas fa-file-invoice mb-3" style="font-size: 3rem; color: #7cb9e8;"></i>
+                <h4 class="mb-3">No Invoices Found</h4>
+                <p class="text-muted">You haven't created any invoices yet. Click the "Add Invoice" button above to
+                  create your first invoice.</p>
+              </div>
             </div>
-        </div>
+          </div>
           {% endif %}
         </div>
       </div>
     </div>
   </div>
-  
 </div>
 {% endblock content %}
 
 {% block extra_js %}
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script>
-<script src="https://cdn.datatables.net/responsive/2.2.9/js/responsive.bootstrap5.min.js"></script>
+<!-- DataTables JS -->
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+{% if invoices %}
+<script>
+  $(document).ready(function () {
+    // Initialize DataTable
+    $('#invoicessss-table').DataTable({
+      responsive: true,
+      pageLength: 5,
+      lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],
+      language: {
+        search: "_INPUT_",
+        searchPlaceholder: "Search invoices...",
+        lengthMenu: "Show _MENU_ invoices",
+        info: "Showing _START_ to _END_ of _TOTAL_ invoices",
+        infoEmpty: "Showing 0 to 0 of 0 invoices",
+        infoFiltered: "(filtered from _MAX_ total invoices)"
+      },
+      dom: '<"row"<"col-sm-6"l><"col-sm-6"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-5"i><"col-sm-7"p>>'
+    });
+  });
+</script>
+{% endif %}
 {% endblock %}

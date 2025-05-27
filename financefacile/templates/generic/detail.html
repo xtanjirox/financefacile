@@ -4,7 +4,7 @@
 
 {% block stylesheets %}
 <link rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
+    href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.14.0-beta2/dist/css/bootstrap-select.min.css">
 {{ form.media.css }}
 {% endblock stylesheets %}
 
@@ -23,58 +23,69 @@
 {% block content %}
 <div class="container-fluid p-0" style="background: #F4F7FB;">
     <div class="row justify-content-center">
-    <div class="col-12">
-        <div class="card shadow-sm mt-4 border-0" style="border-radius: 1.2rem; overflow: hidden; background: #fafdff;">
-            <div class="card-header d-flex align-items-center" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed;">
-                <h3 class="card-title mb-0 text-dark"><i class="fas fa-edit me-2" style="color: #7cb9e8;"></i>Update {{segment|title}}</h3>
-            </div>
-            <div class="card-body">
-                <form action="" method="post" autocomplete="off" class="w-100" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class="p-3 w-100" style="background: #fff; border-radius: 1rem;">
-                        <div class="row">
-    {% for field in form.visible_fields %}
-        <div class="form-group mb-1 col-12">
-            {{ field|as_crispy_field }}
-            {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text }}</small>{% endif %}
-            {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
-        </div>
-    {% endfor %}
-</div>
-                    </div>
-                    <div class="mt-4 d-flex justify-content-end">
-                        <button type="submit" class="btn btn-sm" style="background: #F4F3FD; color: #605BFD; border: 1px solid #E0DEFD;">
-                            <i class="fas fa-save me-1"></i> Save
-                        </button>
-                    </div>
-                </form>
+        <div class="col-12">
+            <div class="card shadow-sm mt-4 border-0"
+                style="border-radius: 1.2rem; overflow: hidden; background: #fafdff;">
+                <div class="card-header d-flex align-items-center"
+                    style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed;">
+                    <h3 class="card-title mb-0 text-dark"><i class="fas fa-edit me-2" style="color: #7cb9e8;"></i>Update
+                        {{segment|title}}</h3>
+                </div>
+                <div class="card-body">
+                    <form action="" method="post" autocomplete="off" class="w-100" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="p-3 w-100" style="background: #fff; border-radius: 1rem;">
+                            <div class="row">
+                                {% for field in form.visible_fields %}
+                                <div class="form-group mb-1 col-12">
+                                    {{ field|as_crispy_field }}
+                                    {% if field.help_text %}<small class="form-text text-muted">{{ field.help_text
+                                        }}</small>{% endif %}
+                                    {% for error in field.errors %}<div class="invalid-feedback d-block">{{ error }}
+                                    </div>{% endfor %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="mt-4 d-flex justify-content-end">
+                            <button type="submit" class="btn btn-sm"
+                                style="background: #F4F3FD; color: #635BFF; border: 1px solid #E0DEFD;">
+                                <i class="fas fa-save me-1"></i> Save
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Enhance all select elements with bootstrap-select for searchability
-        var selects = document.querySelectorAll('select');
-        selects.forEach(function(sel) {
-            sel.classList.add('selectpicker');
-            sel.setAttribute('data-live-search', 'true');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Enhance all select elements with bootstrap-select for searchability
+            var selects = document.querySelectorAll('select');
+            selects.forEach(function (sel) {
+                sel.classList.add('selectpicker');
+                sel.setAttribute('data-live-search', 'true');
+            });
+            if (window.jQuery && window.jQuery().selectpicker) {
+                $('.selectpicker').selectpicker('refresh');
+            }
         });
-        if (window.jQuery && window.jQuery().selectpicker) {
-            $('.selectpicker').selectpicker('refresh');
-        }
-    });
-</script>
+    </script>
 </div>
 <style>
-    .card-body input, .card-body select, .card-body textarea {
+    .card-body input,
+    .card-body select,
+    .card-body textarea {
         background: #fafdff;
         border: 1px solid #dbeafe;
         color: #39739d;
         border-radius: 0.5rem;
         margin-bottom: 1rem;
     }
-    .card-body input:focus, .card-body select:focus, .card-body textarea:focus {
+
+    .card-body input:focus,
+    .card-body select:focus,
+    .card-body textarea:focus {
         background: #F4F3FD;
         border-color: #7cb9e8;
         color: #39739d;
