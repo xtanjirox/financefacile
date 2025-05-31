@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
 
 {% block sidebar %}
 {% include 'includes/sidebar.html' %}
@@ -37,9 +38,9 @@
 
   <div class="row justify-content-center">
     <div class="col-12">
-      <div class="card shadow-sm border-0" style="border-radius: 14px; overflow: hidden; background: #fafdff;">
+      <div class="card shadow-sm border-0" style="border-radius: 8px; overflow: hidden; background: #ffffff;">
         <div class="card-header d-flex align-items-center justify-content-between py-3"
-          style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed;">
+          style="background: #ffffff; border-bottom: 1px solid #e0e6ed;">
           <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
             <i class="fas fa-info-circle me-2" style="color: #7cb9e8;"></i>
             {{ object.name }}
@@ -156,7 +157,7 @@
 
           <div class="card shadow-sm border-0 mb-4" style="border-radius: 10px;">
             <div class="card-header py-3"
-              style="background: #f8f9fa; border-bottom: 1px solid #e0e6ed; border-radius: 10px 10px 0 0;">
+              style="background: #ffffff; border-bottom: 1px solid #e0e6ed; border-radius: 10px 10px 0 0;">
               <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
                 <i class="fas fa-info-circle me-2" style="color: #7cb9e8;"></i> Description
               </h5>
@@ -174,9 +175,9 @@
   <!-- Invoices Section -->
   <div class="row mt-4">
     <div class="col-12">
-      <div class="card shadow-sm border-0" style="border-radius: 14px; background: #fafdff;">
+      <div class="card shadow-sm border-0" style="border-radius: 8px; background: #ffffff;">
         <div class="card-header py-3"
-          style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
+          style="background: #ffffff; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
           <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
             <i class="fas fa-file-invoice me-2" style="color: #7cb9e8;"></i> Invoices Containing This Product
           </h5>
@@ -185,6 +186,7 @@
           {% if invoices %}
           <!-- DataTables CSS -->
           <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+          <link rel="stylesheet" type="text/css" href="{% static 'assets/css/modern-action-buttons.css' %}">
           <style>
             /* Custom DataTables styling */
             .dataTables_wrapper .dataTables_length,
@@ -288,16 +290,11 @@
                     }}</span>
                   {% endif %}
                 </td>
-                <td>
-                  <div class="actions-menu">
-                    <button class="actions-button" onclick="toggleActionsMenu(this)">
-                      <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                    <div class="actions-dropdown">
-                      <a href="{{ invoice.url }}" class="action-item">
-                        <i class="fas fa-eye"></i> View
-                      </a>
-                    </div>
+                <td class="text-center">
+                  <div class="action-buttons-container">
+                    <a href="{{ invoice.url }}" class="action-btn action-view" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
                   </div>
                 </td>
               </tr>
