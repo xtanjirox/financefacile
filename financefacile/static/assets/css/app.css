@@ -1,5 +1,5 @@
 /* GLOBAL BASE COLOR OVERRIDE */
-body, .container, .container-fluid {
+body, .container {
   background: #F4F7FB !important;
 }
 
