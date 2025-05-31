@@ -197,9 +197,9 @@ def home(request):
         }]
     }
 
-    # --- Pie chart: sold products by parent category (invoices) ---
+    # --- Pie chart: sold products by parent category (invoices) - total selling value ---
     
-    sold_qty_by_parent = {}
+    sold_value_by_parent = {}
     
     for parent in parent_categories_query:
         descendants = set()
@@ -213,14 +213,15 @@ def home(request):
         # Filter by company if user has a company
         if user_company:
             invoice_items_query = invoice_items_query.filter(invoice__company=user_company)
-        sold_qty = invoice_items_query.aggregate(total=Sum('quantity'))['total'] or 0
-        sold_qty_by_parent[parent.name] = sold_qty
+        # Calculate total selling value (total_price is quantity * selling_price)
+        sold_value = invoice_items_query.aggregate(total=Sum('total_price'))['total'] or 0
+        sold_value_by_parent[parent.name] = float(sold_value)
         
     pie_invoice_by_category = {
-        'labels': list(sold_qty_by_parent.keys()) if sold_qty_by_parent else [],
+        'labels': list(sold_value_by_parent.keys()) if sold_value_by_parent else [],
         'datasets': [{
-            'label': 'Produits vendus',
-            'data': list(sold_qty_by_parent.values()) if sold_qty_by_parent else [],
+            'label': 'Valeur des ventes',
+            'data': list(sold_value_by_parent.values()) if sold_value_by_parent else [],
         }]
     }
 
