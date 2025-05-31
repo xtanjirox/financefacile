@@ -1,13 +1,16 @@
 {% load static %}
 {% block content %}
-<nav class="navbar navbar-expand navbar-light navbar-bg" style="background-color: white; border-bottom: 1px solid #f1f5f9; padding: 0.75rem 1.5rem;">
+<nav class="navbar navbar-expand navbar-light navbar-bg"
+    style="background-color: white; border-bottom: 1px solid #f1f5f9; padding: 0.75rem 1.5rem;">
     <a class="sidebar-toggle js-sidebar-toggle" style="margin-right: 1rem;">
         <i class="fas fa-bars" style="color: #64748b;"></i>
     </a>
     <form class="d-none d-sm-inline-block position-relative" autocomplete="off" onsubmit="return false;">
-        <div class="input-group input-group-navbar" style="background-color: #f8fafc; border-radius: 8px; overflow: hidden;">
+        <div class="input-group input-group-navbar"
+            style="background-color: #f8fafc; border-radius: 8px; overflow: hidden;">
             <input type="text" class="form-control" id="live-search-input" name="q" placeholder="Search…"
-                aria-label="Search" autocomplete="off" style="border: none; background-color: #f8fafc; padding: 0.5rem 1rem;">
+                aria-label="Search" autocomplete="off"
+                style="border: none; background-color: #f8fafc; padding: 0.5rem 1rem;">
             <button class="btn" type="submit" style="background-color: #f8fafc; border: none;">
                 <i class="fas fa-search" style="color: #64748b;"></i>
             </button>
@@ -75,28 +78,58 @@
     </script>
     <div class="navbar-collapse collapse">
         <ul class="navbar-nav navbar-align">
-            
-            
+            <!-- Notifications Dropdown -->
+            <li class="nav-item dropdown">
+                <a class="nav-icon dropdown-toggle" href="#" id="notificationsDropdown" data-bs-toggle="dropdown">
+                    <div class="position-relative">
+                        <i class="fas fa-bell" style="font-size: 1.25rem; color: #6259FF;"></i>
+                        <span class="indicator" id="notification-badge"
+                            style="display: none; position: absolute; top: -5px; right: -5px; width: 18px; height: 18px; background: #6259FF; border-radius: 50%; color: white; font-size: 0.7rem; text-align: center; line-height: 18px; font-weight: bold;">0</span>
+                    </div>
+                </a>
+                <div class="dropdown-menu dropdown-menu-lg dropdown-menu-end py-0" id="notifications-container"
+                    style="min-width: 320px; max-height: 400px; overflow-y: auto;">
+                    <div class="dropdown-menu-header" style="background: #eae9ff; color: #6259FF;">
+                        <div class="position-relative py-2 px-3 d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 fw-bold">Notifications</h6>
+                            <a href="#" id="mark-all-read" class="text-decoration-none"
+                                style="font-size: 0.8rem; color: #6259FF;">Mark all as read</a>
+                        </div>
+                    </div>
+                    <div class="list-group list-group-flush" id="notification-list">
+                        <!-- Notifications will be loaded here via JavaScript -->
+                        <div class="text-center py-3">
+                            <div class="spinner-border text-primary" role="status" style="color: #6259FF !important;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+
             <li class="nav-item dropdown">
                 <a class="nav-icon dropdown-toggle d-inline-block d-sm-none" href="#" data-bs-toggle="dropdown">
                     {% if user.profile.avatar %}
-                        <img src="{{ user.profile.avatar.url }}" class="avatar img-fluid rounded-circle" style="width: 32px; height: 32px; object-fit: cover;"
-                            alt="{{ user.username }}" />
+                    <img src="{{ user.profile.avatar.url }}" class="avatar img-fluid rounded-circle"
+                        style="width: 32px; height: 32px; object-fit: cover;" alt="{{ user.username }}" />
                     {% else %}
-                        <div class="avatar-circle d-inline-flex align-items-center justify-content-center" style="width: 32px; height: 32px; background-color: #7cb9e8; border-radius: 50%;">
-                            <span style="color: white; font-size: 0.75rem; font-weight: bold;">{{ user.profile.get_initials }}</span>
-                        </div>
+                    <div class="avatar-circle d-inline-flex align-items-center justify-content-center"
+                        style="width: 32px; height: 32px; background-color: #7cb9e8; border-radius: 50%;">
+                        <span style="color: white; font-size: 0.75rem; font-weight: bold;">{{ user.profile.get_initials }}</span>
+                    </div>
                     {% endif %}
                 </a>
 
                 <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#" data-bs-toggle="dropdown">
                     {% if user.profile.avatar %}
-                        <img src="{{ user.profile.avatar.url }}" class="avatar img-fluid rounded-circle me-1" style="width: 36px; height: 36px; object-fit: cover;"
-                            alt="{{ user.username }}" />
+                    <img src="{{ user.profile.avatar.url }}" class="avatar img-fluid rounded-circle me-1"
+                        style="width: 36px; height: 36px; object-fit: cover;" alt="{{ user.username }}" />
                     {% else %}
-                        <div class="avatar-circle d-inline-flex align-items-center justify-content-center me-1" style="width: 36px; height: 36px; background-color: #7cb9e8; border-radius: 50%;">
-                            <span style="color: white; font-size: 0.875rem; font-weight: bold;">{{ user.profile.get_initials }}</span>
-                        </div>
+                    <div class="avatar-circle d-inline-flex align-items-center justify-content-center me-1"
+                        style="width: 36px; height: 36px; background-color: #7cb9e8; border-radius: 50%;">
+                        <span style="color: white; font-size: 0.875rem; font-weight: bold;">{{ user.profile.get_initials }}</span>
+                    </div>
                     {% endif %}
                     <span class="text-dark">{{ user.get_full_name|default:user.username }}</span>
                 </a>
@@ -104,7 +137,8 @@
                     <a class="dropdown-item" href="{% url 'auth:profile' %}"><i class="align-middle me-1"
                             data-feather="user"></i> Profile</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="{% url 'organizations:company-detail' user.profile.company.id %}"><i class="align-middle me-1" data-feather="settings"></i>
+                    <a class="dropdown-item" href="{% url 'organizations:company-detail' user.profile.company.id %}"><i
+                            class="align-middle me-1" data-feather="settings"></i>
                         Company Settings</a>
                     <div class="dropdown-divider"></div>
                     <a class="dropdown-item" href="{% url 'auth:logout' %}">Log out</a>

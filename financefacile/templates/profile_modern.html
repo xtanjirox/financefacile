@@ -1,0 +1,489 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load django_tables2 %}
+
+{% block sidebar %}
+{% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+{% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+{% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block stylesheets %}
+<style>
+    /* Card Styling */
+    .card {
+        box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 0.12);
+        border: 0;
+        border-radius: 0.5rem;
+    }
+
+    .card-header {
+        padding: 1.5rem;
+        background-color: transparent;
+        border-bottom: 1px solid #d9dee3;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Button Styling */
+    .btn-primary {
+        background-color: #696cff !important;
+        border-color: #696cff !important;
+        box-shadow: 0 0.125rem 0.25rem 0 rgba(105, 108, 255, 0.4);
+    }
+
+    .btn-primary:hover {
+        background-color: #5f61e6 !important;
+        border-color: #5f61e6 !important;
+    }
+
+    .btn-outline-primary {
+        color: #696cff;
+        border-color: #696cff;
+    }
+
+    .btn-outline-primary:hover {
+        background-color: #696cff;
+        color: #fff;
+    }
+
+    .btn-outline-secondary {
+        color: #8592a3;
+        border-color: #8592a3;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #8592a3;
+        color: #fff;
+    }
+
+    /* Badge Styling */
+    .badge {
+        padding: 0.5rem 0.75rem;
+        font-weight: 500;
+        border-radius: 0.375rem;
+    }
+
+    .badge-primary {
+        background-color: rgba(105, 108, 255, 0.16);
+        color: #696cff;
+    }
+
+    .badge-secondary {
+        background-color: rgba(133, 146, 163, 0.16);
+        color: #8592a3;
+    }
+
+    /* Profile Image */
+    .profile-image {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 0.5rem;
+        border: 5px solid #fff;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Info List */
+    .info-list {
+        list-style: none;
+        padding: 0;
+    }
+
+    .info-list li {
+        padding: 0.75rem 0;
+        border-bottom: 1px solid #f0f0f0;
+        display: flex;
+        align-items: center;
+    }
+
+    .info-list li:last-child {
+        border-bottom: none;
+    }
+
+    .info-list .icon {
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: rgba(105, 108, 255, 0.16);
+        color: #696cff;
+        margin-right: 0.75rem;
+    }
+
+    /* Activity Feed */
+    .activity-item {
+        padding: 1rem 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .activity-content {
+        margin-left: 1rem;
+        flex: 1;
+    }
+
+    .activity-time {
+        color: #8592a3;
+        font-size: 0.875rem;
+    }
+
+    /* Dashboard Cards */
+    .dashboard-card {
+        border: none;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        padding: 1.5rem;
+        min-height: 120px;
+        background: #fff;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+    }
+
+    .dashboard-card:hover {
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+        transform: translateY(-5px);
+    }
+
+    .dashboard-card .icon-wrapper {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+
+    .dashboard-card .icon {
+        font-size: 1.5rem;
+        color: #fff;
+    }
+
+    .dashboard-card .card-title {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: #6c757d;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .dashboard-card .card-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+        color: #333;
+    }
+
+    .dashboard-card .progress-wrapper {
+        height: 8px;
+        background-color: #f0f0f0;
+        border-radius: 4px;
+        margin-top: auto;
+    }
+
+    .dashboard-card .progress-bar {
+        height: 100%;
+        border-radius: 4px;
+    }
+
+    /* Card color schemes */
+    .dashboard-card.invoices .icon-wrapper {
+        background-color: rgba(77, 182, 172, 0.2);
+    }
+
+    .dashboard-card.invoices .icon {
+        color: #4DB6AC;
+    }
+
+    .dashboard-card.invoices .progress-bar {
+        background-color: #4DB6AC;
+    }
+
+    .dashboard-card.clients .icon-wrapper {
+        background-color: rgba(66, 165, 245, 0.2);
+    }
+
+    .dashboard-card.clients .icon {
+        color: #42A5F5;
+    }
+
+    .dashboard-card.clients .progress-bar {
+        background-color: #42A5F5;
+    }
+
+    .dashboard-card.revenue .icon-wrapper {
+        background-color: rgba(255, 167, 38, 0.2);
+    }
+
+    .dashboard-card.revenue .icon {
+        color: #FFA726;
+    }
+
+    .dashboard-card.revenue .progress-bar {
+        background-color: #FFA726;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+        <div class="d-flex align-items-center">
+            <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fas fa-user me-2" style="color: #7cb9e8;"></i>User Profile</h2>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary shadow-sm px-4" style="border-color: #8592a3; color: #8592a3; font-weight: 600;">
+                <i class="fas fa-arrow-left me-1"></i> Back to Dashboard
+            </a>
+            <a href="{% url 'edit_profile' %}" class="btn btn-primary shadow-sm px-4" style="background: #696cff !important; border: none; font-weight: 600;">
+                <i class="fas fa-pencil-alt me-1"></i> Edit Profile
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="dashboard-card invoices">
+                <div class="icon-wrapper">
+                    <i class="fas fa-file-invoice icon"></i>
+                </div>
+                <div class="card-title">Total Invoices</div>
+                <div class="card-value">{{ invoices_count|default:"0" }}</div>
+                <div class="progress-wrapper">
+                    <div class="progress-bar" style="width: 85%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="dashboard-card clients">
+                <div class="icon-wrapper">
+                    <i class="fas fa-users icon"></i>
+                </div>
+                <div class="card-title">Clients</div>
+                <div class="card-value">{{ clients_count|default:"0" }}</div>
+                <div class="progress-wrapper">
+                    <div class="progress-bar" style="width: 70%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="dashboard-card revenue">
+                <div class="icon-wrapper">
+                    <i class="fas fa-chart-line icon"></i>
+                </div>
+                <div class="card-title">Total Revenue</div>
+                <div class="card-value">{{ total_revenue|default:"0" }}</div>
+                <div class="progress-wrapper">
+                    <div class="progress-bar" style="width: 65%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Profile Information -->
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Profile Information</h5>
+                </div>
+                <div class="card-body text-center">
+                    {% if current_user.profile.avatar %}
+                        <img src="{{ current_user.profile.avatar.url }}" alt="{{ current_user.get_full_name }}" class="profile-image mb-3">
+                    {% else %}
+                        <div class="profile-image d-flex align-items-center justify-content-center mb-3" style="background-color: rgba(66, 165, 245, 0.2); color: #42A5F5; font-size: 2.5rem;">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <h5 class="mb-1">{{ current_user.get_full_name }}</h5>
+                    <p class="text-muted mb-3">{{ current_user.email }}</p>
+                    <span class="badge badge-primary mb-3">{{ current_user.groups.all.first|default:"User" }}</span>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <a href="{% url 'edit_profile' %}" class="btn btn-outline-primary">
+                            <i class="fas fa-pencil-alt me-1"></i> Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Contact Information</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="info-list">
+                        <li>
+                            <div class="icon"><i class="fas fa-envelope"></i></div>
+                            <div>
+                                <small class="text-muted d-block">Email</small>
+                                <span>{{ current_user.email }}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="icon"><i class="fas fa-phone"></i></div>
+                            <div>
+                                <small class="text-muted d-block">Phone</small>
+                                <span>{{ current_user.profile.phone|default:"Not provided" }}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="icon"><i class="fas fa-map-marker-alt"></i></div>
+                            <div>
+                                <small class="text-muted d-block">Location</small>
+                                <span>{{ current_user.profile.address|default:"Not provided" }}</span>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="icon"><i class="fas fa-building"></i></div>
+                            <div>
+                                <small class="text-muted d-block">Company</small>
+                                <span>{{ current_user.profile.company.name|default:"Not provided" }}</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="col-md-8">
+            <div class="card mb-4">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Activity</h5>
+                    <div>
+                        <a href="#" class="btn btn-sm btn-outline-primary">
+                            <i class="fas fa-filter me-1"></i> Filter
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    {% if activities %}
+                        {% for activity in activities %}
+                            <div class="d-flex activity-item">
+                                <div class="activity-avatar-wrapper">
+                                    {% if activity.user.profile.avatar %}
+                                        <img src="{{ activity.user.profile.avatar.url }}" alt="{{ activity.user.get_full_name }}" class="activity-avatar">
+                                    {% else %}
+                                        <div class="activity-avatar d-flex align-items-center justify-content-center" style="background-color: rgba(66, 165, 245, 0.2); color: #42A5F5;">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="activity-content">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <p class="mb-0"><strong>{{ activity.description }}</strong></p>
+                                        <span class="activity-time">{{ activity.created_at|timesince }} ago</span>
+                                    </div>
+                                    <p class="text-muted mb-0">{{ activity.details }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="text-center py-5">
+                            <div class="mb-3" style="font-size: 3rem; color: #d9dee3;">
+                                <i class="fas fa-history"></i>
+                            </div>
+                            <h5>No Recent Activity</h5>
+                            <p class="text-muted">Your recent activities will appear here.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- User Statistics -->
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Statistics</h5>
+                    <div class="dropdown">
+                        <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            This Month
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="#">This Week</a></li>
+                            <li><a class="dropdown-item" href="#">This Month</a></li>
+                            <li><a class="dropdown-item" href="#">This Year</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div style="background-color: rgba(77, 182, 172, 0.2); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                                        <i class="fas fa-file-invoice" style="color: #4DB6AC;"></i>
+                                    </div>
+                                    <h6 class="mb-0">Invoices Created</h6>
+                                </div>
+                                <p class="mb-0 ps-4 ms-2">{{ invoices_created|default:"0" }} this month</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div style="background-color: rgba(66, 165, 245, 0.2); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                                        <i class="fas fa-check-circle" style="color: #42A5F5;"></i>
+                                    </div>
+                                    <h6 class="mb-0">Invoices Paid</h6>
+                                </div>
+                                <p class="mb-0 ps-4 ms-2">{{ invoices_paid|default:"0" }} this month</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div style="background-color: rgba(255, 167, 38, 0.2); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                                        <i class="fas fa-user-plus" style="color: #FFA726;"></i>
+                                    </div>
+                                    <h6 class="mb-0">New Clients</h6>
+                                </div>
+                                <p class="mb-0 ps-4 ms-2">{{ new_clients|default:"0" }} this month</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                                <div class="d-flex align-items-center mb-2">
+                                    <div style="background-color: rgba(77, 182, 172, 0.2); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                                        <i class="fas fa-chart-line" style="color: #4DB6AC;"></i>
+                                    </div>
+                                    <h6 class="mb-0">Revenue</h6>
+                                </div>
+                                <p class="mb-0 ps-4 ms-2">{{ monthly_revenue|default:"0" }} this month</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

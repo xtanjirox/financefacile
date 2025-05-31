@@ -5,46 +5,50 @@
 {% load currency_tags %}
 
 {% block sidebar %}
-  {% include 'includes/sidebar.html' %}
+{% include 'includes/sidebar.html' %}
 {% endblock sidebar %}
 
 {% block topbar %}
-  {% include 'includes/topbar.html' %}
+{% include 'includes/topbar.html' %}
 {% endblock topbar %}
 
 {% block footer %}
-  {% include 'includes/footer.html' %}
+{% include 'includes/footer.html' %}
 {% endblock footer %}
 
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/modern-action-buttons.css' %}">
 {% endblock %}
 
 {% block content %}
 <div class="container-fluid p-0">
   <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
     <div class="d-flex align-items-center">
-      <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-boxes-stacked me-2" style="color: #7cb9e8;"></i>Products</h2>
+      <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-boxes-stacked me-2"
+          style="color: #7cb9e8;"></i>Products</h2>
       {% if archived_products_count > 0 %}
       <div class="ms-3">
         {% if show_archived %}
-          <a href="{% url 'product-list' %}" class="btn btn-sm btn-outline-secondary rounded-pill">
-            <i class="fas fa-eye-slash me-1"></i> Hide Archived ({{ archived_products_count }})
-          </a>
+        <a href="{% url 'product-list' %}" class="btn btn-sm btn-outline-secondary rounded-pill">
+          <i class="fas fa-eye-slash me-1"></i> Hide Archived ({{ archived_products_count }})
+        </a>
         {% else %}
-          <a href="{% url 'product-list' %}?show_archived=true" class="btn btn-sm btn-outline-secondary rounded-pill">
-            <i class="fas fa-archive me-1"></i> Show Archived ({{ archived_products_count }})
-          </a>
+        <a href="{% url 'product-list' %}?show_archived=true" class="btn btn-sm btn-outline-secondary rounded-pill">
+          <i class="fas fa-archive me-1"></i> Show Archived ({{ archived_products_count }})
+        </a>
         {% endif %}
       </div>
       {% endif %}
     </div>
     <div class="d-flex gap-2">
-      <a href="{% url 'category-create' %}" class="btn btn-outline-primary shadow-sm rounded-pill px-4" style="border-color: #7cb9e8; color: #39739d; font-weight: 600;">
+      <a href="{% url 'category-create' %}" class="btn btn-outline-primary shadow-sm px-4"
+        style="border-color: #7cb9e8; color: #39739d; font-weight: 600;">
         <i class="fa fa-tags"></i> Add Category
       </a>
-      <a href="{% url 'product-create' %}" class="btn btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+      <a href="{% url 'product-create' %}" class="btn btn-primary shadow-sm rounded-pill px-4"
+        style="background: #7cb9e8; border: none; font-weight: 600;">
         <i class="fa fa-plus"></i> Add Product
       </a>
     </div>
@@ -54,100 +58,106 @@
   <style>
     /* Modern Dashboard Card Styles */
     .dashboard-card {
-        border: none;
-        border-radius: 16px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        padding: 1.5rem;
-        min-height: 120px;
-        background: #fff;
-        transition: all 0.3s ease;
-        position: relative;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 1rem;
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      min-height: 120px;
+      background: #fff;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
     }
 
     .dashboard-card:hover {
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
-        transform: translateY(-5px);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      transform: translateY(-5px);
     }
 
     .dashboard-card .icon-wrapper {
-        width: 50px;
-        height: 50px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 1rem;
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
     }
 
     .dashboard-card .icon {
-        font-size: 1.5rem;
-        color: #fff;
+      font-size: 1.5rem;
+      color: #fff;
     }
 
     .dashboard-card .card-title {
-        font-size: 0.9rem;
-        font-weight: 500;
-        color: #6c757d;
-        margin-bottom: 0.5rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #6c757d;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
 
     .dashboard-card .card-value {
-        font-size: 1.8rem;
-        font-weight: 700;
-        margin-bottom: 1rem;
-        color: #333;
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #333;
     }
 
     .dashboard-card .progress-wrapper {
-        height: 8px;
-        background-color: #f0f0f0;
-        border-radius: 4px;
-        margin-top: auto;
+      height: 8px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      margin-top: auto;
     }
 
     .dashboard-card .progress-bar {
-        height: 100%;
-        border-radius: 4px;
+      height: 100%;
+      border-radius: 4px;
     }
 
     /* Card color schemes */
     .dashboard-card.products .icon-wrapper {
-        background-color: rgba(77, 182, 172, 0.2);
+      background-color: rgba(77, 182, 172, 0.2);
     }
+
     .dashboard-card.products .icon {
-        color: #4DB6AC;
+      color: #4DB6AC;
     }
+
     .dashboard-card.products .progress-bar {
-        background-color: #4DB6AC;
+      background-color: #4DB6AC;
     }
 
     .dashboard-card.inventory .icon-wrapper {
-        background-color: rgba(66, 165, 245, 0.2);
+      background-color: rgba(66, 165, 245, 0.2);
     }
+
     .dashboard-card.inventory .icon {
-        color: #42A5F5;
+      color: #42A5F5;
     }
+
     .dashboard-card.inventory .progress-bar {
-        background-color: #42A5F5;
+      background-color: #42A5F5;
     }
 
     .dashboard-card.revenue .icon-wrapper {
-        background-color: rgba(255, 167, 38, 0.2);
+      background-color: rgba(255, 167, 38, 0.2);
     }
+
     .dashboard-card.revenue .icon {
-        color: #FFA726;
+      color: #FFA726;
     }
+
     .dashboard-card.revenue .progress-bar {
-        background-color: #FFA726;
+      background-color: #FFA726;
     }
   </style>
-  
+
   <div class="row mb-4">
     <div class="col-md-4">
       <div class="dashboard-card products">
@@ -190,39 +200,45 @@
   <!-- DataTables will handle filtering and searching -->
   <div class="row mt-4">
     <div class="col-12">
-      <div class="card shadow-sm border-0" style="border-radius: 14px; background: #fafdff;">
-        <div class="card-header py-3" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
-          <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
-            <i class="fas fa-file-invoice me-2" style="color: #7cb9e8;"></i>Products
-          </h5>
-        </div>
+      <div class="shadow-sm border-0" style="background: #ffffff;">
         <div class="card-body p-4">
           {% if products %}
           <!-- DataTables CSS -->
           <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
           <style>
+            /* Action buttons are now loaded from the global CSS file */
+            
             /* Custom DataTables styling */
-            .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+            .dataTables_wrapper .dataTables_length,
+            .dataTables_wrapper .dataTables_filter,
+            .dataTables_wrapper .dataTables_info,
+            .dataTables_wrapper .dataTables_processing,
+            .dataTables_wrapper .dataTables_paginate {
               color: #39739d;
               margin-bottom: 15px;
             }
-            .dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
               background: #e7f1fa;
               border-color: #7cb9e8;
               color: #39739d !important;
               border-radius: 50px;
             }
+
             .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
               background: #e7f1fa;
               border-color: #7cb9e8;
               color: #39739d !important;
               border-radius: 50px;
             }
+
             .dataTables_wrapper .dataTables_paginate .paginate_button {
               color: #39739d !important;
               border-radius: 50px;
               margin: 0 3px;
             }
+
             .dataTables_wrapper .dataTables_length select {
               border-color: #e0e6ed;
               background-color: #f8f9fa;
@@ -230,27 +246,46 @@
               border-radius: 8px;
               padding: 5px 10px;
             }
+
             .dataTables_wrapper .dataTables_filter input {
               border-color: #e0e6ed;
               background-color: #f8f9fa;
               color: #39739d;
-              border-radius: 50px;
-              padding: 8px 15px;
-              width: 250px;
+              border-radius: 20px;
+              padding: 5px 12px;
+              width: 180px;
+              font-size: 0.9rem;
+              box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+              transition: all 0.2s ease;
             }
-            table.dataTable thead th, table.dataTable thead td {
+            
+            .dataTables_wrapper .dataTables_filter input:focus {
+              box-shadow: 0 2px 8px rgba(124, 185, 232, 0.25);
+              border-color: #7cb9e8;
+              outline: none;
+            }
+            
+            .dataTables_wrapper .dataTables_filter {
+              margin-bottom: 15px;
+            }
+
+            table.dataTable thead th,
+            table.dataTable thead td {
               border-bottom: 1px solid #e0e6ed;
               padding: 12px 10px;
               font-weight: 600;
               color: #39739d;
               background-color: #FAFDFF;
             }
+
             table.dataTable.no-footer {
               border-bottom: 1px solid #e0e6ed;
             }
+
             table.dataTable tbody tr:hover {
               background-color: rgba(124, 185, 232, 0.1);
             }
+
             .badge {
               padding: 6px 10px;
               font-weight: 500;
@@ -277,48 +312,44 @@
                 <td>{{ product.category.name|default:'-' }}</td>
                 <td>
                   {% if product.quantity > 0 %}
-                    <span class="status-badge active"><i class="fas fa-circle"></i> {{ product.quantity }}</span>
+                  <span class="status-badge active"><i class="fas fa-circle"></i> {{ product.quantity }}</span>
                   {% else %}
-                    <span class="status-badge offline"><i class="fas fa-circle"></i> {{ product.quantity }}</span>
+                  <span class="status-badge offline"><i class="fas fa-circle"></i> {{ product.quantity }}</span>
                   {% endif %}
                 </td>
                 <td>{{ product.unit_cost|currency:currency_symbol }}</td>
                 <td>{{ product.selling_price|currency:currency_symbol }}</td>
-                <td>
-                  <div class="actions-menu">
-                    <button class="actions-button" onclick="toggleActionsMenu(this)">
-                      <i class="fas fa-ellipsis-v"></i>
-                    </button>
-                    <div class="actions-dropdown">
-                      <a href="{% url 'product-detail' product.id %}" class="action-item">
-                        <i class="fas fa-eye"></i> View
-                      </a>
-                      <a href="{% url 'product-update' product.id %}" class="action-item">
-                        <i class="fas fa-edit"></i> Edit
-                      </a>
-                      {% if product.is_archived %}
-                      <a href="{% url 'product-restore' product.id %}" class="action-item">
-                        <i class="fas fa-undo-alt"></i> Restore
-                      </a>
-                      {% else %}
-                      <a href="{% url 'product-delete' product.id %}" class="action-item delete">
-                        <i class="fas fa-archive"></i> Archive
-                      </a>
-                      {% endif %}
-                    </div>
+                <td class="text-center">
+                  <div class="action-buttons-container">
+                    <a href="{% url 'product-detail' product.id %}" class="action-btn action-view" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{% url 'product-update' product.id %}" class="action-btn action-edit" title="Edit">
+                      <i class="fas fa-pencil-alt"></i>
+                    </a>
+                    {% if product.is_archived %}
+                    <a href="{% url 'product-restore' product.id %}" class="action-btn action-restore" title="Restore">
+                      <i class="fas fa-undo-alt"></i>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'product-delete' product.id %}" class="action-btn action-archive" title="Archive">
+                      <i class="fas fa-archive"></i>
+                    </a>
+                    {% endif %}
                   </div>
                 </td>
               </tr>
               {% empty %}
               <div class="col-12">
-                <div class="card shadow-sm border-0" style="border-radius: 1.2rem; background: #fafdff;">
-                    <div class="card-body text-center py-5">
-                        <i class="fas fa-tags mb-3" style="font-size: 3rem; color: #7cb9e8;"></i>
-                        <h4 class="mb-3">No Products Found</h4>
-                        <p class="text-muted">You haven't created any products yet. Click the "Add Product" button above to create your first product.</p>
-                    </div>
+                <div class="card shadow-sm border-0" style="background: #fff;">
+                  <div class="card-body text-center py-5">
+                    <i class="fas fa-tags mb-3" style="font-size: 3rem; color: #7cb9e8;"></i>
+                    <h4 class="mb-3">No Products Found</h4>
+                    <p class="text-muted">You haven't created any products yet. Click the "Add Product" button above to
+                      create your first product.</p>
+                  </div>
                 </div>
-            </div>
+              </div>
               {% endfor %}
             </tbody>
           </table>
@@ -326,7 +357,34 @@
           <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
           <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
           <script>
+            // jQuery for action menu dropdowns
             $(document).ready(function() {
+              // Toggle dropdown when clicking the button
+              $(document).on('click', '.action-menu-button', function(e) {
+                e.stopPropagation();
+                
+                // Close all other open dropdowns
+                $('.action-menu-dropdown').not($(this).siblings('.action-menu-dropdown')).hide();
+                
+                // Toggle this dropdown
+                $(this).siblings('.action-menu-dropdown').toggle();
+              });
+              
+              // Close all dropdowns when clicking elsewhere
+              $(document).on('click', function(e) {
+                if (!$(e.target).closest('.action-menu-container').length) {
+                  $('.action-menu-dropdown').hide();
+                }
+              });
+              
+              // Prevent dropdown from closing when clicking inside it
+              $(document).on('click', '.action-menu-dropdown', function(e) {
+                e.stopPropagation();
+              });
+            });
+            
+            $(document).ready(function () {
+              // Initialize DataTable
               $('#productsss-table').DataTable({
                 responsive: true,
                 pageLength: 5,
@@ -346,13 +404,14 @@
           {% else %}
           <div class="col-12">
             <div class="card shadow-sm border-0" style="border-radius: 1.2rem; background: #fafdff;">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-tags mb-3" style="font-size: 3rem; color: #7cb9e8;"></i>
-                    <h4 class="mb-3">No Products Found</h4>
-                    <p class="text-muted">You haven't created any products yet. Click the "Add Product" button above to create your first product.</p>
-                </div>
+              <div class="card-body text-center py-5">
+                <i class="fas fa-tags mb-3" style="font-size: 3rem; color: #7cb9e8;"></i>
+                <h4 class="mb-3">No Products Found</h4>
+                <p class="text-muted">You haven't created any products yet. Click the "Add Product" button above to
+                  create your first product.</p>
+              </div>
             </div>
-        </div>
+          </div>
           {% endif %}
         </div>
       </div>

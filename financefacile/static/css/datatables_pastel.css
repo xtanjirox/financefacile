@@ -1,23 +1,23 @@
 /* Pastel DataTables for product/invoice tables */
 table.dataTable thead th {
-    background: #e3f2fd;
+    background: #eae9ff;
     color: #39739d;
     border-bottom: 2px solid #e0e6ed;
 }
 table.dataTable tbody tr {
-    background: #fafdff;
+    background: #f9f8ff;
     transition: background 0.2s;
 }
 table.dataTable tbody tr:hover {
     background: #f0f7fa;
 }
 .dataTables_wrapper .dataTables_filter input {
-    background: #e3f2fd;
+    background: #eae9ff;
     color: #39739d;
     border: 1px solid #dbeafe;
 }
 .dataTables_wrapper .dataTables_paginate .paginate_button {
-    background: #e3f2fd;
+    background: #eae9ff;
     color: #39739d !important;
     border: 1px solid #dbeafe;
     border-radius: 0.5rem;

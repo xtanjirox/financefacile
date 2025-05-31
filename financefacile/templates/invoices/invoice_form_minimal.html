@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block sidebar %}
+{% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+{% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+{% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+    <div class="card flex-fill shadow-lg" style="border-radius: 0.5rem;">
+      <div class="card-header d-flex align-items-center"
+        style="background: linear-gradient(90deg,#eae9ff 0%,#f9f8ff 100%); border-bottom: 1px solid #e0e6ed; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+        <h3 class="card-title mb-0 text-dark d-flex align-items-center">
+          <i class="fas fa-file-invoice me-2" style="color: #7cb9e8; font-size: 2rem;"></i>Invoice Form
+        </h3>
+      </div>
+      <div class="card-body p-4">
+        <p>This is a temporary placeholder for the invoice form.</p>
+        <p>The original template has syntax errors that need to be fixed.</p>
+        <a href="{% url 'invoice-list' %}" class="btn btn-primary">Back to Invoice List</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block script_content %}
+<script>
+  console.log("Minimal invoice form template loaded");
+</script>
+{% endblock script_content %}

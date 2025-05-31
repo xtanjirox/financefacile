@@ -1,0 +1,102 @@
+/* Modern Action Buttons with Light Colors - FinanceFacile
+   Consistent action buttons for tables across the application
+*/
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  border: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.action-view {
+  background-color: #e0f2fe;
+  color: #0284c7;
+}
+
+.action-view:hover {
+  background-color: #bae6fd;
+}
+
+.action-edit {
+  background-color: #f3e8ff;
+  color: #7e22ce;
+}
+
+.action-edit:hover {
+  background-color: #e9d5ff;
+}
+
+.action-restore {
+  background-color: #dcfce7;
+  color: #16a34a;
+}
+
+.action-restore:hover {
+  background-color: #bbf7d0;
+}
+
+.action-archive {
+  background-color: #ffedd5;
+  color: #ea580c;
+}
+
+.action-archive:hover {
+  background-color: #fed7aa;
+}
+
+.action-delete {
+  background-color: #fee2e2;
+  color: #dc2626;
+}
+
+.action-delete:hover {
+  background-color: #fecaca;
+}
+
+.action-download {
+  background-color: #e0e7ff;
+  color: #4f46e5;
+}
+
+.action-download:hover {
+  background-color: #c7d2fe;
+}
+
+.action-print {
+  background-color: #f1f5f9;
+  color: #475569;
+}
+
+.action-print:hover {
+  background-color: #e2e8f0;
+}
+
+/* Container for action buttons */
+.action-buttons-container {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .action-btn {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .action-buttons-container {
+    gap: 4px;
+  }
+}

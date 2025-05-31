@@ -34,6 +34,7 @@ class ProductCategoryListView(BaseListView):
     create_url = reverse_lazy('category-create')
     segment = 'categories'
     detail = True
+    template_name = 'products/product_category_list_modern.html'
     
     def get_queryset(self):
         logger.info("\n=== Starting get_queryset for user: %s ===", self.request.user)
@@ -61,7 +62,7 @@ class ProductCategoryListView(BaseListView):
         # Log all categories in the database with their company info
         try:
             all_categories = list(queryset.values('id', 'name', 'company__id', 'company__name'))
-            logger.info(f"\n=== All categories in database ===")
+            logger.info("\n=== All categories in database ===")
             for cat in all_categories:
                 logger.info(f"- {cat['name']} (ID: {cat['id']}) - Company: {cat['company__name']} (ID: {cat['company__id']})")
         except Exception as e:
@@ -128,6 +129,38 @@ class ProductCategoryListView(BaseListView):
                 logger.info(f"Row {i}: {row}")
         else:
             logger.warning("Table has no rows attribute")
+        
+        # Add dashboard card data
+        total_categories = 0
+        total_products_in_categories = 0
+        inventory_value = 0
+        
+        # If user has a company profile, count products and categories
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            company = self.request.user.profile.company
+            
+            # Count total categories
+            total_categories = models.ProductCategory.objects.filter(company=company).count()
+            
+            # Count products in categories and calculate inventory value
+            from django.db.models import Sum, F
+            products_query = models.Product.objects.filter(company=company, category__isnull=False)
+            
+            total_products_in_categories = products_query.count()
+            
+            # Calculate inventory value (quantity * selling_price)
+            inventory_value_result = products_query.aggregate(
+                total_value=Sum(F('quantity') * F('selling_price'), default=0)
+            )
+            inventory_value = inventory_value_result['total_value'] or 0
+            
+            # Format inventory value as currency
+            from django.contrib.humanize.templatetags.humanize import intcomma
+            inventory_value = f"${intcomma(round(inventory_value, 2))}"
+        
+        context['total_categories'] = total_categories
+        context['total_products_in_categories'] = total_products_in_categories
+        context['inventory_value'] = inventory_value
             
         logger.info(f"Context keys: {context.keys()}")
         return context
@@ -139,7 +172,7 @@ class ProductCategoryListView(BaseListView):
 
 class ProductCategoryCreateView(CreateView, FormViewMixin):
     model = models.ProductCategory
-    template_name = 'generic/create.html'
+    template_name = 'products/product_category_form_modern.html'
     fields = ['name', 'parent']
     segment = 'categories'
     success_url = reverse_lazy('category-list')
@@ -164,7 +197,7 @@ class ProductCategoryCreateView(CreateView, FormViewMixin):
 
 class ProductCategoryUpdateView(UpdateView, FormViewMixin, CompanyFilterMixin):
     model = models.ProductCategory
-    template_name = 'generic/detail.html'
+    template_name = 'products/product_category_form_modern.html'
     fields = ['name', 'parent']
     segment = 'categories'
     success_url = reverse_lazy('category-list')
@@ -282,6 +315,8 @@ class ProductListView(ProductPermissionMixin, CompanyFilterMixin, ListView):
         # Add create URL and segment for template
         context['create_url'] = self.create_url
         context['segment'] = self.segment
+        context['page_title'] = "Products"
+        context['page_title_badge'] = "Products"
         
         # Add currency symbol to context
         user = self.request.user
@@ -366,7 +401,7 @@ class ProductDataJsonView(BaseViewMixin, View):
 class ProductCreateView(ProductPermissionMixin, CreateView):
     model = models.Product
     form_class = core.forms.ProductForm
-    template_name = 'generic/create.html'
+    template_name = 'products/product_form.html'
     segment = 'products'
     success_url = reverse_lazy('product-list')
     
@@ -403,11 +438,10 @@ class ProductCreateView(ProductPermissionMixin, CreateView):
         
         return super().form_valid(form)
 
-
 class ProductUpdateView(ProductPermissionMixin, UpdateView):
     model = models.Product
     form_class = core.forms.ProductForm
-    template_name = 'generic/detail.html'
+    template_name = 'products/product_form.html'
     segment = 'products'
     success_url = reverse_lazy('product-list')
     
@@ -461,17 +495,13 @@ class ProductDeleteView(ProductPermissionMixin, View):
                     messages.error(request, "You don't have permission to archive this product.")
                     return redirect('product-list')
 
-        # Check if product is used in any invoices
-        invoice_items_count = models.InvoiceItem.objects.filter(product=self.object).count()
+        # Check if product is used in any invoices (for future reference)
+        # We're just checking if the product is used in invoices but not taking any action based on it yet
+        models.InvoiceItem.objects.filter(product=self.object).count()
 
         # Archive the product instead of deleting it
         self.object.is_archived = True
         self.object.save()
-
-        if invoice_items_count > 0:
-            messages.success(request, f"Product '{self.object.name}' has been archived. It appears in {invoice_items_count} invoice(s) and will remain available for historical reference.")
-        else:
-            messages.success(request, f"Product '{self.object.name}' has been archived.")
 
         return redirect(self.success_url)
 
@@ -505,8 +535,6 @@ class ProductRestoreView(BaseViewMixin, View):
         # Restore the product by setting is_archived to False
         self.object.is_archived = False
         self.object.save()
-        
-        messages.success(request, f"Product '{self.object.name}' has been restored and is now active.")
         
         return redirect(self.success_url)
 
@@ -553,7 +581,7 @@ class ProductDetailView(ProductPermissionMixin, DetailView):
 class InvoiceCreateView(InvoicePermissionMixin, CreateView, FormViewMixin):
     model = models.Invoice
     form_class = core.forms.InvoiceForm
-    template_name = 'invoices/invoice_form.html'
+    template_name = 'invoices/invoice_form_new.html'
     success_url = None
     
     def get_initial(self):
@@ -589,16 +617,18 @@ class InvoiceCreateView(InvoicePermissionMixin, CreateView, FormViewMixin):
             context['formset'] = core.forms.InvoiceItemFormSet(self.request.POST, company=company)
         else:
             context['formset'] = core.forms.InvoiceItemFormSet(company=company)
-            
+        context['page_title'] = 'Create Invoice'
+        context['page_title_badge'] = 'Create Invoice'
+        
         self.add_products_to_context(context)
         return context
 
     def add_products_to_context(self, context):
-        # Add products to context for the select2 widget, filtered by company
+        # Add products to context for the select2 widget, filtered by company and excluding archived products
         if self.request.user.is_superuser or self.request.user.is_staff:
-            products = models.Product.objects.all()
+            products = models.Product.objects.filter(is_archived=False)
         elif hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-            products = models.Product.objects.filter(company=self.request.user.profile.company)
+            products = models.Product.objects.filter(company=self.request.user.profile.company, is_archived=False)
         else:
             products = models.Product.objects.none()
             
@@ -718,18 +748,31 @@ class InvoiceCreateView(InvoicePermissionMixin, CreateView, FormViewMixin):
             for item in invoice_items:
                 try:
                     product = item.product
-                    if product.quantity < item.quantity:
+                    requested_quantity = int(item.quantity)  # Ensure quantity is an integer
+                    
+                    logger.info(f"Processing inventory update for product {product.name} (ID: {product.id}). Requested: {requested_quantity}, Current stock: {product.quantity}")
+                    
+                    if product.quantity < requested_quantity:
                         # Not enough stock
-                        logger.error(f"Not enough stock for product {product.name} (ID: {product.id}). Requested: {item.quantity}, Available: {product.quantity}")
-                        form.add_error(None, f"Not enough stock for product {product.name}. Requested: {item.quantity}, Available: {product.quantity}")
+                        logger.error(f"Not enough stock for product {product.name} (ID: {product.id}). Requested: {requested_quantity}, Available: {product.quantity}")
+                        form.add_error(None, f"Not enough stock for product {product.name}. Requested: {requested_quantity}, Available: {product.quantity}")
                         # Delete the invoice and return form_invalid
                         self.object.delete()
                         return self.form_invalid(form)
                     
-                    # Update product quantity
-                    product.quantity -= item.quantity
+                    # Update product quantity - explicitly deduct the requested quantity
+                    original_quantity = product.quantity
+                    product.quantity = original_quantity - requested_quantity
                     product.save()
-                    logger.info(f"Updated inventory for product {product.name} (ID: {product.id}). New quantity: {product.quantity}")
+                    logger.info(f"Updated inventory for product {product.name} (ID: {product.id}). Original: {original_quantity}, Deducted: {requested_quantity}, New quantity: {product.quantity}")
+                    
+                    # Double-check the update was correct
+                    if product.quantity != original_quantity - requested_quantity:
+                        logger.error(f"Inventory update error: Expected {original_quantity - requested_quantity} but got {product.quantity}")
+                        form.add_error(None, f"Error updating inventory for product {product.name}: Quantity mismatch")
+                        # Try to fix it
+                        product.quantity = original_quantity - requested_quantity
+                        product.save()
                 except Exception as e:
                     logger.error(f"Error updating product inventory: {e}")
                     # Add error but continue with other products
@@ -806,6 +849,8 @@ class InvoiceListView(InvoicePermissionMixin, ListView):
         # Initialize filter form
         filter_form = DateRangeFilterFormNew(self.request.GET or None)
         context['filter_form'] = filter_form
+        context['page_title'] = 'Invoices'
+        context['page_title_badge'] = 'Invoices'
         
         # Get filter parameters
         start_date = self.request.GET.get('start_date')
@@ -908,11 +953,10 @@ class InvoiceListView(InvoicePermissionMixin, ListView):
         })
         return context
 
-
 class InvoiceUpdateView(InvoicePermissionMixin, UpdateView, FormViewMixin):
     model = models.Invoice
     form_class = core.forms.InvoiceForm
-    template_name = 'invoices/invoice_form.html'
+    template_name = 'invoices/invoice_form_modern.html'
     success_url = reverse_lazy('invoice-list')
     
     def get_initial(self):
@@ -965,6 +1009,8 @@ class InvoiceUpdateView(InvoicePermissionMixin, UpdateView, FormViewMixin):
         context['product_json'] = [
             {'id': p.id, 'text': p.name, 'price': float(p.selling_price)} for p in products
         ]
+        context['page_title'] = 'Update Invoice'
+        context['page_title_badge'] = 'Update Invoice'
         
         return context
         

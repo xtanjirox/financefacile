@@ -1,5 +1,6 @@
 from django.contrib import admin
 from . import models
+from .notifications import Notification
 
 # Base class for all company-specific model admins
 class CompanyModelAdmin(admin.ModelAdmin):
@@ -104,3 +105,22 @@ class CalendarEventAdmin(CompanyModelAdmin):
     list_filter = ('theme', 'all_day', 'company')
     search_fields = ('title', 'description')
     date_hierarchy = 'start_date'
+
+
+@admin.register(Notification)
+class NotificationAdmin(admin.ModelAdmin):
+    """Admin interface for Notification"""
+    list_display = ('recipient', 'notification_type', 'title', 'created_at', 'is_read')
+    list_filter = ('notification_type', 'is_read', 'created_at')
+    search_fields = ('title', 'message')
+    date_hierarchy = 'created_at'
+    readonly_fields = ('content_type', 'object_id', 'content_object')
+    
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        if hasattr(request.user, 'profile') and request.user.profile.company:
+            # Filter notifications for users in the same company
+            return qs.filter(recipient__profile__company=request.user.profile.company)
+        return qs.none()

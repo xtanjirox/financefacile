@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% load currency_tags %}
+{% load static %}
 {% block sidebar %}
   {% include 'includes/sidebar.html' %}
 {% endblock sidebar %}
@@ -14,6 +15,7 @@
 {% block extra_css %}
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="{% static 'assets/css/modern-action-buttons.css' %}">
 <style>
   /* Modern Dashboard Card Styles */
   .dashboard-card {
@@ -184,17 +186,17 @@
 {% endblock %}
 
 {% block content %}
-<div class="container-fluid p-0">
+<div class="container-fluid p-0" style="background: #F4F7FB;">
   <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
     <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-money-bill-wave me-2" style="color: #7cb9e8;"></i>Expenses</h2>
     <div class="d-flex gap-2">
-      <a href="{% url 'expense-category-create' %}" class="btn btn-outline-primary shadow-sm rounded-pill px-4" style="border-color: #7cb9e8; color: #39739d; font-weight: 600;">
+      <a href="{% url 'expense-category-create' %}" class="btn btn-outline-primary shadow-sm px-4" style="border-color: #7cb9e8; color: #39739d; font-weight: 600;">
         <i class="fa fa-tags"></i> Add Category
       </a>
-      <a href="{% url 'expense-create' %}" class="btn btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+      <a href="{% url 'expense-create' %}" class="btn btn-primary shadow-sm px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
         <i class="fa fa-plus"></i> Add Expense
       </a>
-      <a href="{% url 'expenses-pdf' %}{% if is_filtered %}?{{ request.GET.urlencode }}{% endif %}" class="btn btn-success shadow-sm rounded-pill px-4" style="background: #81c784; border: none; font-weight: 600;">
+      <a href="{% url 'expenses-pdf' %}{% if is_filtered %}?{{ request.GET.urlencode }}{% endif %}" class="btn shadow-sm px-4" style="background: #E7F5E9; border: none; font-weight: 600;color: #388E3C;">
         <i class="fas fa-file-pdf"></i> Export PDF
       </a>
     </div>
@@ -250,28 +252,14 @@
         </div>
       </div>
     </div>
-    
-    <!-- Expenses by Category Chart -->
-    <div class="col-md-8">
-      <div class="card shadow-sm border-0" style="border-radius: 16px; overflow: hidden;">
-        <div class="card-header py-3" style="background: #f8f9fa; border-bottom: 1px solid #e0e6ed;">
-          <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
-            <i class="fas fa-chart-pie me-2" style="color: #EF5350;"></i>Expenses by Category
-          </h5>
-        </div>
-        <div class="card-body p-3">
-          <div id="chart-expenses-category" style="height: 300px;"></div>
-        </div>
-      </div>
-    </div>
   </div>
 
     <!-- Date Range Filter -->
     <div class="row mb-4">
       <div class="col-12">
         <div class="card shadow-sm border-0" style="border-radius: 1rem;">
-          <div class="card-header" style="background: #e3f2fd; border-top-left-radius: 1rem; border-top-right-radius: 1rem;">
-            <h5 class="mb-0"><i class="fas fa-filter me-2"></i>Filter Expenses</h5>
+          <div class="card-header" style="background: #ffffff;">
+            <h5 class="mb-0" style="color: #39739D;"><i class="fas fa-filter me-2"></i>Filter Expenses</h5>
           </div>
           <div class="card-body">
             {% crispy filter_form %}
@@ -282,12 +270,7 @@
 
     <div class="row mt-4">
       <div class="col-12">
-        <div class="card shadow-sm border-0" style="border-radius: 14px; background: #fafdff;">
-          <div class="card-header py-3" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
-            <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
-              <i class="fas fa-file-invoice me-2" style="color: #7cb9e8;"></i>Expenses
-            </h5>
-          </div>
+        <div class="shadow-sm border-0" style="background: #ffffff;">
           <div class="card-body p-4">
             {% if expenses %}
             <!-- DataTables CSS -->
@@ -326,9 +309,20 @@
                 border-color: #e0e6ed;
                 background-color: #f8f9fa;
                 color: #39739d;
-                border-radius: 50px;
-                padding: 8px 15px;
-                width: 250px;
+                border-radius: 20px;
+                padding: 5px 12px;
+                width: 180px;
+                font-size: 0.9rem;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+                transition: all 0.2s ease;
+              }
+              .dataTables_wrapper .dataTables_filter input:focus {
+                box-shadow: 0 2px 8px rgba(124, 185, 232, 0.25);
+                border-color: #7cb9e8;
+                outline: none;
+              }
+              .dataTables_wrapper .dataTables_filter {
+                margin-bottom: 15px;
               }
               table.dataTable thead th, table.dataTable thead td tr {
                 border-bottom: 1px solid #e0e6ed;
@@ -349,8 +343,8 @@
                 border-radius: 50px;
               }
             </style>
-            <table id="expenses-table" class="modern-table">
-              <thead style="background: #e3f2fd; color: #1976d2; font-weight: 600;">
+            <table id="expensesss-table" class="modern-table">
+              <thead>
                 <tr>
                   <th>Date</th>
                   <th>Category</th>
@@ -367,31 +361,26 @@
                   <td>{{ expense.category }}</td>
                   <td>{{ expense.amount|currency:currency_symbol }}</td>
                   <td>{{ expense.description|default:'—' }}</td>
-                  <td>
+                  <td class="text-center">
                     {% if expense.attachment %}
-                      <a href="{{ expense.attachment.url }}" target="_blank" class="btn btn-sm shadow-sm" style="background: #e1f5fe; color: #0288d1; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="View Attachment">
+                      <a href="{{ expense.attachment.url }}" target="_blank" class="action-btn action-download" title="View Attachment">
                         <i class="fas fa-paperclip"></i>
                       </a>
                     {% else %}
                       <span class="text-muted">—</span>
                     {% endif %}
                   </td>
-                  <td>
-                    <div class="actions-menu">
-                      <button class="actions-button" onclick="toggleActionsMenu(this)">
-                        <i class="fas fa-ellipsis-v"></i>
-                      </button>
-                      <div class="actions-dropdown">
-                        <a href="{% url 'expense-update' expense.pk %}" class="action-item">
-                          <i class="fas fa-edit"></i> Edit
-                        </a>
-                        <a href="{% url 'expense-pdf' expense.pk %}" class="action-item">
-                          <i class="fas fa-file-pdf"></i> Export PDF
-                        </a>
-                        <a href="{% url 'expense-delete' expense.pk %}" class="action-item delete">
-                          <i class="fas fa-trash"></i> Delete
-                        </a>
-                      </div>
+                  <td class="text-center">
+                    <div class="action-buttons-container">
+                      <a href="{% url 'expense-update' expense.pk %}" class="action-btn action-edit" title="Edit">
+                        <i class="fas fa-pencil-alt"></i>
+                      </a>
+                      <a href="{% url 'expense-pdf' expense.pk %}" class="action-btn action-download" title="Export PDF">
+                        <i class="fas fa-file-pdf"></i>
+                      </a>
+                      <a href="{% url 'expense-delete' expense.pk %}" class="action-btn action-delete" title="Delete">
+                        <i class="fas fa-trash-alt"></i>
+                      </a>
                     </div>
                   </td>
                 </tr>
@@ -405,7 +394,7 @@
             <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
             <script>
               $(document).ready(function() {
-                $('#expenses-table').DataTable({
+                $('#expensesss-table').DataTable({
                   responsive: true,
                   pageLength: 5,
                   lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],
@@ -423,14 +412,14 @@
             </script>
             {% else %}
             <div class="col-12">
-              <div class="card shadow-sm border-0" style="border-radius: 1.2rem; background: #fafdff;">
-                  <div class="card-body text-center py-5">
-                      <i class="fas fa-tags mb-3" style="font-size: 3rem; color: #7cb9e8;"></i>
-                      <h4 class="mb-3">No Expenses Found</h4>
-                      <p class="text-muted">You haven't created any expenses yet. Click the "Add Expense" button above to create your first expense.</p>
-                  </div>
+              <div class="shadow-sm border-0" style="background: #fff;">
+                <div class="card-body text-center py-5">
+                  <i class="fas fa-receipt mb-3" style="font-size: 3rem; color: #7cb9e8;"></i>
+                  <h4 class="mb-3">No Expenses Found</h4>
+                  <p class="text-muted">You haven't created any expenses yet. Click the "Add Expense" button above to create your first expense.</p>
+                </div>
               </div>
-          </div>
+            </div>
             {% endif %}
           </div>
         </div>

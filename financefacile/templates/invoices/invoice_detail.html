@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% load currency_tags %}
 {% block sidebar %}
-  {% include 'includes/sidebar.html' %}
+{% include 'includes/sidebar.html' %}
 {% endblock sidebar %}
 {% block topbar %}
-  {% include 'includes/topbar.html' %}
+{% include 'includes/topbar.html' %}
 {% endblock topbar %}
 {% block footer %}
-  {% include 'includes/footer.html' %}
+{% include 'includes/footer.html' %}
 {% endblock footer %}
 {% block content %}
 <div class="container-fluid p-0">
@@ -18,7 +18,9 @@
           <h5 class="card-title mb-0">Invoice INV-{{ invoice.id }}</h5>
           <small class="text-muted">Date: {{ invoice.created_at|date:'Y-m-d H:i' }}</small>
         </div>
-        <a href="{% url 'invoice-pdf' invoice.id %}" class="btn shadow-sm" style="background: #e8f5e9; color: #388e3c; border-radius: 7px; font-weight: 500; border: none;" data-bs-toggle="tooltip" title="Export PDF">
+        <a href="{% url 'invoice-pdf' invoice.id %}" class="btn shadow-sm"
+          style="background: #e8f5e9; color: #388e3c; border-radius: 7px; font-weight: 500; border: none;"
+          data-bs-toggle="tooltip" title="Export PDF">
           <i class="fas fa-file-pdf"></i> Download PDF
         </a>
       </div>
@@ -26,7 +28,7 @@
         <!-- Company Information Card -->
         {% if invoice.company %}
         <div class="card mb-4 shadow-sm" style="border-radius: 0.5rem; overflow: hidden;">
-          <div class="card-header" style="background: #e3f2fd; color: #39739d;">
+          <div class="card-header" style="background: #F4F3FD; color: #635BFF;">
             <h6 class="mb-0">Company Information</h6>
           </div>
           <div class="card-body">
@@ -47,7 +49,7 @@
           </div>
         </div>
         {% endif %}
-        
+
         <h6>Invoice Items</h6>
         <table class="table table-bordered">
           <thead>
@@ -69,9 +71,9 @@
             {% endfor %}
           </tbody>
         </table>
-        
+
         <div class="card mt-3 shadow-sm" style="border-radius: 0.5rem; overflow: hidden;">
-          <div class="card-header" style="background: #e3f2fd; color: #39739d;">
+          <div class="card-header" style="background: #F4F3FD; color: #635BFF;">
             <h6 class="mb-0">Invoice Summary</h6>
           </div>
           <div class="card-body">

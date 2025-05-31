@@ -37,21 +37,11 @@
     <script src="{% static 'assets/js/finance_facile.js' %}"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.css" />
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="{% static 'assets/css/base/base_html.css' %}" rel="stylesheet">
     {% block extra_css %}
-    
+
     {% endblock %}
-    <style>
-        /* Only fix the search dropdown positioning */
-        #live-search-dropdown {
-            position: absolute;
-            left: 0;
-            top: 100%;
-            width: 100%;
-            max-width: 400px;
-            z-index: 1051;
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
-        }
-    </style>
+
 </head>
 
 <body>
@@ -76,22 +66,12 @@
     <script src="{% static 'assets/js/sidebar-toggle.js' %}"></script>
     <script src="{% static 'assets/js/dropdown-fix.js' %}"></script>
     <script src="{% static 'assets/js/actions-menu.js' %}"></script>
+    <script src="{% static 'js/notifications.js' %}?v={% now 'U' %}"></script>
     {% block script_content %}
     {% endblock script_content %}
     <script src="https://kit.fontawesome.com/304487a008.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Datatables Orders
-            $("#datatables-orders").DataTable({
-                responsive: true,
-                aoColumnDefs: [{
-                    bSortable: false,
-                    aTargets: [-1]
-                }]
-            });
-        });
-    </script>
+    <script src="{% static 'assets/js/base/base_datatable.js' %}"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(document).ready(function () {

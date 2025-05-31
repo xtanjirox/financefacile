@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 
 {% block sidebar %}
-  {% include 'includes/sidebar.html' %}
+{% include 'includes/sidebar.html' %}
 {% endblock sidebar %}
 
 {% block topbar %}
-  {% include 'includes/topbar.html' %}
+{% include 'includes/topbar.html' %}
 {% endblock topbar %}
 
 {% block footer %}
-  {% include 'includes/footer.html' %}
+{% include 'includes/footer.html' %}
 {% endblock footer %}
 
 {% block content %}
@@ -29,7 +29,8 @@
     <div class="row g-4">
         <div class="col-lg-12">
             <div class="card shadow-sm border-0" style="border-radius: 14px;">
-                <div class="card-header d-flex align-items-center" style="background: #ffebee; border-bottom: 1px solid #ffcdd2;">
+                <div class="card-header d-flex align-items-center"
+                    style="background: #ffebee; border-bottom: 1px solid #ffcdd2;">
                     <h5 class="card-title mb-0 fw-bold" style="color: #d32f2f;">
                         <i class="fas fa-archive me-2" style="color: #f44336;"></i>
                         Archive Product: {{ object.name }}
@@ -38,9 +39,11 @@
                 <div class="card-body p-4">
                     <div class="alert alert-warning">
                         <i class="fas fa-exclamation-circle me-2"></i>
-                        <strong>Note:</strong> Archiving a product will hide it from active product lists, but it will remain available for historical invoices. This is safer than deletion and preserves your invoice history.
+                        <strong>Note:</strong> Archiving a product will hide it from active product lists, but it will
+                        remain available for historical invoices. This is safer than deletion and preserves your invoice
+                        history.
                     </div>
-                    
+
                     <div class="mb-4">
                         <h6 class="fw-bold">Product Details:</h6>
                         <div class="p-3 bg-light rounded">
@@ -52,14 +55,15 @@
                             <p><strong>Description:</strong> {{ object.description|default:"—" }}</p>
                         </div>
                     </div>
-                    
+
                     {% if invoice_items_count > 0 %}
                     <div class="alert alert-info">
                         <i class="fas fa-info-circle me-2"></i>
-                        <strong>Information:</strong> This product appears in {{ invoice_items_count }} invoice(s). Archiving will preserve these historical records.
+                        <strong>Information:</strong> This product appears in {{ invoice_items_count }} invoice(s).
+                        Archiving will preserve these historical records.
                     </div>
                     {% endif %}
-                    
+
                     <form method="post">
                         {% csrf_token %}
                         <div class="d-flex justify-content-between">

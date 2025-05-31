@@ -1,7 +1,6 @@
-version: '3.3'
+version: '3.8'
 
 services:
-
   postgres_db:
     image: postgres:15
     restart: always
@@ -11,5 +10,11 @@ services:
       POSTGRES_PASSWORD: financefacile
       POSTGRES_DB: financefacile
       POSTGRES_USER: financefacile
+      PGDATA: /var/lib/postgresql/data/pgdata
     volumes:
       - ./data/db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U financefacile -d financefacile"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

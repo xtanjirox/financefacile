@@ -8,3 +8,4 @@ class CoreConfig(AppConfig):
     def ready(self):
         import core.forms  # Ensures django-select2 widgets are registered
         import core.signals  # Import signals to register them
+        import core.notifications  # Import notifications model

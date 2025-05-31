@@ -2,11 +2,11 @@
 :root {
   --sidebar-bg: #ffffff;
   --sidebar-text: #64748b;
-  --sidebar-active-bg: #6c5dd3;
+  --sidebar-active-bg: #635BFF;
   --sidebar-active-text: #ffffff;
   --sidebar-hover-bg: #f8fafc;
-  --sidebar-brand-color: #6c5dd3;
-  --sidebar-icon-color: #6c5dd3;
+  --sidebar-brand-color: #635BFF;
+  --sidebar-icon-color: #635BFF;
   --sidebar-header-color: #94a3b8;
   --sidebar-shadow: none;
   --sidebar-width: 240px;
@@ -16,7 +16,7 @@
   --sidebar-item-padding: 10px 12px;
   --sidebar-transition: all 0.2s ease;
   --pro-badge-bg: #e0e7ff;
-  --pro-badge-color: #6c5dd3;
+  --pro-badge-color: #635BFF;
 }
 
 /* Sidebar Container */

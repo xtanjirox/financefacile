@@ -47,7 +47,7 @@ class ProfileUpdateView(LoginRequiredMixin, UpdateView):
         return kwargs
     
     def form_valid(self, form):
-        messages.success(self.request, 'Your profile has been updated successfully!')
+        # No success message
         return super().form_valid(form)
         
     def post(self, request, *args, **kwargs):
@@ -410,16 +410,26 @@ class RegistrationView(FormView):
 class CompanyListView(LoginRequiredMixin, IsAdminMixin, ListView):
     """View to list all companies (admin only)"""
     model = Company
-    template_name = 'accounts/company_list.html'
+    template_name = 'accounts/company_list_modern.html'
     context_object_name = 'companies'
     ordering = ['name']
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Add dashboard card data
+        context['total_companies'] = Company.objects.count()
+        context['total_users'] = UserProfile.objects.filter(company__isnull=False).count()
+        context['active_companies'] = Company.objects.filter(userprofile__isnull=False).distinct().count()
+        
+        return context
 
 
 class CompanyCreateView(LoginRequiredMixin, IsAdminMixin, CreateView):
     """View to create a new company (admin only)"""
     model = Company
     form_class = CompanyForm
-    template_name = 'accounts/company_form.html'
+    template_name = 'accounts/company_form_modern.html'
     success_url = reverse_lazy('company-list')
     
     def form_valid(self, form):
@@ -431,7 +441,7 @@ class CompanyUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     """View to update company information (admin or company admin)"""
     model = Company
     form_class = CompanyForm
-    template_name = 'accounts/company_form.html'
+    template_name = 'accounts/company_form_modern.html'
     
     def get_object(self, queryset=None):
         # For staff/superusers, allow editing any company
@@ -449,17 +459,23 @@ class CompanyUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
         # For company admins, redirect back to company detail page
         if (not self.request.user.is_staff and not self.request.user.is_superuser) and \
            hasattr(self.request.user, 'profile') and self.request.user.profile.is_company_admin:
-            return reverse('company-detail', kwargs={'pk': self.object.id})
+            return reverse('organizations:company-detail', kwargs={'pk': self.object.id})
         # For staff/superusers, redirect to company list
-        return reverse_lazy('company-list')
+        return reverse_lazy('organizations:company-list')
     
     def test_func(self):
-        # This will only be called after get_object, so we can simplify
-        # Allow access if user is superuser/staff or company admin for their company
-        return (self.request.user.is_staff or 
-                self.request.user.is_superuser or 
-                (hasattr(self.request.user, 'profile') and 
-                 self.request.user.profile.is_company_admin))
+        # Allow access if user is superuser/staff
+        if self.request.user.is_staff or self.request.user.is_superuser:
+            return True
+            
+        # For company admins, check if they're trying to edit their own company
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.is_company_admin:
+            # Get the company ID from the URL
+            company_id = self.kwargs.get('pk')
+            # Check if it matches the user's company
+            return str(self.request.user.profile.company.id) == str(company_id)
+            
+        return False
     
     def form_valid(self, form):
         messages.success(self.request, 'Company information updated successfully.')
@@ -506,7 +522,7 @@ class CompanySettingsUpdateView(LoginRequiredMixin, UserPassesTestMixin, UpdateV
 class CompanyDetailView(LoginRequiredMixin, DetailView):
     """View to see company details and settings"""
     model = Company
-    template_name = 'accounts/company_detail.html'
+    template_name = 'accounts/company_detail_modern.html'
     context_object_name = 'company'
     
     def get_object(self, queryset=None):
@@ -529,6 +545,13 @@ class CompanyDetailView(LoginRequiredMixin, DetailView):
         
         # Add company members to the context
         context['members'] = UserProfile.objects.filter(company=self.object).select_related('user')
+        
+        # Add company settings to the context if they exist
+        try:
+            context['company_settings'] = self.object.settings
+        except CompanySettings.DoesNotExist:
+            # Create default settings if they don't exist
+            context['company_settings'] = CompanySettings.objects.create(company=self.object)
         
         return context
     

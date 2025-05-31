@@ -175,6 +175,37 @@
         </div>
     </div>
 
+    <!-- Monthly Comparison Charts -->
+    <div class="row mb-4">
+        <!-- Monthly Invoice Comparison Chart -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100" style="border-radius: 10px; background: #ffffff;">
+                <div class="card-header py-3" style="background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.05); border-radius: 10px 10px 0 0;">
+                    <h5 class="card-title mb-0 fw-semibold" style="color: #2A3547;">
+                        <i class="fas fa-file-invoice me-2" style="color: #5D87FF;"></i>Comparaison des factures mensuelles
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    <div id="monthly-invoice-chart" style="height: 350px;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Monthly Expense Comparison Chart -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100" style="border-radius: 10px; background: #ffffff;">
+                <div class="card-header py-3" style="background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.05); border-radius: 10px 10px 0 0;">
+                    <h5 class="card-title mb-0 fw-semibold" style="color: #2A3547;">
+                        <i class="fas fa-coins me-2" style="color: #F06292;"></i>Comparaison des dépenses mensuelles
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    <div id="monthly-expense-chart" style="height: 350px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row g-2">
         <div class="col-12 col-lg-4">
             <div class="card shadow-sm border-0" style="margin-bottom:0;">
@@ -202,55 +233,129 @@
         </div>
     </div>
 
-    <!-- Recent Invoices and Upcoming Events Row -->
+    <!-- Transactions and Events Row -->
     <div class="row mt-4">
-        <!-- Recent Invoices Table -->
+        <!-- Recent Transactions with Tabs - 2/3 width -->
         <div class="col-lg-8">
-            <div class="card shadow-sm border-0" style="border-radius: 14px; background: #fafdff;">
-                <div class="card-header py-3" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
-                    <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
-                        <i class="fas fa-file-invoice me-2" style="color: #7cb9e8;"></i>Dernières factures créées
-                    </h5>
+            <div class="card shadow-sm border-0 overflow-hidden" style="border-radius: 10px; background: #ffffff;">
+                <div class="card-header" style="background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 0;">
+                    <ul class="nav nav-tabs" id="transactionTabs" role="tablist" style="border-bottom: none;">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active px-4 py-3" 
+                                    id="invoices-tab" 
+                                    data-bs-toggle="tab" 
+                                    data-bs-target="#invoices-tab-pane" 
+                                    type="button" 
+                                    role="tab" 
+                                    aria-controls="invoices-tab-pane" 
+                                    aria-selected="true"
+                                    style="border: none; border-bottom: 3px solid #5D87FF; border-radius: 0; color: #5D87FF; font-weight: 500; margin-right: 5px;">
+                                <i class="fas fa-file-invoice me-2"></i>Dernières factures
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link px-4 py-3" 
+                                    id="expenses-tab" 
+                                    data-bs-toggle="tab" 
+                                    data-bs-target="#expenses-tab-pane" 
+                                    type="button" 
+                                    role="tab" 
+                                    aria-controls="expenses-tab-pane" 
+                                    aria-selected="false"
+                                    style="border: none; border-bottom: 3px solid transparent; border-radius: 0; color: #7C8FAC; font-weight: 500;">
+                                <i class="fas fa-coins me-2"></i>Dernières dépenses
+                            </button>
+                        </li>
+                    </ul>
                 </div>
                 <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="modern-table mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th scope="col">№ Facture</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Client</th>
-                                    <th scope="col">Montant</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                            {% for invoice in recent_invoices %}
-                                <tr style="cursor: pointer;" onclick="window.location.href='{% url 'invoice-detail' invoice.id %}';">
-                                    <td>INV-{{ invoice.id|stringformat:"06d" }}</td>
-                                    <td>{{ invoice.invoice_date|default:invoice.created_at|date:"d/m/Y" }}</td>
-                                    <td>{{ invoice.customer_name|default:'-' }}</td>
-                                    <td>{{ invoice.get_total|currency:currency_symbol }}</td>
-                                </tr>
-                            {% empty %}
-                                <tr><td colspan="4" class="text-center text-muted">Aucune facture récente.</td></tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
+                    <div class="tab-content" id="transactionTabsContent">
+                        <!-- Invoices Tab -->
+                        <div class="tab-pane fade show active" id="invoices-tab-pane" role="tabpanel" aria-labelledby="invoices-tab" tabindex="0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead style="background-color: #f8f9fa;">
+                                        <tr>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">№ Facture</th>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">Date</th>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">Client</th>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">Montant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for invoice in recent_invoices %}
+                                        <tr style="cursor: pointer;" onclick="window.location.href='{% url 'invoice-detail' invoice.id %}'">
+                                            <td class="px-4 py-3" style="color: #2A3547; font-weight: 500;">INV-{{ invoice.id|stringformat:"06d" }}</td>
+                                            <td class="px-4 py-3" style="color: #2A3547;">{{ invoice.invoice_date|default:invoice.created_at|date:"d/m/Y" }}</td>
+                                            <td class="px-4 py-3" style="color: #2A3547;">{{ invoice.customer_name|default:'-' }}</td>
+                                            <td class="px-4 py-3" style="color: #2A3547; font-weight: 600;">{{ invoice.get_total|currency:currency_symbol }}</td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr><td colspan="4" class="text-center text-muted p-4">Aucune facture récente.</td></tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Expenses Tab -->
+                        <div class="tab-pane fade" id="expenses-tab-pane" role="tabpanel" aria-labelledby="expenses-tab" tabindex="0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead style="background-color: #f8f9fa;">
+                                        <tr>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">№ Dépense</th>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">Date</th>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">Catégorie</th>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">Montant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for expense in recent_expenses %}
+                                        <tr style="cursor: pointer;" onclick="window.location.href='{% url 'expense-update' expense.id %}'">
+                                            <td class="px-4 py-3" style="color: #2A3547; font-weight: 500;">EXP-{{ expense.id|stringformat:"06d" }}</td>
+                                            <td class="px-4 py-3" style="color: #2A3547;">{{ expense.date|date:"d/m/Y" }}</td>
+                                            <td class="px-4 py-3" style="color: #2A3547;">{{ expense.category }}</td>
+                                            <td class="px-4 py-3" style="color: #2A3547; font-weight: 600;">{{ expense.amount|currency:currency_symbol }}</td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr><td colspan="4" class="text-center text-muted p-4">Aucune dépense récente.</td></tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer p-3" style="background-color: #f8f9fa; border-top: 1px solid rgba(0,0,0,0.05);">
+                    <div class="d-flex justify-content-center">
+                        <div class="tab-content w-100 text-center" id="footerTabsContent">
+                            <div class="tab-pane fade show active" id="invoices-footer" role="tabpanel" aria-labelledby="invoices-tab">
+                                <a href="{% url 'invoice-list' %}" class="btn btn-sm btn-primary rounded-pill px-4" style="background: #5D87FF; border: none;">
+                                    <i class="fas fa-list fa-sm me-1"></i> Voir toutes les factures
+                                </a>
+                            </div>
+                            <div class="tab-pane fade" id="expenses-footer" role="tabpanel" aria-labelledby="expenses-tab">
+                                <a href="{% url 'expenses-list' %}" class="btn btn-sm btn-primary rounded-pill px-4" style="background: #5D87FF; border: none;">
+                                    <i class="fas fa-list fa-sm me-1"></i> Voir toutes les dépenses
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <!-- Upcoming Events Column -->
+        
+        <!-- Upcoming Events - 1/3 width -->
         <div class="col-lg-4">
-            <div class="card shadow-sm border-0 h-100" style="border-radius: 14px; background: #fafdff;">
-                <div class="card-header py-3 d-flex justify-content-between align-items-center" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
-                    <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
-                        <i class="fas fa-calendar-alt me-2" style="color: #7cb9e8;"></i>Upcoming Events
+            <div class="card shadow-sm border-0 overflow-hidden" style="border-radius: 10px; background: #ffffff;">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 1.25rem 1.5rem;">
+                    <h5 class="card-title mb-0 fw-semibold" style="color: #2A3547; font-size: 1.05rem;">
+                        <i class="fas fa-calendar-alt me-2" style="color: #5D87FF;"></i>Upcoming Events
                     </h5>
                     <div>
-                        <a href="{% url 'calendar-event-create' %}" class="btn btn-sm btn-primary rounded-pill" style="background: #7cb9e8; border: none;">
-                            <i class="fas fa-plus fa-sm"></i>
+                        <a href="{% url 'calendar-event-create' %}" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="background: #5D87FF; border: none; width: 32px; height: 32px;">
+                            <i class="fas fa-plus fa-xs"></i>
                         </a>
                     </div>
                 </div>
@@ -259,40 +364,45 @@
                         <div class="list-group list-group-flush">
                             {% for event in upcoming_events %}
                                 <a href="{{ event.get_absolute_url }}" 
-                                   class="list-group-item list-group-item-action border-0 py-2">
+                                   class="list-group-item list-group-item-action border-0 py-3 px-4">
                                     <div class="d-flex w-100 justify-content-between align-items-center">
                                         <div>
                                             <div class="d-flex align-items-center mb-1">
-                                                <span class="theme-badge theme-{{ event.theme }}" style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px;"></span>
-                                                <h6 class="mb-0 fw-semibold" style="font-size: 0.9rem;">{{ event.title }}</h6>
+                                                <span class="theme-badge" style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 10px; background-color: {% if event.theme == 'primary' %}#5D87FF{% elif event.theme == 'success' %}#13DEB9{% elif event.theme == 'info' %}#49BEFF{% elif event.theme == 'warning' %}#FFAE1F{% elif event.theme == 'danger' %}#FA896B{% else %}#5D87FF{% endif %};"></span>
+                                                <h6 class="mb-0 fw-semibold" style="font-size: 0.95rem; color: #2A3547;">{{ event.title }}</h6>
                                             </div>
                                             <p class="mb-0">
-                                                <small class="text-muted" style="font-size: 0.75rem;">
+                                                <small style="font-size: 0.8rem; color: #7C8FAC;">
                                                     <i class="far fa-calendar-alt me-1"></i>{{ event.start_date|date:"M d" }}
                                                     {% if event.all_day %}
-                                                        <span class="badge bg-light text-dark ms-1" style="font-size: 0.7rem;">All day</span>
+                                                        <span class="badge bg-light-primary text-primary ms-1" style="font-size: 0.7rem; background-color: rgba(93, 135, 255, 0.1); color: #5D87FF; padding: 0.25rem 0.5rem; border-radius: 4px;">All day</span>
                                                     {% else %}
                                                         <i class="far fa-clock ms-1 me-1"></i>{{ event.start_date|time:"g:i A" }}
                                                     {% endif %}
                                                 </small>
                                             </p>
                                         </div>
+                                        <div>
+                                            <span class="badge rounded-pill" style="background-color: {% if event.theme == 'primary' %}rgba(93, 135, 255, 0.1){% elif event.theme == 'success' %}rgba(19, 222, 185, 0.1){% elif event.theme == 'info' %}rgba(73, 190, 255, 0.1){% elif event.theme == 'warning' %}rgba(255, 174, 31, 0.1){% elif event.theme == 'danger' %}rgba(250, 137, 107, 0.1){% else %}rgba(93, 135, 255, 0.1){% endif %}; color: {% if event.theme == 'primary' %}#5D87FF{% elif event.theme == 'success' %}#13DEB9{% elif event.theme == 'info' %}#49BEFF{% elif event.theme == 'warning' %}#FFAE1F{% elif event.theme == 'danger' %}#FA896B{% else %}#5D87FF{% endif %}; padding: 0.35rem 0.75rem; font-size: 0.75rem;">{{ event.theme|title }}</span>
+                                        </div>
                                     </div>
                                 </a>
                             {% endfor %}
                         </div>
-                        <div class="card-footer text-center py-2" style="background: transparent; border-top: 1px solid #e0e6ed;">
-                            <a href="{% url 'calendar-event-list' %}" class="btn btn-sm btn-outline-primary rounded-pill">
-                                <i class="fas fa-list fa-sm me-1"></i> View All
+                        <div class="card-footer text-center py-3" style="background: transparent; border-top: 1px solid rgba(0,0,0,0.05);">
+                            <a href="{% url 'calendar-event-list' %}" class="btn btn-primary rounded-pill px-4" style="background: #5D87FF; border: none; font-size: 0.85rem;">
+                                <i class="fas fa-list fa-sm me-1"></i> View All Events
                             </a>
                         </div>
                     {% else %}
-                        <div class="text-center p-4">
-                            <i class="fas fa-calendar-alt mb-2" style="font-size: 2rem; color: #7cb9e8;"></i>
-                            <h6 class="mb-2">No Upcoming Events</h6>
-                            <p class="text-muted small mb-3">No events scheduled.</p>
-                            <a href="{% url 'calendar-event-create' %}" class="btn btn-sm btn-primary rounded-pill" style="background: #7cb9e8; border: none;">
-                                <i class="fas fa-plus fa-sm me-1"></i> Add Event
+                        <div class="text-center p-5">
+                            <div class="mb-3" style="width: 50px; height: 50px; background-color: rgba(93, 135, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                <i class="fas fa-calendar-alt" style="font-size: 1.5rem; color: #5D87FF;"></i>
+                            </div>
+                            <h5 class="mb-2" style="color: #2A3547; font-weight: 500;">No Upcoming Events</h5>
+                            <p style="color: #7C8FAC; font-size: 0.9rem; margin-bottom: 1.5rem;">You don't have any events scheduled yet.</p>
+                            <a href="{% url 'calendar-event-create' %}" class="btn btn-primary rounded-pill px-4" style="background: #5D87FF; border: none; font-size: 0.85rem;">
+                                <i class="fas fa-plus fa-sm me-1"></i> Add New Event
                             </a>
                         </div>
                     {% endif %}
@@ -301,7 +411,33 @@
         </div>
     </div>
 
+    <!-- Calendar Widget Row -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0" style="border-radius: 14px; background: #fafdff;">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center" style="background: #e7f1fa; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
+                    <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
+                        <i class="fas fa-calendar-alt me-2" style="color: #7cb9e8;"></i>Calendar
+                    </h5>
+                    <div>
+                        <a href="{% url 'calendar-event-create' %}" class="btn btn-sm btn-primary rounded-pill" style="background: #7cb9e8; border: none;">
+                            <i class="fas fa-plus fa-sm"></i> Add Event
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    <div id="dashboard-calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <style>
+    /* Chart background override */
+    .apexcharts-canvas .apexcharts-plot-background {
+        fill: #ffffff !important;
+    }
+    
     #dashboard-calendar {
         min-height: 300px;
     }
@@ -785,6 +921,196 @@
             }]
         };
         
+        // Initialize Monthly Invoice Comparison Chart
+        const monthlyInvoiceEl = document.getElementById('monthly-invoice-chart');
+        if (monthlyInvoiceEl) {
+            // Parse data from Django context
+            const currentYearData = JSON.parse('{{ monthly_revenue_current_year|safe }}');
+            const previousYearData = JSON.parse('{{ monthly_revenue_previous_year|safe }}');
+            const currentYear = {{ current_year }};
+            const previousYear = {{ previous_year }};
+            
+            // Month names
+            const monthNames = [
+                'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+            ];
+            
+            // Chart options
+            const monthlyInvoiceOptions = {
+                series: [
+                    {
+                        name: `${currentYear}`,
+                        data: currentYearData
+                    },
+                    {
+                        name: `${previousYear}`,
+                        data: previousYearData
+                    }
+                ],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    fontFamily: 'Nunito, sans-serif',
+                    toolbar: {
+                        show: false
+                    },
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                colors: ['#5D87FF', '#7C8FAC'],
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: [3, 3]
+                },
+                grid: {
+                    borderColor: 'rgba(0,0,0,0.1)',
+                    row: {
+                        colors: ['transparent', 'transparent'],
+                        opacity: 0.5
+                    }
+                },
+                markers: {
+                    size: 4,
+                    colors: ['#5D87FF', '#7C8FAC'],
+                    strokeColors: '#fff',
+                    strokeWidth: 2,
+                    hover: {
+                        size: 7
+                    }
+                },
+                xaxis: {
+                    categories: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(val) {
+                            return val.toFixed(0) + ' ' + currencySymbol;
+                        }
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(val) {
+                            return val.toFixed(2) + ' ' + currencySymbol;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'right',
+                    floating: true,
+                    offsetY: -25,
+                    offsetX: -5
+                }
+            };
+            
+            // Initialize chart
+            const monthlyInvoiceChart = new ApexCharts(monthlyInvoiceEl, monthlyInvoiceOptions);
+            monthlyInvoiceChart.render();
+        }
+        
+        // Initialize Monthly Expense Comparison Chart
+        const monthlyExpenseEl = document.getElementById('monthly-expense-chart');
+        if (monthlyExpenseEl) {
+            // Parse data from Django context
+            const currentYearExpenseData = JSON.parse('{{ monthly_expense_current_year|safe }}');
+            const previousYearExpenseData = JSON.parse('{{ monthly_expense_previous_year|safe }}');
+            
+            // Chart options
+            const monthlyExpenseOptions = {
+                series: [
+                    {
+                        name: `{{ current_year }}`,
+                        data: currentYearExpenseData
+                    },
+                    {
+                        name: `{{ previous_year }}`,
+                        data: previousYearExpenseData
+                    }
+                ],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    fontFamily: 'Nunito, sans-serif',
+                    toolbar: {
+                        show: false
+                    },
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                colors: ['#F06292', '#F8BBD0'],
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: [3, 3]
+                },
+                grid: {
+                    borderColor: 'rgba(0,0,0,0.1)',
+                    row: {
+                        colors: ['transparent', 'transparent'],
+                        opacity: 0.5
+                    }
+                },
+                markers: {
+                    size: 4,
+                    colors: ['#F06292', '#F8BBD0'],
+                    strokeColors: '#fff',
+                    strokeWidth: 2,
+                    hover: {
+                        size: 7
+                    }
+                },
+                xaxis: {
+                    categories: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(val) {
+                            return val.toFixed(0) + ' ' + currencySymbol;
+                        }
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(val) {
+                            return val.toFixed(2) + ' ' + currencySymbol;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'right',
+                    floating: true,
+                    offsetY: -25,
+                    offsetX: -5
+                }
+            };
+            
+            // Initialize chart
+            const monthlyExpenseChart = new ApexCharts(monthlyExpenseEl, monthlyExpenseOptions);
+            monthlyExpenseChart.render();
+        }
+        
         // Initialize charts if elements exist
         const initCharts = () => {
             // Pie Chart: Products by Parent Category
@@ -926,5 +1252,31 @@
 {% endblock content %}
 
 {% block script_content %}
-    <!-- Additional scripts can be added here if needed -->
+    <style>
+        /* Change chart gray background to white */
+        .apexcharts-canvas .apexcharts-plot-background {
+            fill: #ffffff !important;
+        }
+    </style>
+    <script>
+        // Sync tabs with footer
+        document.addEventListener('DOMContentLoaded', function() {
+            const invoicesTab = document.getElementById('invoices-tab');
+            const expensesTab = document.getElementById('expenses-tab');
+            const invoicesFooter = document.getElementById('invoices-footer');
+            const expensesFooter = document.getElementById('expenses-footer');
+            
+            if (invoicesTab && expensesTab) {
+                invoicesTab.addEventListener('shown.bs.tab', function() {
+                    invoicesFooter.classList.add('show', 'active');
+                    expensesFooter.classList.remove('show', 'active');
+                });
+                
+                expensesTab.addEventListener('shown.bs.tab', function() {
+                    expensesFooter.classList.add('show', 'active');
+                    invoicesFooter.classList.remove('show', 'active');
+                });
+            }
+        });
+    </script>
 {% endblock script_content %}

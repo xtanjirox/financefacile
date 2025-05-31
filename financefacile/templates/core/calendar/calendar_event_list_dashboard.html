@@ -164,46 +164,86 @@
 
         <!-- Upcoming Events -->
         <div class="col-lg-4">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">Upcoming Events</h6>
-                </div>
-                <div class="card-body p-0">
-                    {% if upcoming_events %}
-                        <div class="list-group list-group-flush upcoming-events-list">
-                            {% for event in upcoming_events %}
-                                <a href="{{ event.get_absolute_url }}" 
-                                   class="list-group-item list-group-item-action {{ event.theme }}">
-                                    <div class="d-flex w-100 justify-content-between">
-                                        <h6 class="mb-1">{{ event.title }}</h6>
-                                        <small class="text-muted">{{ event.start_date|date:"M d" }}</small>
-                                    </div>
-                                    <p class="mb-1">
-                                        <small class="text-muted">
-                                            {% if event.all_day %}
-                                                All day
-                                            {% else %}
-                                                {{ event.start_date|time:"g:i A" }}
-                                                {% if event.end_date %}- {{ event.end_date|time:"g:i A" }}{% endif %}
-                                            {% endif %}
-                                        </small>
-                                    </p>
-                                    {% if event.description %}
-                                        <small class="text-muted">{{ event.description|truncatechars:50 }}</small>
-                                    {% endif %}
-                                </a>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        <div class="text-center p-4">
-                            <p class="text-muted mb-0">No upcoming events</p>
-                            <a href="{% url 'calendar-event-create' %}" class="btn btn-sm btn-primary mt-2">
-                                <i class="fas fa-plus fa-sm"></i> Add Event
-                            </a>
-                        </div>
-                    {% endif %}
-                </div>
+          <div class="card mb-lg-0">
+            <div class="card-body">
+              <h5 class="card-title mb-4">Daily activities</h5>
+              <style>
+                  .timeline-widget .timeline-item {
+                      min-height: 60px;
+                      margin-bottom: 18px;
+                      position: relative;
+                  }
+                  .timeline-widget {
+                      position: relative;
+                      padding-left: 0;
+                      margin-left: 0;
+                      list-style: none;
+                  }
+                  .timeline-widget::before {
+                      content: '';
+                      position: absolute;
+                      left: 67px;
+                      top: 0;
+                      bottom: 0;
+                      width: 2px;
+                      background: #e5e9f2;
+                      z-index: 0;
+                  }
+                  .timeline-time {
+                      width: 52px;
+                      text-align: right;
+                      font-weight: 500;
+                      font-size: 18px;
+                      color: #7d8793;
+                      flex-shrink: 0;
+                      margin-right: 0.5rem;
+                  }
+                  .timeline-badge {
+                      width: 14px;
+                      height: 14px;
+                      border-radius: 50%;
+                      display: inline-block;
+                      position: relative;
+                      z-index: 2;
+                      margin-left: 10px;
+                      margin-right: 10px;
+                  }
+                  .timeline-desc {
+                      font-size: 17px;
+                      color: #555b5f;
+                      flex: 1;
+                      padding-top: 2px;
+                  }
+                  .timeline-link {
+                      color: #6366f1;
+                      text-decoration: none;
+                      font-weight: 500;
+                  }
+              </style>
+              <div class="simplebar-content" style="padding: 0px;">
+                  <ul class="timeline-widget mb-0">
+                      {% for event in upcoming_events %}
+                      <li class="timeline-item d-flex position-relative overflow-hidden">
+                          <div class="timeline-time">{{ event.start_date|time:"H:i" }}</div>
+                          <div class="timeline-badge bg-{{ event.theme|default:'primary' }}"></div>
+                          <div class="timeline-desc">
+                              {{ event.title }}
+                              {% if event.link %}
+                              <a href="{{ event.get_absolute_url }}" class="timeline-link">{{ event.link_label|default:'#'|add:event.id }}</a>
+                              {% endif %}
+                          </div>
+                      </li>
+                      {% empty %}
+                      <li class="timeline-item d-flex position-relative overflow-hidden">
+                          <div class="timeline-time">--:--</div>
+                          <div class="timeline-badge bg-secondary"></div>
+                          <div class="timeline-desc">No activities today</div>
+                      </li>
+                      {% endfor %}
+                  </ul>
+              </div>
             </div>
+          </div>
         </div>
     </div>
 </div>

@@ -44,7 +44,7 @@ body.sidebar-toggled #sidebar {
   width: calc(100% - 240px);
   margin-left: 240px;
   min-height: 100vh;
-  background-color: #f8fafc;
+  background-color: var(--surface-alt);
   position: relative;
   transition: margin 0.3s ease-in-out, width 0.3s ease-in-out;
   overflow-x: hidden;
@@ -63,12 +63,14 @@ body.sidebar-toggled .main {
   margin: 0;
   box-sizing: border-box;
   position: relative;
+  background: #F4F7FB;
 }
 
 /* Navbar styling */
 .navbar {
-  background-color: white !important;
-  border-bottom: 1px solid #f1f5f9 !important;
+  background-color: var(--topbar-bg) !important;
+  border-bottom: 1px solid var(--topbar-border) !important;
+  color: var(--topbar-text) !important;
   padding: 0.75rem 1.5rem !important;
   height: 64px;
   box-shadow: none !important;
@@ -76,29 +78,31 @@ body.sidebar-toggled .main {
 
 /* Search input styling */
 .input-group-navbar {
-  background-color: #f8fafc;
+  background-color: var(--surface-alt);
   border-radius: 8px;
   overflow: hidden;
 }
 
 .input-group-navbar .form-control {
   border: none;
-  background-color: #f8fafc;
+  background-color: var(--surface-alt);
   padding: 0.5rem 1rem;
 }
 
 .input-group-navbar .btn {
-  background-color: #f8fafc;
+  background-color: var(--surface-alt);
   border: none;
 }
 
 /* Card styling */
 .card {
   border-radius: 8px;
-  border: none;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
-  background-color: white;
-  margin-bottom: 1rem;
+  border: 1px solid var(--card-border);
+  box-shadow: var(--card-shadow);
+  background-color: var(--card-bg);
+  margin-bottom: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  position: relative;
   overflow: hidden;
 }
 
@@ -146,7 +150,7 @@ body.sidebar-toggled .main {
 .col-lg, .col-lg-1, .col-lg-2, .col-lg-3, .col-lg-4, .col-lg-5, .col-lg-6, .col-lg-7, .col-lg-8, .col-lg-9, .col-lg-10, .col-lg-11, .col-lg-12,
 .col-xl, .col-xl-1, .col-xl-2, .col-xl-3, .col-xl-4, .col-xl-5, .col-xl-6, .col-xl-7, .col-xl-8, .col-xl-9, .col-xl-10, .col-xl-11, .col-xl-12 {
   padding-left: 0.5rem;
-  padding-right: 0.5rem;
+  padding-right: 0rem;
 }
 
 /* Page header styling */
@@ -160,7 +164,7 @@ body.sidebar-toggled .main {
 .page-title {
   font-size: 1.5rem;
   font-weight: 600;
-  color: #1e293b;
+  color: var(--primary-main);
   margin: 0;
 }
 
@@ -170,16 +174,19 @@ body.sidebar-toggled .main {
   padding: 0.5rem 1rem;
   font-weight: 500;
   transition: all 0.2s ease;
+  background: var(--btn-outline-bg);
+  color: var(--btn-outline-text);
+  border: 1px solid var(--btn-outline-border);
 }
 
 .btn-primary {
-  background-color: #6c5dd3;
-  border-color: #6c5dd3;
+  background-color: var(--btn-primary-bg);
+  border-color: var(--btn-primary-bg);
 }
 
 .btn-primary:hover {
-  background-color: #5a4cbe;
-  border-color: #5a4cbe;
+  background-color: var(--btn-primary-hover);
+  border-color: var(--btn-primary-hover);
 }
 
 /* Sidebar toggle button */

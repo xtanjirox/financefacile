@@ -16,7 +16,7 @@ from django.views.decorators.http import require_http_methods
 from django.shortcuts import render
 from datetime import datetime, timedelta
 
-from core.forms import CalendarEventForm
+from core.forms import CalendarEventForm, CalendarEventFilterForm
 from core.mixins import CompanyMixin
 from core.models import CalendarEvent
 
@@ -33,9 +33,35 @@ class CalendarEventListView(CompanyMixin, generic.ListView):
     context_object_name = 'events'
     
     def get_queryset(self):
-        return CalendarEvent.objects.filter(
+        queryset = CalendarEvent.objects.filter(
             company=self.get_company()
         ).select_related('created_by')
+        
+        # Apply filters from form
+        start_date = self.request.GET.get('start_date')
+        end_date = self.request.GET.get('end_date')
+        themes = self.request.GET.getlist('theme')
+        
+        if start_date:
+            try:
+                start_date = datetime.strptime(start_date, '%Y-%m-%d')
+                queryset = queryset.filter(start_date__gte=start_date)
+            except ValueError:
+                pass
+                
+        if end_date:
+            try:
+                end_date = datetime.strptime(end_date, '%Y-%m-%d')
+                # Add one day to include the end date fully
+                end_date = end_date + timedelta(days=1)
+                queryset = queryset.filter(start_date__lt=end_date)
+            except ValueError:
+                pass
+                
+        if themes:
+            queryset = queryset.filter(theme__in=themes)
+            
+        return queryset
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -56,9 +82,16 @@ class CalendarEventListView(CompanyMixin, generic.ListView):
         context['upcoming_events'] = upcoming_events
         context['all_day_events'] = all_day_events
         
-        # Add theme choices for filtering
-        context['theme_choices'] = dict(CalendarEvent.THEME_CHOICES)
+        # Create filter form
+        theme_choices = [(k, v) for k, v in dict(CalendarEvent.THEME_CHOICES).items()]
+        filter_form = CalendarEventFilterForm(
+            data=self.request.GET,
+            theme_choices=theme_choices
+        )
         
+        context['filter_form'] = filter_form
+        context['page_title'] = 'Calendar Events'
+        context['page_title_badge'] = 'Calendar Events'
         return context
 
 
@@ -91,6 +124,8 @@ class CalendarEventCreateView(CompanyMixin, generic.CreateView):
         context = super().get_context_data(**kwargs)
         context['segment'] = 'calendar'
         context['form_title'] = 'Create New Event'
+        context['page_title'] = 'Create Event'
+        context['page_title_badge'] = 'Create Event'
         return context
 
 
@@ -124,6 +159,8 @@ class CalendarEventUpdateView(CompanyMixin, generic.UpdateView):
         context = super().get_context_data(**kwargs)
         context['segment'] = 'calendar'
         context['form_title'] = 'Update Event'
+        context['page_title'] = 'Update Event'
+        context['page_title_badge'] = 'Update Event'
         return context
 
 
@@ -138,6 +175,8 @@ class CalendarEventDetailView(CompanyMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['segment'] = 'calendar'
+        context['page_title'] = 'Event Detail'
+        context['page_title_badge'] = 'Event Detail'
         return context
 
 

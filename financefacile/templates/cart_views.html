@@ -16,16 +16,16 @@
 
 {% block content %}
 <script>
-    $(function(){
-        $('#product_tab').click(function(e){
+    $(function () {
+        $('#product_tab').click(function (e) {
             e.preventDefault();
             $('#mytabs a[href="#tab-5"]').tab('show');
         })
 
     })
 
-    $(function(){
-        $('#recipe_tab').click(function(e){
+    $(function () {
+        $('#recipe_tab').click(function (e) {
             e.preventDefault();
             $('#mytabs a[href="#tab-6"]').tab('show');
         })
@@ -41,13 +41,11 @@
                     <div class="card-header">
                         <div class="card-actions float-end">
                             <div class="dropdown position-relative">
-                                <a href="#" data-bs-toggle="dropdown" data-bs-display="static"
-                                   aria-expanded="false" class="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                         viewBox="0 0 24 24" fill="none"
-                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round"
-                                         class="feather feather-more-horizontal align-middle">
+                                <a href="#" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"
+                                    class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="feather feather-more-horizontal align-middle">
                                         <circle cx="12" cy="12" r="1"></circle>
                                         <circle cx="19" cy="12" r="1"></circle>
                                         <circle cx="5" cy="12" r="1"></circle>
@@ -78,13 +76,11 @@
                     <div class="card-header">
                         <div class="card-actions float-end">
                             <div class="dropdown position-relative">
-                                <a href="#" data-bs-toggle="dropdown" data-bs-display="static"
-                                   aria-expanded="false" class="">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                         viewBox="0 0 24 24" fill="none"
-                                         stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                         stroke-linejoin="round"
-                                         class="feather feather-more-horizontal align-middle">
+                                <a href="#" data-bs-toggle="dropdown" data-bs-display="static" aria-expanded="false"
+                                    class="">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" class="feather feather-more-horizontal align-middle">
                                         <circle cx="12" cy="12" r="1"></circle>
                                         <circle cx="19" cy="12" r="1"></circle>
                                         <circle cx="5" cy="12" r="1"></circle>
@@ -101,98 +97,96 @@
                     </div>
                     <div class="table-container table-responsive">
                         <div id="datatables-orders_wrapper"
-                             class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
+                            class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
                             <div class="row">
                                 <div class="col-sm-12">
                                     <table class="table table-responsive table-striped dataTable no-footer dtr-inline"
-                                           id="datatables-orders" width="100%" aria="" -=""
-                                           describedby="datatables-orders_info"
-                                           style="width: 100%;" role="grid"
-                                           aria-describedby="datatables-orders_info">
+                                        id="datatables-orders" width="100%" aria="" -=""
+                                        describedby="datatables-orders_info" style="width: 100%;" role="grid"
+                                        aria-describedby="datatables-orders_info">
                                         <thead>
-                                        <tr role="row">
-                                            <th class="orderable sorting_asc" tabindex="0"
-                                                aria-controls="datatables-orders"
-                                                rowspan="1" colspan="1" aria-sort="ascending" aria-label="
+                                            <tr role="row">
+                                                <th class="orderable sorting_asc" tabindex="0"
+                                                    aria-controls="datatables-orders" rowspan="1" colspan="1"
+                                                    aria-sort="ascending" aria-label="
                 product_image
         : activate to sort column descending" style="width: 104px;">
-                                                <a href="?sort=product_image">product_image</a>
-                                            </th>
-                                            <th class="orderable sorting" tabindex="0"
-                                                aria-controls="datatables-orders" rowspan="1"
-                                                colspan="1" aria-label="
+                                                    <a href="?sort=product_image">product_image</a>
+                                                </th>
+                                                <th class="orderable sorting" tabindex="0"
+                                                    aria-controls="datatables-orders" rowspan="1" colspan="1"
+                                                    aria-label="
                 Product title
         : activate to sort column ascending" style="width: 78px;">
-                                                <a href="?sort=product_title">Product title</a>
-                                            </th>
-                                            <th class="orderable sorting" tabindex="0"
-                                                aria-controls="datatables-orders" rowspan="1"
-                                                colspan="1" aria-label="
+                                                    <a href="?sort=product_title">Product title</a>
+                                                </th>
+                                                <th class="orderable sorting" tabindex="0"
+                                                    aria-controls="datatables-orders" rowspan="1" colspan="1"
+                                                    aria-label="
                 Product cost price
         : activate to sort column ascending" style="width: 110px;">
-                                                <a href="?sort=product_cost_price">Product cost price</a>
-                                            </th>
-                                            <th class="orderable sorting" tabindex="0"
-                                                aria-controls="datatables-orders" rowspan="1"
-                                                colspan="1" aria-label="
+                                                    <a href="?sort=product_cost_price">Product cost price</a>
+                                                </th>
+                                                <th class="orderable sorting" tabindex="0"
+                                                    aria-controls="datatables-orders" rowspan="1" colspan="1"
+                                                    aria-label="
                 Product sale price
         : activate to sort column ascending" style="width: 108px;">
-                                                <a href="?sort=product_sale_price">Product sale price</a>
-                                            </th>
-                                            <th class="orderable sorting" tabindex="0"
-                                                aria-controls="datatables-orders" rowspan="1"
-                                                colspan="1" aria-label="
+                                                    <a href="?sort=product_sale_price">Product sale price</a>
+                                                </th>
+                                                <th class="orderable sorting" tabindex="0"
+                                                    aria-controls="datatables-orders" rowspan="1" colspan="1"
+                                                    aria-label="
                 Product quantity
         : activate to sort column ascending" style="width: 102px;">
-                                                <a href="?sort=product_quantity">Product quantity</a>
-                                            </th>
-                                            <th class="orderable sorting_disabled" rowspan="1" colspan="1"
-                                                aria-label="
+                                                    <a href="?sort=product_quantity">Product quantity</a>
+                                                </th>
+                                                <th class="orderable sorting_disabled" rowspan="1" colspan="1"
+                                                    aria-label="
                 Actions
         " style="width: 53px;">
-                                                <a href="?sort=actions">Actions</a>
-                                            </th>
-                                        </tr>
+                                                    <a href="?sort=actions">Actions</a>
+                                                </th>
+                                            </tr>
                                         </thead>
                                         <tbody>
-                                        <tr class="odd" role="row">
-                                            <td class="sorting_1"><img src="media/logo_png.png" width="50"
-                                                                       height="50"
-                                                                       display="block"></td>
-                                            <td>jean New</td>
-                                            <td>12.45</td>
-                                            <td>30.0</td>
-                                            <form>
-                                                <td><input type="number" value="1"></td>
-                                                <td>
-                                                    <a href="#" class="btn btn-primary btn-sm">Add to cart</a>
-                                                </td>
-                                            </form>
-                                        </tr>
-                                        <tr class="even" role="row">
-                                            <td class="sorting_1">—</td>
-                                            <td>dslj</td>
-                                            <td>8678.0</td>
-                                            <td>6798.0</td>
-                                            <form>
-                                                <td><input type="number" value="1"></td>
-                                                <td>
-                                                    <a href="#" class="btn btn-primary btn-sm">Add to cart</a>
-                                                </td>
-                                            </form>
-                                        </tr>
-                                        <tr class="odd" role="row">
-                                            <td class="sorting_1">—</td>
-                                            <td>flj</td>
-                                            <td>0.0</td>
-                                            <td>0.0</td>
-                                            <form>
-                                                <td><input type="number" value="1"></td>
-                                                <td>
-                                                    <a href="#" class="btn btn-primary btn-sm">Add to cart</a>
-                                                </td>
-                                            </form>
-                                        </tr>
+                                            <tr class="odd" role="row">
+                                                <td class="sorting_1"><img src="media/logo_png.png" width="50"
+                                                        height="50" display="block"></td>
+                                                <td>jean New</td>
+                                                <td>12.45</td>
+                                                <td>30.0</td>
+                                                <form>
+                                                    <td><input type="number" value="1"></td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-primary btn-sm">Add to cart</a>
+                                                    </td>
+                                                </form>
+                                            </tr>
+                                            <tr class="even" role="row">
+                                                <td class="sorting_1">—</td>
+                                                <td>dslj</td>
+                                                <td>8678.0</td>
+                                                <td>6798.0</td>
+                                                <form>
+                                                    <td><input type="number" value="1"></td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-primary btn-sm">Add to cart</a>
+                                                    </td>
+                                                </form>
+                                            </tr>
+                                            <tr class="odd" role="row">
+                                                <td class="sorting_1">—</td>
+                                                <td>flj</td>
+                                                <td>0.0</td>
+                                                <td>0.0</td>
+                                                <form>
+                                                    <td><input type="number" value="1"></td>
+                                                    <td>
+                                                        <a href="#" class="btn btn-primary btn-sm">Add to cart</a>
+                                                    </td>
+                                                </form>
+                                            </tr>
                                         </tbody>
                                     </table>
                                     <button id="recipe_tab" type="submit" class="btn btn-primary">Validate

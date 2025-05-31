@@ -2,237 +2,384 @@
 {% load static %}
 
 {% block sidebar %}
-    {% include 'includes/sidebar.html' %}
+{% include 'includes/sidebar.html' %}
 {% endblock sidebar %}
 
 {% block topbar %}
-    {% include 'includes/topbar.html' %}
+{% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
 {% block extra_js %}
 {{ block.super }}
 <script>
   // Provide product prices for JS
   window.PRODUCT_PRICES = {
     {% for product in products %}
-      "{{ product.id }}": "{{ product.selling_price }}"{% if not forloop.last %},{% endif %}
-    {% endfor %}
+  "{{ product.id }}": "{{ product.selling_price }}"{% if not forloop.last %}, {% endif %}
+  {% endfor %}
   };
 </script>
 <script src="{% static 'js/invoice_item_autofill.js' %}"></script>
-{% endblock %}
-{% endblock topbar %}
+{% endblock extra_js %}
 
 {% block footer %}
-    {% include 'includes/footer.html' %}
+{% include 'includes/footer.html' %}
 {% endblock footer %}
 
 {% block content %}
+<style>
+  /* Select2 Styling */
+  .select2-container--default .select2-selection--single {
+    border-color: #e0e6ed;
+    border-radius: 8px;
+    background-color: #f9f8ff;
+    height: 38px;
+    padding: 5px 10px;
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #6259FF;
+    line-height: 28px;
+  }
+
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: 36px;
+  }
+
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #eae9ff;
+    color: #6259FF;
+  }
+
+  .select2-dropdown {
+    border-color: #d7d5ff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(98, 89, 255, 0.08);
+  }
+
+  .select2-container--open .select2-dropdown--below {
+    border-top: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+
+  .select2-container--default .select2-search--dropdown .select2-search__field {
+    border-color: #e0e6ed;
+    border-radius: 4px;
+    padding: 8px;
+  }
+
+  /* Modern table styling for invoice items */
+  .modern-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(98, 89, 255, 0.08);
+  }
+
+  .modern-table thead th {
+    padding: 12px 15px;
+    font-weight: 600;
+    color: #6259FF;
+  }
+
+  .modern-table tbody tr {
+    transition: all 0.2s ease;
+  }
+
+  .modern-table tbody tr:hover {
+    background-color: #f9f8ff;
+  }
+
+  .modern-table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid #eae9ff;
+  }
+
+  .modern-table tbody tr:last-child td {
+    border-bottom: none;
+  }
+</style>
 <div class="container-fluid p-0">
-    <div class="col-12 col-lg-12 col-xxl-12 d-flex">
-        <div class="card flex-fill shadow-lg" style="border-radius: 0.5rem;">
-  <div class="card-header d-flex align-items-center" style="background: linear-gradient(90deg,#e3f2fd 0%,#fafdff 100%); border-bottom: 1px solid #e0e6ed; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
-    <h3 class="card-title mb-0 text-dark d-flex align-items-center">
-      <i class="fas fa-file-invoice me-2" style="color: #7cb9e8; font-size: 2rem;"></i>Invoice Form
-    </h3>
-  </div>
-  <div class="card-body p-4">
-    <!-- Error Messages Section -->
-    {% if form.errors or formset.errors or formset.non_form_errors %}
-    <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
-      <div class="d-flex align-items-center">
-        <i class="fas fa-exclamation-triangle me-3" style="font-size: 1.5rem;"></i>
-        <div>
-          <h5 class="alert-heading mb-1">Invoice Creation Failed</h5>
-          <p class="mb-0">Please correct the following errors:</p>
-          
-          <!-- Form non-field errors (general errors) -->
-          {% if form.non_field_errors %}
-          <ul class="mt-2 mb-0">
-            {% for error in form.non_field_errors %}
-              <li><strong>{{ error }}</strong></li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-          
-          <!-- Formset non-form errors (formset-level validation errors) -->
-          {% if formset.non_form_errors %}
-          <ul class="mt-2 mb-0">
-            {% for error in formset.non_form_errors %}
-              <li><strong>{{ error }}</strong></li>
-            {% endfor %}
-          </ul>
-          {% endif %}
-          
-          <!-- Individual formset form errors -->
-          {% if formset.errors %}
-          <ul class="mt-2 mb-0">
-            {% for form_errors in formset.errors %}
-              {% for field, errors in form_errors.items %}
-                {% for error in errors %}
-                  <li><strong>Product Item {{ forloop.parentloop.parentloop.counter }}:</strong> {{ error }}</li>
-                {% endfor %}
-              {% endfor %}
-            {% endfor %}
-          </ul>
-          {% endif %}
-        </div>
+  <div class="col-12 col-lg-12 col-xxl-12 d-flex">
+    <div class="card flex-fill shadow-lg" style="border-radius: 0.5rem;">
+      <div class="card-header d-flex align-items-center"
+        style="background: linear-gradient(90deg,#eae9ff 0%,#f9f8ff 100%); border-bottom: 1px solid #e0e6ed; border-top-left-radius: 0.5rem; border-top-right-radius: 0.5rem;">
+        <h3 class="card-title mb-0 text-dark d-flex align-items-center">
+          <i class="fas fa-file-invoice me-2" style="color: #7cb9e8; font-size: 2rem;"></i>Invoice Form
+        </h3>
       </div>
-      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endif %}
-    
-    <form method="post" id="invoice-form" autocomplete="off" class="w-100">
-      {% csrf_token %}
-      <div class="mb-4">
-        <h4 class="fw-bold mb-3" style="color: #39739d;"><i class="fas fa-info-circle me-2" style="color: #7cb9e8;"></i>Invoice Details</h4>
-        <div class="row g-3">
-          <!-- TVA Rate Field -->
-          <div class="col-md-6">
-            <label class="form-label fw-semibold" for="id_tva_rate">TVA Rate (%)</label>
-            {{ form.tva_rate.as_hidden }}
-            <input type="number" name="tva_rate" id="id_tva_rate" class="form-control" step="0.01" min="0" max="100" placeholder="{{ form.initial.tva_rate|default:'19.0' }}" 
-                  value="{{ form.initial.tva_rate }}" 
-                  >
-            <small class="form-text text-muted">Default rate from company settings ({{ form.initial.tva_rate|default:'19.0' }})</small>
-            {% for error in form.tva_rate.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
-          </div>
-          
-          <!-- Stamp Fee Field -->
-          <div class="col-md-6">
-            <div class="form-check mt-4">
-              <input class="form-check-input" type="checkbox" name="include_stamp_fee" id="id_include_stamp_fee" {% if form.include_stamp_fee.value or form.initial.include_stamp_fee %}checked{% endif %}>
-              <label class="form-check-label" for="id_include_stamp_fee">
-                Include Stamp Fee
-              </label>
-              <small class="form-text text-muted d-block">{{ form.include_stamp_fee.help_text }}</small>
-              {% for error in form.include_stamp_fee.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+      <div class="card-body p-4">
+        <!-- Error Messages Section -->
+        {% if form.errors or formset.errors or formset.non_form_errors %}
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+          <div class="d-flex align-items-center">
+            <i class="fas fa-exclamation-triangle me-3" style="font-size: 1.5rem;"></i>
+            <div>
+              <h5 class="alert-heading mb-1">Invoice Creation Failed</h5>
+              <p class="mb-0">Please correct the following errors:</p>
+
+              <!-- Form non-field errors (general errors) -->
+              {% if form.non_field_errors %}
+              <ul class="mt-2 mb-0">
+                {% for error in form.non_field_errors %}
+                <li><strong>{{ error }}</strong></li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+
+              <!-- Formset non-form errors (formset-level validation errors) -->
+              {% if formset.non_form_errors %}
+              <ul class="mt-2 mb-0">
+                {% for error in formset.non_form_errors %}
+                <li><strong>{{ error }}</strong></li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+
+              <!-- Individual formset form errors -->
+              {% if formset.errors %}
+              <ul class="mt-2 mb-0">
+                {% for form_errors in formset.errors %}
+                {% for field, errors in form_errors.items %}
+                {% for error in errors %}
+                <li><strong>Product Item {{ forloop.parentloop.parentloop.counter }}:</strong> {{ error }}</li>
+                {% endfor %}
+                {% endfor %}
+                {% endfor %}
+              </ul>
+              {% endif %}
             </div>
           </div>
-          
-          <!-- Client Name Field -->
-          <div class="col-md-6">
-            <label class="form-label fw-semibold" for="id_client_name">Client Name</label>
-            <input type="text" name="client_name" id="id_client_name" class="form-control" placeholder="Client name" {% if form.client_name.value %}value="{{ form.client_name.value }}"{% endif %}>
-            {% if form.client_name.help_text %}<small class="form-text text-muted">{{ form.client_name.help_text }}</small>{% endif %}
-            {% for error in form.client_name.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
-          </div>
-          
-          <!-- Client Address Field -->
-          <div class="col-md-6">
-            <label class="form-label fw-semibold" for="id_client_address">Client Address</label>
-            <textarea name="client_address" id="id_client_address" class="form-control" rows="2" placeholder="Client address">{% if form.client_address.value %}{{ form.client_address.value }}{% endif %}</textarea>
-            {% if form.client_address.help_text %}<small class="form-text text-muted">{{ form.client_address.help_text }}</small>{% endif %}
-            {% for error in form.client_address.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
-          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
+        {% endif %}
+
+        <form method="post" id="invoice-form" autocomplete="off" class="w-100">
+          {% csrf_token %}
+          {{ formset.management_form }}
+          <div class="mb-4">
+            <h4 class="fw-bold mb-3" style="color: #39739d;"><i class="fas fa-info-circle me-2"
+                style="color: #7cb9e8;"></i>Invoice Details</h4>
+            <div class="row g-3">
+              <!-- TVA Rate Field -->
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" for="id_tva_rate">TVA Rate (%)</label>
+                {{ form.tva_rate.as_hidden }}
+                <input type="number" name="tva_rate" id="id_tva_rate" class="form-control" step="0.01" min="0" max="100"
+                  placeholder="{{ form.initial.tva_rate|default:'19.0' }}" value="{{ form.initial.tva_rate }}">
+                <small class="form-text text-muted">Default rate from company settings ({{
+                  form.initial.tva_rate|default:'19.0' }})</small>
+                {% for error in form.tva_rate.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor
+                %}
+              </div>
+
+              <!-- Stamp Fee Field -->
+              <div class="col-md-6">
+                <div class="form-check mt-4">
+                  <input class="form-check-input" type="checkbox" name="include_stamp_fee" id="id_include_stamp_fee" {% if form.include_stamp_fee.value or form.initial.include_stamp_fee %}checked{% endif %}>
+                  <label class="form-check-label" for="id_include_stamp_fee">
+                    Include Stamp Fee
+                  </label>
+                  <small class="form-text text-muted d-block">{{ form.include_stamp_fee.help_text }}</small>
+                  {% for error in form.include_stamp_fee.errors %}<div class="invalid-feedback d-block">{{ error }}
+                  </div>{% endfor %}
+                </div>
+              </div>
+
+              <!-- Client Name Field -->
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" for="id_client_name">Client Name</label>
+                <input type="text" name="client_name" id="id_client_name" class="form-control" placeholder="Client name"
+                  {% if form.client_name.value %}value="{{ form.client_name.value }}" {% endif %}>
+                {% if form.client_name.help_text %}<small class="form-text text-muted">{{ form.client_name.help_text
+                  }}</small>{% endif %}
+                {% for error in form.client_name.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{%
+                endfor %}
+              </div>
+
+              <!-- Client Address Field -->
+              <div class="col-md-6">
+                <label class="form-label fw-semibold" for="id_client_address">Client Address</label>
+                <textarea name="client_address" id="id_client_address" class="form-control" rows="2"
+                  placeholder="Client address">{% if form.client_address.value %}{{ form.client_address.value }}{% endif %}</textarea>
+                {% if form.client_address.help_text %}<small class="form-text text-muted">{{
+                  form.client_address.help_text }}</small>{% endif %}
+                {% for error in form.client_address.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{%
+                endfor %}
+              </div>
+            </div>
+          </div>
+          <div class="mb-4">
+            <h4 class="fw-bold mb-3" style="color: #39739d;"><i class="fas fa-list-ul me-2"
+                style="color: #7cb9e8;"></i>Invoice Items</h4>
+            {{ formset.management_form }}
+            <div class="table-responsive">
+              <table class="modern-table" id="invoice-items-table">
+                <thead style="background: #eae9ff; color: #39739d;">
+                  <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Selling Price</th>
+                    <th>Total</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="invoice-items-body">
+                  {% for form in formset.forms %}
+                  <tr class="item-form">
+                    {{ form.id }}
+                    <td>{{ form.product }}</td>
+                    <td>{{ form.quantity }}</td>
+                    <td>{{ form.selling_price }}</td>
+                    <td><input type="number" step="0.01" class="form-control form-control-lg invoice-total-input"
+                        value="" placeholder="Total" readonly /></td>
+                    <td>
+                      <button type="button" class="btn btn-sm btn-danger rounded px-3 delete-row"
+                        style="border-radius: 0.5rem;">Remove</button>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                  <!-- Hidden empty form row for JS cloning -->
+                  <tr id="empty-form-row" style="display:none;">
+                    {% with form=formset.empty_form %}
+                    {{ form.id }}
+                    <td>{{ form.product }}</td>
+                    <td>{{ form.quantity }}</td>
+                    <td>{{ form.selling_price }}</td>
+                    <td><input type="number" step="0.01" class="form-control form-control-lg invoice-total-input"
+                        value="" placeholder="Total" readonly /></td>
+                    {% endwith %}
+                    <td><button type="button" class="btn btn-sm btn-danger rounded px-3 delete-row"
+                        style="border-radius: 0.5rem;">Remove</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <button type="button" class="btn btn-info mb-3 rounded shadow-sm px-4" id="add-item"
+              style="background: #7cb9e8; border: none; color: #fff; font-weight: 600; border-radius: 0.5rem;">
+              <i class="fa fa-plus me-2"></i> Add Another Item
+            </button>
+          </div>
+          <div class="row mt-4 mb-2 justify-content-end">
+            <div class="col-md-4">
+              <div class="p-3" style="background: #eae9ff; border-radius: 0.5rem;">
+                <label for="invoice-total-price" class="fw-bold mb-2" style="color: #39739d;">Invoice Total</label>
+                <input type="number" step="0.01" class="form-control form-control-lg invoice-grand-total"
+                  id="invoice-total-price" name="invoice_total" value="" placeholder="Total invoice amount" />
+              </div>
+            </div>
+          </div>
+          <div class="mt-4 d-flex justify-content-end">
+            <button type="submit" class="btn rounded shadow-sm px-5"
+              style="background: #eae9ff; color: #39739d; border: 1px solid #dbeafe;">
+              <i class="fas fa-save me-1"></i> Save Invoice
+            </button>
+            <a href="{% url 'invoice-list' %}" class="btn btn-secondary ms-3">Cancel</a>
+          </div>
+        </form>
       </div>
-                    <div class="mb-4">
-  <h4 class="fw-bold mb-3" style="color: #39739d;"><i class="fas fa-list-ul me-2" style="color: #7cb9e8;"></i>Invoice Items</h4>
-  {{ formset.management_form }}
-  <div class="table-responsive">
-    <table class="modern-table" id="invoice-items-table">
-      <thead style="background: #e3f2fd; color: #39739d;">
-        <tr>
-          <th>Product</th>
-          <th>Quantity</th>
-          <th>Selling Price</th>
-          <th>Total</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="invoice-items-body">
-        {% for form in formset.forms %}
-        <tr class="item-form">
-          {{ form.id }}
-          <td>{{ form.product }}</td>
-          <td>{{ form.quantity }}</td>
-          <td>{{ form.selling_price }}</td>
-          <td><input type="number" step="0.01" class="form-control form-control-lg invoice-total-input" value="" placeholder="Total" readonly /></td>
-          <td>
-            <button type="button" class="btn btn-sm btn-danger rounded px-3 delete-row" style="border-radius: 0.5rem;">Remove</button>
-          </td>
-        </tr>
-        {% endfor %}
-        <!-- Hidden empty form row for JS cloning -->
-        <tr id="empty-form-row" style="display:none;">
-          {% with form=formset.empty_form %}
-          {{ form.id }}
-          <td>{{ form.product }}</td>
-          <td>{{ form.quantity }}</td>
-          <td>{{ form.selling_price }}</td>
-          <td><input type="number" step="0.01" class="form-control form-control-lg invoice-total-input" value="" placeholder="Total" readonly /></td>
-          {% endwith %}
-          <td><button type="button" class="btn btn-sm btn-danger rounded px-3 delete-row" style="border-radius: 0.5rem;">Remove</button></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-  <button type="button" class="btn btn-info mb-3 rounded shadow-sm px-4" id="add-item" style="background: #7cb9e8; border: none; color: #fff; font-weight: 600; border-radius: 0.5rem;">
-    <i class="fa fa-plus me-2"></i> Add Another Item
-  </button>
-</div>
-                    <div class="row mt-4 mb-2 justify-content-end">
-  <div class="col-md-4">
-    <div class="p-3" style="background: #e3f2fd; border-radius: 0.5rem;">
-      <label for="invoice-total-price" class="fw-bold mb-2" style="color: #39739d;">Invoice Total</label>
-      <input type="number" step="0.01" class="form-control form-control-lg invoice-grand-total" id="invoice-total-price" name="invoice_total" value="" placeholder="Total invoice amount" />
     </div>
   </div>
-</div>
-<div class="mt-4 d-flex justify-content-end">
-  <button type="submit" class="btn rounded shadow-sm px-5" style="background: #e3f2fd; color: #39739d; border: 1px solid #dbeafe;">
-    <i class="fas fa-save me-1"></i> Save Invoice
-  </button>
-  <a href="{% url 'invoice-list' %}" class="btn btn-secondary ms-3">Cancel</a>
-</div>
-</form>
-</div>
 </div>
 {% endblock %}
 
 {% block script_content %}
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const addButton = document.getElementById('add-item');
-        const tbody = document.getElementById('invoice-items-body');
-        function updateFormCount() {
-            const count = tbody.querySelectorAll('.item-form').length;
-            const totalFormsInput = document.getElementById('id_items-TOTAL_FORMS');
-            if (!totalFormsInput) {
-                console.error('[Invoice JS] Management form not found! Make sure {{ formset.management_form }} is rendered directly inside <form>.');
-                return;
-            }
-            totalFormsInput.value = count;
-            console.log('[Invoice JS] Updated form count:', count);
-        }
-        function setupDeleteButtons() {
-            tbody.querySelectorAll('.delete-row').forEach(button => {
-                button.onclick = function() {
-                    const removedRow = this.closest('tr');
-                    removedRow.remove();
-                    updateFormCount();
-                    console.log('[Invoice JS] Removed an item row.');
-                };
-            });
-        }
-        setupDeleteButtons();
-        addButton.addEventListener('click', function() {
-            const emptyFormRow = document.getElementById('empty-form-row');
-            const newRow = emptyFormRow.cloneNode(true);
-            newRow.style.display = '';
-            newRow.removeAttribute('id');
-            newRow.classList.add('item-form');
-            const formIdx = tbody.querySelectorAll('.item-form').length;
-            newRow.querySelectorAll('input,select,label').forEach(function(el) {
-                if (el.name) el.name = el.name.replace(/__prefix__/g, formIdx);
-                if (el.id) el.id = el.id.replace(/__prefix__/g, formIdx);
-                if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/__prefix__/g, formIdx);
-                if (el.type === 'text' || el.type === 'number') el.value = '';
-            });
-            tbody.appendChild(newRow);
-            updateFormCount();
-            setupDeleteButtons();
-            console.log('[Invoice JS] Added a new item row.');
-        });
+  document.addEventListener('DOMContentLoaded', function () {
+    // Debug formset management form
+    console.log('[Invoice JS] Looking for management form fields...');
+    const managementFormFields = document.querySelectorAll('[name$="-TOTAL_FORMS"], [name$="-INITIAL_FORMS"], [name$="-MIN_NUM_FORMS"], [name$="-MAX_NUM_FORMS"]');
+    managementFormFields.forEach(field => {
+      console.log('[Invoice JS] Found management form field:', field.name, '=', field.value);
     });
+    
+    // Debug empty form template
+    const emptyFormRow = document.getElementById('empty-form-row');
+    if (emptyFormRow) {
+      console.log('[Invoice JS] Empty form row found');
+      const inputs = emptyFormRow.querySelectorAll('input, select');
+      inputs.forEach(input => {
+        console.log('[Invoice JS] Empty form input:', input.name || 'unnamed', input.id || 'no id');
+      });
+    } else {
+      console.error('[Invoice JS] Empty form row NOT found! Check template.');
+    }
+    // Initialize Select2 for all product dropdowns
+    $('.select2').select2({
+      width: '100%',
+      dropdownCssClass: 'select2-dropdown-modern',
+      theme: 'classic'
+    });
+
+    // Initialize Select2 for any new product fields added dynamically
+    function initializeNewSelect2() {
+      $('.select2:not(.select2-hidden-accessible)').select2({
+        width: '100%',
+        dropdownCssClass: 'select2-dropdown-modern',
+        theme: 'classic'
+      });
+    }
+    const addButton = document.getElementById('add-item');
+    const tbody = document.getElementById('invoice-items-body');
+    function updateFormCount() {
+      const count = tbody.querySelectorAll('.item-form').length;
+      // Look for any of the possible management form field IDs
+      const totalFormsInput = document.getElementById('id_items-TOTAL_FORMS') || 
+                             document.getElementById('id_invoiceitem_set-TOTAL_FORMS') || 
+                             document.querySelector('[name$="-TOTAL_FORMS"]');
+      if (!totalFormsInput) {
+        console.error('[Invoice JS] Management form not found! Make sure {{ formset.management_form }} is rendered directly inside <form>.');
+        return;
+      }
+      totalFormsInput.value = count;
+      console.log('[Invoice JS] Updated form count:', count, 'using field', totalFormsInput.id);
+    }
+    function setupDeleteButtons() {
+      tbody.querySelectorAll('.delete-row').forEach(button => {
+        button.onclick = function () {
+          const removedRow = this.closest('tr');
+          removedRow.remove();
+          updateFormCount();
+          console.log('[Invoice JS] Removed an item row.');
+        };
+      });
+    }
+    setupDeleteButtons();
+    addButton.addEventListener('click', function () {
+      const emptyFormRow = document.getElementById('empty-form-row');
+      const newRow = emptyFormRow.cloneNode(true);
+      newRow.style.display = '';
+      newRow.removeAttribute('id');
+      newRow.classList.add('item-form');
+      const formIdx = tbody.querySelectorAll('.item-form').length;
+      
+      // Find the formset prefix by looking at the management form
+      const totalFormsInput = document.getElementById('id_items-TOTAL_FORMS') || 
+                             document.getElementById('id_invoiceitem_set-TOTAL_FORMS') || 
+                             document.querySelector('[name$="-TOTAL_FORMS"]');
+      let prefix = 'items';
+      if (totalFormsInput) {
+        const name = totalFormsInput.name;
+        prefix = name.substring(0, name.indexOf('-TOTAL_FORMS'));
+        console.log('[Invoice JS] Using formset prefix:', prefix);
+      }
+      
+      newRow.querySelectorAll('input,select,label').forEach(function (el) {
+        if (el.name) el.name = el.name.replace(/__prefix__/g, formIdx).replace(/items-/g, prefix + '-');
+        if (el.id) el.id = el.id.replace(/__prefix__/g, formIdx).replace(/items-/g, prefix + '-');
+        if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/__prefix__/g, formIdx).replace(/items-/g, prefix + '-');
+        if (el.type === 'text' || el.type === 'number') el.value = '';
+      });
+      tbody.appendChild(newRow);
+      updateFormCount();
+      setupDeleteButtons();
+      // Initialize Select2 for any new select fields
+      initializeNewSelect2();
+      console.log('[Invoice JS] Added a new item row.');
+    });
+  });
 </script>
-{% endblock %}
+{% endblock script_content %}
