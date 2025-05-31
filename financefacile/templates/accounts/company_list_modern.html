@@ -1,0 +1,424 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block sidebar %}
+{% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+{% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+{% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.bootstrap5.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <div class="d-flex align-items-center">
+      <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fa-solid fa-building me-2"
+          style="color: #7cb9e8;"></i>Companies</h2>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'organizations:company-create' %}" class="btn btn-primary shadow-sm rounded-pill px-4"
+        style="background: #7cb9e8; border: none; font-weight: 600;">
+        <i class="fa fa-plus"></i> Add Company
+      </a>
+    </div>
+  </div>
+
+  <!-- Stats Cards -->
+  <style>
+    /* Modern Dashboard Card Styles */
+    .dashboard-card {
+      border: none;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      padding: 1.5rem;
+      min-height: 120px;
+      background: #fff;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
+    }
+
+    .dashboard-card:hover {
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+      transform: translateY(-5px);
+    }
+
+    .dashboard-card .icon-wrapper {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .dashboard-card .icon {
+      font-size: 1.5rem;
+      color: #fff;
+    }
+
+    .dashboard-card .card-title {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #6c757d;
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .dashboard-card .card-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #333;
+    }
+
+    .dashboard-card .progress-wrapper {
+      height: 8px;
+      background-color: #f0f0f0;
+      border-radius: 4px;
+      margin-top: auto;
+    }
+
+    .dashboard-card .progress-bar {
+      height: 100%;
+      border-radius: 4px;
+    }
+
+    /* Card color schemes */
+    .dashboard-card.companies .icon-wrapper {
+      background-color: rgba(77, 182, 172, 0.2);
+    }
+
+    .dashboard-card.companies .icon {
+      color: #4DB6AC;
+    }
+
+    .dashboard-card.companies .progress-bar {
+      background-color: #4DB6AC;
+    }
+
+    .dashboard-card.users .icon-wrapper {
+      background-color: rgba(66, 165, 245, 0.2);
+    }
+
+    .dashboard-card.users .icon {
+      color: #42A5F5;
+    }
+
+    .dashboard-card.users .progress-bar {
+      background-color: #42A5F5;
+    }
+
+    .dashboard-card.active .icon-wrapper {
+      background-color: rgba(255, 167, 38, 0.2);
+    }
+
+    .dashboard-card.active .icon {
+      color: #FFA726;
+    }
+
+    .dashboard-card.active .progress-bar {
+      background-color: #FFA726;
+    }
+    
+    /* Action buttons styling */
+    .action-buttons-container {
+      display: flex;
+      gap: 5px;
+      justify-content: center;
+    }
+    
+    .action-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+    
+    .action-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .action-view {
+      background-color: #42A5F5;
+    }
+    
+    .action-edit {
+      background-color: #4DB6AC;
+    }
+    
+    .action-archive, .action-delete {
+      background-color: #FF7043;
+    }
+    
+    .action-restore {
+      background-color: #7E57C2;
+    }
+    
+    .status-badge {
+      padding: 5px 10px;
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    
+    .status-badge i {
+      font-size: 8px;
+    }
+    
+    .status-badge.active {
+      background-color: rgba(77, 182, 172, 0.15);
+      color: #4DB6AC;
+    }
+    
+    .status-badge.offline {
+      background-color: rgba(239, 83, 80, 0.15);
+      color: #EF5350;
+    }
+  </style>
+
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="dashboard-card companies">
+        <div class="icon-wrapper">
+          <i class="fas fa-building icon"></i>
+        </div>
+        <div class="card-title">Total Companies</div>
+        <div class="card-value">{{ total_companies }}</div>
+        <div class="progress-wrapper">
+          <div class="progress-bar" style="width: 85%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="dashboard-card users">
+        <div class="icon-wrapper">
+          <i class="fas fa-users icon"></i>
+        </div>
+        <div class="card-title">Total Users</div>
+        <div class="card-value">{{ total_users }}</div>
+        <div class="progress-wrapper">
+          <div class="progress-bar" style="width: 70%"></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="dashboard-card active">
+        <div class="icon-wrapper">
+          <i class="fas fa-check-circle icon"></i>
+        </div>
+        <div class="card-title">Active Companies</div>
+        <div class="card-value">{{ active_companies }}</div>
+        <div class="progress-wrapper">
+          <div class="progress-bar" style="width: 65%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DataTables will handle filtering and searching -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <div class="shadow-sm border-0" style="background: #ffffff;">
+        <div class="card-body p-4">
+          {% if companies %}
+          <!-- DataTables CSS -->
+          <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+          <style>
+            /* Custom DataTables styling */
+            .dataTables_wrapper .dataTables_length,
+            .dataTables_wrapper .dataTables_filter,
+            .dataTables_wrapper .dataTables_info,
+            .dataTables_wrapper .dataTables_processing,
+            .dataTables_wrapper .dataTables_paginate {
+              color: #39739d;
+              margin-bottom: 15px;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+            .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+              background: #e7f1fa;
+              border-color: #7cb9e8;
+              color: #39739d !important;
+              border-radius: 50px;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+              background: #e7f1fa;
+              border-color: #7cb9e8;
+              color: #39739d !important;
+              border-radius: 50px;
+            }
+
+            .dataTables_wrapper .dataTables_paginate .paginate_button {
+              color: #39739d !important;
+              border-radius: 50px;
+              margin: 0 3px;
+            }
+
+            .dataTables_wrapper .dataTables_length select {
+              border-color: #e0e6ed;
+              background-color: #f8f9fa;
+              color: #39739d;
+              border-radius: 8px;
+              padding: 5px 10px;
+            }
+
+            .dataTables_wrapper .dataTables_filter input {
+              border-color: #e0e6ed;
+              background-color: #f8f9fa;
+              color: #39739d;
+              border-radius: 20px;
+              padding: 5px 12px;
+              width: 180px;
+              font-size: 0.9rem;
+              box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+              transition: all 0.2s ease;
+            }
+            
+            .dataTables_wrapper .dataTables_filter input:focus {
+              box-shadow: 0 2px 8px rgba(124, 185, 232, 0.25);
+              border-color: #7cb9e8;
+              outline: none;
+            }
+            
+            .dataTables_wrapper .dataTables_filter {
+              margin-bottom: 15px;
+            }
+
+            table.dataTable thead th,
+            table.dataTable thead td {
+              border-bottom: 1px solid #e0e6ed;
+              padding: 12px 10px;
+              font-weight: 600;
+              color: #39739d;
+              background-color: #FAFDFF;
+            }
+
+            table.dataTable.no-footer {
+              border-bottom: 1px solid #e0e6ed;
+            }
+
+            table.dataTable tbody tr:hover {
+              background-color: rgba(124, 185, 232, 0.1);
+            }
+
+            .badge {
+              padding: 6px 10px;
+              font-weight: 500;
+              border-radius: 50px;
+            }
+          </style>
+          <table id="companies-table" class="table table-borderless align-middle">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>SIRET Number</th>
+                <th>Address</th>
+                <th>Phone Number</th>
+                <th>Users</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for company in companies %}
+              <tr>
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar-sm me-2 d-flex align-items-center justify-content-center rounded-circle" 
+                         style="width: 40px; height: 40px; background-color: #e7f1fa; color: #39739d;">
+                      <i class="fas fa-building"></i>
+                    </div>
+                    <div>
+                      <h6 class="mb-0">{{ company.name }}</h6>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ company.siret_number|default:"--" }}</td>
+                <td>{{ company.address|default:"--" }}</td>
+                <td>{{ company.phone_number|default:"--" }}</td>
+                <td>
+                  <span class="badge bg-light text-dark">
+                    {{ company.userprofile_set.count }} users
+                  </span>
+                </td>
+                <td>
+                  <div class="action-buttons-container">
+                    <a href="{% url 'organizations:company-detail' company.id %}" class="action-btn action-view" title="View">
+                      <i class="fas fa-eye"></i>
+                    </a>
+                    <a href="{% url 'organizations:company-edit' company.id %}" class="action-btn action-edit" title="Edit">
+                      <i class="fas fa-pencil-alt"></i>
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+          <!-- DataTables JS -->
+          <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+          <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+          <script>
+            $(document).ready(function () {
+              // Initialize DataTable
+              $('#companies-table').DataTable({
+                responsive: true,
+                pageLength: 10,
+                lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],
+                language: {
+                  search: "_INPUT_",
+                  searchPlaceholder: "Search companies...",
+                  lengthMenu: "Show _MENU_ companies",
+                  info: "Showing _START_ to _END_ of _TOTAL_ companies",
+                  infoEmpty: "Showing 0 to 0 of 0 companies",
+                  infoFiltered: "(filtered from _MAX_ total companies)"
+                },
+                dom: '<"row"<"col-sm-6"l><"col-sm-6"f>><"row"<"col-sm-12"tr>><"row"<"col-sm-5"i><"col-sm-7"p>>'
+              });
+            });
+          </script>
+          {% else %}
+          <div class="col-12">
+            <div class="card shadow-sm border-0" style="border-radius: 1.2rem; background: #fafdff;">
+              <div class="card-body text-center py-5">
+                <i class="fas fa-building mb-3" style="font-size: 3rem; color: #7cb9e8;"></i>
+                <h4 class="mb-3">No Companies Found</h4>
+                <p class="text-muted">You haven't created any companies yet. Click the "Add Company" button above to create your first company.</p>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+{% endblock %}

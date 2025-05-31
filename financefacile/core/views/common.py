@@ -259,6 +259,10 @@ def home(request):
     monthly_revenue_current_year = [0] * 12
     monthly_revenue_previous_year = [0] * 12
     
+    # Generate monthly expense data for current and previous years
+    monthly_expense_current_year = [0] * 12
+    monthly_expense_previous_year = [0] * 12
+    
     if user_company:
         # Get all invoices for current and previous year - use timezone-aware datetimes
         tz = timezone.get_current_timezone()
@@ -281,6 +285,20 @@ def home(request):
             created_at__lte=previous_year_end
         )
         
+        # Get current year expenses
+        current_year_expenses = models.Expense.objects.filter(
+            company=user_company,
+            date__gte=current_year_start.date(),
+            date__lte=current_year_end.date()
+        )
+        
+        # Get previous year expenses
+        previous_year_expenses = models.Expense.objects.filter(
+            company=user_company,
+            date__gte=previous_year_start.date(),
+            date__lte=previous_year_end.date()
+        )
+        
         # Calculate monthly revenue for current year
         for invoice in current_year_invoices:
             month_index = invoice.created_at.month - 1  # 0-based index
@@ -290,6 +308,16 @@ def home(request):
         for invoice in previous_year_invoices:
             month_index = invoice.created_at.month - 1  # 0-based index
             monthly_revenue_previous_year[month_index] += float(invoice.get_total())
+        
+        # Calculate monthly expenses for current year
+        for expense in current_year_expenses:
+            month_index = expense.date.month - 1  # 0-based index
+            monthly_expense_current_year[month_index] += float(expense.amount)
+        
+        # Calculate monthly expenses for previous year
+        for expense in previous_year_expenses:
+            month_index = expense.date.month - 1  # 0-based index
+            monthly_expense_previous_year[month_index] += float(expense.amount)
         
         # Calculate total previous year revenue
         previous_year_revenue = float(sum(monthly_revenue_previous_year))
@@ -341,6 +369,8 @@ def home(request):
         'next_next_month': next_next_month,
         'monthly_revenue_current_year': json.dumps(monthly_revenue_current_year, cls=DecimalEncoder),
         'monthly_revenue_previous_year': json.dumps(monthly_revenue_previous_year, cls=DecimalEncoder),
+        'monthly_expense_current_year': json.dumps(monthly_expense_current_year, cls=DecimalEncoder),
+        'monthly_expense_previous_year': json.dumps(monthly_expense_previous_year, cls=DecimalEncoder),
         'previous_year_revenue': previous_year_revenue,
     }
     context['page_title'] = 'Dashboard'

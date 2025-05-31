@@ -1,0 +1,302 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block sidebar %}
+{% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+{% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+{% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block extra_css %}
+<style>
+  .form-control, .form-select {
+    background: #fafdff;
+    border: 1px solid #dbeafe;
+    color: #39739d;
+    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .form-control:focus, .form-select:focus {
+    background: #F4F3FD;
+    border-color: #7cb9e8;
+    color: #39739d;
+    box-shadow: 0 0 0 0.1rem #b6e0fe;
+  }
+  
+  .card {
+    border-radius: 1rem;
+    border: none;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+  }
+  
+  .card-header {
+    background: #F4F3FD;
+    border-bottom: 1px solid #E0DEFD;
+    border-radius: 1rem 1rem 0 0 !important;
+    padding: 1.25rem 1.5rem;
+  }
+  
+  .btn-primary {
+    background: #7cb9e8;
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.5rem;
+  }
+  
+  .btn-primary:hover {
+    background: #5a9ad6;
+  }
+  
+  .btn-secondary {
+    background: #f8f9fa;
+    border: 1px solid #e9ecef;
+    color: #495057;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    padding: 0.5rem 1.5rem;
+  }
+  
+  .form-label {
+    font-weight: 600;
+    color: #39739d;
+    margin-bottom: 0.5rem;
+  }
+  
+  .section-title {
+    color: #39739d;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .section-title i {
+    color: #7cb9e8;
+    margin-right: 0.5rem;
+  }
+  
+  .form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+  }
+  
+  .invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+  
+  .select2-container--default .select2-selection--single {
+    background: #fafdff;
+    border: 1px solid #dbeafe;
+    border-radius: 0.5rem;
+    height: calc(3rem + 2px);
+    padding: 0.5rem 0.75rem;
+  }
+  
+  .select2-container--default .select2-selection--single .select2-selection__arrow {
+    height: calc(3rem + 2px);
+  }
+  
+  .select2-container--default .select2-selection--single .select2-selection__rendered {
+    color: #39739d;
+    line-height: 2rem;
+  }
+  
+  .select2-container--default .select2-results__option--highlighted[aria-selected] {
+    background-color: #7cb9e8;
+  }
+</style>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg-8 mx-auto">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header d-flex align-items-center justify-content-between">
+          <h5 class="mb-0 fw-bold">
+            <i class="fas fa-receipt me-2 text-primary"></i>
+            {% if form.instance.pk %}Edit{% else %}Add New{% endif %} Expense
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          {% if form.errors %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="d-flex">
+              <div class="me-3">
+                <i class="fas fa-exclamation-triangle fa-2x"></i>
+              </div>
+              <div>
+                <h5 class="alert-heading">Please correct the errors below</h5>
+                <ul class="mb-0">
+                  {% for field in form %}
+                  {% for error in field.errors %}
+                  <li>{{ field.label }}: {{ error }}</li>
+                  {% endfor %}
+                  {% endfor %}
+                  {% for error in form.non_field_errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endif %}
+
+          <form method="post" id="expense-form" autocomplete="off" class="w-100" enctype="multipart/form-data">
+            {% csrf_token %}
+            
+            <div class="mb-4">
+              <h4 class="section-title">
+                <i class="fas fa-info-circle"></i>Expense Details
+              </h4>
+              
+              <div class="row g-3">
+                <!-- Category Field -->
+                <div class="col-md-6">
+                  <label for="{{ form.category.id_for_label }}" class="form-label">Category</label>
+                  {{ form.category }}
+                  {% if form.category.help_text %}
+                  <small class="form-text text-muted">{{ form.category.help_text }}</small>
+                  {% endif %}
+                  {% for error in form.category.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                
+                <!-- Date Field -->
+                <div class="col-md-6">
+                  <label for="{{ form.date.id_for_label }}" class="form-label">Date</label>
+                  {{ form.date }}
+                  {% if form.date.help_text %}
+                  <small class="form-text text-muted">{{ form.date.help_text }}</small>
+                  {% endif %}
+                  {% for error in form.date.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                
+                <!-- Amount Field -->
+                <div class="col-md-6">
+                  <label for="{{ form.amount.id_for_label }}" class="form-label">Amount</label>
+                  {{ form.amount }}
+                  {% if form.amount.help_text %}
+                  <small class="form-text text-muted">{{ form.amount.help_text }}</small>
+                  {% endif %}
+                  {% for error in form.amount.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                
+                <!-- Description Field -->
+                <div class="col-md-12">
+                  <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                  {{ form.description }}
+                  {% if form.description.help_text %}
+                  <small class="form-text text-muted">{{ form.description.help_text }}</small>
+                  {% endif %}
+                  {% for error in form.description.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                  {% endfor %}
+                </div>
+                
+                <!-- Attachment Field -->
+                <div class="col-md-12">
+                  <label for="{{ form.attachment.id_for_label }}" class="form-label">Attachment</label>
+                  <div class="input-group">
+                    {{ form.attachment }}
+                    {% if form.instance.attachment %}
+                    <a href="{{ form.instance.attachment.url }}" class="btn btn-outline-secondary" target="_blank">
+                      <i class="fas fa-eye"></i> View Current
+                    </a>
+                    {% endif %}
+                  </div>
+                  {% if form.attachment.help_text %}
+                  <small class="form-text text-muted">{{ form.attachment.help_text }}</small>
+                  {% endif %}
+                  {% for error in form.attachment.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-end mt-4">
+              <a href="{% url 'expenses-list' %}" class="btn btn-secondary me-2">
+                <i class="fas fa-times"></i> Cancel
+              </a>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Expense
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block script_content %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('Expense form initialized');
+    
+    // Initialize Select2 for category dropdown
+    if ($.fn.select2) {
+      $('#{{ form.category.id_for_label }}').select2({
+        width: '100%',
+        theme: 'classic',
+        placeholder: 'Select a category...',
+        allowClear: true
+      });
+    }
+    
+    // Format amount input
+    const amountInput = document.getElementById('{{ form.amount.id_for_label }}');
+    if (amountInput) {
+      amountInput.addEventListener('blur', function() {
+        if (this.value) {
+          const amount = parseFloat(this.value);
+          if (!isNaN(amount)) {
+            this.value = amount.toFixed(2);
+          }
+        }
+      });
+    }
+    
+    // Show filename in file input
+    const attachmentInput = document.getElementById('{{ form.attachment.id_for_label }}');
+    if (attachmentInput) {
+      attachmentInput.addEventListener('change', function() {
+        const fileName = this.files[0]?.name;
+        if (fileName) {
+          const fileNameDisplay = document.createElement('small');
+          fileNameDisplay.classList.add('form-text', 'text-success', 'd-block');
+          fileNameDisplay.textContent = `Selected file: ${fileName}`;
+          
+          // Remove any existing file name display
+          const existingDisplay = this.parentNode.querySelector('.text-success');
+          if (existingDisplay) {
+            existingDisplay.remove();
+          }
+          
+          this.parentNode.appendChild(fileNameDisplay);
+        }
+      });
+    }
+  });
+</script>
+{% endblock script_content %}

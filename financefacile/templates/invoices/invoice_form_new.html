@@ -1,0 +1,554 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block sidebar %}
+{% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+{% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+  // Provide product prices for JS
+  window.PRODUCT_PRICES = {
+    {% for product in products %}
+    "{{ product.id }}": "{{ product.selling_price }}"{% if not forloop.last %}, {% endif %}
+    {% endfor %}
+  };
+</script>
+{% endblock extra_js %}
+
+{% block footer %}
+{% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <div class="card shadow-sm mb-4">
+        <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+          <h6 class="m-0 font-weight-bold text-primary">{{ page_title }}</h6>
+        </div>
+        <div class="card-body">
+          {% if form.errors %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="d-flex">
+              <div class="me-3">
+                <i class="fas fa-exclamation-triangle fa-2x"></i>
+              </div>
+              <div>
+                <h5 class="alert-heading">Please correct the errors below</h5>
+                <ul class="mb-0">
+                  {% for field in form %}
+                  {% for error in field.errors %}
+                  <li>{{ field.label }}: {{ error }}</li>
+                  {% endfor %}
+                  {% endfor %}
+                  {% for error in form.non_field_errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endif %}
+
+          {% if formset.non_form_errors %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="d-flex">
+              <div class="me-3">
+                <i class="fas fa-exclamation-triangle fa-2x"></i>
+              </div>
+              <div>
+                <h5 class="alert-heading">Please correct the errors below</h5>
+                <ul class="mb-0">
+                  {% for error in formset.non_form_errors %}
+                  <li>{{ error }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          {% endif %}
+
+          <form method="post" id="invoice-form" autocomplete="off" class="w-100">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            
+            <div class="mb-4">
+              <h4 class="fw-bold mb-3" style="color: #39739d;">
+                <i class="fas fa-info-circle me-2" style="color: #7cb9e8;"></i>Invoice Details
+              </h4>
+              <div class="row g-3">
+                <!-- TVA Rate Field -->
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold" for="id_tva_rate">TVA Rate (%)</label>
+                  <input type="number" name="tva_rate" id="id_tva_rate" class="form-control" step="0.01" min="0" max="100"
+                    value="{{ form.initial.tva_rate|default:'19.0' }}">
+                  <small class="form-text text-muted">Default rate from company settings ({{ form.initial.tva_rate|default:'19.0' }})</small>
+                  {% for error in form.tva_rate.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                  {% endfor %}
+                </div>
+
+                <!-- Stamp Fee Field -->
+                <div class="col-md-6">
+                  <div class="form-check mt-4">
+                    <input class="form-check-input" type="checkbox" name="include_stamp_fee" id="id_include_stamp_fee" 
+                      {% if form.include_stamp_fee.value or form.initial.include_stamp_fee %}checked{% endif %}>
+                    <label class="form-check-label" for="id_include_stamp_fee">
+                      Include Stamp Fee
+                    </label>
+                    <small class="form-text text-muted d-block">{{ form.include_stamp_fee.help_text }}</small>
+                    {% for error in form.include_stamp_fee.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                  </div>
+                </div>
+
+                <!-- Client Name Field -->
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold" for="id_client_name">Client Name</label>
+                  <input type="text" name="client_name" id="id_client_name" class="form-control" placeholder="Client name"
+                    {% if form.client_name.value %}value="{{ form.client_name.value }}"{% endif %}>
+                  {% if form.client_name.help_text %}
+                  <small class="form-text text-muted">{{ form.client_name.help_text }}</small>
+                  {% endif %}
+                  {% for error in form.client_name.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                  {% endfor %}
+                </div>
+
+                <!-- Client Address Field -->
+                <div class="col-md-6">
+                  <label class="form-label fw-semibold" for="id_client_address">Client Address</label>
+                  <textarea name="client_address" id="id_client_address" class="form-control" rows="2"
+                    placeholder="Client address">{% if form.client_address.value %}{{ form.client_address.value }}{% endif %}</textarea>
+                  {% if form.client_address.help_text %}
+                  <small class="form-text text-muted">{{ form.client_address.help_text }}</small>
+                  {% endif %}
+                  {% for error in form.client_address.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <h4 class="fw-bold mb-3" style="color: #39739d;">
+                <i class="fas fa-shopping-cart me-2" style="color: #7cb9e8;"></i>Invoice Items
+              </h4>
+              <div class="table-responsive">
+                <table class="table table-bordered" id="invoice-items-table">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Product</th>
+                      <th>Quantity</th>
+                      <th>Price</th>
+                      <th>Total</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="invoice-items-body">
+                    {% for form in formset.forms %}
+                    <tr class="item-form">
+                      {{ form.id }}
+                      <td>
+                        <select name="{{ form.product.html_name }}" id="{{ form.product.auto_id }}" class="form-control select2-product">
+                          <option value="">Select a product...</option>
+                          {% for product in products %}
+                          <option value="{{ product.id }}" data-price="{{ product.selling_price }}">{{ product.name }}</option>
+                          {% endfor %}
+                        </select>
+                        {% for error in form.product.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                      </td>
+                      <td>
+                        {{ form.quantity }}
+                        {% for error in form.quantity.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                      </td>
+                      <td>
+                        {{ form.selling_price }}
+                        {% for error in form.selling_price.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                      </td>
+                      <td>
+                        <input type="number" class="form-control item-total" readonly>
+                      </td>
+                      <td>
+                        <button type="button" class="btn btn-sm btn-danger delete-row">
+                          <i class="fas fa-trash"></i> Remove
+                        </button>
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              
+              <div class="mb-3">
+                <button type="button" id="add-item" class="btn btn-primary">
+                  <i class="fas fa-plus"></i> Add Item
+                </button>
+              </div>
+              
+              <!-- Empty form template for JavaScript -->
+              <div id="empty-form" class="d-none">
+                {% with form=formset.empty_form %}
+                <tr class="item-form">
+                  {{ form.id }}
+                  <td>
+                    <select name="{{ form.product.html_name }}" id="{{ form.product.auto_id }}" class="form-control select2-product">
+                      <option value="">Select a product...</option>
+                      {% for product in products %}
+                      <option value="{{ product.id }}" data-price="{{ product.selling_price }}">{{ product.name }}</option>
+                      {% endfor %}
+                    </select>
+                    {% for error in form.product.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {{ form.quantity }}
+                    {% for error in form.quantity.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    {{ form.selling_price }}
+                    {% for error in form.selling_price.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    <input type="number" class="form-control item-total" readonly>
+                  </td>
+                  <td>
+                    <button type="button" class="btn btn-sm btn-danger delete-row">
+                      <i class="fas fa-trash"></i> Remove
+                    </button>
+                  </td>
+                </tr>
+                {% endwith %}
+              </div>
+            </div>
+            
+            <div class="row mb-4">
+              <div class="col-md-6 offset-md-6">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                      <span>Subtotal:</span>
+                      <span id="subtotal">0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                      <span>TVA ({{ form.initial.tva_rate|default:'19.0' }}%):</span>
+                      <span id="tva-amount">0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2" id="stamp-fee-row">
+                      <span>Stamp Fee:</span>
+                      <span id="stamp-fee">0.00</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between fw-bold">
+                      <span>Total:</span>
+                      <span id="total-amount">0.00</span>
+                    </div>
+                    <input type="hidden" name="invoice_total" id="id_invoice_total">
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="d-flex justify-content-end">
+              <a href="{% url 'invoice-list' %}" class="btn btn-secondary me-2">Cancel</a>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save"></i> Save Invoice
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock content %}
+
+{% block script_content %}
+<script src="{% static 'js/select2.min.js' %}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Debug information
+    console.log('Invoice form initialized');
+    console.log('Product prices:', window.PRODUCT_PRICES);
+    
+    // Initialize Select2 for product dropdowns
+    initializeSelect2();
+    
+    // Setup event handlers for existing rows
+    setupExistingRows();
+    
+    // Setup add item button
+    setupAddItemButton();
+    
+    // Calculate initial totals
+    updateAllTotals();
+    
+    // Function to initialize Select2 for product dropdowns
+    function initializeSelect2() {
+      console.log('Initializing Select2 for product dropdowns');
+      $('.select2-product').each(function() {
+        console.log('Found product dropdown:', this.id);
+        $(this).select2({
+          width: '100%',
+          theme: 'classic',
+          placeholder: 'Select a product...',
+          allowClear: true,
+          dropdownParent: $('#invoice-form')
+        });
+      });
+    }
+    
+    // Function to initialize a new Select2 instance
+    function initializeNewSelect2(element) {
+      console.log('Initializing new Select2 for element:', element.id);
+      $(element).addClass('select2-product');
+      $(element).select2({
+        width: '100%',
+        theme: 'classic',
+        placeholder: 'Select a product...',
+        allowClear: true,
+        dropdownParent: $('#invoice-form')
+      });
+    }
+    
+    // Function to setup event handlers for existing rows
+    function setupExistingRows() {
+      const rows = document.querySelectorAll('#invoice-items-body .item-form');
+      rows.forEach(row => {
+        setupRowEventHandlers(row);
+      });
+    }
+    
+    // Function to setup event handlers for a specific row
+    function setupRowEventHandlers(row) {
+      // Product selection change handler
+      const productSelect = row.querySelector('select[name*="product"]');
+      if (productSelect) {
+        productSelect.addEventListener('change', function() {
+          updateRowPrice(row);
+        });
+        
+        // Initialize with current value if any
+        if (productSelect.value) {
+          updateRowPrice(row);
+        }
+      }
+      
+      // Quantity change handler
+      const quantityInput = row.querySelector('input[name*="quantity"]');
+      if (quantityInput) {
+        quantityInput.addEventListener('input', function() {
+          updateRowTotal(row);
+        });
+      }
+      
+      // Price change handler
+      const priceInput = row.querySelector('input[name*="selling_price"]');
+      if (priceInput) {
+        priceInput.addEventListener('input', function() {
+          updateRowTotal(row);
+        });
+      }
+      
+      // Delete button handler
+      const deleteButton = row.querySelector('.delete-row');
+      if (deleteButton) {
+        deleteButton.addEventListener('click', function() {
+          row.remove();
+          updateFormCount();
+          updateAllTotals();
+        });
+      }
+    }
+    
+    // Function to update the price based on selected product
+    function updateRowPrice(row) {
+      const productSelect = row.querySelector('select[name*="product"]');
+      const priceInput = row.querySelector('input[name*="selling_price"]');
+      
+      if (productSelect && priceInput && productSelect.value) {
+        const productId = productSelect.value;
+        if (window.PRODUCT_PRICES && window.PRODUCT_PRICES[productId]) {
+          priceInput.value = window.PRODUCT_PRICES[productId];
+          updateRowTotal(row);
+        }
+      }
+    }
+    
+    // Function to update the total for a row
+    function updateRowTotal(row) {
+      const quantityInput = row.querySelector('input[name*="quantity"]');
+      const priceInput = row.querySelector('input[name*="selling_price"]');
+      const totalInput = row.querySelector('.item-total');
+      
+      if (quantityInput && priceInput && totalInput) {
+        const quantity = parseFloat(quantityInput.value) || 0;
+        const price = parseFloat(priceInput.value) || 0;
+        const total = quantity * price;
+        
+        totalInput.value = total.toFixed(2);
+        updateAllTotals();
+      }
+    }
+    
+    // Function to update all totals (subtotal, TVA, total)
+    function updateAllTotals() {
+      // Calculate subtotal
+      let subtotal = 0;
+      document.querySelectorAll('.item-total').forEach(input => {
+        subtotal += parseFloat(input.value) || 0;
+      });
+      
+      // Get TVA rate
+      const tvaRateInput = document.getElementById('id_tva_rate');
+      const tvaRate = parseFloat(tvaRateInput.value) || 0;
+      
+      // Calculate TVA amount
+      const tvaAmount = subtotal * (tvaRate / 100);
+      
+      // Check if stamp fee is included
+      const includeStampFee = document.getElementById('id_include_stamp_fee').checked;
+      let stampFee = 0;
+      if (includeStampFee) {
+        // Get stamp fee from help text or use default
+        const stampFeeText = document.querySelector('small.form-text.text-muted').textContent;
+        const stampFeeMatch = stampFeeText.match(/stamp fee of (\d+(\.\d+)?)/);
+        if (stampFeeMatch) {
+          stampFee = parseFloat(stampFeeMatch[1]) || 1.0;
+        } else {
+          stampFee = 1.0; // Default value
+        }
+      }
+      
+      // Calculate total
+      const total = subtotal + tvaAmount + stampFee;
+      
+      // Update display
+      document.getElementById('subtotal').textContent = subtotal.toFixed(2);
+      document.getElementById('tva-amount').textContent = tvaAmount.toFixed(2);
+      document.getElementById('stamp-fee').textContent = stampFee.toFixed(2);
+      document.getElementById('total-amount').textContent = total.toFixed(2);
+      
+      // Update hidden input for form submission
+      document.getElementById('id_invoice_total').value = total.toFixed(2);
+      
+      // Show/hide stamp fee row
+      const stampFeeRow = document.getElementById('stamp-fee-row');
+      if (includeStampFee) {
+        stampFeeRow.style.display = '';
+      } else {
+        stampFeeRow.style.display = 'none';
+      }
+    }
+    
+    // Function to setup the add item button
+    function setupAddItemButton() {
+      const addButton = document.getElementById('add-item');
+      const tbody = document.getElementById('invoice-items-body');
+      const emptyForm = document.getElementById('empty-form');
+      
+      addButton.addEventListener('click', function() {
+        console.log('Add item button clicked');
+        
+        // Get the current form count
+        const formCount = tbody.querySelectorAll('.item-form').length;
+        console.log('Current form count:', formCount);
+        
+        // Find the formset prefix
+        const totalFormsInput = document.querySelector('[name$="-TOTAL_FORMS"]');
+        let prefix = 'invoiceitem_set';
+        if (totalFormsInput) {
+          const name = totalFormsInput.name;
+          prefix = name.substring(0, name.indexOf('-TOTAL_FORMS'));
+          console.log('Using formset prefix:', prefix);
+        }
+        
+        // Create a new row by cloning the template
+        const newRow = document.createElement('tr');
+        newRow.classList.add('item-form');
+        
+        // Set the HTML content for the new row
+        newRow.innerHTML = `
+          <td>
+            <select name="${prefix}-${formCount}-product" id="id_${prefix}-${formCount}-product" class="form-control select2-product">
+              <option value="">Select a product...</option>
+              {% for product in products %}
+              <option value="{{ product.id }}" data-price="{{ product.selling_price }}">{{ product.name }}</option>
+              {% endfor %}
+            </select>
+          </td>
+          <td>
+            <input type="number" name="${prefix}-${formCount}-quantity" id="id_${prefix}-${formCount}-quantity" class="form-control" min="1" value="1">
+          </td>
+          <td>
+            <input type="number" name="${prefix}-${formCount}-selling_price" id="id_${prefix}-${formCount}-selling_price" class="form-control" min="0" step="0.01" value="0.00">
+          </td>
+          <td>
+            <input type="number" class="form-control item-total" readonly>
+          </td>
+          <td>
+            <button type="button" class="btn btn-sm btn-danger delete-row">
+              <i class="fas fa-trash"></i> Remove
+            </button>
+          </td>
+        `;
+        
+        // Append the new row to the tbody
+        tbody.appendChild(newRow);
+        
+        // Initialize Select2 for the new row
+        const newSelect = newRow.querySelector('select.select2-product');
+        if (newSelect) {
+          console.log('Initializing Select2 for new product dropdown');
+          initializeNewSelect2(newSelect);
+        } else {
+          console.error('Could not find product select in new row');
+        }
+        
+        // Setup event handlers for the new row
+        setupRowEventHandlers(newRow);
+        
+        // Update the form count
+        updateFormCount();
+      });
+    }
+    
+    // Function to update the form count in the management form
+    function updateFormCount() {
+      const totalForms = document.querySelector('[name$="-TOTAL_FORMS"]');
+      if (totalForms) {
+        const formCount = document.querySelectorAll('#invoice-items-body .item-form').length;
+        totalForms.value = formCount;
+        console.log('Updated form count:', formCount);
+      }
+    }
+    
+    // Update totals when TVA rate changes
+    document.getElementById('id_tva_rate').addEventListener('input', updateAllTotals);
+    
+    // Update totals when stamp fee checkbox changes
+    document.getElementById('id_include_stamp_fee').addEventListener('change', updateAllTotals);
+  });
+</script>
+{% endblock script_content %}

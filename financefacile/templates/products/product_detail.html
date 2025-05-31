@@ -45,8 +45,13 @@
             {{ object.name }}
           </h5>
           <span class="badge rounded-pill px-3 py-2"
-            style="background: #F4F3FD; color: #635BFF; font-size: 0.9rem; box-shadow: 0 1px 4px #E0DEFD;">SKU: {{
-            object.sku }}</span>
+            style="background: #F4F3FD; color: #635BFF; font-size: 0.9rem; box-shadow: 0 1px 4px #E0DEFD;">
+            {% if object.sku %}
+                SKU: {{ object.sku|default:"N/A" }}
+            {% else %}
+                SKU: Not Set
+            {% endif %}
+        </span>
         </div>
         <div class="card-body p-4">
           <!-- Product Image Section -->

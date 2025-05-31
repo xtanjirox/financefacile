@@ -116,8 +116,7 @@
                     {% else %}
                     <div class="avatar-circle d-inline-flex align-items-center justify-content-center"
                         style="width: 32px; height: 32px; background-color: #7cb9e8; border-radius: 50%;">
-                        <span style="color: white; font-size: 0.75rem; font-weight: bold;">{{ user.profile.get_initials
-                            }}</span>
+                        <span style="color: white; font-size: 0.75rem; font-weight: bold;">{{ user.profile.get_initials }}</span>
                     </div>
                     {% endif %}
                 </a>
@@ -129,8 +128,7 @@
                     {% else %}
                     <div class="avatar-circle d-inline-flex align-items-center justify-content-center me-1"
                         style="width: 36px; height: 36px; background-color: #7cb9e8; border-radius: 50%;">
-                        <span style="color: white; font-size: 0.875rem; font-weight: bold;">{{ user.profile.get_initials
-                            }}</span>
+                        <span style="color: white; font-size: 0.875rem; font-weight: bold;">{{ user.profile.get_initials }}</span>
                     </div>
                     {% endif %}
                     <span class="text-dark">{{ user.get_full_name|default:user.username }}</span>

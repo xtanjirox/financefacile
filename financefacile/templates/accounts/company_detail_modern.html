@@ -1,0 +1,375 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block sidebar %}
+{% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+{% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+{% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block extra_css %}
+<style>
+  .card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 25px rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+  }
+
+  .card-header {
+    background-color: #F4F3FD;
+    border-bottom: 1px solid #E0DEFD;
+    padding: 1.2rem 1.5rem;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+    min-height: 120px;
+    background: #fff;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1rem;
+  }
+
+  .dashboard-card:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+  }
+
+  .dashboard-card .icon-wrapper {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  .dashboard-card .icon {
+    font-size: 1.5rem;
+    color: #fff;
+  }
+
+  .dashboard-card .card-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .dashboard-card .card-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #333;
+  }
+
+  .dashboard-card .progress-wrapper {
+    height: 8px;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    margin-top: auto;
+  }
+
+  .dashboard-card .progress-bar {
+    height: 100%;
+    border-radius: 4px;
+  }
+
+  /* Card color schemes */
+  .dashboard-card.companies .icon-wrapper {
+    background-color: rgba(77, 182, 172, 0.2);
+  }
+
+  .dashboard-card.companies .icon {
+    color: #4DB6AC;
+  }
+
+  .dashboard-card.companies .progress-bar {
+    background-color: #4DB6AC;
+  }
+
+  .dashboard-card.settings .icon-wrapper {
+    background-color: rgba(66, 165, 245, 0.2);
+  }
+
+  .dashboard-card.settings .icon {
+    color: #42A5F5;
+  }
+
+  .dashboard-card.settings .progress-bar {
+    background-color: #42A5F5;
+  }
+
+  .dashboard-card.stamp .icon-wrapper {
+    background-color: rgba(255, 167, 38, 0.2);
+  }
+
+  .dashboard-card.stamp .icon {
+    color: #FFA726;
+  }
+
+  .dashboard-card.stamp .progress-bar {
+    background-color: #FFA726;
+  }
+  
+  .company-logo {
+    width: 80px;
+    height: 80px;
+    background-color: #f8f9fa;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: #6c757d;
+  }
+
+  .user-card {
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    margin-bottom: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .user-card:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+  }
+
+  .user-avatar {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(66, 165, 245, 0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #42A5F5;
+  }
+
+  .company-info-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    margin-bottom: 5px;
+  }
+
+  .company-info-value {
+    font-weight: 500;
+    margin-bottom: 15px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+  <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+    <div class="d-flex align-items-center">
+      <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fas fa-building me-2" style="color: #7cb9e8;"></i>Company Details</h2>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{% url 'organizations:company-edit' company.id %}" class="btn btn-primary shadow-sm rounded-pill px-4" style="background: #696cff !important; border: none; font-weight: 600;">
+        <i class="fas fa-pencil-alt me-1"></i> Edit Company
+      </a>
+    </div>
+  </div>
+
+
+  
+  <div class="row">
+    <div class="col-md-4">
+      <div class="card shadow-sm mb-4" style="border-radius: 8px; overflow: hidden;">
+        <div class="card-header d-flex align-items-center" style="background-color: #f8f9fa; border-bottom: 1px solid #e9ecef;">
+          <h5 class="card-title mb-0" style="color: #39739d;">
+            <i class="fas fa-building me-2" style="color: #7cb9e8;"></i>
+            Company Profile
+          </h5>
+        </div>
+        <div class="card-body text-center">
+          {% if company.logo %}
+            <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="company-logo mb-3">
+          {% else %}
+            <div class="company-logo mx-auto mb-3" style="background-color: rgba(77, 182, 172, 0.2); color: #4DB6AC;">
+              <i class="fas fa-building"></i>
+            </div>
+          {% endif %}
+          <h4 class="mb-3" style="color: #333;">{{ company.name }}</h4>
+          <div class="d-flex justify-content-center mb-4">
+            <span class="badge" style="background-color: rgba(66, 165, 245, 0.2); color: #42A5F5; font-weight: 500; padding: 8px 15px; border-radius: 50px;">
+              <i class="fas fa-users me-1"></i> {{ members|length }} users
+            </span>
+          </div>
+          <div class="d-grid gap-2">
+            <a href="{% url 'organizations:company-edit' company.id %}" class="btn btn-primary shadow-sm rounded-pill px-4" style="background: #7cb9e8; border: none; font-weight: 600;">
+              <i class="fas fa-pencil-alt me-1"></i> Edit Company
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="card shadow-sm mb-4" style="border-radius: 8px; overflow: hidden;">
+        <div class="card-header d-flex align-items-center justify-content-between" style="background-color: #f8f9fa; border-bottom: 1px solid #e9ecef;">
+          <h5 class="card-title mb-0" style="color: #39739d;">
+            <i class="fas fa-info-circle me-2" style="color: #7cb9e8;"></i>
+            Company Information
+          </h5>
+          <a href="{% url 'organizations:company-settings' company.id %}" class="btn btn-sm btn-outline-primary shadow-sm" style="border-color: #696cff; color: #696cff; font-weight: 600;">
+            <i class="fas fa-cog me-1"></i> Settings
+          </a>
+        </div>
+        <div class="card-body">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                <div class="d-flex align-items-center mb-2">
+                  <div style="background-color: rgba(77, 182, 172, 0.2); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                    <i class="fas fa-id-card" style="color: #4DB6AC;"></i>
+                  </div>
+                  <h6 class="mb-0">SIRET Number</h6>
+                </div>
+                <p class="mb-0 ps-4 ms-2">{{ company.siret_number|default:"Not provided" }}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                <div class="d-flex align-items-center mb-2">
+                  <div style="background-color: rgba(66, 165, 245, 0.2); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                    <i class="fas fa-phone" style="color: #42A5F5;"></i>
+                  </div>
+                  <h6 class="mb-0">Phone Number</h6>
+                </div>
+                <p class="mb-0 ps-4 ms-2">{{ company.phone_number|default:"Not provided" }}</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                <div class="d-flex align-items-center mb-2">
+                  <div style="background-color: rgba(255, 167, 38, 0.2); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                    <i class="fas fa-receipt" style="color: #FFA726;"></i>
+                  </div>
+                  <h6 class="mb-0">Default TVA Rate</h6>
+                </div>
+                <p class="mb-0 ps-4 ms-2">{{ company_settings.default_tva_rate }}%</p>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                <div class="d-flex align-items-center mb-2">
+                  <div style="background-color: rgba(77, 182, 172, 0.2); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                    <i class="fas fa-stamp" style="color: #4DB6AC;"></i>
+                  </div>
+                  <h6 class="mb-0">Stamp Fee</h6>
+                </div>
+                <p class="mb-0 ps-4 ms-2">{{ company_settings.stamp_fee }} {{ company_settings.currency }}</p>
+              </div>
+            </div>
+            <div class="col-12">
+              <div class="p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                <div class="d-flex align-items-center mb-2">
+                  <div style="background-color: rgba(66, 165, 245, 0.2); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
+                    <i class="fas fa-map-marker-alt" style="color: #42A5F5;"></i>
+                  </div>
+                  <h6 class="mb-0">Address</h6>
+                </div>
+                <p class="mb-0 ps-4 ms-2">{{ company.address|default:"Not provided"|linebreaksbr }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card shadow-sm" style="border-radius: 8px; overflow: hidden;">
+        <div class="card-header d-flex align-items-center justify-content-between" style="background-color: #f8f9fa; border-bottom: 1px solid #e9ecef;">
+          <h5 class="card-title mb-0" style="color: #39739d;">
+            <i class="fas fa-users me-2" style="color: #7cb9e8;"></i>
+            Company Users
+          </h5>
+          <a href="{% url 'organizations:company-user-create' company.id %}" class="btn btn-sm btn-primary shadow-sm" style="background: #696cff !important; border: none; font-weight: 600;">
+            <i class="fas fa-plus me-1"></i> Add User
+          </a>
+        </div>
+        <div class="card-body">
+          {% if members %}
+            <div class="row g-3">
+              {% for profile in members %}
+              <div class="col-12">
+                <div class="user-card p-3" style="background-color: #f8f9fa; border-radius: 8px;">
+                  <div class="d-flex align-items-center justify-content-between">
+                    <div class="d-flex align-items-center">
+                      <div class="user-avatar me-3">
+                        <i class="fas fa-user"></i>
+                      </div>
+                      <div>
+                        <h6 class="mb-0" style="color: #333; font-weight: 600;">{{ profile.user.get_full_name|default:profile.user.username }}</h6>
+                        <small class="text-muted">{{ profile.user.email }}</small>
+                      </div>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                      {% if profile.is_company_admin %}
+                        <span class="badge" style="background-color: rgba(255, 167, 38, 0.2); color: #FFA726; font-weight: 500; padding: 6px 12px; border-radius: 50px;">
+                          <i class="fas fa-crown me-1"></i> Admin
+                        </span>
+                      {% else %}
+                        <span class="badge" style="background-color: rgba(66, 165, 245, 0.2); color: #42A5F5; font-weight: 500; padding: 6px 12px; border-radius: 50px;">
+                          <i class="fas fa-user me-1"></i> User
+                        </span>
+                      {% endif %}
+                      <div class="dropdown">
+                        <button class="btn btn-sm btn-light rounded-pill shadow-sm" type="button" id="userActions{{ profile.id }}" data-bs-toggle="dropdown" aria-expanded="false" style="border: none;">
+                          <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-sm" aria-labelledby="userActions{{ profile.id }}" style="border-radius: 8px; border: none;">
+                          <li>
+                            <a class="dropdown-item" href="{% url 'users:user-permissions' profile.user.id %}">
+                              <i class="fas fa-key me-2" style="color: #42A5F5;"></i> Permissions
+                            </a>
+                          </li>
+                          <li><hr class="dropdown-divider"></li>
+                          <li>
+                            <a class="dropdown-item text-danger" href="{% url 'organizations:remove-user-from-company' company.id profile.user.id %}">
+                              <i class="fas fa-user-minus me-2"></i> Remove User
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="text-center py-4">
+              <i class="fas fa-users mb-3" style="font-size: 2rem; color: #e0e6ed;"></i>
+              <h5>No Users Found</h5>
+              <p class="text-muted">This company doesn't have any users yet.</p>
+              <a href="{% url 'organizations:company-user-create' company.id %}" class="btn btn-sm btn-primary rounded-pill mt-2">
+                <i class="fas fa-plus me-1"></i> Add User
+              </a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% endblock %}

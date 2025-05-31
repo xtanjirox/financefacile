@@ -152,7 +152,7 @@ class ExpenseListView(BaseViewMixin, ExpensePermissionMixin, CompanyFilterMixin,
 class ExpenseCreateView(BaseViewMixin, ExpensePermissionMixin, CreateView):
     model = Expense
     form_class = ExpenseForm
-    template_name = 'expenses/expense_form.html'
+    template_name = 'expenses/expense_form_product_style.html'
     success_url = reverse_lazy('expenses-list')
     
     def get_form(self, form_class=None):
@@ -181,7 +181,7 @@ class ExpenseCreateView(BaseViewMixin, ExpensePermissionMixin, CreateView):
 class ExpenseUpdateView(BaseViewMixin, ExpensePermissionMixin, UpdateView):
     model = Expense
     form_class = ExpenseForm
-    template_name = 'expenses/expense_form.html'
+    template_name = 'expenses/expense_form_product_style.html'
     success_url = reverse_lazy('expenses-list')
     
     def get_queryset(self):
@@ -219,7 +219,7 @@ class ExpenseDeleteView(BaseViewMixin, ExpensePermissionMixin, DeleteView):
 
 class ExpenseCategoryListView(BaseViewMixin, ExpensePermissionMixin, ListView):
     model = ExpenseCategory
-    template_name = 'expenses/expense_categories_list.html'
+    template_name = 'expenses/expense_categories_list_modern.html'
     context_object_name = 'categories'
     
     def get_queryset(self):
@@ -230,11 +230,45 @@ class ExpenseCategoryListView(BaseViewMixin, ExpensePermissionMixin, ListView):
         if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
             return queryset.filter(company=self.request.user.profile.company)
         return queryset.none()
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get total expenses count
+        total_expenses = 0
+        monthly_expenses = 0
+        
+        from django.utils import timezone
+        import datetime
+        
+        # Get current month's start and end dates
+        today = timezone.now().date()
+        month_start = datetime.date(today.year, today.month, 1)
+        
+        # If user has a company profile, count expenses
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            company = self.request.user.profile.company
+            from ..models import Expense
+            
+            # Count total expenses
+            total_expenses = Expense.objects.filter(company=company).count()
+            
+            # Count expenses for current month
+            monthly_expenses = Expense.objects.filter(
+                company=company,
+                date__gte=month_start,
+                date__lte=today
+            ).count()
+        
+        context['total_expenses'] = total_expenses
+        context['monthly_expenses'] = monthly_expenses
+        
+        return context
 
 class ExpenseCategoryCreateView(BaseViewMixin, ExpensePermissionMixin, CreateView):
     model = ExpenseCategory
     form_class = ExpenseCategoryForm
-    template_name = 'expenses/expense_category_form.html'
+    template_name = 'expenses/expense_category_form_modern.html'
     success_url = reverse_lazy('expense-categories-list')
     
     def form_valid(self, form):
@@ -251,7 +285,7 @@ class ExpenseCategoryCreateView(BaseViewMixin, ExpensePermissionMixin, CreateVie
 class ExpenseCategoryUpdateView(BaseViewMixin, ExpensePermissionMixin, UpdateView):
     model = ExpenseCategory
     form_class = ExpenseCategoryForm
-    template_name = 'expenses/expense_category_form.html'
+    template_name = 'expenses/expense_category_form_modern.html'
     success_url = reverse_lazy('expense-categories-list')
     
     def get_queryset(self):

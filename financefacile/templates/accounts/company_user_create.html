@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block stylesheets %}
+{{ form.media.css }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css">
+<style>
+    /* Form Styling */
+    .form-label {
+        font-weight: 500;
+        color: #566a7f;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control, .form-select {
+        padding: 0.6rem 1rem;
+        font-size: 0.9375rem;
+        border-radius: 0.375rem;
+        border: 1px solid #d9dee3;
+        background-color: #fff;
+        color: #697a8d;
+    }
+
+    .form-control:focus, .form-select:focus {
+        border-color: #696cff;
+        box-shadow: 0 0 0.25rem 0.05rem rgba(105, 108, 255, 0.1);
+    }
+
+    .input-group-text {
+        padding: 0.6rem 1rem;
+        background-color: #f5f5f9;
+        border: 1px solid #d9dee3;
+        color: #697a8d;
+    }
+
+    /* Card Styling */
+    .card {
+        box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 0.12);
+        border: 0;
+        border-radius: 0.5rem;
+    }
+
+    .card-header {
+        padding: 1.5rem;
+        background-color: transparent;
+        border-bottom: 1px solid #d9dee3;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Button Styling */
+    .btn-primary {
+        background-color: #696cff !important;
+        border-color: #696cff !important;
+        box-shadow: 0 0.125rem 0.25rem 0 rgba(105, 108, 255, 0.4);
+    }
+
+    .btn-primary:hover {
+        background-color: #5f61e6 !important;
+        border-color: #5f61e6 !important;
+    }
+
+    .btn-outline-secondary {
+        color: #8592a3;
+        border-color: #8592a3;
+    }
+
+    .btn-outline-secondary:hover {
+        background-color: #8592a3;
+        color: #fff;
+    }
+
+    /* Select2 Styling */
+    .select2-container--default .select2-selection--single,
+    .select2-container--default .select2-selection--multiple {
+        border: 1px solid #d9dee3;
+        border-radius: 0.375rem;
+        min-height: 40px;
+        padding: 0.2rem 0.5rem;
+    }
+
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #697a8d;
+        line-height: 2;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        background-color: #e7e7ff;
+        border: 1px solid #d4d4ff;
+        color: #696cff;
+        border-radius: 0.25rem;
+    }
+
+    .select2-container--default .select2-results__option--highlighted[aria-selected] {
+        background-color: #e7e7ff;
+        color: #696cff;
+    }
+
+    .select2-dropdown {
+        border-color: #d9dee3;
+        box-shadow: 0 0.25rem 1rem rgba(161, 172, 184, 0.45);
+    }
+
+    /* Custom File Input */
+    .form-control[type="file"] {
+        padding: 0.375rem 0.75rem;
+    }
+
+    .form-control[type="file"]::file-selector-button {
+        padding: 0.375rem 0.75rem;
+        margin: -0.375rem -0.75rem;
+        margin-inline-end: 0.75rem;
+        color: #697a8d;
+        background-color: #f5f5f9;
+        border: 0;
+        border-inline-end: 1px solid #d9dee3;
+        border-radius: 0.375rem 0 0 0.375rem;
+        transition: all 0.2s ease-in-out;
+    }
+
+    .form-control[type="file"]:hover:not(:disabled):not([readonly])::file-selector-button {
+        background-color: #e9e9ee;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block sidebar %}
+{% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+{% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+{% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <div class="d-flex justify-content-between align-items-center mb-3 mt-4">
+        <div class="d-flex align-items-center">
+            <h2 class="fw-bold mb-0" style="color: #39739d;"><i class="fas fa-user-plus me-2" style="color: #7cb9e8;"></i>Add New User</h2>
+        </div>
+        <div>
+            <a href="{% url 'organizations:company-members' company.id %}" class="btn btn-outline-secondary shadow-sm px-4" style="border-color: #8592a3; color: #8592a3; font-weight: 600;">
+                <i class="fas fa-arrow-left me-1"></i> Back to Members
+            </a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">
+                        <i class="fas fa-user-cog me-2 text-primary"></i>
+                        New User for {{ company.name }}
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <form action="" method="post" autocomplete="off">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">User Information</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                {{ form.first_name|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                {{ form.last_name|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                {{ form.email|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                {{ form.username|as_crispy_field }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Password</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                {{ form.password1|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                {{ form.password2|as_crispy_field }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row mb-4">
+                            <div class="col-md-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h6 class="mb-0">Permissions</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-6 mb-3">
+                                                {{ form.groups|as_crispy_field }}
+                                            </div>
+                                            <div class="col-md-6 mb-3">
+                                                <div class="form-group">
+                                                    <label class="form-label">Company Admin</label>
+                                                    <div class="form-check form-switch mt-2">
+                                                        <input class="form-check-input" type="checkbox" id="id_is_company_admin" name="is_company_admin">
+                                                        <label class="form-check-label" for="id_is_company_admin">
+                                                            Grant company admin privileges
+                                                        </label>
+                                                    </div>
+                                                    <small class="form-text text-muted">
+                                                        Company admins can manage company settings and other users.
+                                                    </small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{% url 'organizations:company-members' company.id %}" class="btn btn-outline-secondary px-4">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                            <button type="submit" class="btn btn-primary px-4">
+                                <i class="fas fa-save me-1"></i> Create User
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+{{ form.media.js }}
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Initialize Select2 for any dropdown fields
+        $('.select2').select2({
+            width: '100%',
+            placeholder: 'Select an option',
+            allowClear: true
+        });
+        
+        // Initialize Select2 for groups field specifically
+        $('#id_groups').select2({
+            width: '100%',
+            placeholder: 'Select user roles',
+            allowClear: true
+        });
+    });
+</script>
+{% endblock javascripts %}

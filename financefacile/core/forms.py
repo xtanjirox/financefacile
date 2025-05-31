@@ -1,4 +1,4 @@
-from django.forms import inlineformset_factory, ModelForm
+from django.forms import inlineformset_factory
 from django import forms
 from django.utils import timezone
 
@@ -106,6 +106,73 @@ class DateRangeFilterForm(forms.Form):
                 Div('start_date', css_class='col-md-3'),
                 Div('end_date', css_class='col-md-3'),
                 Div('category_name', css_class='col-md-3'),
+                Div(
+                    Submit('submit', 'Filter', css_class='btn-primary me-2'),
+                    HTML('<a href="?" class="btn btn-secondary">Reset</a>'),
+                    css_class='col-md-3 d-flex align-items-end'
+                ),
+                css_class='row'
+            )
+        )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        start_date = cleaned_data.get('start_date')
+        end_date = cleaned_data.get('end_date')
+
+        if start_date and end_date and start_date > end_date:
+            raise forms.ValidationError('End date must be after start date')
+
+        return cleaned_data
+
+
+class CalendarEventFilterForm(forms.Form):
+    start_date = forms.DateField(
+        label='Start Date',
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control select2'})
+    )
+    end_date = forms.DateField(
+        label='End Date',
+        required=False,
+        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control select2'})
+    )
+    theme = forms.MultipleChoiceField(
+        label='Theme',
+        required=False,
+        widget=s2forms.Select2MultipleWidget(attrs={'class': 'form-select select2-multiple', 'data-placeholder': 'Select themes...'})
+    )
+
+    def __init__(self, *args, **kwargs):
+        # Extract theme choices from kwargs
+        theme_choices = kwargs.pop('theme_choices', None)
+        
+        super().__init__(*args, **kwargs)
+        
+        # Set theme choices if provided
+        if theme_choices:
+            self.fields['theme'].choices = theme_choices
+        else:
+            # Default theme choices from CalendarEvent model
+            self.fields['theme'].choices = [
+                ('primary', 'Primary'),
+                ('secondary', 'Secondary'),
+                ('success', 'Success'),
+                ('danger', 'Danger'),
+                ('warning', 'Warning'),
+                ('info', 'Info'),
+                ('dark', 'Dark'),
+            ]
+
+        # Setup crispy form helper
+        self.helper = FormHelper()
+        self.helper.form_method = 'get'
+        self.helper.form_class = 'form-inline'
+        self.helper.layout = Layout(
+            Div(
+                Div('start_date', css_class='col-md-3'),
+                Div('end_date', css_class='col-md-3'),
+                Div('theme', css_class='col-md-3'),
                 Div(
                     Submit('submit', 'Filter', css_class='btn-primary me-2'),
                     HTML('<a href="?" class="btn btn-secondary">Reset</a>'),
@@ -273,8 +340,8 @@ class InvoiceItemForm(forms.ModelForm):
         company = kwargs.pop('company', None)
         super().__init__(*args, **kwargs)
         
-        # Filter products by stock > 0
-        product_queryset = models.Product.objects.filter(quantity__gt=0)
+        # Filter products by stock > 0 and exclude archived products
+        product_queryset = models.Product.objects.filter(quantity__gt=0, is_archived=False)
         
         # If company is provided, filter by company as well
         if company:
@@ -403,40 +470,21 @@ class ProductWidget(s2forms.Select2Widget):
 
 class ProductForm(forms.ModelForm):
     debug_marker = "THIS IS THE REAL ProductForm"
-    categories = forms.ModelMultipleChoiceField(
-        queryset=models.ProductCategory.objects.none(),
-        required=False,
-        widget=ProductCategoryWidget(),
-        help_text="Select one or more categories for this product"
-    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Ensure the categories queryset is populated
-        self.fields['categories'].queryset = models.ProductCategory.objects.all().order_by('name')
+        # Enhance the category field
+        self.fields['category'].queryset = models.ProductCategory.objects.all().order_by('name')
+        self.fields['category'].empty_label = "Select a category"
+        self.fields['category'].widget.attrs.update({
+            'class': 'form-select select2',
+            'data-placeholder': 'Select a category'
+        })
         
-        # Set initial values for categories if editing an existing product
-        if self.instance and self.instance.pk:
-            self.fields['categories'].initial = self.instance.category.all()
-            
         # Remove company field if it exists using contextlib's suppress
         from contextlib import suppress
         with suppress(KeyError):
             del self.fields['company']
-            
-    def save(self, commit=True):
-        instance = super().save(commit=False)
-        
-        # Save the instance first to ensure it has a primary key
-        if commit:
-            instance.save()
-            
-            # Clear existing categories and add the selected ones
-            instance.category.clear()
-            for category in self.cleaned_data.get('categories', []):
-                instance.category.add(category)
-                
-        return instance
 
     class Meta:
         model = models.Product

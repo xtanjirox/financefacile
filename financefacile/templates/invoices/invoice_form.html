@@ -15,8 +15,8 @@
   // Provide product prices for JS
   window.PRODUCT_PRICES = {
     {% for product in products %}
-    "{{ product.id }}": "{{ product.selling_price }}"{% if not forloop.last %}, {% endif %}
-    {% endfor %}
+  "{{ product.id }}": "{{ product.selling_price }}"{% if not forloop.last %}, {% endif %}
+  {% endfor %}
   };
 </script>
 <script src="{% static 'js/invoice_item_autofill.js' %}"></script>
@@ -102,7 +102,6 @@
     border-bottom: none;
   }
 </style>
-
 <div class="container-fluid p-0">
   <div class="col-12 col-lg-12 col-xxl-12 d-flex">
     <div class="card flex-fill shadow-lg" style="border-radius: 0.5rem;">
@@ -144,11 +143,11 @@
               {% if formset.errors %}
               <ul class="mt-2 mb-0">
                 {% for form_errors in formset.errors %}
-                  {% for field, errors in form_errors.items %}
-                    {% for error in errors %}
-                    <li><strong>Product Item {{ forloop.parentloop.parentloop.counter }}:</strong> {{ error }}</li>
-                    {% endfor %}
-                  {% endfor %}
+                {% for field, errors in form_errors.items %}
+                {% for error in errors %}
+                <li><strong>Product Item {{ forloop.parentloop.parentloop.counter }}:</strong> {{ error }}</li>
+                {% endfor %}
+                {% endfor %}
                 {% endfor %}
               </ul>
               {% endif %}
@@ -160,6 +159,7 @@
 
         <form method="post" id="invoice-form" autocomplete="off" class="w-100">
           {% csrf_token %}
+          {{ formset.management_form }}
           <div class="mb-4">
             <h4 class="fw-bold mb-3" style="color: #39739d;"><i class="fas fa-info-circle me-2"
                 style="color: #7cb9e8;"></i>Invoice Details</h4>
@@ -168,9 +168,12 @@
               <div class="col-md-6">
                 <label class="form-label fw-semibold" for="id_tva_rate">TVA Rate (%)</label>
                 {{ form.tva_rate.as_hidden }}
-                <div class="form-control bg-light" style="color: #39739d; font-weight: 600;">{{ form.initial.tva_rate|default:'19.0' }}%</div>
-                <small class="form-text text-muted">Default rate from company settings ({{ form.initial.tva_rate|default:'19.0' }})</small>
-                {% for error in form.tva_rate.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                <input type="number" name="tva_rate" id="id_tva_rate" class="form-control" step="0.01" min="0" max="100"
+                  placeholder="{{ form.initial.tva_rate|default:'19.0' }}" value="{{ form.initial.tva_rate }}">
+                <small class="form-text text-muted">Default rate from company settings ({{
+                  form.initial.tva_rate|default:'19.0' }})</small>
+                {% for error in form.tva_rate.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor
+                %}
               </div>
 
               <!-- Stamp Fee Field -->
@@ -181,7 +184,8 @@
                     Include Stamp Fee
                   </label>
                   <small class="form-text text-muted d-block">{{ form.include_stamp_fee.help_text }}</small>
-                  {% for error in form.include_stamp_fee.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                  {% for error in form.include_stamp_fee.errors %}<div class="invalid-feedback d-block">{{ error }}
+                  </div>{% endfor %}
                 </div>
               </div>
 
@@ -189,91 +193,76 @@
               <div class="col-md-6">
                 <label class="form-label fw-semibold" for="id_client_name">Client Name</label>
                 <input type="text" name="client_name" id="id_client_name" class="form-control" placeholder="Client name"
-                  value="{{ form.client_name.value|default:'' }}">
-                {% if form.client_name.help_text %}<small class="form-text text-muted">{{ form.client_name.help_text }}</small>{% endif %}
-                {% for error in form.client_name.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                  {% if form.client_name.value %}value="{{ form.client_name.value }}" {% endif %}>
+                {% if form.client_name.help_text %}<small class="form-text text-muted">{{ form.client_name.help_text
+                  }}</small>{% endif %}
+                {% for error in form.client_name.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{%
+                endfor %}
               </div>
 
               <!-- Client Address Field -->
               <div class="col-md-6">
                 <label class="form-label fw-semibold" for="id_client_address">Client Address</label>
-                <textarea name="client_address" id="id_client_address" class="form-control"
-                  placeholder="Client address">{{ form.client_address.value|default:'' }}</textarea>
-                {% if form.client_address.help_text %}<small class="form-text text-muted">{{ form.client_address.help_text }}</small>{% endif %}
-                {% for error in form.client_address.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
+                <textarea name="client_address" id="id_client_address" class="form-control" rows="2"
+                  placeholder="Client address">{% if form.client_address.value %}{{ form.client_address.value }}{% endif %}</textarea>
+                {% if form.client_address.help_text %}<small class="form-text text-muted">{{
+                  form.client_address.help_text }}</small>{% endif %}
+                {% for error in form.client_address.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{%
+                endfor %}
               </div>
             </div>
           </div>
-
-          <!-- Invoice Items Section -->
           <div class="mb-4">
             <h4 class="fw-bold mb-3" style="color: #39739d;"><i class="fas fa-list-ul me-2"
                 style="color: #7cb9e8;"></i>Invoice Items</h4>
-
-            <!-- Management form for formset -->
             {{ formset.management_form }}
-
             <div class="table-responsive">
-              <table class="modern-table">
-                <thead>
+              <table class="modern-table" id="invoice-items-table">
+                <thead style="background: #eae9ff; color: #39739d;">
                   <tr>
                     <th>Product</th>
                     <th>Quantity</th>
-                    <th>Unit Price</th>
+                    <th>Selling Price</th>
                     <th>Total</th>
                     <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody id="invoice-items-body">
-                  {% for form in formset %}
+                  {% for form in formset.forms %}
                   <tr class="item-form">
+                    {{ form.id }}
+                    <td>{{ form.product }}</td>
+                    <td>{{ form.quantity }}</td>
+                    <td>{{ form.selling_price }}</td>
+                    <td><input type="number" step="0.01" class="form-control form-control-lg invoice-total-input"
+                        value="" placeholder="Total" readonly /></td>
                     <td>
-                      {{ form.id }}
-                      <select name="{{ form.product.html_name }}" id="{{ form.product.auto_id }}"
-                        class="form-control select2" style="width: 100%;">
-                        <option value="">Select a product</option>
-                        {% for product in products %}
-                        <option value="{{ product.id }}" {% if form.product.value == product.id|stringformat:"i" %}selected{% endif %}>
-                          {{ product.name }} ({{ product.sku }})
-                        </option>
-                        {% endfor %}
-                      </select>
-                      {% for error in form.product.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
-                    </td>
-                    <td>
-                      <input type="number" name="{{ form.quantity.html_name }}" id="{{ form.quantity.auto_id }}"
-                        class="form-control item-quantity" min="1" step="1" placeholder="Quantity"
-                        value="{{ form.quantity.value|default:'1' }}">
-                      {% for error in form.quantity.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
-                    </td>
-                    <td>
-                      <input type="number" name="{{ form.selling_price.html_name }}" id="{{ form.selling_price.auto_id }}"
-                        class="form-control item-price" min="0" step="0.01" placeholder="Unit price"
-                        value="{{ form.selling_price.value|default:'0.00' }}">
-                      {% for error in form.selling_price.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
-                    </td>
-                    <td>
-                      <input type="number" name="{{ form.total_price.html_name }}" id="{{ form.total_price.auto_id }}"
-                        class="form-control item-total" readonly placeholder="Total"
-                        value="{{ form.total_price.value|default:'0.00' }}">
-                      {% for error in form.total_price.errors %}<div class="invalid-feedback d-block">{{ error }}</div>{% endfor %}
-                    </td>
-                    <td>
-                      <button type="button" class="btn btn-danger btn-sm delete-row"
+                      <button type="button" class="btn btn-sm btn-danger rounded px-3 delete-row"
                         style="border-radius: 0.5rem;">Remove</button>
                     </td>
                   </tr>
                   {% endfor %}
+                  <!-- Hidden empty form row for JS cloning -->
+                  <tr id="empty-form-row" style="display:none;">
+                    {% with form=formset.empty_form %}
+                    {{ form.id }}
+                    <td>{{ form.product }}</td>
+                    <td>{{ form.quantity }}</td>
+                    <td>{{ form.selling_price }}</td>
+                    <td><input type="number" step="0.01" class="form-control form-control-lg invoice-total-input"
+                        value="" placeholder="Total" readonly /></td>
+                    {% endwith %}
+                    <td><button type="button" class="btn btn-sm btn-danger rounded px-3 delete-row"
+                        style="border-radius: 0.5rem;">Remove</button></td>
+                  </tr>
                 </tbody>
               </table>
             </div>
-            
             <button type="button" class="btn btn-info mb-3 rounded shadow-sm px-4" id="add-item"
-              style="background: #7cb9e8; border: none; color: #fff; font-weight: 600; border-radius: 0.5rem; margin-top: 15px;">
+              style="background: #7cb9e8; border: none; color: #fff; font-weight: 600; border-radius: 0.5rem;">
               <i class="fa fa-plus me-2"></i> Add Another Item
             </button>
           </div>
-          
           <div class="row mt-4 mb-2 justify-content-end">
             <div class="col-md-4">
               <div class="p-3" style="background: #eae9ff; border-radius: 0.5rem;">
@@ -283,7 +272,6 @@
               </div>
             </div>
           </div>
-          
           <div class="mt-4 d-flex justify-content-end">
             <button type="submit" class="btn rounded shadow-sm px-5"
               style="background: #eae9ff; color: #39739d; border: 1px solid #dbeafe;">
@@ -296,41 +284,62 @@
     </div>
   </div>
 </div>
-{% endblock content %}
+{% endblock %}
 
 {% block script_content %}
 <script>
-  document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('DOMContentLoaded', function () {
+    // Debug formset management form
+    console.log('[Invoice JS] Looking for management form fields...');
+    const managementFormFields = document.querySelectorAll('[name$="-TOTAL_FORMS"], [name$="-INITIAL_FORMS"], [name$="-MIN_NUM_FORMS"], [name$="-MAX_NUM_FORMS"]');
+    managementFormFields.forEach(field => {
+      console.log('[Invoice JS] Found management form field:', field.name, '=', field.value);
+    });
+    
+    // Debug empty form template
+    const emptyFormRow = document.getElementById('empty-form-row');
+    if (emptyFormRow) {
+      console.log('[Invoice JS] Empty form row found');
+      const inputs = emptyFormRow.querySelectorAll('input, select');
+      inputs.forEach(input => {
+        console.log('[Invoice JS] Empty form input:', input.name || 'unnamed', input.id || 'no id');
+      });
+    } else {
+      console.error('[Invoice JS] Empty form row NOT found! Check template.');
+    }
     // Initialize Select2 for all product dropdowns
     $('.select2').select2({
       width: '100%',
       dropdownCssClass: 'select2-dropdown-modern',
       theme: 'classic'
     });
-    
-    // Get references to key elements
+
+    // Initialize Select2 for any new product fields added dynamically
+    function initializeNewSelect2() {
+      $('.select2:not(.select2-hidden-accessible)').select2({
+        width: '100%',
+        dropdownCssClass: 'select2-dropdown-modern',
+        theme: 'classic'
+      });
+    }
     const addButton = document.getElementById('add-item');
     const tbody = document.getElementById('invoice-items-body');
-    const totalFormsInput = document.getElementById('id_items-TOTAL_FORMS');
-    const initialFormsInput = document.getElementById('id_items-INITIAL_FORMS');
-    const maxFormsInput = document.getElementById('id_items-MAX_NUM_FORMS');
-    
-    if (!totalFormsInput || !initialFormsInput || !maxFormsInput) {
-      console.error('[Invoice JS] Management form not found!');
-      return;
-    }
-    
-    // Function to update the form count
     function updateFormCount() {
       const count = tbody.querySelectorAll('.item-form').length;
+      // Look for any of the possible management form field IDs
+      const totalFormsInput = document.getElementById('id_items-TOTAL_FORMS') || 
+                             document.getElementById('id_invoiceitem_set-TOTAL_FORMS') || 
+                             document.querySelector('[name$="-TOTAL_FORMS"]');
+      if (!totalFormsInput) {
+        console.error('[Invoice JS] Management form not found! Make sure {{ formset.management_form }} is rendered directly inside <form>.');
+        return;
+      }
       totalFormsInput.value = count;
-      console.log('[Invoice JS] Updated form count:', count);
+      console.log('[Invoice JS] Updated form count:', count, 'using field', totalFormsInput.id);
     }
-    
-    // Function to setup delete buttons
     function setupDeleteButtons() {
       tbody.querySelectorAll('.delete-row').forEach(button => {
-        button.onclick = function() {
+        button.onclick = function () {
           const removedRow = this.closest('tr');
           removedRow.remove();
           updateFormCount();
@@ -338,111 +347,39 @@
         };
       });
     }
-    
-    // Initialize delete buttons
     setupDeleteButtons();
-    
-    // Function to add a new item row
-    addButton.addEventListener('click', function() {
-      // Get the current form count
-      const formCount = parseInt(totalFormsInput.value);
+    addButton.addEventListener('click', function () {
+      const emptyFormRow = document.getElementById('empty-form-row');
+      const newRow = emptyFormRow.cloneNode(true);
+      newRow.style.display = '';
+      newRow.removeAttribute('id');
+      newRow.classList.add('item-form');
+      const formIdx = tbody.querySelectorAll('.item-form').length;
       
-      // Create a new row
-      const newRow = document.createElement('tr');
-      newRow.className = 'item-form';
+      // Find the formset prefix by looking at the management form
+      const totalFormsInput = document.getElementById('id_items-TOTAL_FORMS') || 
+                             document.getElementById('id_invoiceitem_set-TOTAL_FORMS') || 
+                             document.querySelector('[name$="-TOTAL_FORMS"]');
+      let prefix = 'items';
+      if (totalFormsInput) {
+        const name = totalFormsInput.name;
+        prefix = name.substring(0, name.indexOf('-TOTAL_FORMS'));
+        console.log('[Invoice JS] Using formset prefix:', prefix);
+      }
       
-      // Get a template for the new row
-      const formRegex = /__prefix__/g;
-      
-      // Get the empty form HTML from the Django template
-      const emptyFormHTML = `
-        <td>
-          {{ formset.empty_form.id }}
-          <select name="{{ formset.empty_form.product.html_name }}" 
-                 id="{{ formset.empty_form.product.auto_id }}" 
-                 class="form-control select2" style="width: 100%;">
-            <option value="">Select a product</option>
-            {% for product in products %}
-            <option value="{{ product.id }}">{{ product.name }} ({{ product.sku }})</option>
-            {% endfor %}
-          </select>
-        </td>
-        <td>
-          <input type="number" name="{{ formset.empty_form.quantity.html_name }}" 
-                id="{{ formset.empty_form.quantity.auto_id }}" 
-                class="form-control item-quantity" min="1" step="1" 
-                placeholder="Quantity" value="1">
-        </td>
-        <td>
-          <input type="number" name="{{ formset.empty_form.selling_price.html_name }}" 
-                id="{{ formset.empty_form.selling_price.auto_id }}" 
-                class="form-control item-price" min="0" step="0.01" 
-                placeholder="Unit price" value="0.00">
-        </td>
-        <td>
-          <input type="number" name="{{ formset.empty_form.total_price.html_name }}" 
-                id="{{ formset.empty_form.total_price.auto_id }}" 
-                class="form-control item-total" readonly 
-                placeholder="Total" value="0.00">
-        </td>
-        <td>
-          <button type="button" class="btn btn-danger btn-sm delete-row" 
-                 style="border-radius: 0.5rem;">Remove</button>
-        </td>
-      `;
-      
-      // Replace the __prefix__ placeholder with the actual form index
-      newRow.innerHTML = emptyFormHTML.replace(formRegex, formCount);
-      
-      // Add the new row to the tbody
-      tbody.appendChild(newRow);
-      
-      // Update the form count
-      totalFormsInput.value = formCount + 1;
-      
-      // Initialize Select2 for the new row
-      $(newRow).find('.select2').select2({
-        width: '100%',
-        dropdownCssClass: 'select2-dropdown-modern',
-        theme: 'classic'
+      newRow.querySelectorAll('input,select,label').forEach(function (el) {
+        if (el.name) el.name = el.name.replace(/__prefix__/g, formIdx).replace(/items-/g, prefix + '-');
+        if (el.id) el.id = el.id.replace(/__prefix__/g, formIdx).replace(/items-/g, prefix + '-');
+        if (el.htmlFor) el.htmlFor = el.htmlFor.replace(/__prefix__/g, formIdx).replace(/items-/g, prefix + '-');
+        if (el.type === 'text' || el.type === 'number') el.value = '';
       });
-      
-      // Setup delete button for the new row
+      tbody.appendChild(newRow);
+      updateFormCount();
       setupDeleteButtons();
-      
+      // Initialize Select2 for any new select fields
+      initializeNewSelect2();
       console.log('[Invoice JS] Added a new item row.');
     });
-    
-    // Function to calculate item totals
-    function calculateItemTotal(row) {
-      const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
-      const price = parseFloat(row.querySelector('.item-price').value) || 0;
-      const total = quantity * price;
-      row.querySelector('.item-total').value = total.toFixed(2);
-      return total;
-    }
-    
-    // Function to calculate invoice total
-    function calculateInvoiceTotal() {
-      let grandTotal = 0;
-      const rows = tbody.querySelectorAll('.item-form');
-      
-      rows.forEach(row => {
-        grandTotal += calculateItemTotal(row);
-      });
-      
-      document.getElementById('invoice-total-price').value = grandTotal.toFixed(2);
-    }
-    
-    // Add event listeners for quantity and price changes
-    tbody.addEventListener('input', function(e) {
-      if (e.target.classList.contains('item-quantity') || e.target.classList.contains('item-price')) {
-        calculateInvoiceTotal();
-      }
-    });
-    
-    // Initialize totals
-    calculateInvoiceTotal();
   });
 </script>
 {% endblock script_content %}
