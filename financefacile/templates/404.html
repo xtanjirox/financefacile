@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 rounded-lg overflow-hidden">
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <!-- Left side illustration -->
+                        <div class="col-lg-5 bg-primary d-flex flex-column justify-content-center align-items-center text-white p-5" style="background: linear-gradient(135deg, #696cff 0%, #5a5fe0 100%);">
+                            <div class="text-center mb-4">
+                                <div class="display-1 fw-bold mb-3 error-code">404</div>
+                                <h3 class="h4 mb-4">Page Not Found</h3>
+                                <p class="mb-4 opacity-75">The page you are looking for might have been removed or is temporarily unavailable.</p>
+                                <div class="mt-4">
+                                    <a href="{% url 'home' %}" class="btn btn-outline-light btn-lg px-4 fw-medium">
+                                        <i class="fas fa-home me-2"></i> Go to Dashboard
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Right side animation -->
+                        <div class="col-lg-7 p-5 d-flex flex-column justify-content-center">
+                            <div class="text-center">
+                                <!-- Animated SVG Illustration -->
+                                <div class="error-animation mb-4">
+                                    <svg width="280" height="280" viewBox="0 0 500 500" class="img-fluid">
+                                        <!-- Document/Page -->
+                                        <rect x="150" y="50" width="200" height="250" rx="10" fill="#f0f2fa" stroke="#e0e4f4" stroke-width="2"/>
+                                        <line x1="180" y1="90" x2="320" y2="90" stroke="#d8ddf0" stroke-width="8" stroke-linecap="round"/>
+                                        <line x1="180" y1="130" x2="320" y2="130" stroke="#d8ddf0" stroke-width="8" stroke-linecap="round"/>
+                                        <line x1="180" y1="170" x2="320" y2="170" stroke="#d8ddf0" stroke-width="8" stroke-linecap="round"/>
+                                        <line x1="180" y1="210" x2="270" y2="210" stroke="#d8ddf0" stroke-width="8" stroke-linecap="round"/>
+                                        
+                                        <!-- Magnifying Glass -->
+                                        <g class="magnify-group">
+                                            <circle cx="300" cy="320" r="70" fill="none" stroke="#696cff" stroke-width="12" opacity="0.8"/>
+                                            <line x1="350" y1="370" x2="400" y2="420" stroke="#696cff" stroke-width="12" stroke-linecap="round"/>
+                                            <circle cx="300" cy="320" r="30" fill="white" opacity="0.3"/>
+                                        </g>
+                                        
+                                        <!-- Question Mark -->
+                                        <text x="250" y="350" font-family="Arial" font-size="120" fill="#696cff" text-anchor="middle" class="question-mark">?</text>
+                                    </svg>
+                                </div>
+                                
+                                <h4 class="mb-3">Looking for something?</h4>
+                                <p class="text-muted mb-4">Sorry, we couldn't find the page you're looking for. Let's get you back on track.</p>
+                                
+                                {% if exception %}
+                                <div class="alert alert-light mt-3 text-start" style="background: #f8f9fc; border-left: 4px solid #696cff; padding: 1rem;">
+                                    <small class="text-muted">Technical details: {{ exception }}</small>
+                                </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .error-code {
+        font-size: 5rem;
+        font-weight: 800;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .error-animation .magnify-group {
+        animation: float 3s ease-in-out infinite;
+        transform-origin: center;
+    }
+    
+    .error-animation .question-mark {
+        animation: pulse 2s ease-in-out infinite;
+        transform-origin: center;
+    }
+    
+    @keyframes float {
+        0%, 100% {
+            transform: translateY(0) rotate(0deg);
+        }
+        50% {
+            transform: translateY(-10px) rotate(5deg);
+        }
+    }
+    
+    @keyframes pulse {
+        0%, 100% {
+            opacity: 0.8;
+            transform: scale(1);
+        }
+        50% {
+            opacity: 0.6;
+            transform: scale(0.95);
+        }
+    }
+    
+    .btn-outline-light:hover {
+        background-color: rgba(255,255,255,0.2) !important;
+        border-color: #fff !important;
+        color: #fff !important;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+</style>
+{% endblock %}

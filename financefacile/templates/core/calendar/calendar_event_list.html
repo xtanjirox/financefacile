@@ -406,7 +406,11 @@
                     <a href="{% url 'calendar-event-update' event.id %}" class="action-btn action-edit" title="Edit">
                       <i class="fas fa-pencil-alt"></i>
                     </a>
-                    <a href="{% url 'calendar-event-delete' event.id %}" class="action-btn action-delete" title="Delete">
+                    <a href="#" class="action-btn action-delete" title="Delete"
+                       data-delete-url="{% url 'calendar-event-delete' event.id %}" 
+                       data-item-type="Calendar Event" 
+                       data-item-id="#{{ event.id }}" 
+                       data-item-details="<p><strong>Title:</strong> {{ event.title }}</p><p><strong>Start Date:</strong> {{ event.start_date|date:'F d, Y g:i A' }}</p><p><strong>End Date:</strong> {{ event.end_date|date:'F d, Y g:i A' }}</p><p><strong>Theme:</strong> <span class='theme-badge theme-{{ event.theme }}'></span> {{ event.theme|title }}</p>">
                       <i class="fas fa-trash-alt"></i>
                     </a>
                   </div>

@@ -20,7 +20,7 @@
             Confirm Invoice Deletion
         </h2>
         <div class="d-flex gap-2">
-            <a href="{% url 'invoice-list' %}" class="btn btn-outline-secondary rounded-pill px-3">
+            <a href="{% url 'invoice-list' %}" class="btn btn-outline-secondary rounded-pill px-3" style="border: 1px solid #6c757d; color: #6c757d; transition: all 0.2s ease;">
                 <i class="fas fa-arrow-left me-2"></i> Back to Invoices
             </a>
         </div>
@@ -28,7 +28,7 @@
 
     <div class="row g-4">
         <div class="col-lg-12">
-            <div class="card shadow-sm border-0" style="border-radius: 14px;">
+            <div class="card shadow-sm border-0" style="border-radius: 14px; overflow: hidden;">
                 <div class="card-header d-flex align-items-center"
                     style="background: #ffebee; border-bottom: 1px solid #ffcdd2;">
                     <h5 class="card-title mb-0 fw-bold" style="color: #d32f2f;">
@@ -37,10 +37,13 @@
                     </h5>
                 </div>
                 <div class="card-body p-4">
-                    <div class="alert alert-warning">
-                        <i class="fas fa-exclamation-circle me-2"></i>
-                        <strong>Warning:</strong> This action cannot be undone. All invoice data and related items will
-                        be permanently deleted.
+                    <div class="alert alert-warning d-flex align-items-center" role="alert" style="border-radius: 10px; border-left: 4px solid #f44336;">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-exclamation-triangle me-3" style="font-size: 1.5rem; color: #f44336;"></i>
+                            <div>
+                                <strong>Warning:</strong> This action cannot be undone. All invoice data and related items will be permanently deleted.
+                            </div>
+                        </div>
                     </div>
 
                     <div class="mb-4">
@@ -82,18 +85,19 @@
                     </div>
                     {% endif %}
 
+                </div>
+                <div class="card-footer bg-white p-4 border-top">
                     <form method="post">
                         {% csrf_token %}
                         <div class="d-flex justify-content-between">
-                            <a href="{% url 'invoice-list' %}" class="btn btn-secondary">
-                                <i class="fas fa-times me-1"></i> Cancel
+                            <a href="{% url 'invoice-list' %}" class="btn" style="border-radius: 8px; background-color: #6c757d; color: white; box-shadow: 0 2px 6px rgba(108, 117, 125, 0.4); transition: all 0.2s ease;">
+                                <i class="fas fa-times me-2"></i> Cancel
                             </a>
-                            <button type="submit" class="btn btn-danger">
-                                <i class="fas fa-trash-alt me-1"></i> Delete Invoice
+                            <button type="submit" class="btn" style="border-radius: 8px; background-color: #d32f2f; color: white; box-shadow: 0 2px 6px rgba(211, 47, 47, 0.4); transition: all 0.2s ease;">
+                                <i class="fas fa-trash-alt me-2"></i> Delete Invoice
                             </button>
                         </div>
                     </form>
-                </div>
             </div>
         </div>
     </div>

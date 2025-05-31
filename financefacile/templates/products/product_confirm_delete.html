@@ -1,0 +1,63 @@
+{% extends 'confirm_delete.html' %}
+
+{% block object_details %}
+<div class="row">
+    <div class="col-md-6">
+        <p><strong>Name:</strong> {{ object.name }}</p>
+        <p><strong>SKU:</strong> {{ object.sku|default:"Not set" }}</p>
+        <p><strong>Category:</strong> {{ object.category.name|default:"Uncategorized" }}</p>
+        <p><strong>Company:</strong> {{ object.company.name }}</p>
+    </div>
+    <div class="col-md-6">
+        <p><strong>Selling Price:</strong> {{ object.selling_price }}</p>
+        <p><strong>Cost Price:</strong> {{ object.cost_price|default:"Not set" }}</p>
+        <p><strong>Quantity:</strong> {{ object.quantity }}</p>
+        <p><strong>Created:</strong> {{ object.created_at|date:"F j, Y" }}</p>
+    </div>
+</div>
+{% endblock object_details %}
+
+{% block related_items %}
+{% if invoice_items.count > 0 %}
+<div class="mb-4">
+    <h6 class="fw-bold mb-3">Related Invoices ({{ invoice_items.count }}):</h6>
+    <div class="table-responsive">
+        <table class="table table-sm table-hover" style="border-radius: 8px; overflow: hidden;">
+            <thead style="background-color: #f8f9fc;">
+                <tr>
+                    <th>Invoice #</th>
+                    <th>Date</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in invoice_items|slice:":10" %}
+                <tr>
+                    <td><a href="{% url 'invoice-detail' item.invoice.id %}" class="text-decoration-none">#{{ item.invoice.id }}</a></td>
+                    <td>{{ item.invoice.date|date:"M d, Y" }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>{{ item.total }}</td>
+                </tr>
+                {% endfor %}
+                {% if invoice_items.count > 10 %}
+                <tr>
+                    <td colspan="5" class="text-center text-muted"><small>... and {{ invoice_items.count|add:"-10" }} more</small></td>
+                </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+    <div class="alert alert-info d-flex align-items-center mt-3" role="alert" style="border-radius: 10px; border-left: 4px solid #0dcaf0;">
+        <div class="d-flex align-items-center">
+            <i class="fas fa-info-circle me-3" style="font-size: 1.5rem; color: #0dcaf0;"></i>
+            <div>
+                <strong>Note:</strong> Deleting this product will not remove it from existing invoices, but it will no longer be available for new invoices.
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock related_items %}

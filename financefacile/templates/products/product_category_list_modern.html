@@ -356,7 +356,11 @@
                     <a href="{% url 'category-update' row.record.pk %}" class="action-btn action-edit" title="Edit">
                       <i class="fas fa-pencil-alt"></i>
                     </a>
-                    <a href="{% url 'category-delete' row.record.pk %}" class="action-btn action-delete" title="Delete">
+                    <a href="#" class="action-btn action-delete" title="Delete"
+                       data-delete-url="{% url 'category-delete' row.record.pk %}" 
+                       data-item-type="Product Category" 
+                       data-item-id="#{{ row.record.pk }}" 
+                       data-item-details="<p><strong>Name:</strong> {{ row.record.name }}</p><p><strong>Products:</strong> {{ row.record.product_set.count }}</p>">
                       <i class="fas fa-trash"></i>
                     </a>
                   </div>

@@ -332,7 +332,11 @@
                       <i class="fas fa-undo-alt"></i>
                     </a>
                     {% else %}
-                    <a href="{% url 'product-delete' product.id %}" class="action-btn action-archive" title="Archive">
+                    <a href="#" class="action-btn action-archive" title="Archive"
+                       data-delete-url="{% url 'product-delete' product.id %}" 
+                       data-item-type="Product" 
+                       data-item-id="#{{ product.id }}" 
+                       data-item-details="<p><strong>Name:</strong> {{ product.name }}</p><p><strong>SKU:</strong> {{ product.sku }}</p><p><strong>Price:</strong> {{ product.price|currency:currency_symbol }}</p><p><strong>Category:</strong> {{ product.category.name }}</p>">
                       <i class="fas fa-archive"></i>
                     </a>
                     {% endif %}
