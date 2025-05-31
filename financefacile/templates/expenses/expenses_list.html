@@ -378,7 +378,11 @@
                       <a href="{% url 'expense-pdf' expense.pk %}" class="action-btn action-download" title="Export PDF">
                         <i class="fas fa-file-pdf"></i>
                       </a>
-                      <a href="{% url 'expense-delete' expense.pk %}" class="action-btn action-delete" title="Delete">
+                      <a href="#" class="action-btn action-delete" title="Delete" 
+                         data-delete-url="{% url 'expense-delete' expense.pk %}" 
+                         data-item-type="Expense" 
+                         data-item-id="#{{ expense.pk }}" 
+                         data-item-details="<p><strong>Date:</strong> {{ expense.date }}</p><p><strong>Category:</strong> {{ expense.category }}</p><p><strong>Amount:</strong> {{ expense.amount|currency:currency_symbol }}</p>{% if expense.description %}<p><strong>Description:</strong> {{ expense.description }}</p>{% endif %}">
                         <i class="fas fa-trash-alt"></i>
                       </a>
                     </div>
@@ -462,17 +466,18 @@
       let expenseLabels = [];
       let currencySymbol = '$';
       
+      // Load data from Django context
       {% if expense_categories_series %}
-        expenseSeries = [{{ expense_categories_series|join:', ' }}];
-        expenseLabels = [{% for label in expense_categories_labels %}'{{ label|escapejs }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
+      expenseSeries = [{{ expense_categories_series|join:', ' }}];
+      expenseLabels = [{% for label in expense_categories_labels %}'{{ label|escapejs }}'{% if not forloop.last %}, {% endif %}{% endfor %}];
       {% else %}
-        // Sample data if no data is provided from backend
-        expenseSeries = [30, 25, 15, 10, 20];
-        expenseLabels = ['Rent', 'Utilities', 'Food', 'Transportation', 'Others'];
+      // Sample data if no data is provided from backend
+      expenseSeries = [30, 25, 15, 10, 20];
+      expenseLabels = ['Rent', 'Utilities', 'Food', 'Transportation', 'Others'];
       {% endif %}
       
       {% if currency_symbol %}
-        currencySymbol = '{{ currency_symbol|escapejs }}';
+      currencySymbol = '{{ currency_symbol|escapejs }}';
       {% endif %}
       
       // Common chart options

@@ -356,7 +356,11 @@
                     <a href="{% url 'expense-category-update' category.pk %}" class="action-btn action-edit" title="Edit">
                       <i class="fas fa-pencil-alt"></i>
                     </a>
-                    <a href="{% url 'expense-category-delete' category.pk %}" class="action-btn action-delete" title="Delete">
+                    <a href="#" class="action-btn action-delete" title="Delete"
+                       data-delete-url="{% url 'expense-category-delete' category.pk %}" 
+                       data-item-type="Expense Category" 
+                       data-item-id="#{{ category.pk }}" 
+                       data-item-details="<p><strong>Name:</strong> {{ category.name }}</p><p><strong>Number of Expenses:</strong> {{ category.expenses.count }}</p>">
                       <i class="fas fa-trash"></i>
                     </a>
                   </div>

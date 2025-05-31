@@ -2,12 +2,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from django.contrib import admin
 from django.views.generic import RedirectView
 
 # Import views and custom error handlers
 from accounts import views
-from accounts.views import handler403
 from core.views import search_api
 
 urlpatterns = [
@@ -26,4 +24,5 @@ urlpatterns = [
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Register custom error handlers
-handler403 = 'accounts.views.handler403'  # Custom 403 Forbidden handler
+handler403 = 'core.views.errors.custom_403_view'  # Custom 403 Forbidden handler
+handler404 = 'core.views.errors.custom_404_view'  # Custom 404 Not Found handler
