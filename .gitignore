@@ -13,3 +13,5 @@ __pycache__/
 __pycache__/*
 __pycache__/*/*
 .venv/*
+financefacile/debug.log
+financefacile/debug.log
