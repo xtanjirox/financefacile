@@ -1,28 +1,11 @@
-/* MatDash Sidebar - Clean implementation */
+/* MatDash Sidebar - Internal Styling Only */
 
-/* Sidebar container */
-#sidebar {
-  width: 240px;
-  background-color: white;
-  border-right: 1px solid #f1f5f9;
-}
-
-/* Sidebar styling */
-.sidebar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 1030;
-  transition: margin 0.3s ease-in-out;
-}
-
-/* Sidebar content */
+/* Sidebar content container */
 .sidebar-content {
-  background-color: white;
+  background-color: white; /* Retain background for content area */
   padding: 16px 0;
   height: 100%;
-  overflow-y: auto;
+  overflow-y: auto; /* Allow scrolling for sidebar content */
 }
 
 /* Brand container */
@@ -66,29 +49,6 @@
 }
 
 
-
-
-/* Clean sidebar styling to match ApexCharts */
-
-/* Basic sidebar structure */
-.sidebar {
-  background-color: #fff !important;
-  width: 240px;
-  height: 100vh;
-  position: fixed;
-  z-index: 100;
-  left: 0;
-  top: 0;
-  border-right: 1px solid #f0f0f0;
-}
-
-/* Sidebar content */
-.sidebar-content {
-  padding: 0;
-  height: 100%;
-  overflow-y: auto;
-  background-color: #fff !important;
-}
 
 /* Brand container */
 .brand-container {
@@ -240,41 +200,3 @@
   border-radius: 12px;
   margin-left: auto;
 }
-
-/* Main content */
-.main {
-  margin-left: 240px;
-  transition: margin 0.3s ease-in-out, width 0.3s ease-in-out;
-  width: calc(100% - 240px);
-}
-
-/* Collapsed state */
-body.sidebar-toggled #sidebar {
-  margin-left: -240px;
-}
-
-body.sidebar-toggled .main {
-  margin-left: 0;
-  width: 100%;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  #sidebar {
-    margin-left: -240px;
-  }
-  
-  .main {
-    margin-left: 0;
-    width: 100%;
-  }
-  
-  body.sidebar-mobile-open #sidebar {
-    margin-left: 0;
-  }
-  
-  body.sidebar-mobile-open .main {
-    margin-left: 240px;
-  }
-}
-

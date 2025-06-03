@@ -340,16 +340,31 @@ class InvoiceItemForm(forms.ModelForm):
         company = kwargs.pop('company', None)
         super().__init__(*args, **kwargs)
         
-        # Filter products by stock > 0 and exclude archived products
+        # Filter products by stock > 0 and exclude archived products (i.e., only 'active' products)
         product_queryset = models.Product.objects.filter(quantity__gt=0, is_archived=False)
         
         # If company is provided, filter by company as well
         if company:
             product_queryset = product_queryset.filter(company=company)
-            
+        
         self.fields['product'].queryset = product_queryset
         self.fields['product'].widget = ProductWidget()
         self.fields['product'].help_text = 'Select a product from inventory'
+
+        # If the form instance has a product that is no longer in the active queryset (e.g., archived),
+        # clear it from the initial data for this form instance. This prevents it from being shown
+        # as selected and potentially being added by the widget to the dropdown choices.
+        instance = kwargs.get('instance')
+        if instance and instance.pk and instance.product:
+            if not product_queryset.filter(pk=instance.product.pk).exists():
+                # The current product for this item is inactive.
+                # Check if 'product' is in self.initial and if it matches the instance's product pk.
+                if self.initial.get('product') == instance.product.pk:
+                    self.initial['product'] = None
+                else:
+                    pass
+            else:
+                pass
         
         # Add validation for quantity
         self.fields['quantity'].widget.attrs.update({
@@ -368,7 +383,7 @@ class InvoiceItemForm(forms.ModelForm):
         
         # Add help text
         self.fields['product'].help_text = 'Only products with available stock are shown'
-        self.fields['quantity'].help_text = 'Must not exceed available product stock'
+        # self.fields['quantity'].help_text = 'Must not exceed available product stock'
     
     def clean(self):
         cleaned_data = super().clean()
@@ -455,6 +470,25 @@ class ProductCategoryWidget(s2forms.Select2MultipleWidget):
 class ProductWidget(s2forms.Select2Widget):
     model = models.Product
     search_fields = ['name__icontains']
+
+    def filter_queryset(self, request, term, queryset=None, field=None, **dependent_fields):
+        # Always start with the queryset defined on the Django form field itself.
+        # This queryset is already filtered for active products by InvoiceItemForm.__init__.
+        if field:
+            strict_queryset = field.queryset
+        elif queryset is not None:
+            strict_queryset = queryset # Fallback, though field.queryset is preferred
+        else:
+            # This case should ideally not happen if the widget is used with a ModelChoiceField
+            strict_queryset = self.model.objects.none()
+
+        # Apply search term filtering if a term is provided
+        if term:
+            return super().filter_queryset(request, term, queryset=strict_queryset, field=field, **dependent_fields)
+        
+        # If no search term, return the strict_queryset as is.
+        # This prevents Select2Widget from adding back initial values that are not in our strict_queryset.
+        return strict_queryset
 
     def build_attrs(self, *args, **kwargs):
         attrs = super().build_attrs(*args, **kwargs)
@@ -566,6 +600,7 @@ class FilterForm(forms.Form):
                 css_class='row'
             )
         )
+
 class ParticipantSelectWidget(s2forms.Select2MultipleWidget):
     def build_attrs(self, *args, **kwargs):
         attrs = super().build_attrs(*args, **kwargs)

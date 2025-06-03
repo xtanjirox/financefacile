@@ -609,8 +609,13 @@ class InvoiceCreateView(InvoicePermissionMixin, CreateView, FormViewMixin):
         
         # Get the company for the current user
         company = None
+        default_tva_rate = 19.0  # Default fallback
         if hasattr(self.request.user, 'profile') and self.request.user.profile and self.request.user.profile.company:
             company = self.request.user.profile.company
+            # Get default TVA rate from company settings
+            if hasattr(company, 'settings'):
+                default_tva_rate = company.settings.default_tva_rate
+                print(f"[CREATE VIEW] Using company default TVA rate: {default_tva_rate}")
         
         # Pass the company to the formset
         if self.request.POST:
@@ -619,6 +624,7 @@ class InvoiceCreateView(InvoicePermissionMixin, CreateView, FormViewMixin):
             context['formset'] = core.forms.InvoiceItemFormSet(company=company)
         context['page_title'] = 'Create Invoice'
         context['page_title_badge'] = 'Create Invoice'
+        context['company_default_tva_rate'] = default_tva_rate
         
         self.add_products_to_context(context)
         return context
@@ -956,7 +962,7 @@ class InvoiceListView(InvoicePermissionMixin, ListView):
 class InvoiceUpdateView(InvoicePermissionMixin, UpdateView, FormViewMixin):
     model = models.Invoice
     form_class = core.forms.InvoiceForm
-    template_name = 'invoices/invoice_form_modern.html'
+    template_name = 'invoices/invoice_form_new.html'
     success_url = reverse_lazy('invoice-list')
     
     def get_initial(self):
@@ -990,27 +996,50 @@ class InvoiceUpdateView(InvoicePermissionMixin, UpdateView, FormViewMixin):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        # Get the company from the invoice instance for formset filtering
+        company_for_formset = self.object.company if self.object else None
+
         if self.request.POST:
             context['formset'] = core.forms.InvoiceItemFormSet(
-                self.request.POST, instance=self.object)
+                self.request.POST, instance=self.object, company=company_for_formset)
         else:
             context['formset'] = core.forms.InvoiceItemFormSet(
-                instance=self.object)
+                instance=self.object, company=company_for_formset)
         
-        # Add products to context for the select2 widget, filtered by company
-        if self.request.user.is_superuser or self.request.user.is_staff:
-            products = models.Product.objects.all()
-        elif hasattr(self.request.user, 'profile') and self.request.user.profile.company:
-            products = models.Product.objects.filter(company=self.request.user.profile.company)
+        # Determine the company for filtering products for product_json
+        company_for_json = self.object.company if self.object else None
+
+        if company_for_json:
+            products_for_json = models.Product.objects.filter(
+                company=company_for_json, 
+                is_archived=False, 
+                quantity__gt=0
+            )
+        elif self.request.user.is_superuser or self.request.user.is_staff:
+            # Fallback for superuser/staff if no specific invoice company (e.g. if somehow object has no company)
+            # Lists all active products across all companies. Consider if this is desired or should be an error/empty.
+            products_for_json = models.Product.objects.filter(is_archived=False, quantity__gt=0)
         else:
-            products = models.Product.objects.none()
+            products_for_json = models.Product.objects.none()
+
+        # The 'products' key in context might be used elsewhere, ensure it's also the filtered list.
+        context['products'] = products_for_json
             
-        context['products'] = products
+        # Get default TVA rate from company settings
+        default_tva_rate = 19.0  # Default fallback
+        if hasattr(self.request.user, 'profile') and self.request.user.profile.company:
+            company = self.request.user.profile.company
+            if hasattr(company, 'settings'):
+                default_tva_rate = company.settings.default_tva_rate
+                print(f"[VIEW] Using company default TVA rate: {default_tva_rate}")
+        
+        context['products'] = products_for_json
         context['product_json'] = [
-            {'id': p.id, 'text': p.name, 'price': float(p.selling_price)} for p in products
+            {'id': p.id, 'text': p.name, 'price': float(p.selling_price)} for p in products_for_json
         ]
         context['page_title'] = 'Update Invoice'
         context['page_title_badge'] = 'Update Invoice'
+        context['company_default_tva_rate'] = default_tva_rate
         
         return context
         
