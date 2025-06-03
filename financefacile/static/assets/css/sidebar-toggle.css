@@ -1,59 +1,91 @@
-/* Sidebar toggle functionality */
+/* NEW Sidebar Toggle System CSS */
 
-/* Default sidebar state */
+html {
+  overflow-y: scroll !important; /* Always show vertical scrollbar to prevent page jump */
+}
+
+body {
+  overflow-x: hidden !important; /* Prevent horizontal scrollbars */
+}
+
+:root {
+  --sidebar-width: 260px;
+  --sidebar-transition-duration: 0.3s;
+}
+
+/* Sidebar Base Styles */
 #sidebar.sidebar {
   position: fixed !important;
-  left: 0 !important;
   top: 0 !important;
+  left: 0 !important;
   height: 100vh !important;
-  width: 260px !important;
-  transition: transform 0.3s ease-in-out !important;
-  z-index: 1030 !important;
-  background-color: white !important;
-  transform: translateX(0) !important;
+  width: var(--sidebar-width) !important;
+  background-color: white !important; /* Ensure it has a background */
+  z-index: 1030 !important; /* Ensure it's above most content */
+  transform: translateX(-100%) !important; /* Hidden by default */
+  transition: transform var(--sidebar-transition-duration) ease-in-out !important;
+  border-right: 1px solid #e0e0e0; /* Optional: add a border */
+  box-sizing: border-box !important; /* Crucial for consistent width */
 }
 
-/* Main content area */
+/* Main Content Area Base Styles */
 .main {
-  margin-left: 260px !important;
-  transition: margin 0.3s ease-in-out !important;
-  width: calc(100% - 260px) !important;
-}
-
-/* Collapsed sidebar state */
-body.sidebar-collapsed #sidebar.sidebar {
-  transform: translateX(-100%) !important;
-}
-
-body.sidebar-collapsed .main {
-  margin-left: 0 !important;
+  padding-top: 0; /* Adjust if you have a fixed topbar height */
+  transition: margin-left var(--sidebar-transition-duration) ease-in-out !important;
+  margin-left: 0 !important; /* Default when sidebar is closed */
   width: 100% !important;
 }
 
-/* Sidebar toggle button */
-.sidebar-toggle {
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.sidebar-toggle:hover {
-  color: #635AFF !important;
-}
-
-/* Responsive adjustments */
-@media (max-width: 767.98px) {
-  #sidebar.sidebar {
-    width: 260px !important;
-    transform: translateX(-100%) !important;
-    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+/* --- Desktop Styles (sidebar pushes content) --- */
+@media (min-width: 768px) {
+  body.sidebar-is-open #sidebar.sidebar {
+    transform: translateX(0) !important;
   }
-  
+
+  body.sidebar-is-open .main {
+    margin-left: var(--sidebar-width) !important;
+    width: calc(100% - var(--sidebar-width)) !important;
+  }
+}
+
+/* --- Mobile Styles (sidebar overlays content) --- */
+@media (max-width: 767.98px) {
+  body.sidebar-is-open #sidebar.sidebar {
+    transform: translateX(0) !important;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2) !important; /* Add shadow for overlay effect */
+  }
+
+  /* .main content on mobile always takes full width, sidebar overlays */
   .main {
     margin-left: 0 !important;
     width: 100% !important;
   }
-  
-  body.sidebar-collapsed #sidebar.sidebar {
-    transform: translateX(0) !important;
+}
+
+/* Sidebar Toggle Button (optional styling) */
+.js-sidebar-toggle {
+  cursor: pointer;
+  /* Add specific styling for your toggle button if needed */
+}
+
+/* Optional: Add an overlay for mobile when sidebar is open */
+body.sidebar-is-open::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 1029; /* Below sidebar, above content */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--sidebar-transition-duration) ease, visibility var(--sidebar-transition-duration) ease;
+}
+
+@media (max-width: 767.98px) {
+  body.sidebar-is-open::before {
+    opacity: 1;
+    visibility: visible;
   }
 }

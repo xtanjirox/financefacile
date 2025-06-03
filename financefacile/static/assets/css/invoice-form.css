@@ -1,0 +1,7 @@
+/* Hide the DELETE checkbox in invoice item formsets */
+input[name$="-DELETE"],
+input[name*="DELETE"],
+input[id*="DELETE"],
+.delete-checkbox {
+    display: none !important;
+}

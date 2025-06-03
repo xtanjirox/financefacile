@@ -1,0 +1,20 @@
+{
+    "dbcode.connections": [
+        {
+            "connectionId": "5Fmo2C8m_rus6OUKFAB2p",
+            "name": "financefacile",
+            "driver": "postgres",
+            "color": "#00E3A9",
+            "connectionType": "host",
+            "host": "localhost",
+            "port": 5432,
+            "ssl": false,
+            "username": "financefacile",
+            "password": "",
+            "savePassword": "secretStorage",
+            "database": "financefacile",
+            "readOnly": false,
+            "connectionTimeout": 30
+        }
+    ]
+}

@@ -9,15 +9,28 @@
 {% include 'includes/topbar.html' %}
 {% endblock topbar %}
 
+{% block extra_css %}
+<style>
+  .highlight-update {
+    background-color: #ffffcc !important;
+    transition: background-color 1s;
+  }
+</style>
+{% endblock extra_css %}
+
 {% block extra_js %}
 {{ block.super }}
 <script>
   // Provide product prices for JS
-  window.PRODUCT_PRICES = {
+  window.PRODUCT_PRICES = {};
+  {% if products %}
     {% for product in products %}
-    "{{ product.id }}": "{{ product.selling_price }}"{% if not forloop.last %}, {% endif %}
+    window.PRODUCT_PRICES["{{ product.id }}"] = "{{ product.selling_price }}";
     {% endfor %}
-  };
+  {% endif %}
+  
+  // Debug: Log all product prices
+  console.log('DEBUG: Product prices object:', window.PRODUCT_PRICES);
 </script>
 {% endblock extra_js %}
 
@@ -81,25 +94,29 @@
             {% csrf_token %}
             {{ formset.management_form }}
             
-            <div class="mb-4">
-              <h4 class="fw-bold mb-3" style="color: #39739d;">
-                <i class="fas fa-info-circle me-2" style="color: #7cb9e8;"></i>Invoice Details
-              </h4>
+            <div class="card shadow-sm mb-4">
+              <div class="card-header py-3">
+                <h5 class="mb-0 fw-bold text-primary">
+                  <i class="fas fa-info-circle me-2"></i>Invoice Details
+                </h5>
+              </div>
+              <div class="card-body">
               <div class="row g-3">
                 <!-- TVA Rate Field -->
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                   <label class="form-label fw-semibold" for="id_tva_rate">TVA Rate (%)</label>
-                  <input type="number" name="tva_rate" id="id_tva_rate" class="form-control" step="0.01" min="0" max="100"
-                    value="{{ form.initial.tva_rate|default:'19.0' }}">
-                  <small class="form-text text-muted">Default rate from company settings ({{ form.initial.tva_rate|default:'19.0' }})</small>
+                  <input type="text" name="tva_rate" id="id_tva_rate" class="form-control" 
+                    value="{% if form.instance.tva_rate %}{{ form.instance.tva_rate|stringformat:".2f" }}{% elif form.tva_rate.value %}{{ form.tva_rate.value|stringformat:".2f" }}{% else %}{{ form.initial.tva_rate|default:'19.0'|stringformat:".2f" }}{% endif %}"
+                    style="color: black !important; background-color: white !important; z-index: 9999 !important; opacity: 1 !important;" >
+                  <small class="form-text text-muted">Default rate from company settings: {{ company_default_tva_rate }}%</small>
                   {% for error in form.tva_rate.errors %}
                   <div class="invalid-feedback d-block">{{ error }}</div>
                   {% endfor %}
                 </div>
 
                 <!-- Stamp Fee Field -->
-                <div class="col-md-6">
-                  <div class="form-check mt-4">
+                <div class="col-md-6 mb-3 align-self-end">
+                  <div class="form-check mt-md-0 pt-md-2">
                     <input class="form-check-input" type="checkbox" name="include_stamp_fee" id="id_include_stamp_fee" 
                       {% if form.include_stamp_fee.value or form.initial.include_stamp_fee %}checked{% endif %}>
                     <label class="form-check-label" for="id_include_stamp_fee">
@@ -113,7 +130,7 @@
                 </div>
 
                 <!-- Client Name Field -->
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                   <label class="form-label fw-semibold" for="id_client_name">Client Name</label>
                   <input type="text" name="client_name" id="id_client_name" class="form-control" placeholder="Client name"
                     {% if form.client_name.value %}value="{{ form.client_name.value }}"{% endif %}>
@@ -126,7 +143,7 @@
                 </div>
 
                 <!-- Client Address Field -->
-                <div class="col-md-6">
+                <div class="col-md-6 mb-3">
                   <label class="form-label fw-semibold" for="id_client_address">Client Address</label>
                   <textarea name="client_address" id="id_client_address" class="form-control" rows="2"
                     placeholder="Client address">{% if form.client_address.value %}{{ form.client_address.value }}{% endif %}</textarea>
@@ -137,22 +154,26 @@
                   <div class="invalid-feedback d-block">{{ error }}</div>
                   {% endfor %}
                 </div>
-              </div>
-            </div>
+              </div> <!-- end row g-3 -->
+              </div> <!-- end card-body -->
+            </div> <!-- end card -->
 
-            <div class="mb-4">
-              <h4 class="fw-bold mb-3" style="color: #39739d;">
-                <i class="fas fa-shopping-cart me-2" style="color: #7cb9e8;"></i>Invoice Items
-              </h4>
-              <div class="table-responsive">
-                <table class="table table-bordered" id="invoice-items-table">
+            <div class="card shadow-sm mb-4">
+              <div class="card-header py-3">
+                <h5 class="mb-0 fw-bold text-primary">
+                  <i class="fas fa-shopping-cart me-2"></i>Invoice Items
+                </h5>
+              </div>
+              <div class="card-body p-0"> <!-- p-0 to allow table to span full width of card body -->
+                <div class="table-responsive">
+                  <table class="table table-bordered table-hover table-sm mb-0" id="invoice-items-table">
                   <thead class="table-light">
                     <tr>
-                      <th>Product</th>
-                      <th>Quantity</th>
-                      <th>Price</th>
-                      <th>Total</th>
-                      <th>Actions</th>
+                      <th scope="col" style="width: 35%;">Product</th>
+                      <th scope="col" style="width: 15%;" class="text-end">Quantity</th>
+                      <th scope="col" style="width: 20%;" class="text-end">Selling Price</th>
+                      <th scope="col" style="width: 20%;" class="text-end">Item Total</th>
+                      <th scope="col" style="width: 10%;" class="text-center">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="invoice-items-body">
@@ -163,7 +184,7 @@
                         <select name="{{ form.product.html_name }}" id="{{ form.product.auto_id }}" class="form-control select2-product">
                           <option value="">Select a product...</option>
                           {% for product in products %}
-                          <option value="{{ product.id }}" data-price="{{ product.selling_price }}">{{ product.name }}</option>
+                          <option value="{{ product.id }}" data-price="{{ product.selling_price }}" {% if form.product.value|stringformat:'s' == product.id|stringformat:'s' %}selected{% endif %}>{{ product.name }}</option>
                           {% endfor %}
                         </select>
                         {% for error in form.product.errors %}
@@ -171,13 +192,30 @@
                         {% endfor %}
                       </td>
                       <td>
-                        {{ form.quantity }}
+                        <input type="text" 
+                           name="{{ form.quantity.html_name }}" 
+                           id="{{ form.quantity.auto_id }}" 
+                           class="form-control quantity-input-debug {{ form.quantity.field.widget.attrs.class }}" 
+                           value="{{ form.quantity.value|default:'1' }}" 
+                           data-field-type="quantity"
+                           min="1" 
+                           data-bs-toggle="tooltip" 
+                           title="{{ form.quantity.field.widget.attrs.title|default:'Enter quantity (must not exceed available stock)' }}"
+                           {% if form.quantity.help_text %}aria-describedby="{{ form.quantity.auto_id }}_helptext"{% endif %}>
+                    {% if form.quantity.help_text %}
+                      <small id="{{ form.quantity.auto_id }}_helptext" class="form-text text-muted">{{ form.quantity.help_text }}</small>
+                    {% endif %}
                         {% for error in form.quantity.errors %}
                         <div class="invalid-feedback d-block">{{ error }}</div>
                         {% endfor %}
                       </td>
                       <td>
-                        {{ form.selling_price }}
+                        <input type="text" 
+                               name="{{ form.selling_price.html_name }}" 
+                               id="{{ form.selling_price.auto_id }}" 
+                               class="form-control selling-price-input-debug" 
+                               value="{{ form.selling_price.value|default:'0.00' }}" 
+                               data-field-type="selling-price" >
                         {% for error in form.selling_price.errors %}
                         <div class="invalid-feedback d-block">{{ error }}</div>
                         {% endfor %}
@@ -194,14 +232,15 @@
                     {% endfor %}
                   </tbody>
                 </table>
-              </div>
-              
-              <div class="mb-3">
-                <button type="button" id="add-item" class="btn btn-primary">
-                  <i class="fas fa-plus"></i> Add Item
-                </button>
-              </div>
-              
+              </div> <!-- end table-responsive -->
+            </div> <!-- end card-body p-0 -->
+            <div class="card-footer bg-light py-3 text-end">
+              <button type="button" id="add-item" class="btn btn-primary btn-sm">
+                <i class="fas fa-plus me-1"></i> Add Item
+              </button>
+            </div>
+          </div> <!-- end card shadow-sm mb-4 for Invoice Items -->
+
               <!-- Empty form template for JavaScript -->
               <div id="empty-form" class="d-none">
                 {% with form=formset.empty_form %}
@@ -211,7 +250,7 @@
                     <select name="{{ form.product.html_name }}" id="{{ form.product.auto_id }}" class="form-control select2-product">
                       <option value="">Select a product...</option>
                       {% for product in products %}
-                      <option value="{{ product.id }}" data-price="{{ product.selling_price }}">{{ product.name }}</option>
+                      <option value="{{ product.id }}" data-price="{{ product.selling_price }}" {% if form.product.value|stringformat:'s' == product.id|stringformat:'s' %}selected{% endif %}>{{ product.name }}</option>
                       {% endfor %}
                     </select>
                     {% for error in form.product.errors %}
@@ -219,13 +258,23 @@
                     {% endfor %}
                   </td>
                   <td>
-                    {{ form.quantity }}
+                    <input type="text" 
+                           name="{{ form.quantity.html_name }}" 
+                           id="{{ form.quantity.auto_id }}" 
+                           class="form-control quantity-input-debug" 
+                           value="{{ form.quantity.value|default:'1' }}" 
+                           data-field-type="quantity" >
                     {% for error in form.quantity.errors %}
                     <div class="invalid-feedback d-block">{{ error }}</div>
                     {% endfor %}
                   </td>
                   <td>
-                    {{ form.selling_price }}
+                    <input type="text" 
+                           name="{{ form.selling_price.html_name }}" 
+                           id="{{ form.selling_price.auto_id }}" 
+                           class="form-control selling-price-input-debug" 
+                           value="{{ form.selling_price.value|default:'0.00' }}" 
+                           data-field-type="selling-price" >
                     {% for error in form.selling_price.errors %}
                     <div class="invalid-feedback d-block">{{ error }}</div>
                     {% endfor %}
@@ -244,31 +293,34 @@
             </div>
             
             <div class="row mb-4">
-              <div class="col-md-6 offset-md-6">
-                <div class="card">
+              <div class="col-12">
+                <div class="card shadow-sm">
+                  <div class="card-header py-3">
+                    <h5 class="mb-0 fw-bold text-primary"><i class="fas fa-calculator me-2"></i>Summary</h5>
+                  </div>
                   <div class="card-body">
                     <div class="d-flex justify-content-between mb-2">
-                      <span>Subtotal:</span>
-                      <span id="subtotal">0.00</span>
+                      <span class="fw-semibold">Subtotal:</span>
+                      <span id="subtotal" class="text-end">0.00</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                      <span>TVA ({{ form.initial.tva_rate|default:'19.0' }}%):</span>
-                      <span id="tva-amount">0.00</span>
+                      <span class="fw-semibold">TVA (<span id="tva-rate-display">{% if form.instance.tva_rate %}{{ form.instance.tva_rate|stringformat:".2f" }}{% elif form.tva_rate.value %}{{ form.tva_rate.value|stringformat:".2f" }}{% else %}{{ form.initial.tva_rate|default:'19.0'|stringformat:".2f" }}{% endif %}</span>%):</span>
+                      <span id="tva-amount" class="text-end">0.00</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2" id="stamp-fee-row">
-                      <span>Stamp Fee:</span>
-                      <span id="stamp-fee">0.00</span>
+                      <span class="fw-semibold">Stamp Fee:</span>
+                      <span id="stamp-fee" class="text-end">0.00</span>
                     </div>
-                    <hr>
-                    <div class="d-flex justify-content-between fw-bold">
-                      <span>Total:</span>
-                      <span id="total-amount">0.00</span>
+                    <hr class="my-2">
+                    <div class="d-flex justify-content-between fw-bold h5 mb-0">
+                      <span class="text-success">Total:</span>
+                      <span id="total-amount" class="text-end text-success">0.00</span>
                     </div>
                     <input type="hidden" name="invoice_total" id="id_invoice_total">
                   </div>
                 </div>
               </div>
-            </div>
+            </div> <!-- end row for totals -->
             
             <div class="d-flex justify-content-end">
               <a href="{% url 'invoice-list' %}" class="btn btn-secondary me-2">Cancel</a>
@@ -285,12 +337,86 @@
 {% endblock content %}
 
 {% block script_content %}
-<script src="{% static 'js/select2.min.js' %}"></script>
+<!-- Select2 is already loaded in the base template -->
 <script>
   document.addEventListener('DOMContentLoaded', function() {
     // Debug information
     console.log('Invoice form initialized');
     console.log('Product prices:', window.PRODUCT_PRICES);
+    
+    // Function to calculate the total for a row
+    window.calculateRowTotal = function(row, quantity, price) {
+      console.log('Calculating row total for:', row);
+      console.log('Quantity:', quantity, 'Price:', price);
+      
+      // Ensure quantity and price are numbers
+      quantity = quantity || 0;
+      price = price || 0;
+      
+      const total = quantity * price;
+      console.log('Row total:', total);
+      
+      // Update the total field in the row
+      const totalField = row.find('.item-total');
+      if (totalField.length > 0) {
+        totalField.val(total.toFixed(2));
+        console.log('Updated total field:', totalField.val());
+      } else {
+        console.error('Total field not found in row');
+      }
+      
+      return total;
+    };
+    
+    // Function to update all totals
+    window.updateAllTotals = function() {
+      console.log('Updating all totals');
+      
+      // Calculate subtotal
+      let subtotal = 0;
+      $('.item-total').each(function() {
+        const value = parseFloat($(this).val()) || 0;
+        subtotal += value;
+      });
+      
+      // Get TVA rate
+      const tvaRateElement = document.getElementById('id_tva_rate');
+      const tvaRateDisplay = document.getElementById('tva-rate-display');
+      let tvaRate = 19.0; // Default rate
+      
+      if (tvaRateElement) {
+        tvaRate = parseFloat(tvaRateElement.value) || tvaRate;
+      } else if (tvaRateDisplay) {
+        tvaRate = parseFloat(tvaRateDisplay.textContent) || tvaRate;
+      }
+      
+      console.log('TVA Rate:', tvaRate);
+      
+      // Calculate TVA amount
+      const tvaAmount = subtotal * (tvaRate / 100);
+      
+      // Get stamp fee
+      const stampFeeElement = document.getElementById('id_stamp_fee');
+      let stampFee = 0;
+      
+      if (stampFeeElement) {
+        stampFee = parseFloat(stampFeeElement.value) || 0;
+      }
+      
+      console.log('Stamp Fee:', stampFee);
+      
+      // Calculate total
+      const total = subtotal + tvaAmount + stampFee;
+      
+      // Update the display
+      $('#subtotal').text(subtotal.toFixed(2));
+      $('#tva-amount').text(tvaAmount.toFixed(2));
+      $('#stamp-fee').text(stampFee.toFixed(2));
+      $('#total-amount').text(total.toFixed(2));
+      $('#id_invoice_total').val(total.toFixed(2));
+      
+      console.log('Updated totals - Subtotal:', subtotal.toFixed(2), 'TVA:', tvaAmount.toFixed(2), 'Total:', total.toFixed(2));
+    };
     
     // Initialize Select2 for product dropdowns
     initializeSelect2();
@@ -307,15 +433,101 @@
     // Function to initialize Select2 for product dropdowns
     function initializeSelect2() {
       console.log('Initializing Select2 for product dropdowns');
-      $('.select2-product').each(function() {
-        console.log('Found product dropdown:', this.id);
-        $(this).select2({
-          width: '100%',
-          theme: 'classic',
-          placeholder: 'Select a product...',
-          allowClear: true,
-          dropdownParent: $('#invoice-form')
-        });
+      $('.select2-product').select2({
+        placeholder: 'Select a product...',
+        allowClear: true,
+        width: '100%'
+      });
+      
+      // Add change event handler to all product dropdowns
+      $('.select2-product').on('change', function() {
+        console.log('DEBUG: Product dropdown changed');
+        const productId = $(this).val();
+        console.log('DEBUG: Selected product ID:', productId);
+        
+        if (productId) {
+          // Find the price input in the same row
+          const row = $(this).closest('tr');
+          console.log('DEBUG: Found row:', row);
+          
+          // Try different selectors to find the price input
+          let priceInput = row.find('input[id$="-selling_price"]');
+          if (priceInput.length === 0) {
+            priceInput = row.find('input[name$="-selling_price"]');
+          }
+          if (priceInput.length === 0) {
+            // As a fallback, get all inputs and find the one in the third cell (price column)
+            const inputs = row.find('td:eq(2) input');
+            if (inputs.length > 0) {
+              priceInput = inputs.first();
+            }
+          }
+          
+          console.log('DEBUG: Price input found:', priceInput.length > 0, priceInput);
+          
+          // Try to get the price from the data attribute first
+          let price = $(this).find('option:selected').data('price');
+          console.log('DEBUG: Price from data attribute:', price);
+          
+          // If not available, try the PRODUCT_PRICES object
+          if (!price && window.PRODUCT_PRICES && productId in window.PRODUCT_PRICES) {
+            price = window.PRODUCT_PRICES[productId];
+            console.log('DEBUG: Price from PRODUCT_PRICES:', price);
+          }
+          
+          // Set the price in the price input
+          if (price && priceInput.length > 0) {
+            console.log('DEBUG: Setting price input value to:', price);
+            console.log('DEBUG: Price input type:', priceInput.prop('tagName'), 'ID:', priceInput.attr('id'), 'Name:', priceInput.attr('name'));
+            
+            // Use a more direct approach to update the field
+            // First, get the DOM element directly
+            const priceInputElement = priceInput.get(0);
+            if (priceInputElement) {
+              // Set the value property directly
+              priceInputElement.value = price;
+              
+              // Create and dispatch an input event to trigger any listeners
+              const event = new Event('input', { bubbles: true });
+              priceInputElement.dispatchEvent(event);
+              
+              // Also dispatch a change event
+              const changeEvent = new Event('change', { bubbles: true });
+              priceInputElement.dispatchEvent(changeEvent);
+
+              // Force browser reflow/repaint
+              priceInputElement.style.display = 'none';
+              // Reading offsetHeight is a common trick to trigger reflow
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const hack = priceInputElement.offsetHeight;
+              priceInputElement.style.display = '';
+              
+              console.log('DEBUG: Set price using vanilla JS, dispatched events, and forced reflow');
+            }
+            
+            console.log('DEBUG: Price input value after setting:', priceInputElement ? priceInputElement.value : 'N/A');
+            
+            // Force a visual update by adding a temporary class
+            priceInput.addClass('highlight-update');
+            setTimeout(() => {
+              priceInput.removeClass('highlight-update');
+            }, 1000);
+            
+            // Trigger the calculation of the row total
+            const quantityInput = row.find('input[id$="-quantity"]');
+            const quantity = quantityInput.length > 0 ? parseFloat(quantityInput.val()) || 1 : 1;
+            
+            console.log('DEBUG: Quantity input found:', quantityInput.length > 0, 'Value:', quantity);
+            
+            calculateRowTotal(row, quantity, parseFloat(price));
+            // Update all totals
+            updateAllTotals();
+          } else {
+            console.error('DEBUG: No price found for product ID:', productId, 'or price input not found');
+          }
+        } else {
+          console.log('DEBUG: No product selected');
+        }
       });
     }
     
@@ -330,6 +542,98 @@
         allowClear: true,
         dropdownParent: $('#invoice-form')
       });
+      
+      // Add change event handler to the new product dropdown
+      $(element).on('change', function() {
+        console.log('DEBUG: NEW ROW - Product dropdown changed');
+        const productId = $(this).val();
+        console.log('DEBUG: NEW ROW - Selected product ID:', productId);
+        
+        if (productId) {
+          // Find the price input in the same row
+          const row = $(this).closest('tr');
+          console.log('DEBUG: NEW ROW - Found row:', row);
+          
+          // Try different selectors to find the price input
+          let priceInput = row.find('input[id$="-selling_price"]');
+          if (priceInput.length === 0) {
+            priceInput = row.find('input[name$="-selling_price"]');
+          }
+          if (priceInput.length === 0) {
+            // As a fallback, get all inputs and find the one in the third cell (price column)
+            const inputs = row.find('td:eq(2) input');
+            if (inputs.length > 0) {
+              priceInput = inputs.first();
+            }
+          }
+          
+          console.log('DEBUG: NEW ROW - Price input found:', priceInput.length > 0, priceInput);
+          console.log('DEBUG: NEW ROW - All inputs in row:', row.find('input').length, row.find('input'));
+          
+          // Try to get the price from the data attribute first
+          let price = $(this).find('option:selected').data('price');
+          console.log('DEBUG: NEW ROW - Price from data attribute:', price);
+          
+          // If not available, try the PRODUCT_PRICES object
+          if (!price && window.PRODUCT_PRICES && productId in window.PRODUCT_PRICES) {
+            price = window.PRODUCT_PRICES[productId];
+            console.log('DEBUG: NEW ROW - Price from PRODUCT_PRICES:', price);
+          }
+          
+          // Set the price in the price input
+          if (price && priceInput.length > 0) {
+            console.log('DEBUG: NEW ROW - Setting price input value to:', price);
+            console.log('DEBUG: NEW ROW - Price input type:', priceInput.prop('tagName'), 'ID:', priceInput.attr('id'), 'Name:', priceInput.attr('name'));
+            
+            // Use a more direct approach to update the field
+            // First, get the DOM element directly
+            const priceInputElement = priceInput.get(0);
+            if (priceInputElement) {
+              // Set the value property directly
+              priceInputElement.value = price;
+              
+              // Create and dispatch an input event to trigger any listeners
+              const event = new Event('input', { bubbles: true });
+              priceInputElement.dispatchEvent(event);
+              
+              // Also dispatch a change event
+              const changeEvent = new Event('change', { bubbles: true });
+              priceInputElement.dispatchEvent(changeEvent);
+
+              // Force browser reflow/repaint
+              priceInputElement.style.display = 'none';
+              // Reading offsetHeight is a common trick to trigger reflow
+              // eslint-disable-next-line @typescript-eslint/no-unused-vars
+              const hack = priceInputElement.offsetHeight;
+              priceInputElement.style.display = '';
+              
+              console.log('DEBUG: NEW ROW - Set price using vanilla JS, dispatched events, and forced reflow');
+            }
+            
+            console.log('DEBUG: NEW ROW - Price input value after setting:', priceInputElement ? priceInputElement.value : 'N/A');
+            
+            // Force a visual update by adding a temporary class
+            priceInput.addClass('highlight-update');
+            setTimeout(() => {
+              priceInput.removeClass('highlight-update');
+            }, 1000);
+            
+            // Trigger the calculation of the row total
+            const quantityInput = row.find('input[id$="-quantity"]');
+            const quantity = quantityInput.length > 0 ? parseFloat(quantityInput.val()) || 1 : 1;
+            
+            console.log('DEBUG: NEW ROW - Quantity input found:', quantityInput.length > 0, 'Value:', quantity);
+            
+            calculateRowTotal(row, quantity, parseFloat(price));
+            // Update all totals
+            updateAllTotals();
+          } else {
+            console.error('DEBUG: NEW ROW - No price found for product ID:', productId, 'or price input not found');
+          }
+        } else {
+          console.log('DEBUG: NEW ROW - No product selected');
+        }
+      });
     }
     
     // Function to setup event handlers for existing rows
@@ -337,7 +641,22 @@
       const rows = document.querySelectorAll('#invoice-items-body .item-form');
       rows.forEach(row => {
         setupRowEventHandlers(row);
+        
+        // Calculate initial row total for existing items
+        const quantityInput = row.querySelector('input[name*="quantity"]');
+        const priceInput = row.querySelector('input[name*="selling_price"]');
+        const totalInput = row.querySelector('.item-total');
+        
+        if (quantityInput && priceInput && totalInput && quantityInput.value && priceInput.value) {
+          const quantity = parseFloat(quantityInput.value) || 0;
+          const price = parseFloat(priceInput.value) || 0;
+          const total = quantity * price;
+          totalInput.value = total.toFixed(2);
+        }
       });
+      
+      // Update all totals after setting up rows
+      updateAllTotals();
     }
     
     // Function to setup event handlers for a specific row
@@ -414,18 +733,37 @@
     
     // Function to update all totals (subtotal, TVA, total)
     function updateAllTotals() {
+      console.log('Updating all totals...');
+      
       // Calculate subtotal
       let subtotal = 0;
       document.querySelectorAll('.item-total').forEach(input => {
         subtotal += parseFloat(input.value) || 0;
       });
+      console.log('Calculated subtotal:', subtotal);
       
       // Get TVA rate
       const tvaRateInput = document.getElementById('id_tva_rate');
-      const tvaRate = parseFloat(tvaRateInput.value) || 0;
+      let tvaRate = parseFloat(tvaRateInput.value) || 0;
+      
+      // Ensure TVA rate is not zero if it has a value
+      if (tvaRateInput.value && tvaRate === 0) {
+        console.warn('TVA rate input has value but parsed as 0, trying again:', tvaRateInput.value);
+        // Try to parse again with different locale handling
+        tvaRate = parseFloat(tvaRateInput.value.replace(',', '.')) || 0;
+      }
+      
+      console.log('Using TVA rate:', tvaRate);
+      
+      // Update TVA rate display
+      const tvaRateDisplay = document.getElementById('tva-rate-display');
+      if (tvaRateDisplay) {
+        tvaRateDisplay.textContent = tvaRate.toFixed(1);
+      }
       
       // Calculate TVA amount
       const tvaAmount = subtotal * (tvaRate / 100);
+      console.log('Calculated TVA amount:', tvaAmount);
       
       // Check if stamp fee is included
       const includeStampFee = document.getElementById('id_include_stamp_fee').checked;
@@ -499,10 +837,22 @@
             </select>
           </td>
           <td>
-            <input type="number" name="${prefix}-${formCount}-quantity" id="id_${prefix}-${formCount}-quantity" class="form-control" min="1" value="1">
+            <input type="text" 
+                   name="${prefix}-${formCount}-quantity" 
+                   id="id_${prefix}-${formCount}-quantity" 
+                   class="form-control quantity-input-debug" 
+                   value="1" 
+                   data-field-type="quantity"
+                   style="color: black !important; background-color: white !important; z-index: 9999 !important; opacity: 1 !important;" >
           </td>
           <td>
-            <input type="number" name="${prefix}-${formCount}-selling_price" id="id_${prefix}-${formCount}-selling_price" class="form-control" min="0" step="0.01" value="0.00">
+            <input type="text" 
+                   name="${prefix}-${formCount}-selling_price" 
+                   id="id_${prefix}-${formCount}-selling_price" 
+                   class="form-control selling-price-input-debug" 
+                   value="0.00" 
+                   data-field-type="selling-price"
+                   style="color: black !important; background-color: white !important; z-index: 9999 !important; opacity: 1 !important;" >
           </td>
           <td>
             <input type="number" class="form-control item-total" readonly>
@@ -544,11 +894,34 @@
       }
     }
     
-    // Update totals when TVA rate changes
-    document.getElementById('id_tva_rate').addEventListener('input', updateAllTotals);
-    
-    // Update totals when stamp fee checkbox changes
-    document.getElementById('id_include_stamp_fee').addEventListener('change', updateAllTotals);
+    // Initialize the form when the DOM is loaded
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, initializing invoice form...');
+      
+      // Initialize Select2 for product dropdowns
+      initializeSelect2();
+      
+      // Setup event handlers for existing rows
+      setupExistingRows();
+      
+      // Setup event handlers for the empty form template
+      setupEmptyFormTemplate();
+      
+      // Setup event handlers for the add button
+      setupAddItemButton();
+      
+      // Setup event handler for the TVA rate input
+      const tvaRateInput = document.getElementById('id_tva_rate');
+      console.log('Initial TVA rate:', tvaRateInput.value);
+      tvaRateInput.addEventListener('input', updateAllTotals);
+      
+      // Setup event handler for the include stamp fee checkbox
+      document.getElementById('id_include_stamp_fee').addEventListener('change', updateAllTotals);
+      
+      // Force an initial calculation of all totals
+      console.log('Forcing initial calculation of all totals');
+      updateAllTotals();
+    });
   });
 </script>
 {% endblock script_content %}
