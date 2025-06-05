@@ -38,6 +38,10 @@
     {% endfor %}
   {% endif %}
   
+  // Check if we're in update mode (invoice already exists)
+  window.isUpdateMode = {% if form.instance.id %}true{% else %}false{% endif %};
+  console.log('Is update mode:', window.isUpdateMode);
+  
   // Debug: Log all product prices
   console.log('DEBUG: Product prices object:', window.PRODUCT_PRICES);
 </script>
@@ -187,6 +191,7 @@
                   </thead>
                   <tbody id="invoice-items-body">
                     {% for form in formset.forms %}
+                    {% if form.instance.id or form.product.value or forloop.first and not form.instance.id %}
                     <tr class="item-form">
                       {{ form.id }}
                       <td>
@@ -223,7 +228,7 @@
                                name="{{ form.selling_price.html_name }}" 
                                id="{{ form.selling_price.auto_id }}" 
                                class="form-control selling-price-input-debug" 
-                               value="{{ form.selling_price.value|default:'0.00' }}" 
+                               value="{% if form.selling_price.value %}{{ form.selling_price.value|stringformat:'.2f'|safe }}{% else %}0.00{% endif %}" 
                                data-field-type="selling-price" >
                         {% for error in form.selling_price.errors %}
                         <div class="invalid-feedback d-block">{{ error }}</div>
@@ -238,6 +243,7 @@
                         </button>
                       </td>
                     </tr>
+                    {% endif %}
                     {% endfor %}
                   </tbody>
                 </table>
@@ -353,28 +359,42 @@
     console.log('Invoice form initialized');
     console.log('Product prices:', window.PRODUCT_PRICES);
     
+    // Function to normalize number input (handle commas and periods)
+    function normalizeNumber(value) {
+      if (typeof value === 'string') {
+        // Replace commas with periods for parsing
+        value = value.replace(/,/g, '.');
+        // Remove any non-numeric characters except decimal point
+        value = value.replace(/[^0-9.]/g, '');
+      }
+      const num = parseFloat(value);
+      return isNaN(num) ? 0 : num;
+    }
+    
     // Function to calculate the total for a row
     window.calculateRowTotal = function(row, quantity, price) {
       console.log('Calculating row total for:', row);
       console.log('Quantity:', quantity, 'Price:', price);
       
-      // Ensure quantity and price are numbers
-      quantity = quantity || 0;
-      price = price || 0;
+      // Normalize inputs
+      quantity = normalizeNumber(quantity);
+      price = normalizeNumber(price);
       
+      console.log('DEBUG: Calculating row total - Quantity:', quantity, 'Price:', price);
       const total = quantity * price;
-      console.log('Row total:', total);
+      console.log('DEBUG: Row total calculated:', total);
       
-      // Update the total field in the row
-      const totalField = row.find('.item-total');
-      if (totalField.length > 0) {
-        totalField.val(total.toFixed(2));
-        console.log('Updated total field:', totalField.val());
+      // Update the total display in the row
+      const totalInput = row.find('.item-total');
+      if (totalInput.length > 0) {
+        totalInput.val(total.toFixed(2));
+        console.log('DEBUG: Updated row total display to:', total.toFixed(2));
       } else {
-        console.error('Total field not found in row');
+        console.error('DEBUG: Could not find total input in row');
       }
       
-      return total;
+      // Update all totals
+      updateAllTotals();
     };
     
     // Function to update all totals
@@ -384,17 +404,21 @@
       // Calculate subtotal
       let subtotal = 0;
       $('.item-total').each(function() {
-        const value = parseFloat($(this).val()) || 0;
-        subtotal += value;
+        // Normalize the value to handle comma decimal separators
+        const rowTotal = normalizeNumber($(this).val());
+        subtotal += rowTotal;
       });
+      
+      console.log('Subtotal:', subtotal);
       
       // Get TVA rate
       const tvaRateElement = document.getElementById('id_tva_rate');
-      const tvaRateDisplay = document.getElementById('tva-rate-display');
-      let tvaRate = 19.0; // Default rate
+      let tvaRate = 19; // Default TVA rate
       
       if (tvaRateElement) {
-        tvaRate = parseFloat(tvaRateElement.value) || tvaRate;
+        // Normalize the TVA rate to handle comma decimal separators
+        tvaRate = normalizeNumber(tvaRateElement.value);
+        if (tvaRate === 0) tvaRate = 19; // Fallback to default if parsing failed
       } else if (tvaRateDisplay) {
         tvaRate = parseFloat(tvaRateDisplay.textContent) || tvaRate;
       }
@@ -406,10 +430,16 @@
       
       // Get stamp fee
       const stampFeeElement = document.getElementById('id_stamp_fee');
+      const includeStampFeeCheckbox = document.getElementById('id_include_stamp_fee');
       let stampFee = 0;
       
       if (stampFeeElement) {
-        stampFee = parseFloat(stampFeeElement.value) || 0;
+        stampFee = normalizeNumber(stampFeeElement.value);
+      }
+      
+      // Only include stamp fee if checkbox is checked
+      if (includeStampFeeCheckbox && !includeStampFeeCheckbox.checked) {
+        stampFee = 0;
       }
       
       console.log('Stamp Fee:', stampFee);
@@ -489,12 +519,35 @@
             console.log('DEBUG: Setting price input value to:', price);
             console.log('DEBUG: Price input type:', priceInput.prop('tagName'), 'ID:', priceInput.attr('id'), 'Name:', priceInput.attr('name'));
             
+            // Convert price to a proper number format
+            let numericPrice;
+            if (typeof price === 'string') {
+              // Handle both comma and period decimal separators
+              // First, replace commas with periods for parsing
+              price = price.replace(/,/g, '.');
+              // Then remove any non-numeric characters except decimal point
+              price = price.replace(/[^0-9.]/g, '');
+              numericPrice = parseFloat(price);
+            } else {
+              numericPrice = parseFloat(price);
+            }
+            
+            // Ensure it's a valid number
+            if (isNaN(numericPrice)) {
+              numericPrice = 0;
+            }
+            
+            // Format to 2 decimal places
+            numericPrice = numericPrice.toFixed(2);
+            
+            console.log('DEBUG: Converted price to numeric format:', numericPrice);
+            
             // Use a more direct approach to update the field
             // First, get the DOM element directly
             const priceInputElement = priceInput.get(0);
             if (priceInputElement) {
               // Set the value property directly
-              priceInputElement.value = price;
+              priceInputElement.value = numericPrice;
               
               // Create and dispatch an input event to trigger any listeners
               const event = new Event('input', { bubbles: true });
@@ -645,9 +698,22 @@
       });
     }
     
-    // Function to setup event handlers for existing rows
+    // Function to setup existing rows
     function setupExistingRows() {
+      console.log('Setting up existing rows');
+      
+      // Get all existing item rows
       const rows = document.querySelectorAll('#invoice-items-body .item-form');
+      console.log('Found', rows.length, 'existing rows');
+      
+      // If there are no rows and we're not in update mode, add an empty row
+      if (rows.length === 0 && !window.isUpdateMode) {
+        console.log('No existing rows and not in update mode, adding an empty row');
+        // Trigger the add item button click to add an empty row
+        document.getElementById('add-item').click();
+      }
+      
+      // Setup event handlers for each row
       rows.forEach(row => {
         setupRowEventHandlers(row);
         
@@ -903,6 +969,54 @@
       }
     }
     
+    // Function to remove empty rows (used in update mode)
+    function removeEmptyRows() {
+      if (window.isUpdateMode) {
+        console.log('Update mode detected, checking for empty rows to remove');
+        const rows = document.querySelectorAll('#invoice-items-body .item-form');
+        let emptyRowsFound = false;
+        
+        rows.forEach(row => {
+          // Check if this is an empty row using multiple methods
+          const productSelect = row.querySelector('select[name*="product"]');
+          const quantityInput = row.querySelector('input[name*="quantity"]');
+          const priceInput = row.querySelector('input[name*="selling_price"]');
+          const totalInput = row.querySelector('.item-total');
+          
+          // Check if product is empty (handle both native select and Select2)
+          let productEmpty = false;
+          if (productSelect) {
+            // Check native select value
+            if (!productSelect.value) {
+              productEmpty = true;
+            }
+            // Also check Select2 text content if available
+            const select2Container = row.querySelector('.select2-selection__rendered');
+            if (select2Container && (select2Container.textContent.trim() === 'Select a product...' || 
+                                     select2Container.textContent.trim() === '')) {
+              productEmpty = true;
+            }
+          }
+          
+          // Check if quantity is default and price is zero/empty
+          const isDefaultQuantity = quantityInput && (quantityInput.value === '1' || quantityInput.value === '');
+          const isZeroPrice = priceInput && (priceInput.value === '0' || priceInput.value === '0.00' || priceInput.value === '');
+          const isZeroTotal = totalInput && (totalInput.value === '0' || totalInput.value === '0.00' || totalInput.value === '');
+          
+          if (productEmpty && isDefaultQuantity && isZeroPrice) {
+            console.log('Found empty row in update mode, removing it');
+            row.remove();
+            emptyRowsFound = true;
+          }
+        });
+        
+        // Update form count after removing empty rows
+        if (emptyRowsFound) {
+          updateFormCount();
+        }
+      }
+    }
+    
     // Initialize the form when the DOM is loaded
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOM loaded, initializing invoice form...');
@@ -918,6 +1032,11 @@
       
       // Setup event handlers for the add button
       setupAddItemButton();
+      
+      // Remove empty rows if in update mode - do this after a slight delay to ensure Select2 is fully initialized
+      setTimeout(function() {
+        removeEmptyRows();
+      }, 300);
       
       // Setup event handler for the TVA rate input
       const tvaRateInput = document.getElementById('id_tva_rate');
