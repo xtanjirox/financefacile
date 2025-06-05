@@ -1,58 +1,200 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const sidebarToggleButtons = document.querySelectorAll('.js-sidebar-toggle');
+/**
+ * Sidebar Toggle System - Complete Rewrite
+ * Features:
+ * - Vanilla JavaScript implementation
+ * - Responsive behavior for desktop and mobile
+ * - State persistence using localStorage
+ * - Mobile overlay with click-outside-to-close
+ * - Touch support for mobile devices
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    // DOM Elements
     const body = document.body;
-    const sidebar = document.getElementById('sidebar'); // Required for click-outside logic
-    const STORAGE_KEY = 'sidebarIsOpen';
-
-    // Function to check if on mobile view based on CSS breakpoint
-    function isMobileView() {
-        return window.innerWidth < 768;
+    const sidebar = document.getElementById('sidebar');
+    const toggleButtons = document.querySelectorAll('.js-sidebar-toggle');
+    const wrapper = document.querySelector('.wrapper');
+    
+    // Constants
+    const STORAGE_KEY = 'sidebarState';
+    const MOBILE_BREAKPOINT = 768;
+    
+    // State
+    let isMobile = window.innerWidth < MOBILE_BREAKPOINT;
+    
+    /**
+     * Check if current viewport is mobile
+     * @returns {boolean} True if viewport width is less than mobile breakpoint
+     */
+    function checkMobile() {
+        return window.innerWidth < MOBILE_BREAKPOINT;
     }
-
-    // Apply initial state from localStorage
-    function applyInitialState() {
-        const storedState = localStorage.getItem(STORAGE_KEY);
-        if (storedState === 'true') {
-            body.classList.add('sidebar-is-open');
+    
+    /**
+     * Create overlay element for mobile view
+     * @returns {HTMLElement} The created overlay element
+     */
+    function createOverlay() {
+        const overlay = document.createElement('div');
+        overlay.className = 'sidebar-overlay';
+        overlay.addEventListener('click', closeSidebar);
+        return overlay;
+    }
+    
+    /**
+     * Add overlay to DOM
+     */
+    function addOverlay() {
+        if (!document.querySelector('.sidebar-overlay')) {
+            wrapper.appendChild(createOverlay());
+        }
+    }
+    
+    /**
+     * Remove overlay from DOM
+     */
+    function removeOverlay() {
+        const overlay = document.querySelector('.sidebar-overlay');
+        if (overlay) {
+            overlay.removeEventListener('click', closeSidebar);
+            overlay.remove();
+        }
+    }
+    
+    /**
+     * Open sidebar
+     */
+    function openSidebar() {
+        body.classList.add('sidebar-open');
+        body.classList.remove('sidebar-closed');
+        
+        if (isMobile) {
+            addOverlay();
+        }
+        
+        saveState('open');
+    }
+    
+    /**
+     * Close sidebar
+     */
+    function closeSidebar() {
+        body.classList.remove('sidebar-open');
+        body.classList.add('sidebar-closed');
+        
+        if (isMobile) {
+            removeOverlay();
+        }
+        
+        saveState('closed');
+    }
+    
+    /**
+     * Toggle sidebar state
+     */
+    function toggleSidebar() {
+        if (body.classList.contains('sidebar-open') || 
+            (!body.classList.contains('sidebar-closed') && isMobile)) {
+            closeSidebar();
         } else {
-            body.classList.remove('sidebar-is-open');
-            // On mobile, ensure it's closed by default if no state is stored or state is 'false'
-            if (isMobileView() && storedState !== 'true') {
-                 body.classList.remove('sidebar-is-open');
+            openSidebar();
+        }
+    }
+    
+    /**
+     * Save sidebar state to localStorage
+     * @param {string} state - 'open' or 'closed'
+     */
+    function saveState(state) {
+        localStorage.setItem(STORAGE_KEY, state);
+    }
+    
+    /**
+     * Load and apply sidebar state from localStorage
+     */
+    function loadState() {
+        const state = localStorage.getItem(STORAGE_KEY);
+        
+        // Default state: open on desktop, closed on mobile
+        if (!state) {
+            if (isMobile) {
+                closeSidebar();
+            } else {
+                openSidebar();
+            }
+            return;
+        }
+        
+        if (state === 'open') {
+            openSidebar();
+        } else {
+            closeSidebar();
+        }
+    }
+    
+    /**
+     * Handle window resize events
+     */
+    function handleResize() {
+        const wasMobile = isMobile;
+        isMobile = checkMobile();
+        
+        // If changing between mobile/desktop modes
+        if (wasMobile !== isMobile) {
+            if (isMobile) {
+                // Switching to mobile
+                if (body.classList.contains('sidebar-open')) {
+                    addOverlay();
+                }
+            } else {
+                // Switching to desktop
+                removeOverlay();
             }
         }
     }
-
-    applyInitialState();
-
-    sidebarToggleButtons.forEach(button => {
-        button.addEventListener('click', function (event) {
-            event.preventDefault();
-            event.stopPropagation(); // Prevent click from bubbling to document for click-outside logic
-            const isOpen = body.classList.toggle('sidebar-is-open');
-            localStorage.setItem(STORAGE_KEY, isOpen);
+    
+    // Initialize event listeners
+    toggleButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            toggleSidebar();
         });
     });
-
-    // Close sidebar on mobile when clicking outside of it (on the overlay or main content)
-    document.addEventListener('click', function (event) {
-        if (isMobileView() && body.classList.contains('sidebar-is-open')) {
-            // Check if the click is on the sidebar itself or the toggle button
-            const isClickInsideSidebar = sidebar && sidebar.contains(event.target);
-            const isClickOnToggleButton = Array.from(sidebarToggleButtons).some(btn => btn.contains(event.target));
-
-            if (!isClickInsideSidebar && !isClickOnToggleButton) {
-                body.classList.remove('sidebar-is-open');
-                localStorage.setItem(STORAGE_KEY, 'false');
-            }
-        }
-    });
-
-    // Optional: Re-apply state on window resize if behavior needs to change, 
-    // e.g. if mobile was open, and resize to desktop, should it remain open?
-    // For now, this is simple and relies on initial load state + toggle clicks.
-    // window.addEventListener('resize', applyInitialState); // Could be added if needed
     
-    // Log for debugging
-    console.log('Sidebar toggle initialized, initial collapsed state:', body.classList.contains('sidebar-collapsed'));
+    // Handle window resize
+    window.addEventListener('resize', handleResize);
+    
+    // Initialize sidebar state
+    isMobile = checkMobile();
+    loadState();
+    
+    // Add touch swipe support for mobile
+    let touchStartX = 0;
+    let touchEndX = 0;
+    
+    document.addEventListener('touchstart', function(e) {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+    
+    document.addEventListener('touchend', function(e) {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    }, { passive: true });
+    
+    function handleSwipe() {
+        const swipeThreshold = 70; // Minimum distance for swipe
+        const swipeDistance = touchEndX - touchStartX;
+        
+        // Right swipe (open sidebar)
+        if (swipeDistance > swipeThreshold && isMobile && !body.classList.contains('sidebar-open')) {
+            openSidebar();
+        }
+        
+        // Left swipe (close sidebar)
+        if (swipeDistance < -swipeThreshold && isMobile && body.classList.contains('sidebar-open')) {
+            closeSidebar();
+        }
+    }
+    
+    console.log('Sidebar toggle system initialized');
 });
+

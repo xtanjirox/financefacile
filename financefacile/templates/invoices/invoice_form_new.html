@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block extra_head %}
+<script>
+  // Add invoice-form class to body when document is ready
+  document.addEventListener('DOMContentLoaded', function() {
+    document.body.classList.add('invoice-form');
+  });
+</script>
+{% endblock extra_head %}
+
 {% block sidebar %}
 {% include 'includes/sidebar.html' %}
 {% endblock sidebar %}
