@@ -1,91 +1,129 @@
-/* NEW Sidebar Toggle System CSS */
-
-html {
-  overflow-y: scroll !important; /* Always show vertical scrollbar to prevent page jump */
-}
-
-body {
-  overflow-x: hidden !important; /* Prevent horizontal scrollbars */
-}
+/* Sidebar Toggle System - Complete Rewrite */
 
 :root {
   --sidebar-width: 260px;
-  --sidebar-transition-duration: 0.3s;
+  --sidebar-collapsed-width: 0;
+  --sidebar-transition: 0.3s ease-in-out;
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+  --sidebar-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+  --breakpoint-mobile: 768px;
 }
 
-/* Sidebar Base Styles */
-#sidebar.sidebar {
-  position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  height: 100vh !important;
-  width: var(--sidebar-width) !important;
-  background-color: white !important; /* Ensure it has a background */
-  z-index: 1030 !important; /* Ensure it's above most content */
-  transform: translateX(-100%) !important; /* Hidden by default */
-  transition: transform var(--sidebar-transition-duration) ease-in-out !important;
-  border-right: 1px solid #e0e0e0; /* Optional: add a border */
-  box-sizing: border-box !important; /* Crucial for consistent width */
+/* Prevent horizontal scrollbars */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100%;
 }
 
-/* Main Content Area Base Styles */
-.main {
-  padding-top: 0; /* Adjust if you have a fixed topbar height */
-  transition: margin-left var(--sidebar-transition-duration) ease-in-out !important;
-  margin-left: 0 !important; /* Default when sidebar is closed */
-  width: 100% !important;
+/* Base layout */
+.wrapper {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+  width: 100%;
+  max-width: 100%;
 }
 
-/* --- Desktop Styles (sidebar pushes content) --- */
-@media (min-width: 768px) {
-  body.sidebar-is-open #sidebar.sidebar {
-    transform: translateX(0) !important;
-  }
-
-  body.sidebar-is-open .main {
-    margin-left: var(--sidebar-width) !important;
-    width: calc(100% - var(--sidebar-width)) !important;
-  }
-}
-
-/* --- Mobile Styles (sidebar overlays content) --- */
-@media (max-width: 767.98px) {
-  body.sidebar-is-open #sidebar.sidebar {
-    transform: translateX(0) !important;
-    box-shadow: 0 0 15px rgba(0,0,0,0.2) !important; /* Add shadow for overlay effect */
-  }
-
-  /* .main content on mobile always takes full width, sidebar overlays */
-  .main {
-    margin-left: 0 !important;
-    width: 100% !important;
-  }
-}
-
-/* Sidebar Toggle Button (optional styling) */
-.js-sidebar-toggle {
-  cursor: pointer;
-  /* Add specific styling for your toggle button if needed */
-}
-
-/* Optional: Add an overlay for mobile when sidebar is open */
-body.sidebar-is-open::before {
-  content: '';
+/* Sidebar base styles */
+#sidebar {
+  width: var(--sidebar-width);
+  min-width: var(--sidebar-width);
+  max-width: var(--sidebar-width);
+  height: 100vh;
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.3);
-  z-index: 1029; /* Below sidebar, above content */
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--sidebar-transition-duration) ease, visibility var(--sidebar-transition-duration) ease;
+  z-index: 1040;
+  background-color: #fff;
+  border-right: 1px solid rgba(0, 0, 0, 0.08);
+  transition: transform var(--sidebar-transition), box-shadow var(--sidebar-transition);
 }
 
+/* Main content area */
+.main {
+  width: 100%;
+  padding-left: var(--sidebar-width);
+  transition: padding-left var(--sidebar-transition);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+/* Mobile styles - sidebar overlays content */
 @media (max-width: 767.98px) {
-  body.sidebar-is-open::before {
+  #sidebar {
+    transform: translateX(-100%);
+    box-shadow: none;
+  }
+  
+  .main {
+    padding-left: 0;
+  }
+  
+  /* When sidebar is open on mobile */
+  body.sidebar-open #sidebar {
+    transform: translateX(0);
+    box-shadow: var(--sidebar-shadow);
+  }
+  
+  /* Ensure main content doesn't shift on mobile when sidebar is open */
+  body.sidebar-open .main {
+    padding-left: 0;
+  }
+  
+  /* Overlay when sidebar is open on mobile */
+  .sidebar-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--overlay-bg);
+    z-index: 1035;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity var(--sidebar-transition), visibility var(--sidebar-transition);
+  }
+  
+  body.sidebar-open .sidebar-overlay {
     opacity: 1;
     visibility: visible;
   }
+}
+
+/* Desktop styles - sidebar pushes content */
+@media (min-width: 768px) {
+  /* Default state - sidebar open */
+  body:not(.sidebar-closed) .main {
+    padding-left: var(--sidebar-width);
+  }
+  
+  /* When sidebar is closed on desktop */
+  body.sidebar-closed #sidebar {
+    transform: translateX(-100%);
+  }
+  
+  body.sidebar-closed .main {
+    padding-left: 0;
+  }
+}
+
+/* Toggle button styling */
+.js-sidebar-toggle {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+}
+
+body.sidebar-open .js-sidebar-toggle,
+body:not(.sidebar-closed) .js-sidebar-toggle {
+  transform: rotate(180deg);
+}
+
+/* Ensure sidebar content is not visible outside its bounds */
+#sidebar {
+  overflow-y: auto;
+  overflow-x: hidden;
 }

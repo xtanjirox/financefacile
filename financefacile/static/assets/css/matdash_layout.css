@@ -39,26 +39,18 @@ body.sidebar-toggled #sidebar {
   margin-left: -240px;
 }
 
-/* Main content area */
+/* Main content area - styles moved to sidebar-toggle.css */
 .main {
-  width: calc(100% - 240px);
-  margin-left: 240px;
   min-height: 100vh;
   background-color: var(--surface-alt);
   position: relative;
-  transition: margin 0.3s ease-in-out, width 0.3s ease-in-out;
   overflow-x: hidden;
 }
 
-/* Main content when sidebar is toggled */
-body.sidebar-toggled .main {
-  width: 100%;
-  margin-left: 0;
-}
+/* Main content when sidebar is toggled - styles moved to sidebar-toggle.css */
 
 /* Content padding */
 .content {
-  padding: 1.75rem 1.25rem 0.75rem 3.75rem;
   width: 100%;
   margin: 0;
   box-sizing: border-box;
@@ -199,7 +191,7 @@ body.sidebar-toggled .main {
 @media (max-width: 768px) {
   #sidebar, 
   .sidebar {
-    margin-left: -240px;
+    margin-left: -4px;
     transition: all 0.3s ease;
   }
   
@@ -209,14 +201,7 @@ body.sidebar-toggled .main {
     transition: all 0.3s ease;
   }
   
-  .sidebar-show #sidebar, 
-  .sidebar-show .sidebar {
-    margin-left: 0;
-  }
-  
-  .sidebar-show .main {
-    margin-left: 240px;
-  }
+  /* Sidebar toggle styles moved to sidebar-toggle.css */
 }
 
 
