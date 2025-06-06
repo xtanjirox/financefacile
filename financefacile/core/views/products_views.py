@@ -405,6 +405,11 @@ class ProductCreateView(ProductPermissionMixin, CreateView):
     segment = 'products'
     success_url = reverse_lazy('product-list')
     
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+    
     def get_form(self, form_class=None):
         form = super().get_form(form_class)
         # Filter category choices to only show categories from the user's company
@@ -444,6 +449,11 @@ class ProductUpdateView(ProductPermissionMixin, UpdateView):
     template_name = 'products/product_form.html'
     segment = 'products'
     success_url = reverse_lazy('product-list')
+    
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
     
     def form_valid(self, form):
         # Debug logging for image upload

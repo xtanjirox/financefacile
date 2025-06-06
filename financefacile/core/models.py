@@ -45,7 +45,8 @@ class Product(models.Model):
     sku = models.CharField(max_length=50)
     quantity = models.PositiveIntegerField(default=0)
     unit_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
-    selling_price = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+    selling_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Base price without TVA")
+    tva_rate = models.DecimalField(max_digits=5, decimal_places=2, default=19.0, help_text="TVA rate in percentage")
     # selling price
     value_current = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     value_1_month = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -78,6 +79,12 @@ class Product(models.Model):
         verbose_name_plural = 'products'
         unique_together = ['company', 'sku']
 
+    @property
+    def tva_inclusive_price(self):
+        """Calculate the TVA-inclusive price based on the selling price and TVA rate"""
+        from decimal import Decimal
+        return round(self.selling_price * (1 + (self.tva_rate / Decimal('100'))), 2)
+    
     def __str__(self):
         return f"{self.name} ({self.sku})"
 
