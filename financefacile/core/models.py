@@ -47,6 +47,7 @@ class Product(models.Model):
     unit_cost = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     selling_price = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Base price without TVA")
     tva_rate = models.DecimalField(max_digits=5, decimal_places=2, default=19.0, help_text="TVA rate in percentage")
+    price_with_tva = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text="Price including TVA")
     # selling price
     value_current = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     value_1_month = models.DecimalField(max_digits=10, decimal_places=2, default=0)
@@ -58,6 +59,10 @@ class Product(models.Model):
     is_archived = models.BooleanField(default=False, help_text="Archived products are not shown in active lists but remain available for historical invoices")
     
     def save(self, *args, **kwargs):
+        # Calculate price_with_tva before saving
+        from decimal import Decimal
+        self.price_with_tva = round(self.selling_price * (1 + (self.tva_rate / Decimal('100'))), 2)
+        
         # If no category is specified and the product has a company, assign to 'Uncategorized'
         if not self.category and self.company:
             # Try to find the 'Uncategorized' category for this company

@@ -271,24 +271,66 @@
             width: '100%'
         });
         
-        // Function to calculate TVA-inclusive price
-        function calculateTvaInclusivePrice() {
+        // Function to calculate TVA-inclusive price from selling price
+        function calculatePriceWithTva() {
             const sellingPrice = parseFloat($('#id_selling_price').val()) || 0;
             const tvaRate = parseFloat($('#id_tva_rate').val()) || 0;
             
             // Calculate TVA-inclusive price
-            const tvaInclusivePrice = sellingPrice * (1 + (tvaRate / 100));
+            const priceWithTva = sellingPrice * (1 + (tvaRate / 100));
             
             // Format to 2 decimal places and update the field
-            $('#id_tva_inclusive_price').val(tvaInclusivePrice.toFixed(2));
+            $('#id_price_with_tva').val(priceWithTva.toFixed(2));
+        }
+        
+        // Function to calculate selling price from TVA-inclusive price
+        function calculateSellingPrice() {
+            const priceWithTva = parseFloat($('#id_price_with_tva').val()) || 0;
+            const tvaRate = parseFloat($('#id_tva_rate').val()) || 0;
+            
+            // Calculate selling price (base price)
+            const sellingPrice = tvaRate > 0 ? priceWithTva / (1 + (tvaRate / 100)) : priceWithTva;
+            
+            // Format to 2 decimal places and update the field
+            $('#id_selling_price').val(sellingPrice.toFixed(2));
         }
         
         // Calculate TVA-inclusive price when the page loads
-        calculateTvaInclusivePrice();
+        calculatePriceWithTva();
         
-        // Recalculate when selling price or TVA rate changes
-        $('#id_selling_price, #id_tva_rate').on('input change', function() {
-            calculateTvaInclusivePrice();
+        // Recalculate when selling price changes
+        $('#id_selling_price').on('input change', function() {
+            calculatePriceWithTva();
+        });
+        
+        // Recalculate when TVA-inclusive price changes
+        $('#id_price_with_tva').on('input change', function() {
+            calculateSellingPrice();
+        });
+        
+        // Recalculate both when TVA rate changes
+        $('#id_tva_rate').on('input change', function() {
+            // Use the last edited price field to determine which calculation to perform
+            if ($('#id_selling_price').is(':focus') || $('#id_selling_price').data('last-edited')) {
+                calculatePriceWithTva();
+                $('#id_selling_price').data('last-edited', true);
+                $('#id_price_with_tva').data('last-edited', false);
+            } else {
+                calculateSellingPrice();
+                $('#id_price_with_tva').data('last-edited', true);
+                $('#id_selling_price').data('last-edited', false);
+            }
+        });
+        
+        // Track which field was last edited
+        $('#id_selling_price').on('focus', function() {
+            $('#id_selling_price').data('last-edited', true);
+            $('#id_price_with_tva').data('last-edited', false);
+        });
+        
+        $('#id_price_with_tva').on('focus', function() {
+            $('#id_price_with_tva').data('last-edited', true);
+            $('#id_selling_price').data('last-edited', false);
         });
 
         // Preview image on file select

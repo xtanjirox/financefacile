@@ -93,9 +93,9 @@
             </div>
           </div>
 
-          <!-- Second row of cards -->
+          <!-- Second row of cards - Pricing Information -->
           <div class="row mb-4 g-3">
-            <div class="col-6 col-md-6">
+            <div class="col-6 col-md-3">
               <div class="shadow-sm p-3 rounded-4 text-center h-100"
                 style="background: #e8f5e9; border: 1px solid rgba(129, 199, 132, 0.2);">
                 <div class="mb-2 text-secondary small fw-semibold"><i class="fas fa-coins me-1"
@@ -103,12 +103,28 @@
                 <span class="fw-bold fs-3" style="color: #2e7d32;">{{ object.unit_cost }}</span>
               </div>
             </div>
-            <div class="col-6 col-md-6">
+            <div class="col-6 col-md-3">
               <div class="shadow-sm p-3 rounded-4 text-center h-100"
                 style="background: #fff8e1; border: 1px solid rgba(255, 213, 79, 0.2);">
                 <div class="mb-2 text-secondary small fw-semibold"><i class="fas fa-tag me-1"
-                    style="color: #ffd54f;"></i> Selling Price</div>
+                    style="color: #ffd54f;"></i> Base Price (HT)</div>
                 <span class="fw-bold fs-3" style="color: #f57f17;">{{ object.selling_price }}</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="shadow-sm p-3 rounded-4 text-center h-100"
+                style="background: #e3f2fd; border: 1px solid rgba(66, 165, 245, 0.2);">
+                <div class="mb-2 text-secondary small fw-semibold"><i class="fas fa-percentage me-1"
+                    style="color: #42a5f5;"></i> TVA Rate</div>
+                <span class="fw-bold fs-3" style="color: #1565c0;">{{ object.tva_rate }}%</span>
+              </div>
+            </div>
+            <div class="col-6 col-md-3">
+              <div class="shadow-sm p-3 rounded-4 text-center h-100"
+                style="background: #f3e5f5; border: 1px solid rgba(186, 104, 200, 0.2);">
+                <div class="mb-2 text-secondary small fw-semibold"><i class="fas fa-receipt me-1"
+                    style="color: #ba68c8;"></i> Price with TVA</div>
+                <span class="fw-bold fs-3" style="color: #6a1b9a;">{{ object.price_with_tva }}</span>
               </div>
             </div>
           </div>
