@@ -78,6 +78,7 @@ urlpatterns = [
     path('core/notifications/read-all/', mark_all_read, name='mark-all-notifications-read-core'),
     
     path(r'', login_required(views.home), name='home'),
+    path(r'dashboard/', login_required(views.dashboard), name='dashboard'),
 
     
     #path(r'finance_entry', views.FianceEntryListView.as_view(), name='entry-list'),

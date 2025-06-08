@@ -16,8 +16,8 @@
                 <li class="sidebar-header">
                     MANAGEMENT
                 </li>
-                <li class="sidebar-item {% if request.path == '/app/' %}active{% endif %}">
-                    <a class="sidebar-link" href="/app/">
+                <li class="sidebar-item {% if request.path == '/app/dashboard/' %}active{% endif %}">
+                    <a class="sidebar-link" href="/app/dashboard/">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <rect x="3" y="3" width="7" height="7" rx="1" stroke="#64748b" stroke-width="2" />
                             <rect x="14" y="3" width="7" height="7" rx="1" stroke="#64748b" stroke-width="2" />
@@ -71,6 +71,95 @@
                         <span>Event List</span>
                     </a>
                 </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link justify-content-between has-arrow" href="javascript:void(0)" aria-expanded="false">
+                      <div class="d-flex align-items-center gap-3">
+                        <span class="d-flex">
+                          <iconify-icon icon="solar:home-angle-line-duotone"></iconify-icon>
+                        </span>
+                        <span class="hide-menu">Front Pages</span>
+                      </div>
+                    </a>
+                    <ul aria-expanded="false" class="collapse first-level">
+                      <li class="sidebar-item">
+                        <a class="sidebar-link justify-content-between" target="_blank" href="https://bootstrapdemos.adminmart.com/matdash/dist/main/frontend-landingpage.html">
+                          <div class="d-flex align-items-center gap-3">
+                            <span class="d-flex">
+                              <span class="icon-small"></span>
+                            </span>
+                            <span class="hide-menu">Homepage</span>
+                          </div>
+                          <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
+                        </a>
+                      </li>
+                      <li class="sidebar-item">
+                        <a class="sidebar-link justify-content-between" target="_blank" href="https://bootstrapdemos.adminmart.com/matdash/dist/main/frontend-aboutpage.html">
+                          <div class="d-flex align-items-center gap-3">
+                            <span class="d-flex">
+                              <span class="icon-small"></span>
+                            </span>
+                            <span class="hide-menu">About Us</span>
+                          </div>
+                          <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
+                        </a>
+                      </li>
+                      <li class="sidebar-item">
+                        <a class="sidebar-link justify-content-between" target="_blank" href="https://bootstrapdemos.adminmart.com/matdash/dist/main/frontend-blogpage.html">
+                          <div class="d-flex align-items-center gap-3">
+                            <span class="d-flex">
+                              <span class="icon-small"></span>
+                            </span>
+                            <span class="hide-menu">Blog</span>
+                          </div>
+                          <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
+                        </a>
+                      </li>
+                      <li class="sidebar-item">
+                        <a class="sidebar-link justify-content-between" target="_blank" href="https://bootstrapdemos.adminmart.com/matdash/dist/main/frontend-blogdetailpage.html">
+                          <div class="d-flex align-items-center gap-3">
+                            <span class="d-flex">
+                              <span class="icon-small"></span>
+                            </span>
+                            <span class="hide-menu">Blog Details</span>
+                          </div>
+                          <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
+                        </a>
+                      </li>
+                      <li class="sidebar-item">
+                        <a class="sidebar-link justify-content-between" target="_blank" href="https://bootstrapdemos.adminmart.com/matdash/dist/main/frontend-contactpage.html">
+                          <div class="d-flex align-items-center gap-3">
+                            <span class="d-flex">
+                              <span class="icon-small"></span>
+                            </span>
+                            <span class="hide-menu">Contact Us</span>
+                          </div>
+                          <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
+                        </a>
+                      </li>
+                      <li class="sidebar-item">
+                        <a class="sidebar-link justify-content-between" target="_blank" href="https://bootstrapdemos.adminmart.com/matdash/dist/main/frontend-portfoliopage.html">
+                          <div class="d-flex align-items-center gap-3">
+                            <span class="d-flex">
+                              <span class="icon-small"></span>
+                            </span>
+                            <span class="hide-menu">Portfolio</span>
+                          </div>
+                          <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
+                        </a>
+                      </li>
+                      <li class="sidebar-item">
+                        <a class="sidebar-link justify-content-between" target="_blank" href="https://bootstrapdemos.adminmart.com/matdash/dist/main/frontend-pricingpage.html">
+                          <div class="d-flex align-items-center gap-3">
+                            <span class="d-flex">
+                              <span class="icon-small"></span>
+                            </span>
+                            <span class="hide-menu">Pricing</span>
+                          </div>
+                          <span class="hide-menu badge bg-secondary-subtle text-secondary fs-1 py-1">Pro</span>
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
                 <li>
                     <span class="sidebar-divider lg"></span>
                 </li>

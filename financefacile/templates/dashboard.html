@@ -1,0 +1,1279 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load currency_tags %}
+
+{% block sidebar %}
+{% include 'includes/sidebar.html' %}
+{% endblock sidebar %}
+
+{% block topbar %}
+{% include 'includes/topbar.html' %}
+{% endblock topbar %}
+
+{% block footer %}
+{% include 'includes/footer.html' %}
+{% endblock footer %}
+
+{% block content %}
+<div class="container-fluid p-0">
+
+    <h1 class="h3 mb-3">Finance <strong>Facile</strong></h1>
+
+    <style>
+        /* Modern Dashboard Card Styles */
+        .dashboard-card {
+            border: none;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 1.5rem;
+            min-height: 120px;
+            background: #fff;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .dashboard-card:hover {
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            transform: translateY(-5px);
+        }
+
+        .dashboard-card .icon-wrapper {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+
+        .dashboard-card .icon {
+            font-size: 1.5rem;
+            color: #fff;
+        }
+
+        .dashboard-card .card-title {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .dashboard-card .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .dashboard-card .progress-wrapper {
+            height: 8px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            margin-top: auto;
+        }
+
+        .dashboard-card .progress-bar {
+            height: 100%;
+            border-radius: 4px;
+        }
+
+        /* Card color schemes */
+        .dashboard-card.products .icon-wrapper {
+            background-color: rgba(77, 182, 172, 0.2);
+        }
+        .dashboard-card.products .icon {
+            color: #4DB6AC;
+        }
+        .dashboard-card.products .progress-bar {
+            background-color: #4DB6AC;
+        }
+
+        .dashboard-card.items .icon-wrapper {
+            background-color: rgba(66, 165, 245, 0.2);
+        }
+        .dashboard-card.items .icon {
+            color: #42A5F5;
+        }
+        .dashboard-card.items .progress-bar {
+            background-color: #42A5F5;
+        }
+
+        .dashboard-card.value .icon-wrapper {
+            background-color: rgba(255, 167, 38, 0.2);
+        }
+        .dashboard-card.value .icon {
+            color: #FFA726;
+        }
+        .dashboard-card.value .progress-bar {
+            background-color: #FFA726;
+        }
+
+        .dashboard-card.invoice .icon-wrapper {
+            background-color: rgba(240, 98, 146, 0.2);
+        }
+        .dashboard-card.invoice .icon {
+            color: #F06292;
+        }
+        .dashboard-card.invoice .progress-bar {
+            background-color: #F06292;
+        }
+    </style>
+    <div class="row g-4 mb-4">
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="dashboard-card products">
+                <div class="icon-wrapper">
+                    <i class="fas fa-boxes icon"></i>
+                </div>
+                <div class="card-title">Nombre de produits</div>
+                <div class="card-value">{{ product_count }}</div>
+                <div class="progress-wrapper">
+                    <div class="progress-bar" style="width: 75%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="dashboard-card items">
+                <div class="icon-wrapper">
+                    <i class="fas fa-boxes-stacked icon"></i>
+                </div>
+                <div class="card-title">Articles en stock</div>
+                <div class="card-value">{{ total_pieces }}</div>
+                <div class="progress-wrapper">
+                    <div class="progress-bar" style="width: 65%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="dashboard-card value">
+                <div class="icon-wrapper">
+                    <i class="fas fa-warehouse icon"></i>
+                </div>
+                <div class="card-title">Valeur du stock</div>
+                <div class="card-value">{% format_currency warehouse_value %}</div>
+                <div class="progress-wrapper">
+                    <div class="progress-bar" style="width: 83%"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6 col-xl-3">
+            <div class="dashboard-card invoice">
+                <div class="icon-wrapper">
+                    <i class="fas fa-file-invoice-dollar icon"></i>
+                </div>
+                <div class="card-title">Total factures</div>
+                <div class="card-value">{% format_currency total_invoice_price %}</div>
+                <div class="progress-wrapper">
+                    <div class="progress-bar" style="width: 70%"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Comparison Charts -->
+    <div class="row mb-4">
+        <!-- Monthly Invoice Comparison Chart -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100" style="border-radius: 10px; background: #ffffff;">
+                <div class="card-header py-3" style="background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.05); border-radius: 10px 10px 0 0;">
+                    <h5 class="card-title mb-0 fw-semibold" style="color: #2A3547;">
+                        <i class="fas fa-file-invoice me-2" style="color: #5D87FF;"></i>Comparaison des factures mensuelles
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    <div id="monthly-invoice-chart" style="height: 350px;"></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Monthly Expense Comparison Chart -->
+        <div class="col-md-6">
+            <div class="card shadow-sm border-0 h-100" style="border-radius: 10px; background: #ffffff;">
+                <div class="card-header py-3" style="background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.05); border-radius: 10px 10px 0 0;">
+                    <h5 class="card-title mb-0 fw-semibold" style="color: #2A3547;">
+                        <i class="fas fa-coins me-2" style="color: #F06292;"></i>Comparaison des dépenses mensuelles
+                    </h5>
+                </div>
+                <div class="card-body p-3">
+                    <div id="monthly-expense-chart" style="height: 350px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-2">
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm border-0" style="margin-bottom:0;">
+                <div class="card-body p-2">
+                    <div id="chart-products-category" style="height: 250px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm border-0" style="margin-bottom:0;">
+                <div class="card-body p-2">
+                    <div id="chart-value-category" style="height: 250px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4">
+            <div class="card shadow-sm border-0" style="margin-bottom:0;">
+                <div class="card-body p-2">
+                    <div id="chart-invoice-category" style="height: 250px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transactions and Events Row -->
+    <div class="row mt-4">
+        <!-- Recent Transactions with Tabs - 2/3 width -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 overflow-hidden" style="border-radius: 10px; background: #ffffff;">
+                <div class="card-header" style="background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 0;">
+                    <ul class="nav nav-tabs" id="transactionTabs" role="tablist" style="border-bottom: none;">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active px-4 py-3" 
+                                    id="invoices-tab" 
+                                    data-bs-toggle="tab" 
+                                    data-bs-target="#invoices-tab-pane" 
+                                    type="button" 
+                                    role="tab" 
+                                    aria-controls="invoices-tab-pane" 
+                                    aria-selected="true"
+                                    style="border: none; border-bottom: 3px solid #5D87FF; border-radius: 0; color: #5D87FF; font-weight: 500; margin-right: 5px;">
+                                <i class="fas fa-file-invoice me-2"></i>Dernières factures
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link px-4 py-3" 
+                                    id="expenses-tab" 
+                                    data-bs-toggle="tab" 
+                                    data-bs-target="#expenses-tab-pane" 
+                                    type="button" 
+                                    role="tab" 
+                                    aria-controls="expenses-tab-pane" 
+                                    aria-selected="false"
+                                    style="border: none; border-bottom: 3px solid transparent; border-radius: 0; color: #7C8FAC; font-weight: 500;">
+                                <i class="fas fa-coins me-2"></i>Dernières dépenses
+                            </button>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card-body p-0">
+                    <div class="tab-content" id="transactionTabsContent">
+                        <!-- Invoices Tab -->
+                        <div class="tab-pane fade show active" id="invoices-tab-pane" role="tabpanel" aria-labelledby="invoices-tab" tabindex="0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead style="background-color: #f8f9fa;">
+                                        <tr>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">№ Facture</th>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">Date</th>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">Client</th>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">Montant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for invoice in recent_invoices %}
+                                        <tr style="cursor: pointer;" onclick="window.location.href='{% url 'invoice-detail' invoice.id %}'">
+                                            <td class="px-4 py-3" style="color: #2A3547; font-weight: 500;">INV-{{ invoice.id|stringformat:"06d" }}</td>
+                                            <td class="px-4 py-3" style="color: #2A3547;">{{ invoice.invoice_date|default:invoice.created_at|date:"d/m/Y" }}</td>
+                                            <td class="px-4 py-3" style="color: #2A3547;">{{ invoice.customer_name|default:'-' }}</td>
+                                            <td class="px-4 py-3" style="color: #2A3547; font-weight: 600;">{{ invoice.get_total|currency:currency_symbol }}</td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr><td colspan="4" class="text-center text-muted p-4">Aucune facture récente.</td></tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Expenses Tab -->
+                        <div class="tab-pane fade" id="expenses-tab-pane" role="tabpanel" aria-labelledby="expenses-tab" tabindex="0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0">
+                                    <thead style="background-color: #f8f9fa;">
+                                        <tr>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">№ Dépense</th>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">Date</th>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">Catégorie</th>
+                                            <th scope="col" class="px-4 py-3" style="color: #2A3547; font-weight: 600; font-size: 0.875rem;">Montant</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for expense in recent_expenses %}
+                                        <tr style="cursor: pointer;" onclick="window.location.href='{% url 'expense-update' expense.id %}'">
+                                            <td class="px-4 py-3" style="color: #2A3547; font-weight: 500;">EXP-{{ expense.id|stringformat:"06d" }}</td>
+                                            <td class="px-4 py-3" style="color: #2A3547;">{{ expense.date|date:"d/m/Y" }}</td>
+                                            <td class="px-4 py-3" style="color: #2A3547;">{{ expense.category }}</td>
+                                            <td class="px-4 py-3" style="color: #2A3547; font-weight: 600;">{{ expense.amount|currency:currency_symbol }}</td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr><td colspan="4" class="text-center text-muted p-4">Aucune dépense récente.</td></tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer p-3" style="background-color: #f8f9fa; border-top: 1px solid rgba(0,0,0,0.05);">
+                    <div class="d-flex justify-content-center">
+                        <div class="tab-content w-100 text-center" id="footerTabsContent">
+                            <div class="tab-pane fade show active" id="invoices-footer" role="tabpanel" aria-labelledby="invoices-tab">
+                                <a href="{% url 'invoice-list' %}" class="btn btn-sm btn-primary rounded-pill px-4" style="background: #5D87FF; border: none;">
+                                    <i class="fas fa-list fa-sm me-1"></i> Voir toutes les factures
+                                </a>
+                            </div>
+                            <div class="tab-pane fade" id="expenses-footer" role="tabpanel" aria-labelledby="expenses-tab">
+                                <a href="{% url 'expenses-list' %}" class="btn btn-sm btn-primary rounded-pill px-4" style="background: #5D87FF; border: none;">
+                                    <i class="fas fa-list fa-sm me-1"></i> Voir toutes les dépenses
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Upcoming Events - 1/3 width -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 overflow-hidden" style="border-radius: 10px; background: #ffffff;">
+                <div class="card-header d-flex justify-content-between align-items-center" style="background: #ffffff; border-bottom: 1px solid rgba(0,0,0,0.05); padding: 1.25rem 1.5rem;">
+                    <h5 class="card-title mb-0 fw-semibold" style="color: #2A3547; font-size: 1.05rem;">
+                        <i class="fas fa-calendar-alt me-2" style="color: #5D87FF;"></i>Upcoming Events
+                    </h5>
+                    <div>
+                        <a href="{% url 'calendar-event-create' %}" class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center" style="background: #5D87FF; border: none; width: 32px; height: 32px;">
+                            <i class="fas fa-plus fa-xs"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    {% if upcoming_events %}
+                        <div class="list-group list-group-flush">
+                            {% for event in upcoming_events %}
+                                <a href="{{ event.get_absolute_url }}" 
+                                   class="list-group-item list-group-item-action border-0 py-3 px-4">
+                                    <div class="d-flex w-100 justify-content-between align-items-center">
+                                        <div>
+                                            <div class="d-flex align-items-center mb-1">
+                                                <span class="theme-badge" style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 10px; background-color: {% if event.theme == 'primary' %}#5D87FF{% elif event.theme == 'success' %}#13DEB9{% elif event.theme == 'info' %}#49BEFF{% elif event.theme == 'warning' %}#FFAE1F{% elif event.theme == 'danger' %}#FA896B{% else %}#5D87FF{% endif %};"></span>
+                                                <h6 class="mb-0 fw-semibold" style="font-size: 0.95rem; color: #2A3547;">{{ event.title }}</h6>
+                                            </div>
+                                            <p class="mb-0">
+                                                <small style="font-size: 0.8rem; color: #7C8FAC;">
+                                                    <i class="far fa-calendar-alt me-1"></i>{{ event.start_date|date:"M d" }}
+                                                    {% if event.all_day %}
+                                                        <span class="badge bg-light-primary text-primary ms-1" style="font-size: 0.7rem; background-color: rgba(93, 135, 255, 0.1); color: #5D87FF; padding: 0.25rem 0.5rem; border-radius: 4px;">All day</span>
+                                                    {% else %}
+                                                        <i class="far fa-clock ms-1 me-1"></i>{{ event.start_date|time:"g:i A" }}
+                                                    {% endif %}
+                                                </small>
+                                            </p>
+                                        </div>
+                                        <div>
+                                            <span class="badge rounded-pill" style="background-color: {% if event.theme == 'primary' %}rgba(93, 135, 255, 0.1){% elif event.theme == 'success' %}rgba(19, 222, 185, 0.1){% elif event.theme == 'info' %}rgba(73, 190, 255, 0.1){% elif event.theme == 'warning' %}rgba(255, 174, 31, 0.1){% elif event.theme == 'danger' %}rgba(250, 137, 107, 0.1){% else %}rgba(93, 135, 255, 0.1){% endif %}; color: {% if event.theme == 'primary' %}#5D87FF{% elif event.theme == 'success' %}#13DEB9{% elif event.theme == 'info' %}#49BEFF{% elif event.theme == 'warning' %}#FFAE1F{% elif event.theme == 'danger' %}#FA896B{% else %}#5D87FF{% endif %}; padding: 0.35rem 0.75rem; font-size: 0.75rem;">{{ event.theme|title }}</span>
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                        <div class="card-footer text-center py-3" style="background: transparent; border-top: 1px solid rgba(0,0,0,0.05);">
+                            <a href="{% url 'calendar-event-list' %}" class="btn btn-primary rounded-pill px-4" style="background: #5D87FF; border: none; font-size: 0.85rem;">
+                                <i class="fas fa-list fa-sm me-1"></i> View All Events
+                            </a>
+                        </div>
+                    {% else %}
+                        <div class="text-center p-5">
+                            <div class="mb-3" style="width: 50px; height: 50px; background-color: rgba(93, 135, 255, 0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto;">
+                                <i class="fas fa-calendar-alt" style="font-size: 1.5rem; color: #5D87FF;"></i>
+                            </div>
+                            <h5 class="mb-2" style="color: #2A3547; font-weight: 500;">No Upcoming Events</h5>
+                            <p style="color: #7C8FAC; font-size: 0.9rem; margin-bottom: 1.5rem;">You don't have any events scheduled yet.</p>
+                            <a href="{% url 'calendar-event-create' %}" class="btn btn-primary rounded-pill px-4" style="background: #5D87FF; border: none; font-size: 0.85rem;">
+                                <i class="fas fa-plus fa-sm me-1"></i> Add New Event
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calendar Widget Row -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card shadow-sm border-0" style="border-radius: 8px; background: #fff;">
+                <div class="card-header py-3 d-flex justify-content-between align-items-center" style="background: #fff; border-bottom: 1px solid #e0e6ed; border-radius: 14px 14px 0 0;">
+                    <h5 class="card-title mb-0 fw-bold" style="color: #39739d;">
+                        <i class="fas fa-calendar-alt me-2" style="color: #7cb9e8;"></i>Calendar
+                    </h5>
+                    <div>
+                        <a href="{% url 'calendar-event-create' %}" class="btn btn-sm btn-primary rounded-pill" style="background: #7cb9e8; border: none;">
+                            <i class="fas fa-plus fa-sm"></i> Add Event
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body p-3">
+                    <div id="dashboard-calendar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+    /* Chart background override */
+    .apexcharts-canvas .apexcharts-plot-background {
+        fill: #ffffff !important;
+    }
+    
+    #dashboard-calendar {
+        min-height: 300px;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1.1em;
+    }
+    .fc .fc-button {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+        line-height: 1.5;
+    }
+    .fc .fc-toolbar.fc-header-toolbar {
+        margin-bottom: 0.5em;
+        padding: 0.5rem;
+    }
+    .fc .fc-view-harness {
+        min-height: 250px;
+    }
+    .fc-event {
+        font-size: 0.85em;
+        padding: 2px 4px;
+        cursor: pointer;
+        margin-bottom: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .fc-daygrid-more-link {
+        font-weight: bold;
+        color: #4e73df;
+        cursor: pointer;
+    }
+    .fc-daygrid-day:hover {
+        background-color: rgba(78, 115, 223, 0.05);
+    }
+    .fc-daygrid-day-number {
+        font-weight: 500;
+    }
+    </style>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('dashboard-calendar');
+        
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            headerToolbar: {
+                left: 'prev,next today',
+                center: 'title',
+                right: ''
+            },
+            height: 'auto',
+            events: function(info, successCallback, failureCallback) {
+                // Calculate start and end dates for the API request
+                const startDate = info.start;
+                const endDate = info.end;
+                
+                // Format dates for API
+                const startStr = startDate.toISOString().split('T')[0];
+                const endStr = endDate.toISOString().split('T')[0];
+                
+                console.log(`Dashboard: Fetching events from ${startStr} to ${endStr}`);
+                
+                // Add a timestamp to prevent caching
+                const timestamp = new Date().getTime();
+                
+                // Make API request
+                fetch(`/app/calendar/events/?start=${startStr}&end=${endStr}&_=${timestamp}`, {
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'Accept': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Dashboard: Fetched events:', data);
+                        if (data && data.length > 0) {
+                            // Use the real events from the API
+                            successCallback(data);
+                        } else {
+                            // If no events found, show sample events for the current date
+                            const today = new Date();
+                            const year = today.getFullYear();
+                            const month = today.getMonth();
+                            const day = today.getDate();
+                            
+                            // Create sample events only if no real events exist
+                            const sampleEvents = [
+                                {
+                                    id: 'sample-1',
+                                    title: 'Client Meeting',
+                                    start: new Date(year, month, day, 10, 0),
+                                    end: new Date(year, month, day, 11, 30),
+                                    backgroundColor: '#4e73df',
+                                    borderColor: '#4e73df',
+                                    textColor: '#ffffff',
+                                    url: '/app/calendar/date/' + year + '/' + (month + 1) + '/' + day + '/',
+                                    allDay: false
+                                },
+                                {
+                                    id: 'sample-2',
+                                    title: 'Team Standup',
+                                    start: new Date(year, month, day, 9, 0),
+                                    end: new Date(year, month, day, 9, 30),
+                                    backgroundColor: '#36b9cc',
+                                    borderColor: '#36b9cc',
+                                    textColor: '#ffffff',
+                                    url: '/app/calendar/date/' + year + '/' + (month + 1) + '/' + day + '/',
+                                    allDay: false
+                                }
+                            ];
+                            
+                            successCallback(sampleEvents);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error fetching events:', error);
+                        failureCallback(error);
+                        
+                        // Show sample events as fallback on error
+                        const today = new Date();
+                        const year = today.getFullYear();
+                        const month = today.getMonth();
+                        const day = today.getDate();
+                        
+                        const fallbackEvents = [
+                            {
+                                id: 'sample-1',
+                                title: 'Client Meeting',
+                                start: new Date(year, month, day, 10, 0),
+                                end: new Date(year, month, day, 11, 30),
+                                backgroundColor: '#4e73df',
+                                borderColor: '#4e73df',
+                                textColor: '#ffffff',
+                                url: '/app/calendar/date/' + year + '/' + (month + 1) + '/' + day + '/',
+                                allDay: false
+                            }
+                        ];
+                        
+                        successCallback(fallbackEvents);
+                    });
+            },
+            eventClick: function(info) {
+                info.jsEvent.preventDefault();
+                if (info.event.url) {
+                    window.location.href = info.event.url;
+                }
+            },
+            dayMaxEvents: 2, // Show a maximum of 2 events per day
+            dayMaxEventRows: 2, // Show a maximum of 2 events per day
+            eventOrder: 'start,-duration',
+            eventDisplay: 'block',
+            displayEventTime: true,
+            displayEventEnd: false,
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                meridiem: false
+            },
+            // Add a date click handler to redirect to the date events page
+            dateClick: function(info) {
+                // Format the date as YYYY/MM/DD
+                const dateStr = info.dateStr.split('T')[0];
+                const [year, month, day] = dateStr.split('-');
+                
+                // Redirect to the date events page
+                window.location.href = `/app/calendar/date/${year}/${month}/${day}/`;
+            },
+            // Add a "more" link when there are more events than can be displayed
+            moreLinkClick: function(info) {
+                // Prevent default behavior
+                info.jsEvent.preventDefault();
+                
+                // Get the date
+                const date = info.date;
+                const year = date.getFullYear();
+                const month = date.getMonth() + 1; // getMonth() is zero-based
+                const day = date.getDate();
+                
+                // Redirect to the date events page
+                window.location.href = `/app/calendar/date/${year}/${month}/${day}/`;
+                
+                return false; // Prevent default FullCalendar behavior
+            },
+            // Custom event rendering to make events more visually appealing
+            eventContent: function(arg) {
+                let timeText = '';
+                if (!arg.event.allDay) {
+                    const startTime = arg.event.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                    timeText = `<div class="fc-event-time">${startTime}</div>`;
+                }
+                
+                const title = arg.event.title;
+                const titleHtml = `<div class="fc-event-title">${title}</div>`;
+                
+                return { html: `<div class="fc-event-main">${timeText}${titleHtml}</div>` };
+            },
+            eventTimeFormat: {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            },
+            eventContent: function(arg) {
+                // Skip rendering for the "more" link as we'll handle it in dayCellContent
+                if (arg.event.extendedProps.isMoreLink) {
+                    return { html: '' }; // Empty content, we'll handle it in dayCellContent
+                }
+                
+                // Regular event content
+                var titleEl = document.createElement('div');
+                titleEl.classList.add('fc-event-title');
+                titleEl.textContent = arg.event.title;
+                
+                var timeEl = document.createElement('div');
+                timeEl.classList.add('fc-event-time');
+                
+                if (arg.event.allDay) {
+                    timeEl.textContent = 'All day';
+                } else {
+                    var startTime = arg.event.start ? arg.timeText : '';
+                    var endTime = arg.event.end ? ' - ' + arg.event.end.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '';
+                    timeEl.textContent = startTime + endTime;
+                }
+                
+                var wrapper = document.createElement('div');
+                wrapper.appendChild(timeEl);
+                wrapper.appendChild(titleEl);
+                
+                return { domNodes: [wrapper] };
+            },
+            dayCellContent: function(arg) {
+                // Create the default content
+                const dayNumberEl = document.createElement('div');
+                dayNumberEl.classList.add('fc-daygrid-day-number');
+                dayNumberEl.textContent = arg.dayNumberText.replace('\n', '');
+                
+                // Create a container for the day cell content
+                const container = document.createElement('div');
+                container.classList.add('fc-daygrid-day-top');
+                container.appendChild(dayNumberEl);
+                
+                // Return the default content
+                return { domNodes: [container] };
+            },
+            moreLinkClick: 'day', // When "more" link is clicked, go to day view
+            moreLinkContent: function(arg) {
+                // Create a custom "more" link
+                const link = document.createElement('a');
+                link.href = '#';
+                link.classList.add('fc-more-link');
+                link.textContent = arg.num.toString() + ' more';
+                link.dataset.date = arg.date.toISOString().split('T')[0];
+                
+                // Add click handler
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const dateStr = this.dataset.date;
+                    window.location.href = `{% url 'calendar-event-list' %}?date=${dateStr}`;
+                });
+                
+                return { domNodes: [link] };
+            },
+            eventDidMount: function(arg) {
+                if (arg.event.extendedProps.theme && !arg.event.extendedProps.isMoreLink) {
+                    arg.el.classList.add('fc-event-theme-' + arg.event.extendedProps.theme);
+                }
+            }
+        });
+        
+        calendar.render();
+        
+        // Refresh calendar when navigating back to the page
+        document.addEventListener('visibilitychange', function() {
+            if (!document.hidden) {
+                calendar.refetchEvents();
+            }
+        });
+    });
+    </script>
+    
+    <style>
+    /* Event theme colors */
+    .fc-event-theme-primary { background-color: #4e73df; border-color: #4e73df; }
+    .fc-event-theme-secondary { background-color: #858796; border-color: #858796; }
+    .fc-event-theme-success { background-color: #1cc88a; border-color: #1cc88a; }
+    .fc-event-theme-info { background-color: #36b9cc; border-color: #36b9cc; }
+    .fc-event-theme-warning { background-color: #f6c23e; border-color: #f6c23e; color: #000; }
+    .fc-event-theme-danger { background-color: #e74a3b; border-color: #e74a3b; }
+    .fc-event-theme-dark { background-color: #5a5c69; border-color: #5a5c69; }
+
+    /* Event styling */
+    .fc-event {
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 2px 4px;
+        margin: 1px 0;
+        font-size: 0.85em;
+        cursor: pointer;
+    }
+
+    .fc-event .fc-event-time {
+        font-weight: bold;
+        font-size: 0.8em;
+        margin-bottom: 2px;
+        opacity: 0.9;
+    }
+
+    .fc-event .fc-event-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 0.9em;
+    }
+
+    /* More link styling */
+    .fc-daygrid-more-link {
+        margin-top: 4px;
+        font-size: 0.8em !important;
+        color: #4e73df !important;
+        text-decoration: none !important;
+        padding: 2px 4px;
+        display: block;
+        text-align: left;
+        background-color: rgba(78, 115, 223, 0.1);
+        border-radius: 3px;
+        transition: background-color 0.2s;
+    }
+
+    .fc-daygrid-more-link:hover {
+        background-color: rgba(78, 115, 223, 0.2);
+        text-decoration: underline !important;
+    }
+
+    /* Adjust day cell padding */
+    .fc-daygrid-day-events {
+        min-height: 0;
+        margin: 0 2px 2px 2px;
+    }
+
+    /* Ensure day number is visible */
+    .fc-daygrid-day-number {
+        padding: 2px 4px;
+        color: #4e73df;
+        font-weight: bold;
+    }
+
+    /* Adjust today's date styling */
+    .fc-day-today {
+        background-color: rgba(78, 115, 223, 0.05) !important;
+    }
+
+    .fc-day-today .fc-daygrid-day-number {
+        font-weight: bold;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .fc-event .fc-event-title {
+            font-size: 0.8em;
+        }
+        
+        .fc-event .fc-event-time {
+            font-size: 0.7em;
+        }
+        
+        .fc-daygrid-more-link {
+            font-size: 0.7em !important;
+        }
+    }
+    </style>
+
+    <!-- ApexCharts.js -->
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts@3.40.0/dist/apexcharts.min.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Get the currency symbol from the server
+        const currencySymbol = '{{ currency_symbol }}';
+        
+        // Common colors for all charts
+        const chartColors = [
+            '#4e73df', '#1cc88a', '#36b9cc', '#f6c23e', '#e74a3b',
+            '#6f42c1', '#20c9a6', '#27a9e3', '#fd7e14', '#6c757d'
+        ];
+        
+        // Common options for all pie charts
+        const commonOptions = {
+            chart: {
+                type: 'donut',
+                fontFamily: 'Nunito, sans-serif',
+                toolbar: {
+                    show: false
+                },
+                animations: {
+                    enabled: true,
+                    easing: 'easeinout',
+                    speed: 800
+                }
+            },
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center',
+                fontSize: '12px',
+                markers: {
+                    width: 10,
+                    height: 10,
+                    radius: 2
+                },
+                itemMargin: {
+                    horizontal: 5,
+                    vertical: 5
+                }
+            },
+            tooltip: {
+                enabled: true,
+                style: {
+                    fontSize: '12px'
+                },
+                y: {
+                    formatter: function(value) {
+                        return value;
+                    }
+                }
+            },
+            stroke: {
+                width: 2,
+                colors: ['#fff']
+            },
+            dataLabels: {
+                enabled: false
+            },
+            colors: chartColors,
+            plotOptions: {
+                pie: {
+                    donut: {
+                        size: '60%',
+                        labels: {
+                            show: true,
+                            name: {
+                                show: true,
+                                fontSize: '16px',
+                                fontWeight: 600
+                            },
+                            value: {
+                                show: true,
+                                fontSize: '14px',
+                                fontWeight: 400,
+                                formatter: function(val) {
+                                    return val;
+                                }
+                            },
+                            total: {
+                                show: true,
+                                fontSize: '14px',
+                                fontWeight: 600,
+                                label: 'Total',
+                                formatter: function(w) {
+                                    return w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    chart: {
+                        height: 250
+                    },
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }]
+        };
+        
+        // Initialize Monthly Invoice Comparison Chart
+        const monthlyInvoiceEl = document.getElementById('monthly-invoice-chart');
+        if (monthlyInvoiceEl) {
+            // Parse data from Django context
+            const currentYearData = JSON.parse('{{ monthly_revenue_current_year|safe }}');
+            const previousYearData = JSON.parse('{{ monthly_revenue_previous_year|safe }}');
+            const currentYear = {{ current_year }};
+            const previousYear = {{ previous_year }};
+            
+            // Month names
+            const monthNames = [
+                'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin',
+                'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'
+            ];
+            
+            // Chart options
+            const monthlyInvoiceOptions = {
+                series: [
+                    {
+                        name: `${currentYear}`,
+                        data: currentYearData
+                    },
+                    {
+                        name: `${previousYear}`,
+                        data: previousYearData
+                    }
+                ],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    fontFamily: 'Nunito, sans-serif',
+                    toolbar: {
+                        show: false
+                    },
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                colors: ['#5D87FF', '#7C8FAC'],
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: [3, 3]
+                },
+                grid: {
+                    borderColor: 'rgba(0,0,0,0.1)',
+                    row: {
+                        colors: ['transparent', 'transparent'],
+                        opacity: 0.5
+                    }
+                },
+                markers: {
+                    size: 4,
+                    colors: ['#5D87FF', '#7C8FAC'],
+                    strokeColors: '#fff',
+                    strokeWidth: 2,
+                    hover: {
+                        size: 7
+                    }
+                },
+                xaxis: {
+                    categories: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(val) {
+                            return val.toFixed(0) + ' ' + currencySymbol;
+                        }
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(val) {
+                            return val.toFixed(2) + ' ' + currencySymbol;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'right',
+                    floating: true,
+                    offsetY: -25,
+                    offsetX: -5
+                }
+            };
+            
+            // Initialize chart
+            const monthlyInvoiceChart = new ApexCharts(monthlyInvoiceEl, monthlyInvoiceOptions);
+            monthlyInvoiceChart.render();
+        }
+        
+        // Initialize Monthly Expense Comparison Chart
+        const monthlyExpenseEl = document.getElementById('monthly-expense-chart');
+        if (monthlyExpenseEl) {
+            // Parse data from Django context
+            const currentYearExpenseData = JSON.parse('{{ monthly_expense_current_year|safe }}');
+            const previousYearExpenseData = JSON.parse('{{ monthly_expense_previous_year|safe }}');
+            
+            // Chart options
+            const monthlyExpenseOptions = {
+                series: [
+                    {
+                        name: `{{ current_year }}`,
+                        data: currentYearExpenseData
+                    },
+                    {
+                        name: `{{ previous_year }}`,
+                        data: previousYearExpenseData
+                    }
+                ],
+                chart: {
+                    height: 350,
+                    type: 'line',
+                    fontFamily: 'Nunito, sans-serif',
+                    toolbar: {
+                        show: false
+                    },
+                    zoom: {
+                        enabled: false
+                    }
+                },
+                colors: ['#F06292', '#F8BBD0'],
+                dataLabels: {
+                    enabled: false
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: [3, 3]
+                },
+                grid: {
+                    borderColor: 'rgba(0,0,0,0.1)',
+                    row: {
+                        colors: ['transparent', 'transparent'],
+                        opacity: 0.5
+                    }
+                },
+                markers: {
+                    size: 4,
+                    colors: ['#F06292', '#F8BBD0'],
+                    strokeColors: '#fff',
+                    strokeWidth: 2,
+                    hover: {
+                        size: 7
+                    }
+                },
+                xaxis: {
+                    categories: ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'],
+                    axisBorder: {
+                        show: false
+                    },
+                    axisTicks: {
+                        show: false
+                    }
+                },
+                yaxis: {
+                    labels: {
+                        formatter: function(val) {
+                            return val.toFixed(0) + ' ' + currencySymbol;
+                        }
+                    }
+                },
+                tooltip: {
+                    y: {
+                        formatter: function(val) {
+                            return val.toFixed(2) + ' ' + currencySymbol;
+                        }
+                    }
+                },
+                legend: {
+                    position: 'top',
+                    horizontalAlign: 'right',
+                    floating: true,
+                    offsetY: -25,
+                    offsetX: -5
+                }
+            };
+            
+            // Initialize chart
+            const monthlyExpenseChart = new ApexCharts(monthlyExpenseEl, monthlyExpenseOptions);
+            monthlyExpenseChart.render();
+        }
+        
+        // Initialize charts if elements exist
+        const initCharts = () => {
+            // Pie Chart: Products by Parent Category
+            const productsEl = document.getElementById('chart-products-category');
+            if (productsEl) {
+                const pieProductsData = JSON.parse('{{ pie_products_by_category|escapejs }}');
+                const productSeries = pieProductsData.datasets[0].data;
+                const productLabels = pieProductsData.labels;
+                
+                const productsOptions = {
+                    ...commonOptions,
+                    series: productSeries,
+                    labels: productLabels,
+                    title: {
+                        text: 'Articles par catégorie',
+                        align: 'center',
+                        style: {
+                            fontSize: '14px',
+                            fontWeight: 500,
+                            color: '#666'
+                        }
+                    }
+                };
+                
+                const productsChart = new ApexCharts(productsEl, productsOptions);
+                productsChart.render();
+            }
+
+            // Pie Chart: Inventory Value by Parent Category
+            const valueEl = document.getElementById('chart-value-category');
+            if (valueEl) {
+                const pieValueData = JSON.parse('{{ pie_value_by_category|escapejs }}');
+                const valueSeries = pieValueData.datasets[0].data;
+                const valueLabels = pieValueData.labels;
+                
+                const valueOptions = {
+                    ...commonOptions,
+                    series: valueSeries,
+                    labels: valueLabels,
+                    title: {
+                        text: 'Valeur du stock par catégorie',
+                        align: 'center',
+                        style: {
+                            fontSize: '14px',
+                            fontWeight: 500,
+                            color: '#666'
+                        }
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function(value) {
+                                return currencySymbol + ' ' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                labels: {
+                                    value: {
+                                        formatter: function(val) {
+                                            return currencySymbol + ' ' + parseFloat(val).toLocaleString();
+                                        }
+                                    },
+                                    total: {
+                                        formatter: function(w) {
+                                            const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                            return currencySymbol + ' ' + total.toLocaleString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+                
+                const valueChart = new ApexCharts(valueEl, valueOptions);
+                valueChart.render();
+            }
+
+            // Pie Chart: Invoices by Parent Category (sold products)
+            const invoiceEl = document.getElementById('chart-invoice-category');
+            if (invoiceEl) {
+                const pieInvoiceData = JSON.parse('{{ pie_invoice_by_category|escapejs }}');
+                const invoiceSeries = pieInvoiceData.datasets[0].data;
+                const invoiceLabels = pieInvoiceData.labels;
+                
+                const invoiceOptions = {
+                    ...commonOptions,
+                    series: invoiceSeries,
+                    labels: invoiceLabels,
+                    title: {
+                        text: 'Valeur des ventes par catégorie',
+                        align: 'center',
+                        style: {
+                            fontSize: '14px',
+                            fontWeight: 500,
+                            color: '#666'
+                        }
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function(value) {
+                                return currencySymbol + ' ' + value.toLocaleString();
+                            }
+                        }
+                    },
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                labels: {
+                                    value: {
+                                        formatter: function(val) {
+                                            return currencySymbol + ' ' + parseFloat(val).toLocaleString();
+                                        }
+                                    },
+                                    total: {
+                                        formatter: function(w) {
+                                            const total = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
+                                            return currencySymbol + ' ' + total.toLocaleString();
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                };
+                
+                const invoiceChart = new ApexCharts(invoiceEl, invoiceOptions);
+                invoiceChart.render();
+            }
+        };
+
+        // Initialize charts
+        initCharts();
+    });
+    </script>
+</div>
+{% endblock content %}
+
+{% block script_content %}
+    <style>
+        /* Change chart gray background to white */
+        .apexcharts-canvas .apexcharts-plot-background {
+            fill: #ffffff !important;
+        }
+    </style>
+    <script>
+        // Sync tabs with footer
+        document.addEventListener('DOMContentLoaded', function() {
+            const invoicesTab = document.getElementById('invoices-tab');
+            const expensesTab = document.getElementById('expenses-tab');
+            const invoicesFooter = document.getElementById('invoices-footer');
+            const expensesFooter = document.getElementById('expenses-footer');
+            
+            if (invoicesTab && expensesTab) {
+                invoicesTab.addEventListener('shown.bs.tab', function() {
+                    invoicesFooter.classList.add('show', 'active');
+                    expensesFooter.classList.remove('show', 'active');
+                });
+                
+                expensesTab.addEventListener('shown.bs.tab', function() {
+                    expensesFooter.classList.add('show', 'active');
+                    invoicesFooter.classList.remove('show', 'active');
+                });
+            }
+        });
+    </script>
+{% endblock script_content %}
