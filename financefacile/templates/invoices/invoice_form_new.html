@@ -30,20 +30,30 @@
 {% block extra_js %}
 {{ block.super }}
 <script>
-  // Provide product prices for JS
-  window.PRODUCT_PRICES = {};
+  // Initialize products object
+  window.PRODUCTS = {};
+  
+  // Add product data from Django template
   {% if products %}
     {% for product in products %}
-    window.PRODUCT_PRICES["{{ product.id }}"] = "{{ product.selling_price }}";
+      window.PRODUCTS['{{ product.id|escapejs }}'] = {
+        selling_price: {{ product.selling_price|default:0|floatformat:2|stringformat:"f" }},
+        tva_rate: {{ product.tva_rate|default:19.0|floatformat:1|stringformat:"f" }},
+        price_with_tva: {{ product.price_with_tva|default:0|floatformat:2|stringformat:"f" }},
+        name: '{{ product.name|escapejs }}'
+      };
     {% endfor %}
   {% endif %}
   
-  // Check if we're in update mode (invoice already exists)
+  // Set update mode flag
   window.isUpdateMode = {% if form.instance.id %}true{% else %}false{% endif %};
-  console.log('Is update mode:', window.isUpdateMode);
+
   
-  // Debug: Log all product prices
-  console.log('DEBUG: Product prices object:', window.PRODUCT_PRICES);
+  // Debug information
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('Is update mode:', window.isUpdateMode);
+    console.log('Products data:', window.PRODUCTS);
+  });
 </script>
 {% endblock extra_js %}
 
@@ -115,13 +125,13 @@
               </div>
               <div class="card-body">
               <div class="row g-3">
-                <!-- TVA Rate Field -->
+                <!-- TVA Rate Field (for backend calculations) -->
                 <div class="col-md-6 mb-3">
-                  <label class="form-label fw-semibold" for="id_tva_rate">TVA Rate (%)</label>
+                  <label class="form-label fw-semibold" for="id_tva_rate">Default TVA Rate (%) <small class="text-muted">- For system use</small></label>
                   <input type="text" name="tva_rate" id="id_tva_rate" class="form-control" 
                     value="{% if form.instance.tva_rate %}{{ form.instance.tva_rate|stringformat:".2f" }}{% elif form.tva_rate.value %}{{ form.tva_rate.value|stringformat:".2f" }}{% else %}{{ form.initial.tva_rate|default:'19.0'|stringformat:".2f" }}{% endif %}"
-                    style="color: black !important; background-color: white !important; z-index: 9999 !important; opacity: 1 !important;" >
-                  <small class="form-text text-muted">Default rate from company settings: {{ company_default_tva_rate }}%</small>
+                    style="color: #6c757d !important; background-color: #f8f9fa !important; z-index: 9999 !important; opacity: 1 !important;" >
+                  <small class="form-text text-muted">This rate is used for backend calculations. All prices shown are TVA-inclusive.</small>
                   {% for error in form.tva_rate.errors %}
                   <div class="invalid-feedback d-block">{{ error }}</div>
                   {% endfor %}
@@ -182,11 +192,13 @@
                   <table class="table table-bordered table-hover table-sm mb-0" id="invoice-items-table">
                   <thead class="table-light">
                     <tr>
-                      <th scope="col" style="width: 35%;">Product</th>
-                      <th scope="col" style="width: 15%;" class="text-end">Quantity</th>
-                      <th scope="col" style="width: 20%;" class="text-end">Selling Price</th>
-                      <th scope="col" style="width: 20%;" class="text-end">Item Total</th>
-                      <th scope="col" style="width: 10%;" class="text-center">Actions</th>
+                      <th scope="col" style="width: 25%;">Product</th>
+                      <th scope="col" style="width: 10%;" class="text-end">Quantity</th>
+                      <th scope="col" style="width: 15%;" class="text-end">Base Price</th>
+                      <th scope="col" style="width: 15%;" class="text-end">TVA Incl. Price</th>
+                      <th scope="col" style="width: 15%;" class="text-end">TVA Rate</th>
+                      <th scope="col" style="width: 15%;" class="text-end">Item Total</th>
+                      <th scope="col" style="width: 5%;" class="text-center">Actions</th>
                     </tr>
                   </thead>
                   <tbody id="invoice-items-body">
@@ -198,7 +210,7 @@
                         <select name="{{ form.product.html_name }}" id="{{ form.product.auto_id }}" class="form-control select2-product">
                           <option value="">Select a product...</option>
                           {% for product in products %}
-                          <option value="{{ product.id }}" data-price="{{ product.selling_price }}" {% if form.product.value|stringformat:'s' == product.id|stringformat:'s' %}selected{% endif %}>{{ product.name }}</option>
+                          <option value="{{ product.id }}" data-price="{{ product.tva_inclusive_price|default:product.selling_price }}" {% if form.product.value|stringformat:'s' == product.id|stringformat:'s' %}selected{% endif %}>{{ product.name }}</option>
                           {% endfor %}
                         </select>
                         {% for error in form.product.errors %}
@@ -225,12 +237,31 @@
                       </td>
                       <td>
                         <input type="text" 
+                               name="base_price" 
+                               id="id_base_price" 
+                               class="form-control base-price" 
+                               value="0.00" 
+                               data-field-type="base-price" >
+                      </td>
+                      <td>
+                        <input type="text" 
                                name="{{ form.selling_price.html_name }}" 
                                id="{{ form.selling_price.auto_id }}" 
-                               class="form-control selling-price-input-debug" 
+                               class="form-control unit-price" 
                                value="{% if form.selling_price.value %}{{ form.selling_price.value|stringformat:'.2f'|safe }}{% else %}0.00{% endif %}" 
-                               data-field-type="selling-price" >
+                               data-field-type="unit-price-ttc" >
                         {% for error in form.selling_price.errors %}
+                        <div class="invalid-feedback d-block">{{ error }}</div>
+                        {% endfor %}
+                      </td>
+                      <td>
+                        <input type="text" 
+                               name="{{ form.tva_rate.html_name }}" 
+                               id="{{ form.tva_rate.auto_id }}" 
+                               class="form-control tva-rate" 
+                               value="{% if form.tva_rate.value %}{{ form.tva_rate.value|stringformat:'.2f'|safe }}{% else %}19.00{% endif %}" 
+                               data-field-type="tva-rate" >
+                        {% for error in form.tva_rate.errors %}
                         <div class="invalid-feedback d-block">{{ error }}</div>
                         {% endfor %}
                       </td>
@@ -265,7 +296,7 @@
                     <select name="{{ form.product.html_name }}" id="{{ form.product.auto_id }}" class="form-control select2-product">
                       <option value="">Select a product...</option>
                       {% for product in products %}
-                      <option value="{{ product.id }}" data-price="{{ product.selling_price }}" {% if form.product.value|stringformat:'s' == product.id|stringformat:'s' %}selected{% endif %}>{{ product.name }}</option>
+                      <option value="{{ product.id }}" data-price="{{ product.tva_inclusive_price|default:product.selling_price }}" {% if form.product.value|stringformat:'s' == product.id|stringformat:'s' %}selected{% endif %}>{{ product.name }}</option>
                       {% endfor %}
                     </select>
                     {% for error in form.product.errors %}
@@ -285,12 +316,31 @@
                   </td>
                   <td>
                     <input type="text" 
+                           name="base_price" 
+                           id="id_base_price" 
+                           class="form-control base-price" 
+                           value="0.00" 
+                           data-field-type="base-price" >
+                  </td>
+                  <td>
+                    <input type="text" 
                            name="{{ form.selling_price.html_name }}" 
                            id="{{ form.selling_price.auto_id }}" 
-                           class="form-control selling-price-input-debug" 
+                           class="form-control unit-price" 
                            value="{{ form.selling_price.value|default:'0.00' }}" 
-                           data-field-type="selling-price" >
+                           data-field-type="unit-price-ttc" >
                     {% for error in form.selling_price.errors %}
+                    <div class="invalid-feedback d-block">{{ error }}</div>
+                    {% endfor %}
+                  </td>
+                  <td>
+                    <input type="text" 
+                           name="{{ form.tva_rate.html_name }}" 
+                           id="{{ form.tva_rate.auto_id }}" 
+                           class="form-control tva-rate" 
+                           value="{{ form.tva_rate.value|default:'19.00' }}" 
+                           data-field-type="tva-rate" >
+                    {% for error in form.tva_rate.errors %}
                     <div class="invalid-feedback d-block">{{ error }}</div>
                     {% endfor %}
                   </td>
@@ -319,8 +369,12 @@
                       <span id="subtotal" class="text-end">0.00</span>
                     </div>
                     <div class="d-flex justify-content-between mb-2">
-                      <span class="fw-semibold">TVA (<span id="tva-rate-display">{% if form.instance.tva_rate %}{{ form.instance.tva_rate|stringformat:".2f" }}{% elif form.tva_rate.value %}{{ form.tva_rate.value|stringformat:".2f" }}{% else %}{{ form.initial.tva_rate|default:'19.0'|stringformat:".2f" }}{% endif %}</span>%):</span>
+                      <span class="fw-semibold">TVA:</span>
                       <span id="tva-amount" class="text-end">0.00</span>
+                    </div>
+                    <!-- TVA breakdown by rate -->
+                    <div class="ps-4 mb-2 small" id="tva-breakdown">
+                      <!-- Will be populated dynamically with TVA rates -->
                     </div>
                     <div class="d-flex justify-content-between mb-2" id="stamp-fee-row">
                       <span class="fw-semibold">Stamp Fee:</span>
@@ -399,63 +453,162 @@
     
     // Function to update all totals
     window.updateAllTotals = function() {
-      console.log('Updating all totals');
-      
-      // Calculate subtotal
-      let subtotal = 0;
-      $('.item-total').each(function() {
-        // Normalize the value to handle comma decimal separators
-        const rowTotal = normalizeNumber($(this).val());
-        subtotal += rowTotal;
-      });
-      
-      console.log('Subtotal:', subtotal);
-      
-      // Get TVA rate
-      const tvaRateElement = document.getElementById('id_tva_rate');
-      let tvaRate = 19; // Default TVA rate
-      
-      if (tvaRateElement) {
-        // Normalize the TVA rate to handle comma decimal separators
-        tvaRate = normalizeNumber(tvaRateElement.value);
-        if (tvaRate === 0) tvaRate = 19; // Fallback to default if parsing failed
-      } else if (tvaRateDisplay) {
-        tvaRate = parseFloat(tvaRateDisplay.textContent) || tvaRate;
+      try {
+        let subtotalHT = 0;
+        let totalTVA = 0;
+        let totalTTC = 0;
+        
+        // Group TVA by rate for detailed breakdown
+        const tvaByRate = {};
+        
+        // Calculate totals from all visible rows
+        $('.invoice-item-row:visible').each(function() {
+          const row = $(this);
+          const rowSubtotalHT = parseFloat(row.find('[id$=subtotal]').val() || 0);
+          const rowTVA = parseFloat(row.find('[id$=tva_amount]').val() || 0);
+          const rowTTC = parseFloat(row.find('[id$=total_ttc]').val() || 0);
+          const tvaRate = parseFloat(row.find('.tva-rate').val() || 0);
+          
+          // Update running totals
+          subtotalHT += isNaN(rowSubtotalHT) ? 0 : rowSubtotalHT;
+          totalTVA += isNaN(rowTVA) ? 0 : rowTVA;
+          totalTTC += isNaN(rowTTC) ? 0 : rowTTC;
+          
+          // Group TVA by rate
+          if (tvaRate > 0) {
+            const rateKey = tvaRate.toFixed(2);
+            if (!tvaByRate[rateKey]) {
+              tvaByRate[rateKey] = 0;
+            }
+            tvaByRate[rateKey] += isNaN(rowTVA) ? 0 : rowTVA;
+          }
+        });
+        
+        // Format numbers with 2 decimal places and thousand separators
+        const formatNumber = (num) => {
+          return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        };
+        
+        // Update the summary
+        $('#subtotal-amount').text(formatNumber(subtotalHT));
+        
+        // Update TVA amount with detailed breakdown by rate if available
+        let tvaBreakdownHtml = '';
+        if (Object.keys(tvaByRate).length > 0) {
+          // Sort rates from lowest to highest
+          const sortedRates = Object.keys(tvaByRate).sort((a, b) => parseFloat(a) - parseFloat(b));
+          
+          // Create breakdown HTML
+          for (const rate of sortedRates) {
+            const amount = tvaByRate[rate];
+            tvaBreakdownHtml += `<div>TVA ${rate}%: ${formatNumber(amount)}</div>`;
+          }
+          
+          // Add total TVA if there are multiple rates
+          if (sortedRates.length > 1) {
+            tvaBreakdownHtml += `<div class="fw-bold mt-1">Total TVA: ${formatNumber(totalTVA)}</div>`;
+          }
+          
+          // Update the TVA breakdown container
+          $('#tva-breakdown').html(tvaBreakdownHtml);
+        }
+        
+        // Update the main TVA amount display
+        $('#tva-amount').text(formatNumber(totalTVA));
+        
+        // Update the total amount
+        $('#total-amount').text(formatNumber(totalTTC));
+        
+        // Update hidden fields (without thousand separators)
+        $('#id_subtotal').val(subtotalHT.toFixed(2));
+        $('#id_tva_amount').val(totalTVA.toFixed(2));
+        $('#id_total_ttc').val(totalTTC.toFixed(2));
+        
+        // Update the document title with the total amount
+        document.title = `Invoice - ${formatNumber(totalTTC)} ${window.currencySymbol || ''}`.trim();
+        
+        console.log('Updated invoice totals:', {
+          subtotalHT: subtotalHT.toFixed(2),
+          totalTVA: totalTVA.toFixed(2),
+          totalTTC: totalTTC.toFixed(2),
+          tvaByRate: tvaByRate
+        });
+      } catch (error) {
+        console.error('Error in updateAllTotals:', error);
       }
-      
-      console.log('TVA Rate:', tvaRate);
-      
-      // Calculate TVA amount
-      const tvaAmount = subtotal * (tvaRate / 100);
-      
-      // Get stamp fee
-      const stampFeeElement = document.getElementById('id_stamp_fee');
-      const includeStampFeeCheckbox = document.getElementById('id_include_stamp_fee');
-      let stampFee = 0;
-      
-      if (stampFeeElement) {
-        stampFee = normalizeNumber(stampFeeElement.value);
-      }
-      
-      // Only include stamp fee if checkbox is checked
-      if (includeStampFeeCheckbox && !includeStampFeeCheckbox.checked) {
-        stampFee = 0;
-      }
-      
-      console.log('Stamp Fee:', stampFee);
-      
-      // Calculate total
-      const total = subtotal + tvaAmount + stampFee;
-      
-      // Update the display
-      $('#subtotal').text(subtotal.toFixed(2));
-      $('#tva-amount').text(tvaAmount.toFixed(2));
-      $('#stamp-fee').text(stampFee.toFixed(2));
-      $('#total-amount').text(total.toFixed(2));
-      $('#id_invoice_total').val(total.toFixed(2));
-      
-      console.log('Updated totals - Subtotal:', subtotal.toFixed(2), 'TVA:', tvaAmount.toFixed(2), 'Total:', total.toFixed(2));
     };
+    
+    // Function to update row total
+    function updateRowTotal(row) {
+      try {
+        // Get quantity, base price, and TVA-inclusive price values
+        const quantity = parseFloat(row.find('.quantity').val()) || 0;
+        const tvaRate = parseFloat(row.find('.tva-rate').val()) || 0;
+        
+        // Check which price was modified last (base price or TVA-inclusive price)
+        const basePrice = parseFloat(row.find('.base-price').val().replace(/\s/g, '').replace(/,/g, '.')) || 0;
+        const priceTTC = parseFloat(row.find('.unit-price').val().replace(/\s/g, '').replace(/,/g, '.')) || 0;
+        
+        // Get the product ID to check for product-specific data
+        const productSelect = row.find('.product-select');
+        
+        if (productSelect.length > 0 && productSelect.val()) {
+          const productId = productSelect.val();
+          const product = window.PRODUCTS[productId];
+          
+          if (product) {
+            // Use the product's TVA rate if available
+            const productTvaRate = parseFloat(product.tva_rate) || 0;
+            row.find('.tva-rate').val(productTvaRate.toFixed(2));
+            
+            // Update prices if they're empty or zero
+            if (!row.find('.unit-price').val() || row.find('.unit-price').val() === '0.00') {
+              const priceWithTVA = parseFloat(product.price_with_tva) || 0;
+              row.find('.unit-price').val(priceWithTVA.toFixed(2));
+              
+              // Calculate and set base price
+              const basePrice = productTvaRate > 0 ? (priceWithTVA * 100) / (100 + productTvaRate) : priceWithTVA;
+              row.find('.base-price').val(basePrice.toFixed(2));
+            }
+          }
+        }
+        
+        // Recalculate prices based on which one was modified
+        // If base price was modified, update TVA-inclusive price
+        if (row.find('.base-price').is(':focus')) {
+          const newPriceTTC = basePrice * (1 + tvaRate / 100);
+          row.find('.unit-price').val(newPriceTTC.toFixed(2));
+        } 
+        // If TVA-inclusive price was modified, update base price
+        else if (row.find('.unit-price').is(':focus')) {
+          const newBasePrice = tvaRate > 0 ? (priceTTC * 100) / (100 + tvaRate) : priceTTC;
+          row.find('.base-price').val(newBasePrice.toFixed(2));
+        }
+        
+        // Calculate row totals
+        const rowBaseTotal = basePrice * quantity;
+        const rowTotalTTC = priceTTC * quantity;
+        const rowTVAAmount = rowTotalTTC - rowBaseTotal;
+        
+        // Format numbers with 2 decimal places and proper thousand separators
+        const formatNumber = (num) => {
+          return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        };
+        
+        // Update the row display
+        row.find('.item-total').val(formatNumber(rowTotalTTC));
+        
+        // Update hidden fields for form submission (without thousand separators)
+        row.find('[id$=subtotal]').val(rowBaseTotal.toFixed(2));
+        row.find('[id$=tva_amount]').val(rowTVAAmount.toFixed(2));
+        row.find('[id$=total_ttc]').val(rowTotalTTC.toFixed(2));
+        
+        // Update the invoice totals
+        updateAllTotals();
+      } catch (error) {
+        console.error('Error in updateRowTotal:', error);
+      }
+    }
     
     // Initialize Select2 for product dropdowns
     initializeSelect2();
@@ -479,22 +632,15 @@
       });
       
       // Add change event handler to all product dropdowns
-      $('.select2-product').on('change', function() {
-        console.log('DEBUG: Product dropdown changed');
+      $('#invoice-items-container').on('change', '.product-select', function() {
+        const row = $(this).closest('.invoice-item-row');
         const productId = $(this).val();
-        console.log('DEBUG: Selected product ID:', productId);
         
         if (productId) {
-          // Find the price input in the same row
-          const row = $(this).closest('tr');
-          console.log('DEBUG: Found row:', row);
-          
-          // Try different selectors to find the price input
-          let priceInput = row.find('input[id$="-selling_price"]');
-          if (priceInput.length === 0) {
-            priceInput = row.find('input[name$="-selling_price"]');
-          }
-          if (priceInput.length === 0) {
+          const product = window.PRODUCTS[productId];
+          if (product) {
+            // Update the price field with the product's TVA-inclusive price
+            row.find('.unit-price').val(product.price_with_tva.toFixed(2));
             // As a fallback, get all inputs and find the one in the third cell (price column)
             const inputs = row.find('td:eq(2) input');
             if (inputs.length > 0) {
@@ -736,143 +882,298 @@
     
     // Function to setup event handlers for a specific row
     function setupRowEventHandlers(row) {
-      // Product selection change handler
-      const productSelect = row.querySelector('select[name*="product"]');
-      if (productSelect) {
-        productSelect.addEventListener('change', function() {
-          updateRowPrice(row);
-        });
-        
-        // Initialize with current value if any
-        if (productSelect.value) {
-          updateRowPrice(row);
+      // Handle quantity changes
+      row.find('.quantity').on('input', function() {
+        updateRowTotal(row);
+      });
+      
+      // Handle base price changes
+      row.find('.base-price').on('input', function() {
+        updateRowTotal(row);
+      });
+      
+      // Handle TVA-inclusive price changes
+      row.find('.unit-price').on('input', function() {
+        updateRowTotal(row);
+      });
+      
+      // Handle TVA rate changes
+      row.find('.tva-rate').on('input', function() {
+        updateRowTotal(row);
+      });
+      
+      // Handle product selection
+      row.find('.product-select').on('change', function() {
+        const productId = $(this).val();
+        if (productId) {
+          const product = window.PRODUCTS[productId];
+          if (product) {
+            // Update the TVA rate field with the product's TVA rate
+            const tvaRate = parseFloat(product.tva_rate) || 0;
+            row.find('.tva-rate').val(tvaRate.toFixed(2));
+            
+            // Update the TVA-inclusive price field with the product's TVA-inclusive price
+            const priceTTC = parseFloat(product.price_with_tva) || 0;
+            row.find('.unit-price').val(priceTTC.toFixed(2));
+            
+            // Calculate and set base price
+            const basePrice = tvaRate > 0 ? (priceTTC * 100) / (100 + tvaRate) : priceTTC;
+            row.find('.base-price').val(basePrice.toFixed(2));
+            
+            // Update the description field if it's empty
+            if (!row.find('[id$=description]').val()) {
+              row.find('[id$=description]').val(product.name);
+            }
+            
+            // Update the unit of measure if available
+            if (product.unit) {
+              const unitCell = row.find('.unit-measure');
+              if (unitCell.length) {
+                unitCell.text(product.unit);
+              }
+            }
+            
+            updateRowTotal(row);
+          }
+        } else {
+          // If no product selected, clear the prices and TVA rate
+          row.find('.base-price').val('0.00');
+          row.find('.unit-price').val('0.00');
+          row.find('.tva-rate').val('19.00'); // Default TVA rate
+          
+          // Clear unit of measure
+          const unitCell = row.find('.unit-measure');
+          if (unitCell.length) {
+            unitCell.text('');
+          }
+          
+          updateRowTotal(row);
         }
-      }
+      });
       
-      // Quantity change handler
-      const quantityInput = row.querySelector('input[name*="quantity"]');
-      if (quantityInput) {
-        quantityInput.addEventListener('input', function() {
-          updateRowTotal(row);
-        });
-      }
-      
-      // Price change handler
-      const priceInput = row.querySelector('input[name*="selling_price"]');
-      if (priceInput) {
-        priceInput.addEventListener('input', function() {
-          updateRowTotal(row);
-        });
-      }
-      
-      // Delete button handler
-      const deleteButton = row.querySelector('.delete-row');
-      if (deleteButton) {
-        deleteButton.addEventListener('click', function() {
+      // Handle delete button
+      row.find('.delete-row').on('click', function() {
+        if (row.hasClass('existing-row')) {
+          // For existing rows, mark as deleted
+          const deleteCheckbox = row.find('input[type="checkbox"][id$="-DELETE"]');
+          if (deleteCheckbox.length) {
+            deleteCheckbox.prop('checked', true);
+            row.hide();
+          } else {
+            row.remove();
+          }
+        } else {
+          // For new rows, just remove
           row.remove();
-          updateFormCount();
-          updateAllTotals();
-        });
-      }
-    }
-    
-    // Function to update the price based on selected product
-    function updateRowPrice(row) {
-      const productSelect = row.querySelector('select[name*="product"]');
-      const priceInput = row.querySelector('input[name*="selling_price"]');
-      
-      if (productSelect && priceInput && productSelect.value) {
-        const productId = productSelect.value;
-        if (window.PRODUCT_PRICES && window.PRODUCT_PRICES[productId]) {
-          priceInput.value = window.PRODUCT_PRICES[productId];
-          updateRowTotal(row);
         }
+        updateFormCount();
+        updateAllTotals();
+      });
+      
+      // Initialize the row if it has a product selected
+      const productSelect = row.find('.product-select');
+      if (productSelect.length > 0 && productSelect.val()) {
+        productSelect.trigger('change');
+      } else {
+        updateRowTotal(row);
       }
-    }
     
     // Function to update the total for a row
     function updateRowTotal(row) {
-      const quantityInput = row.querySelector('input[name*="quantity"]');
-      const priceInput = row.querySelector('input[name*="selling_price"]');
-      const totalInput = row.querySelector('.item-total');
-      
-      if (quantityInput && priceInput && totalInput) {
-        const quantity = parseFloat(quantityInput.value) || 0;
-        const price = parseFloat(priceInput.value) || 0;
-        const total = quantity * price;
+      try {
+        const $row = $(row);
+        const productSelect = $row.find('select[name*="product"]');
+        const quantityInput = $row.find('input[name*="quantity"]');
+        const basePriceInput = $row.find('.base-price');
+        const priceTTCInput = $row.find('.unit-price');
+        const tvaRateInput = $row.find('.tva-rate');
+        const totalInput = $row.find('.item-total');
         
-        totalInput.value = total.toFixed(2);
+        if (quantityInput.length && basePriceInput.length && priceTTCInput.length && tvaRateInput.length && totalInput.length) {
+          const quantity = parseFloat(quantityInput.val()) || 0;
+          const basePrice = parseFloat(basePriceInput.val().replace(/\s/g, '').replace(',', '.')) || 0;
+          const priceTTC = parseFloat(priceTTCInput.val().replace(/\s/g, '').replace(',', '.')) || 0;
+          const tvaRate = parseFloat(tvaRateInput.val().replace(/\s/g, '').replace(',', '.')) || 0;
+          
+          // Determine which price field was last modified
+          if (basePriceInput.is(':focus')) {
+            // Base price was modified, update TVA-inclusive price
+            const newPriceTTC = basePrice * (1 + tvaRate / 100);
+            priceTTCInput.val(newPriceTTC.toFixed(2));
+          } else if (priceTTCInput.is(':focus')) {
+            // TVA-inclusive price was modified, update base price
+            const newBasePrice = tvaRate > 0 ? (priceTTC * 100) / (100 + tvaRate) : priceTTC;
+            basePriceInput.val(newBasePrice.toFixed(2));
+          } else if (tvaRateInput.is(':focus')) {
+            // TVA rate was modified, update TVA-inclusive price based on base price
+            const newPriceTTC = basePrice * (1 + tvaRate / 100);
+            priceTTCInput.val(newPriceTTC.toFixed(2));
+          }
+          
+          // Calculate row totals
+          const rowBaseTotal = basePrice * quantity;
+          const rowTotalTTC = priceTTC * quantity;
+          const rowTVAAmount = rowTotalTTC - rowBaseTotal;
+          
+          // Format for display
+          const formatNumber = (num) => {
+            return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+          };
+          
+          // Update the row display
+          totalInput.val(formatNumber(rowTotalTTC));
+          
+          // Update hidden fields for form submission
+          const hiddenSubtotalInput = $row.find('input[name*="subtotal"]');
+          if (hiddenSubtotalInput.length) {
+            hiddenSubtotalInput.val(rowBaseTotal.toFixed(2));
+          }
+          
+          const hiddenTvaInput = $row.find('input[name*="tva_amount"]');
+          if (hiddenTvaInput.length) {
+            hiddenTvaInput.val(rowTVAAmount.toFixed(2));
+          }
+          
+          const hiddenTotalTTCInput = $row.find('input[name*="total_ttc"]');
+          if (hiddenTotalTTCInput.length) {
+            hiddenTotalTTCInput.val(rowTotalTTC.toFixed(2));
+          }
+          
+          // Update hidden TVA rate field
+          const hiddenTvaRateInput = $row.find('input[name*="tva_rate"]');
+          if (hiddenTvaRateInput.length) {
+            hiddenTvaRateInput.val(tvaRate.toFixed(2));
+          }
+        }
+      } catch (error) {
+        console.error('Error in updateRowTotal:', error);
+      } finally {
+        // Update all totals after updating this row
         updateAllTotals();
       }
     }
     
     // Function to update all totals (subtotal, TVA, total)
     function updateAllTotals() {
-      console.log('Updating all totals...');
-      
-      // Calculate subtotal
-      let subtotal = 0;
-      document.querySelectorAll('.item-total').forEach(input => {
-        subtotal += parseFloat(input.value) || 0;
-      });
-      console.log('Calculated subtotal:', subtotal);
-      
-      // Get TVA rate
-      const tvaRateInput = document.getElementById('id_tva_rate');
-      let tvaRate = parseFloat(tvaRateInput.value) || 0;
-      
-      // Ensure TVA rate is not zero if it has a value
-      if (tvaRateInput.value && tvaRate === 0) {
-        console.warn('TVA rate input has value but parsed as 0, trying again:', tvaRateInput.value);
-        // Try to parse again with different locale handling
-        tvaRate = parseFloat(tvaRateInput.value.replace(',', '.')) || 0;
-      }
-      
-      console.log('Using TVA rate:', tvaRate);
-      
-      // Update TVA rate display
-      const tvaRateDisplay = document.getElementById('tva-rate-display');
-      if (tvaRateDisplay) {
-        tvaRateDisplay.textContent = tvaRate.toFixed(1);
-      }
-      
-      // Calculate TVA amount
-      const tvaAmount = subtotal * (tvaRate / 100);
-      console.log('Calculated TVA amount:', tvaAmount);
-      
-      // Check if stamp fee is included
-      const includeStampFee = document.getElementById('id_include_stamp_fee').checked;
-      let stampFee = 0;
-      if (includeStampFee) {
-        // Get stamp fee from help text or use default
-        const stampFeeText = document.querySelector('small.form-text.text-muted').textContent;
-        const stampFeeMatch = stampFeeText.match(/stamp fee of (\d+(\.\d+)?)/);
-        if (stampFeeMatch) {
-          stampFee = parseFloat(stampFeeMatch[1]) || 1.0;
+      try {
+        let subtotalHT = 0;
+        let totalTVA = 0;
+        let totalTTC = 0;
+        
+        // Group TVA by rate for detailed breakdown
+        const tvaByRate = {};
+        
+        // Calculate totals from all visible rows
+        $('.invoice-item-row:visible').each(function() {
+          const row = $(this);
+          const quantity = parseFloat(row.find('.quantity').val()) || 0;
+          const basePrice = parseFloat(row.find('.base-price').val().replace(/\s/g, '').replace(/,/g, '.')) || 0;
+          const priceTTC = parseFloat(row.find('.unit-price').val().replace(/\s/g, '').replace(/,/g, '.')) || 0;
+          const tvaRate = parseFloat(row.find('.tva-rate').val().replace(/\s/g, '').replace(/,/g, '.')) || 0;
+          
+          // Calculate row totals
+          const rowTotalHT = quantity * basePrice;
+          const rowTotalTTC = quantity * priceTTC;
+          const rowTVA = rowTotalTTC - rowTotalHT;
+          
+          // Update running totals
+          subtotalHT += rowTotalHT;
+          totalTVA += rowTVA;
+          totalTTC += rowTotalTTC;
+          
+          // Group TVA by rate
+          if (tvaRate > 0) {
+            const rateKey = tvaRate.toFixed(2);
+            if (!tvaByRate[rateKey]) {
+              tvaByRate[rateKey] = 0;
+            }
+            tvaByRate[rateKey] += rowTVA;
+          }
+        });
+        
+        // Format numbers with 2 decimal places and thousand separators
+        const formatNumber = (num) => {
+          return num.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+        };
+        
+        // Update the summary
+        $('#subtotal-amount').text(formatNumber(subtotalHT));
+        
+        // Update TVA amount with detailed breakdown by rate if available
+        let tvaBreakdownHtml = '';
+        if (Object.keys(tvaByRate).length > 0) {
+          // Sort rates from lowest to highest
+          const sortedRates = Object.keys(tvaByRate).sort((a, b) => parseFloat(a) - parseFloat(b));
+          
+          // Create breakdown HTML
+          for (const rate of sortedRates) {
+            const amount = tvaByRate[rate];
+            tvaBreakdownHtml += `<div>TVA ${rate}%: ${formatNumber(amount)}</div>`;
+          }
+          
+          // Add total TVA if there are multiple rates
+          if (sortedRates.length > 1) {
+            tvaBreakdownHtml += `<div class="fw-bold mt-1">Total TVA: ${formatNumber(totalTVA)}</div>`;
+          }
+          
+          // Update the TVA breakdown container
+          $('#tva-breakdown').html(tvaBreakdownHtml);
         } else {
-          stampFee = 1.0; // Default value
+          // Clear the breakdown if no TVA rates
+          $('#tva-breakdown').html('');
         }
+        
+        // Update the main TVA amount display
+        $('#tva-amount').text(formatNumber(totalTVA));
+        
+        // Calculate and update total with stamp fee
+        const stampFee = parseFloat($('input[name="stamp_fee"]').val() || 0);
+        const grandTotal = totalTTC + (isNaN(stampFee) ? 0 : stampFee);
+        
+        // Update the total amount
+        $('#total-amount').text(formatNumber(grandTotal));
+        
+        // Update hidden fields (without thousand separators)
+        $('input[name$="_subtotal"]').val(subtotalHT.toFixed(2));
+        $('input[name$="_tva_amount"]').val(totalTVA.toFixed(2));
+        $('input[name$="_total_ttc"]').val(totalTTC.toFixed(2));
+        $('input[name="invoice_total"]').val(grandTotal.toFixed(2));
+        
+        // Show/hide stamp fee row based on checkbox
+        const includeStampFee = $('#id_include_stamp_fee').is(':checked');
+        $('#stamp-fee-row').toggle(includeStampFee);
+        if (!includeStampFee) {
+          $('input[name="stamp_fee"]').val('0.00');
+        }
+        
+        // Update document title with total amount
+        document.title = `Invoice - ${formatNumber(grandTotal)} ${window.currencySymbol || ''}`.trim();
+        
+        console.log('Updated invoice totals:', {
+          subtotalHT: subtotalHT.toFixed(2),
+          totalTVA: totalTVA.toFixed(2),
+          totalTTC: totalTTC.toFixed(2),
+          tvaByRate: tvaByRate
+        });
+      } catch (error) {
+        console.error('Error in updateAllTotals:', error);
       }
+    }
+    
+    // Show/hide stamp fee row
+    const stampFeeRow = document.getElementById('stamp-fee-row');
+    const stampFeeCheckbox = document.getElementById('id_include_stamp_fee');
+    
+    if (stampFeeRow && stampFeeCheckbox) {
+      // Initial state
+      stampFeeRow.style.display = stampFeeCheckbox.checked ? '' : 'none';
       
-      // Calculate total
-      const total = subtotal + tvaAmount + stampFee;
-      
-      // Update display
-      document.getElementById('subtotal').textContent = subtotal.toFixed(2);
-      document.getElementById('tva-amount').textContent = tvaAmount.toFixed(2);
-      document.getElementById('stamp-fee').textContent = stampFee.toFixed(2);
-      document.getElementById('total-amount').textContent = total.toFixed(2);
-      
-      // Update hidden input for form submission
-      document.getElementById('id_invoice_total').value = total.toFixed(2);
-      
-      // Show/hide stamp fee row
-      const stampFeeRow = document.getElementById('stamp-fee-row');
-      if (includeStampFee) {
-        stampFeeRow.style.display = '';
-      } else {
-        stampFeeRow.style.display = 'none';
-      }
+      // Add change event listener
+      stampFeeCheckbox.addEventListener('change', function() {
+        stampFeeRow.style.display = this.checked ? '' : 'none';
+        updateAllTotals();
+      });
+    }
     }
     
     // Function to setup the add item button

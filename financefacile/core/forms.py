@@ -504,12 +504,6 @@ class ProductWidget(s2forms.Select2Widget):
 
 class ProductForm(forms.ModelForm):
     debug_marker = "THIS IS THE REAL ProductForm"
-    tva_inclusive_price = forms.DecimalField(
-        label="TVA-Inclusive Price",
-        required=False,
-        disabled=True,
-        widget=forms.NumberInput(attrs={"class": "form-control", "readonly": "readonly"})
-    )
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -545,22 +539,21 @@ class ProductForm(forms.ModelForm):
         if not self.instance or not self.instance.pk:
             self.fields['tva_rate'].initial = default_tva_rate
             
-        # Set initial value for TVA-inclusive price if instance exists
-        if self.instance and self.instance.pk:
-            self.fields['tva_inclusive_price'].initial = self.instance.tva_inclusive_price
+        # We don't need to set initial value for price_with_tva as it's now a model field
 
     class Meta:
         model = models.Product
         fields = ['name', 'sku', 'category', 'quantity', 'unit_cost', 'selling_price', 'tva_rate',
-                 'tva_inclusive_price', 'value_current', 'value_1_month', 'value_2_month', 'value_3_month', 
+                 'price_with_tva', 'value_current', 'value_1_month', 'value_2_month', 'value_3_month', 
                  'description', 'image']
         widgets = {
             'name': forms.TextInput(attrs={"class": "form-control", "style": "width: 100%;"}),
             'sku': forms.TextInput(attrs={"class": "form-control", "style": "width: 100%;"}),
             'quantity': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;"}),
             'unit_cost': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;"}),
-            'selling_price': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;"}),
+            'selling_price': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;", "step": "0.01"}),
             'tva_rate': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;", "step": "0.01"}),
+            'price_with_tva': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;", "step": "0.01"}),
             'value_current': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;"}),
             'value_1_month': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;"}),
             'value_2_month': forms.NumberInput(attrs={"class": "form-control", "style": "width: 100%;"}),

@@ -87,3 +87,4 @@ django.template.exceptions.TemplateDoesNotExist: index.html
 ERROR 2025-05-24 17:32:57,715 basehttp "GET /app/ HTTP/1.1" 500 102809
 INFO 2025-05-25 19:58:26,442 autoreload Watching for file changes with StatReloader
 INFO 2025-05-25 19:59:34,758 autoreload Watching for file changes with StatReloader
+INFO 2025-06-06 18:28:25,608 autoreload Watching for file changes with StatReloader
